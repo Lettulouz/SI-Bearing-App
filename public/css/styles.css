@@ -6,15 +6,25 @@
     height: 5vh;
 }
 
+#naglowek1 {
+    float: left;
+    width: 20%;
+}
+
+#naglowek2 {
+    float: left;
+    width: 70%;
+}
+
 html {
     background-color: #C0C0C0;
 }
 
-#wnętrze{
+#wnetrze{
     background-color: #C0C0C0;
 }
 
-#wnętrze1 {
+#wnetrze1 {
     float: left;
     width: 20%;
     background-color: white;
@@ -24,7 +34,7 @@ html {
     height: 80vh;
 }
 
-#wnętrze2 {
+#wnetrze2 {
     float: left;
     width: 70%;
     background-color: yellow;

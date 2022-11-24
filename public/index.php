@@ -6,28 +6,28 @@
 </head>
 <body>
 <div id="naglowek">
-          
+        
         <div id="naglowek1">
+        test nagłówku 1
+        </div>
+
+        <div id="naglowek2">
                 <a href="index.php?logout=true"> Wyloguj</a> &nbsp
                 <a href="index.php?action=wyswietl"> Wyswietl </a> &nbsp
                 <a href="index.php?action=dodaj"> Dodaj </a> &nbsp
                 <a href="index.php?action=ksiazki"> ksiazki </a>
         </div>
-
-        <div id="naglowek2">
-        test nagłówku 2
-        </div>
 </div>
 
-<div id="wnętrze">
-        <div id="wnętrze1">
+<div id="wnetrze">
+        <div id="wnetrze1">
                 Tu jest wnętrze <br/>
                 <hr/>
                 <p> test </p>
                 <b> ananas </b>
         </div>
 
-        <div id="wnętrze2">
+        <div id="wnetrze2">
                 Tu jest wnętrze 2
         </div>
 
