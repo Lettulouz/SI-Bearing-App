@@ -10,8 +10,13 @@ html {
     background-color: #C0C0C0;
 }
 
+#wnętrze{
+    background-color: #C0C0C0;
+}
 
-#wnętrze {
+#wnętrze1 {
+    float: left;
+    width: 20%;
     background-color: white;
     padding-left: 20px;
     padding-top: 20px;
@@ -20,6 +25,8 @@ html {
 }
 
 #wnętrze2 {
+    float: left;
+    width: 70%;
     background-color: yellow;
     padding-left: 20px;
     padding-top: 20px;

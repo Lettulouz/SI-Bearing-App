@@ -7,20 +7,29 @@
 <body>
 <div id="naglowek">
           
-        
-        <a href="index.php?logout=true"> Wyloguj</a> &nbsp
-        <a href="index.php?action=wyswietl"> Wyswietl </a> &nbsp
-        <a href="index.php?action=dodaj"> Dodaj </a> &nbsp
-        <a href="index.php?action=ksiazki"> ksiazki </a>
+        <div id="naglowek1">
+                <a href="index.php?logout=true"> Wyloguj</a> &nbsp
+                <a href="index.php?action=wyswietl"> Wyswietl </a> &nbsp
+                <a href="index.php?action=dodaj"> Dodaj </a> &nbsp
+                <a href="index.php?action=ksiazki"> ksiazki </a>
+        </div>
 
-
+        <div id="naglowek2">
+        test nagłówku 2
+        </div>
 </div>
-<div id="wnetrze">
-wnentrze <br/>
-<hr/>
-<p> test </p>
-<b> ananas </b>
 
+<div id="wnętrze">
+        <div id="wnętrze1">
+                Tu jest wnętrze <br/>
+                <hr/>
+                <p> test </p>
+                <b> ananas </b>
+        </div>
+
+        <div id="wnętrze2">
+                Tu jest wnętrze 2
+        </div>
 
 </div>
 
