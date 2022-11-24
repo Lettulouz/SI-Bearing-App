@@ -2,7 +2,7 @@ Options -MultiViews
 
 RewriteEngine On
 
-RewriteBase /si-project/public
+RewriteBase /si-project-php/public
 
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
