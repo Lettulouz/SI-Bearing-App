@@ -19,6 +19,14 @@ html {
     height: 80vh;
 }
 
+#wnętrze2 {
+    background-color: yellow;
+    padding-left: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    height: 80vh;
+}
+
 
 #fieldleft {
     float: left;
