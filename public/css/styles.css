@@ -21,7 +21,9 @@ html {
 }
 
 #wnetrze{
-    background-color: #C0C0C0;
+    background-color: yellow;
+    padding-bottom: 40px;
+    height: 80vh;
 }
 
 #wnetrze1 {
@@ -35,7 +37,7 @@ html {
 }
 
 #wnetrze2 {
-    float: left;
+    float: right;
     width: 70%;
     background-color: yellow;
     padding-left: 20px;
