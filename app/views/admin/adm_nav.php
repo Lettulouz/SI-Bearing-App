@@ -62,11 +62,7 @@
          <span class="bi bi-chevron-right right-icon ms-auto"></span>
         </a>
          <div class="collapse" id="users_collapse">
-<<<<<<< HEAD:app/views/admin/adm_nav.php
-          
-=======
-          <a href=<?php echo ROOT."/admin/lista"?> class="nav-link text-muted">
->>>>>>> cc951fa3457b001c570fcce4f0d61cda76c1afa9:app/views/admin/adm-nav.php
+         <a href="#" class="nav-link text-muted">
             Lista użytkowników
           </a>
           <a href="#" class="nav-link text-muted">

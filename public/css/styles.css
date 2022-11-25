@@ -38,9 +38,7 @@
     margin-left: var( --offcanvas-width);
   }
 }
-.dropdown-item:hover{
-    color:white;
-}
+
 
 .sidebar-link .right-icon{
     display:inline-flex;
