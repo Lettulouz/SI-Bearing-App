@@ -6,6 +6,8 @@ $path = str_replace("/index.php","",$path);
 
 define('ROOT', $path);
 
-$path = $_SERVER['HTTP_HOST'] . $path . "/css/styles.css";
+$protocol = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
+
+$path = $protocol . $_SERVER['HTTP_HOST'] . $path . "/css/styles.css";
 
 define('CSSPATH', $path);
