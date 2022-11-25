@@ -4,13 +4,14 @@
     <!-- Required meta tags -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?=CSSPATH?>">
+  
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
     
     <!-- Custom CSS -->
+    <link rel="stylesheet" href="<?=CSSPATH?>">
     <!-- temp -->
     <!-- style tu bo nie działają -->
     <style>
@@ -25,6 +26,10 @@
             height: calc(100%-var( --topNavbarHeight));
         }
         
+        .sidecustomcolor{
+          background-color: #363C43;
+        }
+
         @media (min-width:992px){
           body{
             overflow: auto !important;
@@ -76,7 +81,7 @@
 </nav>
     <!-- Sidebar -->
 
-    <div class="offcanvas offcanvas-start bg-dark text-white sidebar" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="sidebar" aria-labelledby="offcanvasDarkLabel">
+    <div class="offcanvas offcanvas-start sidecustomcolor text-white sidebar" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="sidebar" aria-labelledby="offcanvasDarkLabel">
   <div class="offcanvas-header">
     <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Tu będą rzeczy</h5>
   </div>
