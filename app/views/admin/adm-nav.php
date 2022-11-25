@@ -52,7 +52,7 @@
   <div class="offcanvas-body">
     <nav class="navbar-dark">
       <ul class="navbar-nav">
-        <li class="my-2"><a class="text-muted small fw-bold text-uppercase text-decoration-none" href="admin">Strona główna</a></li>
+        <li class="my-2"><a id="gotoadmain" class="text-muted small fw-bold text-uppercase text-decoration-none"  href="admin">Strona główna</a></li>
         <li class="my-2">
           <hr class="dropdown divider">
         </li>
@@ -62,7 +62,7 @@
          <span class="bi bi-chevron-right right-icon ms-auto"></span>
         </a>
          <div class="collapse" id="users_collapse">
-          <a href="#" class="nav-link text-muted">
+          <a href="admin/lista" class="nav-link text-muted">
             Lista użytkowników
           </a>
           <a href="#" class="nav-link text-muted">
