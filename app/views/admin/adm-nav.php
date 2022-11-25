@@ -89,7 +89,7 @@
           <hr class="dropdown divider">
         </li>
         <li>
-        <a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link"
+        <a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link "
          data-bs-toggle="collapse" href="#content_collapse" role="button" aria-expanded="false" aria-controls="content_collapse">Produkty
          <span class="bi bi-chevron-right right-icon ms-auto"></span>
         </a>

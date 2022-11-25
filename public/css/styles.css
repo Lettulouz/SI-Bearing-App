@@ -41,6 +41,9 @@
    transform: rotate(90deg);
 }
 
+.siderbar-link{
+    color:#61757D;
+}
 /* width */
 ::-webkit-scrollbar {
     width: 10px;
@@ -61,6 +64,7 @@
     background: #3A4148; 
   }
 
+  ul.navbar-nav a:hover { color: #fff !important; }
 /*
 #naglowek {
     background-color: #0D3F82;
