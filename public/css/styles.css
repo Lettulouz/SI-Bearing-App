@@ -1,9 +1,32 @@
 :root{
-    --offcanvas-width: 4000px;
+    --offcanvas-width: 400px;
+    --topNavbarHeight:56px;
 }
 
 .sidebar{
     width: var( --offcanvas-width);
+    top: var( --topNavbarHeight);
+    height: calc(100%-var( --topNavbarHeight));
+}
+
+@media (min-width:992px){
+  body{
+    overflow: auto !important;
+  }
+  .offcanvas-backdrop::before{
+    display: none;
+  }
+  .sidebar{
+    transform: none;
+    visibility: visible !important;
+  }
+  .side-btn{
+    display:none;
+  }
+}
+
+body{
+    background-color: #000;
 }
 
 #naglowek {
