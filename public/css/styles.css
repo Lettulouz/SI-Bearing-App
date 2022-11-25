@@ -9,6 +9,10 @@
     height: calc(100%-var( --topNavbarHeight));
 }
 
+.sidecustomcolor{
+  background-color: #272C31;
+}
+
 @media (min-width:992px){
   body{
     overflow: auto !important;
@@ -25,10 +29,39 @@
   }
 }
 
-body{
-    background-color: #000;
+.dropdown-item:hover{
+    color:white;
 }
 
+.sidebar-link .right-icon{
+    display:inline-flex;
+}
+
+.sidebar-link[aria-expanded="true"] .right-icon{
+   transform: rotate(90deg);
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #272C31; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #212529; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3A4148; 
+  }
+
+/*
 #naglowek {
     background-color: #0D3F82;
     padding: 20px;
@@ -47,9 +80,7 @@ body{
     width: 70%;
 }
 
-body {
-    background-color: greenyellow;
-}
+
 
 #wnetrze{
     background-color: yellow;
@@ -104,12 +135,7 @@ fieldset {
     width: 600px;
 }
 
-a {
-    color: white;
-    text-decoration: none;
-    background-color: #3E6FAD;
-    padding: 4px;
-}
+
 
 #kradio {
     margin-right: 25px;
@@ -118,3 +144,4 @@ a {
 #lista {
     width: 170px;
 }
+*/

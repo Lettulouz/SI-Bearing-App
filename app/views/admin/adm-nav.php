@@ -12,40 +12,7 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?=CSSPATH?>">
-    <!-- temp -->
-    <!-- style tu bo nie działają -->
-    <style>
-              :root{
-            --offcanvas-width: 400px;
-            --topNavbarHeight:56px;
-        }
 
-        .sidebar{
-            width: var( --offcanvas-width);
-            top: var( --topNavbarHeight);
-            height: calc(100%-var( --topNavbarHeight));
-        }
-        
-        .sidecustomcolor{
-          background-color: #363C43;
-        }
-
-        @media (min-width:992px){
-          body{
-            overflow: auto !important;
-          }
-          .offcanvas-backdrop::before{
-            display: none;
-          }
-          .sidebar{
-            transform: none;
-            visibility: visible !important;
-          }
-          .side-btn{
-            display:none;
-          }
-        }
-    </style>
 
 
   </head>
@@ -81,12 +48,74 @@
 </nav>
     <!-- Sidebar -->
 
-    <div class="offcanvas offcanvas-start sidecustomcolor text-white sidebar" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="sidebar" aria-labelledby="offcanvasDarkLabel">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Tu będą rzeczy</h5>
-  </div>
+<div class="offcanvas offcanvas-start sidecustomcolor text-white sidebar" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="sidebar" aria-labelledby="offcanvasDarkLabel">
   <div class="offcanvas-body">
-    <p>Tu będzie więcej rzeczy</p>
+    <nav class="navbar-dark">
+      <ul class="navbar-nav">
+        <li class="my-2"><a class="text-muted small fw-bold text-uppercase text-decoration-none" href="admin">Strona główna</a></li>
+        <li class="my-2">
+          <hr class="dropdown divider">
+        </li>
+        <li>
+        <a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link"
+         data-bs-toggle="collapse" href="#users_collapse" role="button" aria-expanded="false" aria-controls="users_collapse">Użytkownicy
+         <span class="bi bi-chevron-right right-icon ms-auto"></span>
+        </a>
+         <div class="collapse" id="users_collapse">
+          <a href="#" class="nav-link text-muted">
+            Lista użytkowników
+          </a>
+          <a href="#" class="nav-link text-muted">
+            Dodawanie użytkowników
+          </a>
+          <a href="#" class="nav-link text-muted">
+            Lista menedżerów contentu
+          </a>
+          <a href="#" class="nav-link text-muted">
+           Dodawanie menedżerów contentu
+          </a>
+          <a href="#" class="nav-link text-muted">
+            Lista Administratorów
+          </a>
+          <a href="#" class="nav-link text-muted">
+            Dodawanie Administratorów
+          </a>
+          <a href="#" class="nav-link text-muted">
+            Zamówienia
+          </a>
+         </div>
+        </li>
+        <li class="my-2">
+          <hr class="dropdown divider">
+        </li>
+        <li>
+        <a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link"
+         data-bs-toggle="collapse" href="#content_collapse" role="button" aria-expanded="false" aria-controls="content_collapse">Produkty
+         <span class="bi bi-chevron-right right-icon ms-auto"></span>
+        </a>
+         <div class="collapse" id="content_collapse">
+          <a href="#" class="nav-link text-muted">
+            Dodaj łożysko
+          </a>
+          <a href="#" class="nav-link text-muted">
+            Edytuj łożysko
+          </a>
+          <a href="#" class="nav-link text-muted">
+            Usuń łożysko
+          </a>
+          <a href="#" class="nav-link text-muted">
+            Dodaj katalog
+          </a>
+          <a href="#" class="nav-link text-muted">
+            Edytuj katalog
+          </a>
+          <a href="#" class="nav-link text-muted">
+            Usuń katalog
+          </a>
+         </div>
+        </li>
+      </ul>
+    </nav>
   </div>
 </div>
 
