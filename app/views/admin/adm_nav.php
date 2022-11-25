@@ -58,11 +58,11 @@
         </li>
         <li>
         <a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link"
-         data-bs-toggle="collapse" href="#users_collapse" role="button" aria-expanded="false" aria-controls="users_collapse">Użytkownicy
+         data-bs-toggle="collapse" href="#users_collapse" role="button" aria-expanded="false" id="users_collapse_btn" aria-controls="users_collapse">Użytkownicy
          <span class="bi bi-chevron-right right-icon ms-auto"></span>
         </a>
          <div class="collapse" id="users_collapse">
-         <a href=<?php echo ROOT."/admin/list_of_users"?> class="nav-link text-muted">
+         <a href=<?php echo ROOT."/admin/list_of_users"?> id="user_lists" class="nav-link text-muted">
             Lista użytkowników
           </a>
           <a href="#" class="nav-link text-muted">

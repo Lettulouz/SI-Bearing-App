@@ -1,5 +1,5 @@
 :root{
-    --offcanvas-width: 400px;
+    --offcanvas-width: 300px;
     --topNavbarHeight:56px;
 }
 
@@ -46,6 +46,13 @@
 
 .sidebar-link[aria-expanded="true"] .right-icon{
    transform: rotate(90deg);
+}
+
+.dash-list .right-icon{
+  display:inline-flex;
+}
+.dash-list[aria-expanded="false"] .right-icon{
+  transform: rotate(270deg);
 }
 
 .siderbar-link{
