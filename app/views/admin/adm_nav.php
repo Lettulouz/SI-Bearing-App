@@ -21,7 +21,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
     <!-- Navbar -->
-<nav class="navbar navbar-expand navbar-dark bg-dark">
+<nav class="navbar navbar-expand navbar-dark bg-dark fixed-top">
   <div class="container-fluid">
     <!--Sidebar button-->
     <button class="btn btn-dark side-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="offcanvasExample">
@@ -62,7 +62,7 @@
          <span class="bi bi-chevron-right right-icon ms-auto"></span>
         </a>
          <div class="collapse" id="users_collapse">
-          <a href="admin/lista" class="nav-link text-muted">
+          <a href="#" class="nav-link text-muted">
             Lista użytkowników
           </a>
           <a href="#" class="nav-link text-muted">
@@ -95,13 +95,13 @@
         </a>
          <div class="collapse" id="content_collapse">
           <a href="#" class="nav-link text-muted">
-            Dodaj łożysko
+            Dodaj produkty
           </a>
           <a href="#" class="nav-link text-muted">
-            Edytuj łożysko
+            Edytuj produkty
           </a>
           <a href="#" class="nav-link text-muted">
-            Usuń łożysko
+            Usuń produkty
           </a>
           <a href="#" class="nav-link text-muted">
             Dodaj katalog
@@ -118,4 +118,5 @@
     </nav>
   </div>
 </div>
+3<main class="mt-5 pt-3" id="adm-main">
 

@@ -27,8 +27,17 @@
   .side-btn{
     display:none;
   }
+
+  #adm-main{
+    margin-left: var( --offcanvas-width);
+  }
 }
 
+@media (min-width:992px){
+  .sidebar #adm-main{
+    margin-left: var( --offcanvas-width);
+  }
+}
 .dropdown-item:hover{
     color:white;
 }
@@ -65,6 +74,7 @@
   }
 
   ul.navbar-nav a:hover { color: #fff !important; }
+
 
 
 /*

@@ -1,15 +1,16 @@
 <?php
-include 'adm-nav.php';
+include 'adm_nav.php';
 
 ?>
-
-<div class="containter">
+<div class="container-fluid">
 
 
 </div>
-
 <script>
     document.getElementById('gotoadmain').setAttribute( 'style', 'color:white !important' );
 </script>
 
-<?php include dirname(__FILE__,2) . "/footer.php"; ?>
+<?php
+include 'adm_feet.php';
+
+?>

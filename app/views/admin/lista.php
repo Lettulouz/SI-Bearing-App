@@ -1,5 +1,5 @@
 <?php
-include 'adm-nav.php';
+include 'adm_nav.php';
 
 ?>
 
