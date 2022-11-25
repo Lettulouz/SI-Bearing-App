@@ -52,7 +52,7 @@
   <div class="offcanvas-body">
     <nav class="navbar-dark">
       <ul class="navbar-nav">
-        <li class="my-2"><a id="gotoadmain" class="text-muted small fw-bold text-uppercase text-decoration-none"  href="admin">Strona główna</a></li>
+        <li class="my-2"><a id="gotoadmain" class="text-muted small fw-bold text-uppercase text-decoration-none"  href=<?php echo ROOT."/admin/"?>>Strona główna</a></li>
         <li class="my-2">
           <hr class="dropdown divider">
         </li>
@@ -62,7 +62,11 @@
          <span class="bi bi-chevron-right right-icon ms-auto"></span>
         </a>
          <div class="collapse" id="users_collapse">
-          <a href="#" class="nav-link text-muted">
+<<<<<<< HEAD:app/views/admin/adm_nav.php
+          
+=======
+          <a href=<?php echo ROOT."/admin/lista"?> class="nav-link text-muted">
+>>>>>>> cc951fa3457b001c570fcce4f0d61cda76c1afa9:app/views/admin/adm-nav.php
             Lista użytkowników
           </a>
           <a href="#" class="nav-link text-muted">
