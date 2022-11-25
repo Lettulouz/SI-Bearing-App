@@ -62,7 +62,7 @@
          <span class="bi bi-chevron-right right-icon ms-auto"></span>
         </a>
          <div class="collapse" id="users_collapse">
-         <a href="#" class="nav-link text-muted">
+         <a href=<?php echo ROOT."/admin/list_of_users"?> class="nav-link text-muted">
             Lista użytkowników
           </a>
           <a href="#" class="nav-link text-muted">
