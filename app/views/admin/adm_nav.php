@@ -13,14 +13,13 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?=CSSPATH?>">
 
-
+    <!--Bootstrap JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
   </head>
 <body>
-    <!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
     <!-- Navbar -->
+    
 <nav class="navbar navbar-expand navbar-dark bg-dark fixed-top">
   <div class="container-fluid">
     <!--Sidebar button-->
@@ -58,7 +57,7 @@
         </li>
         <li>
         <a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link"
-         data-bs-toggle="collapse" href="#users_collapse" role="button" aria-expanded="false" id="users_collapse_btn" aria-controls="users_collapse">Użytkownicy
+         data-bs-toggle="collapse" href="#users_collapse" role="button"  aria-controls="users_collapse" aria-expanded="false" id="users_collapse_btn">Użytkownicy
          <span class="bi bi-chevron-right right-icon ms-auto"></span>
         </a>
          <div class="collapse" id="users_collapse">
@@ -68,19 +67,19 @@
           <a href="#" class="nav-link text-muted">
             Dodawanie użytkowników
           </a>
-          <a href="#" class="nav-link text-muted">
+          <a href="<?php echo ROOT."/admin/list_of_content_managers"?>" id="mn_list" class="nav-link text-muted">
             Lista menedżerów contentu
           </a>
           <a href="#" class="nav-link text-muted">
            Dodawanie menedżerów contentu
           </a>
-          <a href="#" class="nav-link text-muted">
+          <a href="<?php echo ROOT."/admin/list_of_administrators"?>" id="ad_list" class="nav-link text-muted">
             Lista Administratorów
           </a>
           <a href="#" class="nav-link text-muted">
             Dodawanie Administratorów
           </a>
-          <a href="#" class="nav-link text-muted">
+          <a href="<?php echo ROOT."/admin/list_of_orders"?>" id="ord_list" class="nav-link text-muted">
             Zamówienia
           </a>
          </div>
@@ -90,11 +89,11 @@
         </li>
         <li>
         <a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link "
-         data-bs-toggle="collapse" href="#content_collapse" role="button" aria-expanded="false" aria-controls="content_collapse">Produkty
+         data-bs-toggle="collapse" id="content_collapse_btn" href="#content_collapse" role="button" aria-expanded="false" aria-controls="content_collapse">Produkty
          <span class="bi bi-chevron-right right-icon ms-auto"></span>
         </a>
          <div class="collapse" id="content_collapse">
-          <a href="#" class="nav-link text-muted">
+          <a href="<?php echo ROOT."/admin/list_of_products"?>" id="prd_list" class="nav-link text-muted">
             Lista produktów
           </a>
           <a href="#" class="nav-link text-muted">
@@ -118,7 +117,7 @@
           <a href="#" class="nav-link text-muted">
             Usuń katalog
           </a>
-          <a href="#" class="nav-link text-muted">
+          <a href="<?php echo ROOT."/admin/list_of_attributes"?>" id="attr_list" class="nav-link text-muted">
             Lista atrybutów
           </a>
           <a href="#" class="nav-link text-muted">
@@ -136,5 +135,5 @@
     </nav>
   </div>
 </div>
-3<main class="mt-5 pt-3" id="adm-main">
+<main class="mt-5 pt-3" id="adm-main">
 
