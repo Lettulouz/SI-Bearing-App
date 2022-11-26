@@ -174,5 +174,5 @@
               </nav>
           </div>
       </div>
-3     <main class="mt-5 pt-3" id="adm-main">
+      <main class="mt-5 pt-3" id="adm-main">
 
