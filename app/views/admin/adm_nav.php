@@ -52,7 +52,7 @@
     <nav class="navbar-dark">
       <ul class="navbar-nav">
         <li class="my-2"><a id="gotoadmain" class="text-muted small fw-bold text-uppercase text-decoration-none"  href=<?php echo ROOT."/admin/"?>>Strona główna</a></li>
-        <li class="my-2">
+        <li class="my-3">
           <hr class="dropdown divider">
         </li>
         <li>
@@ -67,24 +67,27 @@
           <a href="#" class="nav-link text-muted">
             Dodawanie użytkowników
           </a>
+          <hr class="divider ">
           <a href="<?php echo ROOT."/admin/list_of_content_managers"?>" id="mn_list" class="nav-link text-muted">
             Lista menedżerów contentu
           </a>
           <a href="#" class="nav-link text-muted">
            Dodawanie menedżerów contentu
           </a>
+          <hr class="divider">
           <a href="<?php echo ROOT."/admin/list_of_administrators"?>" id="ad_list" class="nav-link text-muted">
-            Lista Administratorów
+            Lista administratorów
           </a>
           <a href="#" class="nav-link text-muted">
-            Dodawanie Administratorów
+            Dodawanie administratorów
           </a>
+          <hr class="divider  ">
           <a href="<?php echo ROOT."/admin/list_of_orders"?>" id="ord_list" class="nav-link text-muted">
             Zamówienia
           </a>
          </div>
         </li>
-        <li class="my-2">
+        <li class="my-3">
           <hr class="dropdown divider">
         </li>
         <li>
@@ -100,7 +103,7 @@
             Dodaj produkty
           </a>
 
-            <hr class="divider">
+            <hr class="divider  ">
 
           <a href="#" class="nav-link text-muted">
             Lista katalogów
@@ -109,7 +112,7 @@
             Dodaj katalog
           </a>
 
-            <hr class="divider">
+            <hr class="divider ">
 
           <a href="<?php echo ROOT."/admin/list_of_attributes"?>" id="attr_list" class="nav-link text-muted">
             Lista atrybutów
