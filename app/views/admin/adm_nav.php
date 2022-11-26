@@ -36,7 +36,11 @@
                   <span class="navbar-toggler-icon"></span>
               </button>
 
-              <a class="navbar-brand fw-bold" href="#">Admin</a>
+              <a class="navbar-brand fw-bold" 
+                  id="gotoadmain" 
+                  href="<?php echo ROOT."/admin/"?>">
+                  Admin
+              </a>
               <div class="collapse navbar-collapse justify-content-end" 
                   id="navbarNavAltMarkup">
                   <ul class="navbar-nav">
@@ -70,7 +74,8 @@
                       <li class="my-2">
                           <a id="gotoadmain" 
                               class="text-muted small fw-bold text-uppercase text-decoration-none"  
-                              href=<?php echo ROOT."/admin/"?>>Strona główna
+                              href=<?php echo ROOT."/admin/"?>>
+                              Strona główna
                           </a>
                       </li>
                       <li class="my-2">
@@ -83,7 +88,8 @@
                               role="button" 
                               aria-expanded="false"
                               id="users_collapse_btn" 
-                              aria-controls="users_collapse">Użytkownicy
+                              aria-controls="users_collapse">
+                              Użytkownicy
                               <span class="bi bi-chevron-right right-icon ms-auto"></span>
                           </a>
                           <div class="collapse" id="users_collapse">
@@ -96,19 +102,19 @@
                                   Dodawanie użytkowników
                               </a>
                               <a href="#" class="nav-link text-muted">
-                                Lista menedżerów contentu
+                                  Lista menedżerów contentu
                               </a>
                               <a href="#" class="nav-link text-muted">
-                              Dodawanie menedżerów contentu
+                                  Dodawanie menedżerów contentu
                               </a>
                               <a href="#" class="nav-link text-muted">
-                                Lista Administratorów
+                                  Lista Administratorów
                               </a>
                               <a href="#" class="nav-link text-muted">
-                                Dodawanie Administratorów
+                                  Dodawanie Administratorów
                               </a>
                               <a href="#" class="nav-link text-muted">
-                                Zamówienia
+                                  Zamówienia
                               </a>
                           </div>
                       </li>
