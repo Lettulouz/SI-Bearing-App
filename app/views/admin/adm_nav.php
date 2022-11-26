@@ -95,6 +95,9 @@
         </a>
          <div class="collapse" id="content_collapse">
           <a href="#" class="nav-link text-muted">
+            Lista produktów
+          </a>
+          <a href="#" class="nav-link text-muted">
             Dodaj produkty
           </a>
           <a href="#" class="nav-link text-muted">
@@ -104,6 +107,9 @@
             Usuń produkty
           </a>
           <a href="#" class="nav-link text-muted">
+            Lista katalogów
+          </a>
+          <a href="#" class="nav-link text-muted">
             Dodaj katalog
           </a>
           <a href="#" class="nav-link text-muted">
@@ -111,6 +117,18 @@
           </a>
           <a href="#" class="nav-link text-muted">
             Usuń katalog
+          </a>
+          <a href="#" class="nav-link text-muted">
+            Lista atrybutów
+          </a>
+          <a href="#" class="nav-link text-muted">
+            Dodaj atrybut
+          </a>
+          <a href="#" class="nav-link text-muted">
+            Edytuj atrybut
+          </a>
+          <a href="#" class="nav-link text-muted">
+            Usuń atrybut
           </a>
          </div>
         </li>

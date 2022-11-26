@@ -39,6 +39,18 @@
   }
 }
 
+.bg-custom-1 {
+    background-color: rgb(255, 59, 219);
+}
+
+.bg-custom-2 {
+    background-color: rgb(80, 0, 129);
+}
+
+.bg-custom-3 {
+    background-color: rgb(55, 142, 218);
+}
+
 
 .sidebar-link .right-icon{
     display:inline-flex;
