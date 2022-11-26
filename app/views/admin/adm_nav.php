@@ -23,7 +23,7 @@
 <nav class="navbar navbar-expand navbar-dark bg-dark fixed-top">
   <div class="container-fluid">
     <!--Sidebar button-->
-    <button class="btn btn-dark side-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="offcanvasExample">
+    <button class="btn btn-dark side-btn " type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="offcanvasExample">
     <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -99,36 +99,25 @@
           <a href="#" class="nav-link text-muted">
             Dodaj produkty
           </a>
-          <a href="#" class="nav-link text-muted">
-            Edytuj produkty
-          </a>
-          <a href="#" class="nav-link text-muted">
-            Usuń produkty
-          </a>
+
+            <hr class="divider">
+
           <a href="#" class="nav-link text-muted">
             Lista katalogów
           </a>
           <a href="#" class="nav-link text-muted">
             Dodaj katalog
           </a>
-          <a href="#" class="nav-link text-muted">
-            Edytuj katalog
-          </a>
-          <a href="#" class="nav-link text-muted">
-            Usuń katalog
-          </a>
+
+            <hr class="divider">
+
           <a href="<?php echo ROOT."/admin/list_of_attributes"?>" id="attr_list" class="nav-link text-muted">
             Lista atrybutów
           </a>
           <a href="#" class="nav-link text-muted">
             Dodaj atrybut
           </a>
-          <a href="#" class="nav-link text-muted">
-            Edytuj atrybut
-          </a>
-          <a href="#" class="nav-link text-muted">
-            Usuń atrybut
-          </a>
+          
          </div>
         </li>
       </ul>
