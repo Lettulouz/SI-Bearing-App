@@ -27,7 +27,7 @@
     <span class="navbar-toggler-icon"></span>
     </button>
 
-    <a class="navbar-brand fw-bold" href="#">Admin</a>
+    <a class="navbar-brand fw-bold" href=<?php echo ROOT."/admin/"?>>Admin</a>
     <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
     <ul class="navbar-nav">
 
