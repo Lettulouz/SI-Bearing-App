@@ -64,7 +64,7 @@
          <a href=<?php echo ROOT."/admin/list_of_users"?> id="user_lists" class="nav-link text-muted">
             Lista użytkowników
           </a>
-          <a href="#" class="nav-link text-muted">
+          <a href="<?php echo ROOT."/admin/add_user"?>" class="nav-link text-muted" id="addus">
             Dodawanie użytkowników
           </a>
           <hr class="divider ">
