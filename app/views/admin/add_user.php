@@ -48,6 +48,47 @@ include 'adm_nav.php';
                 </div>
             </div>
             <div class="col-12 col-md-6">
+                <div class="row m-2">
+                    <div class="col-6">
+                        <div class="form-floating ">
+                            <input type="text" class="form-control" id="cityInput" name="city" placeholder="Gliwice">
+                            <label for="nameInput">Miejscowość</label>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-floating ">
+                            <input type="text" class="form-control" id="streetInput" name="street" placeholder="Kraszewskiego">
+                            <label for="streetInput">Ulica</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row m-2">
+                    <div class="col-3">
+                        <div class="form-floating ">
+                            <input type="text" class="form-control" id="stnmInput" name="streetNum" placeholder="16A">
+                            <label for="stnmInput">Nr Ulicy</label>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-floating ">
+                            <input type="text" class="form-control" id="lmInput" name="street" placeholder="Nie">
+                            <label for="lmInput">Nr Lokalu</label>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-floating ">
+                            <input type="text" class="form-control" id="zipInput" name="zip" placeholder="44-100">
+                            <label for="zipInput">Kod pocztowy</label>
+                        </div>
+                    </div>
+                    <div>  
+                </div>
+            </div>
+            <div class="row m-2">
+                    <div class="float-end">
+                        <button type="submit" class="btn btn-primary btn-lg float-end">Dodaj</button>
+                    </div>
+                
             </div>
         </div>
     </form>
