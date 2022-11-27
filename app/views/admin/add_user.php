@@ -1,13 +1,13 @@
 <?php
 include 'adm_nav.php';
 ?>
-
-<div class="container-fluid">
-    <h1 class="text-muted">Dodawanie użytkownika</h1>
+<h1 class="text-muted">Dodawanie użytkownika</h1>
     <hr class="divider ">
+<div class="container" style="max-width:720px;">
+    
     <form>
-        <div class="row">
-            <div class="col-12 col-md-6">
+        <div class="row m-2">
+            <div class="col-12 ">
                 <div class="row m-2">
                     <div class="col-6">
                         <div class="form-floating ">
@@ -39,58 +39,24 @@ include 'adm_nav.php';
                     </div>
                 </div>
                 <div class="row m-2">
-                    <div class="col-12">
-                        <div class="form-floating">
-                            <input type="password" class="form-control" id="passInput" name="pass" placeholder="name@example.com">
-                            <label for="passInput" >Hasło</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-6">
-                <div class="row m-2">
-                    <div class="col-6">
+                    <div class="col-10">
                         <div class="form-floating ">
-                            <input type="text" class="form-control" id="cityInput" name="city" placeholder="Gliwice">
-                            <label for="nameInput">Miejscowość</label>
+                            <input type="text" class="form-control" id="passInput" name="pass" placeholder="1234">
+                            <label for="passInput" >Hasło</label> 
                         </div>
                     </div>
-                    <div class="col-6">
-                        <div class="form-floating ">
-                            <input type="text" class="form-control" id="streetInput" name="street" placeholder="Kraszewskiego">
-                            <label for="streetInput">Ulica</label>
+                    <div class="col-auto">
+                             <button type="button" class="btn btn-primary btn-lg d-inline " onclick="genPass()"><i class="bi bi-arrow-repeat"></i></button>
                         </div>
-                    </div>
                 </div>
                 <div class="row m-2">
-                    <div class="col-3">
-                        <div class="form-floating ">
-                            <input type="text" class="form-control" id="stnmInput" name="streetNum" placeholder="16A">
-                            <label for="stnmInput">Nr Ulicy</label>
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="form-floating ">
-                            <input type="text" class="form-control" id="lmInput" name="street" placeholder="Nie">
-                            <label for="lmInput">Nr Lokalu</label>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-floating ">
-                            <input type="text" class="form-control" id="zipInput" name="zip" placeholder="44-100">
-                            <label for="zipInput">Kod pocztowy</label>
-                        </div>
-                    </div>
-                    <div>  
-                </div>
-            </div>
-            <div class="row m-2">
                     <div class="float-end">
                         <button type="submit" class="btn btn-primary btn-lg float-end">Dodaj</button>
                     </div>
-                
+
             </div>
-        </div>
+            </div>
+          
     </form>
 </div>
 
@@ -99,6 +65,19 @@ document.getElementById('users_collapse').classList.add('show');
 document.getElementById('users_collapse_btn').setAttribute('aria-expanded', 'true');
 document.getElementById('users_collapse_btn').setAttribute('style', 'color:white !important');
 document.getElementById('addus').setAttribute('style', 'color:white !important');
+
+function genPass(){
+    var chars = "0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    var passLength = Math.floor(Math.random() * (14 - 8) ) + 8;
+    var pass = "";
+
+    for (var i = 0, n = chars.length; i < passLength; ++i) {
+        pass += chars.charAt(Math.floor(Math.random() * n));
+    }
+
+    document.getElementById('passInput').setAttribute('value', pass);
+}
+
 </script>
 
 <?php include dirname(__FILE__,2) . "/footer.php"; ?>
