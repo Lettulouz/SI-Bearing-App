@@ -65,21 +65,21 @@
           <a href="<?php echo ROOT."/manager"?>" id="prd_list" class="nav-link text-muted">
             Lista produktów
           </a>
-          <a href="#" class="nav-link text-muted">
+          <a href="<?php echo ROOT."/manager/add_item"?>" id="additem" class="nav-link text-muted">
             Dodaj produkty
           </a>
             <hr class="divider  ">
           <a href="#" class="nav-link text-muted">
             Lista katalogów
           </a>
-          <a href="#" class="nav-link text-muted">
+          <a href="<?php echo ROOT."/manager/add_catalog"?>" id="addcat" class="nav-link text-muted">
             Dodaj katalog
           </a>
             <hr class="divider ">
           <a href="<?php echo ROOT."/manager"?>" id="attr_list" class="nav-link text-muted">
             Lista atrybutów
           </a>
-          <a href="#" class="nav-link text-muted">
+          <a href="<?php echo ROOT."/manager/add_attribute"?>" id="addattr" class="nav-link text-muted">
             Dodaj atrybut
           </a>
           
