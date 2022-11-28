@@ -2,31 +2,39 @@
 
     <h1>logowanie</h1>
 
-        <?php
-        
-        /*
-			if(isset($_POST['login']))
-				$login= $_POST['login'];
-			else $login='';
-
-			if(isset($_POST['haslo']))
-				$haslo= $_POST['haslo'];
-			else $haslo='';
-            <?=$data['message']?>
-
-           */ 
-		?>
 
 
-    <?=$data['login']?>
-    <?=$data['haslo']?>
-
-
-    <form method="post" action="/si-project-php/public/logowanie/test2/.$login.$haslo ">
+    <form method="post" action="/si-project-php/public/logowanie/index/">
 			login: <input type="text" name="login" /></br> <br/>
             hasło: <input type="text" name="haslo" /></br> <br/>
 			<input type="submit" value="Zaloguj">
-		</form>
+	</form>
+
+	<?php
+        
+		if(isset($_POST['login']))
+		{
+			if($_POST['login'] != "")
+			{
+				echo 'login: ';
+				echo $data['login'];
+				echo " <br/>";
+			}
+		}
+
+		
+		if(isset($_POST['haslo']))
+		{
+			if($_POST['haslo'] != "")
+			{
+				echo 'hasło: ';
+				echo $data['haslo'];
+				echo " <br/>";
+			}
+		}
+		
+	?>
+
 
 
 <?php include dirname(__FILE__,2) . "/footer.php"; ?>
