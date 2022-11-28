@@ -9,4 +9,7 @@ include 'adm_nav.php';
     document.getElementById('users_collapse_btn').setAttribute( 'style', 'color:white !important' );
     document.getElementById('ord_list').setAttribute( 'style', 'color:white !important' );
 </script>
-<?php include dirname(__FILE__,2) . "/footer.php"; ?>
+<?php
+include 'adm_feet.php';
+
+?>
