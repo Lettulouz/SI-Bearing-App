@@ -23,7 +23,7 @@
 <nav class="navbar navbar-expand navbar-dark bg-dark fixed-top">
   <div class="container-fluid">
     <!--Sidebar button-->
-    <button class="btn btn-dark side-btn " type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="offcanvasExample">
+    <button class="btn btn-dark side-btn mx-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="offcanvasExample">
     <span class="navbar-toggler-icon"></span>
     </button>
 
