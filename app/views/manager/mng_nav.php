@@ -53,7 +53,7 @@
     <!-- Sidebar -->
 
 <div class="offcanvas offcanvas-start sidecustomcolor text-white sidebar " data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" 
- style="background:#373E45;" id="sidebar" aria-labelledby="offcanvasDarkLabel">
+ style="background:#2F353B;" id="sidebar" aria-labelledby="offcanvasDarkLabel">
   <div class="offcanvas-body">
     <nav class="navbar-dark">
       <ul class="navbar-nav">
