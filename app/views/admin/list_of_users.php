@@ -10,4 +10,7 @@ include 'adm_nav.php';
     document.getElementById('user_lists').setAttribute( 'style', 'color:white !important' );
 </script>
 
-<?php include dirname(__FILE__,2) . "/footer.php"; ?>
+<?php
+include 'adm_feet.php';
+
+?>

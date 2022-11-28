@@ -80,4 +80,7 @@ function genPass(){
 
 </script>
 
-<?php include dirname(__FILE__,2) . "/footer.php"; ?>
+<?php
+include 'adm_feet.php';
+
+?>
