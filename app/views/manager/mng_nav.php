@@ -20,14 +20,14 @@
 <body>
     <!-- Navbar -->
     
-<nav class="navbar navbar-expand navbar-dark bg-dark fixed-top">
+<nav class="navbar navbar-expand navbar-dark bg-dark fixed-top mod-nav-">
   <div class="container-fluid">
     <!--Sidebar button-->
     <button class="btn btn-dark side-btn " type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="offcanvasExample">
     <span class="navbar-toggler-icon"></span>
     </button>
 
-    <a class="navbar-brand fw-bold" href=<?php echo ROOT."/admin/"?>>Admin</a>
+    <a class="navbar-brand fw-bold" href=<?php echo ROOT."/manager"?>>Menadżer contentu</a>
     <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
     <ul class="navbar-nav">
 
@@ -51,70 +51,32 @@
   <div class="offcanvas-body">
     <nav class="navbar-dark">
       <ul class="navbar-nav">
-        <li class="my-2"><a id="gotomngmain" class="text-muted small fw-bold text-uppercase text-decoration-none"  href=<?php echo ROOT."/admin/"?>>Strona główna</a></li>
+        <li class="my-2"><a id="gotomngmain" class="text-muted small fw-bold text-uppercase text-decoration-none"  href=<?php echo ROOT."/manager"?>>Strona główna</a></li>
         <li class="my-3">
           <hr class="dropdown divider">
         </li>
-        <li>
-        <a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link"
-         data-bs-toggle="collapse" href="#users_collapse" role="button"  aria-controls="users_collapse" aria-expanded="false" id="users_collapse_btn">Użytkownicy
-         <span class="bi bi-chevron-right right-icon ms-auto"></span>
-        </a>
-         <div class="collapse" id="users_collapse">
-         <a href=<?php echo ROOT."/admin/list_of_users"?> id="user_lists" class="nav-link text-muted">
-            Lista użytkowników
-          </a>
-          <a href="<?php echo ROOT."/admin/add_user"?>" class="nav-link text-muted" id="addus">
-            Dodawanie użytkowników
-          </a>
-          <hr class="divider ">
-          <a href="<?php echo ROOT."/admin/list_of_content_managers"?>" id="mn_list" class="nav-link text-muted">
-            Lista menedżerów contentu
-          </a>
-          <a href="#" class="nav-link text-muted">
-           Dodawanie menedżerów contentu
-          </a>
-          <hr class="divider">
-          <a href="<?php echo ROOT."/admin/list_of_administrators"?>" id="ad_list" class="nav-link text-muted">
-            Lista administratorów
-          </a>
-          <a href="#" class="nav-link text-muted">
-            Dodawanie administratorów
-          </a>
-          <hr class="divider  ">
-          <a href="<?php echo ROOT."/admin/list_of_orders"?>" id="ord_list" class="nav-link text-muted">
-            Zamówienia
-          </a>
-         </div>
-        </li>
-        <li class="my-3">
-          <hr class="dropdown divider">
-        </li>
+        
         <li>
         <a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link "
          data-bs-toggle="collapse" id="content_collapse_btn" href="#content_collapse" role="button" aria-expanded="false" aria-controls="content_collapse">Produkty
          <span class="bi bi-chevron-right right-icon ms-auto"></span>
         </a>
          <div class="collapse" id="content_collapse">
-          <a href="<?php echo ROOT."/admin/list_of_products"?>" id="prd_list" class="nav-link text-muted">
+          <a href="<?php echo ROOT."/manager"?>" id="prd_list" class="nav-link text-muted">
             Lista produktów
           </a>
           <a href="#" class="nav-link text-muted">
             Dodaj produkty
           </a>
-
             <hr class="divider  ">
-
           <a href="#" class="nav-link text-muted">
             Lista katalogów
           </a>
           <a href="#" class="nav-link text-muted">
             Dodaj katalog
           </a>
-
             <hr class="divider ">
-
-          <a href="<?php echo ROOT."/admin/list_of_attributes"?>" id="attr_list" class="nav-link text-muted">
+          <a href="<?php echo ROOT."/manager"?>" id="attr_list" class="nav-link text-muted">
             Lista atrybutów
           </a>
           <a href="#" class="nav-link text-muted">
