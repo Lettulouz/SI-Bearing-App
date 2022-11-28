@@ -1,20 +1,14 @@
 <?php
 class Logowanie extends Controller
 {
-    public function index()
+    public function index($login = '', $haslo = '')
     {
-        $message = "czas się zalogować";
-        $this->view('logowanie/index', ['message' => $message]);
-    }
+        if(isset($_POST['login']))
+        $login = $_POST['login'];
 
-    public function test()
-    {
-        $message = "test";
-        $this->view('logowanie/index', ['message' => $message]);
-    }
+        if(isset($_POST['haslo']))
+        $haslo = $_POST['haslo'];
 
-    public function test2($login = '', $haslo = '')
-    {
         $this->view('logowanie/index', ['login' => $login, 'haslo' => $haslo]);
     }
 }
