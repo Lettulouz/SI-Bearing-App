@@ -6,7 +6,7 @@
             <div class="card px-5 py-5 mb-12" id="form1">
                 <div class="form-data" id="loginFields">
                 <label id="mainName"> Logowanie </label>
-                    <div id="test"> 
+                    <div id="test" style="color : rgb(255, 0, 0)"> 
                         <span>Email lub login</span> 
                         <input type="text" name="emailOrLogin" id="emailOrLogin">
                         <label id="errorEmailOrLogin"></label>
