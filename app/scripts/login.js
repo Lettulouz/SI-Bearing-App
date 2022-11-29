@@ -23,6 +23,7 @@ function loginButton() {
         document.getElementById('form1').style.border = "none";
         document.getElementById('successLogin').style = "display: default;";
     }
+    //window.location.href = "http://83.230.14.95/si-project-php/public/admin";
     
 }
 
@@ -45,9 +46,10 @@ function verifyLogin(login){
     login = result;
     
     if(login == "") {  
+        error = 1;
         document.getElementById('errorEmailOrLogin').innerText = "*Należy uzupelnić email lub login";  
         document.getElementById('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
-        error = 1;
+        document.getElementById('blinkingEmailOrLogin').style = "display: default; color:#de1f1f";
         return false;  
     }  
 
@@ -58,6 +60,7 @@ function verifyLogin(login){
         error = 1;
         document.getElementById('errorEmailOrLogin').innerText = "*Podano znaki różne od liter i cyfr"; 
         document.getElementById('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingEmailOrLogin').style = "display: default; color:#de1f1f";
         return false;
     }
 
@@ -65,14 +68,17 @@ function verifyLogin(login){
         error = 1;
         document.getElementById('errorEmailOrLogin').innerText = "*Brak liter w loginie"; 
         document.getElementById('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingEmailOrLogin').style = "display: default; color:#de1f1f";
         return false;
     }
 
     if(error == 0){
         document.getElementById('errorEmailOrLogin').innerText = ""; 
         document.getElementById('emailOrLogin').style.border = "2px solid rgb(238, 238, 238)";
+        document.getElementById('blinkingEmailOrLogin').style = "display: none;";
         return true;
     }
+    
 }
 
 /** Function that validates given email;
@@ -105,35 +111,41 @@ function verifyEmail(email){
         error = 1;
         document.getElementById('errorEmailOrLogin').innerText = "*Nie podano prawidłowej domeny"; 
         document.getElementById('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingEmailOrLogin').style = "display: default; color:#de1f1f";
         return false;
     }
     if(cond3){
         error = 1;
         document.getElementById('errorEmailOrLogin').innerText = "*Mail nie może zaczynać się od @"; 
         document.getElementById('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingEmailOrLogin').style = "display: default; color:#de1f1f";
         return false;
     }
     if(cond4>1){
         error = 1;
         document.getElementById('errorEmailOrLogin').innerText = "*Mail nie może składać się z więcej niż jednej  @"; 
         document.getElementById('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingEmailOrLogin').style = "display: default; color:#de1f1f";
         return false;
     }
     if(cond5){
         error = 1;
         document.getElementById('errorEmailOrLogin').innerText = "*Podany mail nie posiada żadnych znaków między @ a ."; 
         document.getElementById('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingEmailOrLogin').style = "display: default; color:#de1f1f";
         return false;
     }
     if(!cond6){
         error = 1;
         document.getElementById('errorEmailOrLogin').innerText = "*Podano znaki różne od liter i cyfr"; 
         document.getElementById('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingEmailOrLogin').style = "display: default; color:#de1f1f";
         return false;
     }
     if(error == 0){
         document.getElementById('errorEmailOrLogin').innerText = ""; 
         document.getElementById('emailOrLogin').style.border = "2px solid rgb(238, 238, 238)";
+        document.getElementById('blinkingEmailOrLogin').style = "display: none";
         return true;
     }
 
@@ -158,6 +170,7 @@ function verifyPassword(password) {
     if(password == "") {  
         document.getElementById('errorPassword').innerText = "*Należy uzupelnić hasło";  
         document.getElementById('password').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingPassword').style = "display: default; color:#de1f1f";
         error = 1;
         return false;  
     }  
@@ -166,6 +179,7 @@ function verifyPassword(password) {
     if(password.length < 8) {  
         document.getElementById('errorPassword').innerText = "*Hasło musi mieć długość conajmniej 8 znaków";  
         document.getElementById('password').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingPassword').style = "display: default; color:#de1f1f";
         error = 1;
         return false;  
     }  
@@ -174,12 +188,14 @@ function verifyPassword(password) {
     if(password.length > 15) {  
         document.getElementById('errorPassword').innerText = "*Hasło nie może być dłuższe niż 14 znaków"; 
         document.getElementById('password').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingPassword').style = "display: default; color:#de1f1f";
         error = 1;
         return false;  
     } 
     if(error == 0){
         document.getElementById('errorPassword').innerText = ""; 
         document.getElementById('password').style.border = "2px solid rgb(238, 238, 238)";
+        document.getElementById('blinkingPassword').style = "display: none";
         return true;
     }
   }  
