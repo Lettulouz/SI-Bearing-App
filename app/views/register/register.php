@@ -2,20 +2,26 @@
 
 <div class="container mt-5">
     <div class="row d-flex justify-content-center">
-        <div class="col-md-6">
-            <div class="card px-5 py-5" id="form1">
-                <div class="form-data" v-if="!submitted">
-                <label> Logowanie </label>
-                    <div class="forms-inputs mb-4"> <span>Email or username</span> <input autocomplete="off" type="text" v-model="email" v-bind:class="{'form-control':true, 'is-invalid' : !validEmail(email) && emailBlured}" v-on:blur="emailBlured = true">
-                        <div class="invalid-feedback">A valid email is required!</div>
+        <div class="col-12 col-md-6 mb-12">
+            <div class="card px-5 py-5 mb-12" id="form1">
+                <div class="form-data" id="loginFields">
+                <label id="mainName"> Logowanie </label>
+                    <div class="forms-inputs mb-4"> 
+                        <span>Email lub login</span> 
+                        <input type="text" name="emailOrLogin" id="emailOrLogin">
+                        <label id="errorEmailOrLogin"></label>
                     </div>
-                    <div class="forms-inputs mb-4"> <span>Password</span> <input autocomplete="off" type="password" v-model="password" v-bind:class="{'form-control':true, 'is-invalid' : !validPassword(password) && passwordBlured}" v-on:blur="passwordBlured = true">
-                        <div class="invalid-feedback">Password must be 8 character!</div>
+                    <div class="forms-inputs mb-4" id="test"> 
+                        <span>Password</span> 
+                        <input type="password" name="password" id="password">
+                        <label id="errorPassword"></label>
                     </div>
-                    <div class="mb-3"> <button v-on:click.stop.prevent="submit" class="btn btn-dark w-100">Login</button> </div>
+                    
+                    <div class="mb-3"> <button class="btn btn-dark w-100" onclick="calculateAmount()">Login</button> </div>
+
                 </div>
-                <div class="success-data" v-else>
-                    <div class="text-center d-flex flex-column"> <i class='bx bxs-badge-check'></i> <span class="text-center fs-1">You have been logged in <br> Successfully</span> </div>
+                <div style="display: none;" id="successLogin">
+                    <div class="text-center d-flex flex-column" > <i class='bx bxs-badge-check'></i> <span class="text-center fs-1">Zalogowano <br> pomyślnie!</span> </div>
                 </div>
             </div>
         </div>
