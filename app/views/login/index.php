@@ -7,13 +7,13 @@
                 <div class="form-data" id="loginFields">
                 <label id="mainName"> Logowanie </label>
                     <div class="forms-inputs mb-4"> 
-                        <span>Email lub login</span> 
+                        <span id="emailOrLoginSpan">Email lub login</span> 
                         <input type="text" name="emailOrLogin" id="emailOrLogin"> 
                         <i id="blinkingEmailOrLogin" class='bx bxs-error-circle bx-flip-horizontal bx-burst' style='color:#de1f1f; display: none;' ></i>
                         <label id="errorEmailOrLogin"></labsel>
                     </div>
                     <div class="forms-inputs mb-4"> 
-                        <span>Password</span> 
+                        <span id="passwordSpan">Hasło</span> 
                         <input type="password" name="password" id="password">
                         <i id="blinkingPassword" class='bx bxs-error-circle bx-flip-horizontal bx-burst' style='color:#de1f1f; display: none;' ></i>
                         <label id="errorPassword"></label>
