@@ -20,26 +20,34 @@ include 'mng_nav.php';
                 </div>
                 <div class="row m-2">
                     <div class="col-12">
-                        <div class="form-floating">
-                            <select class="custom-select custom-select-lg" id="select1">
-                            <label for="select1" >Produkty</label>
-                                <option selected>Open this select menu</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option> <!-- Do dokończenia -->
-                            </select>
-                        </div>
+                        <select class="form-select py-3" id="item1" name="item1" aria-label="py-3 example">
+                            <option selected>Wybierz produkt</option>
+                            <option value="1">produkt1</option>
+                            <option value="2">produkt2</option>
+                            <option value="3">produkt3</option> 
+                        </select>
                     </div>
                 </div>
                 <div class="row m-2">
                     <div class="col-12">
-                        <div class="form-floating">
-                            <input type="text" class="form-control" id="widthInput" name="width" placeholder="10">
-                            <label for="widthInput" >Szerokość</label>
-                        </div>
+                        <select class="form-select py-3" id="item2" name="item2" aria-label="py-3 example">
+                            <option selected>Wybierz produkt</option>
+                            <option value="1">produkt1</option>
+                            <option value="2">produkt2</option>
+                            <option value="3">produkt3</option> 
+                        </select>
                     </div>
                 </div>
-                
+                <div class="row m-2">
+                    <div class="col-12">
+                        <select class="form-select py-3" id="item3" name="item3" aria-label="py-3 example">
+                            <option selected>Wybierz produkt</option>
+                            <option value="1">produkt1</option>
+                            <option value="2">produkt2</option>
+                            <option value="3">produkt3</option> 
+                        </select>
+                    </div>
+                </div>                
                 <div class="row m-2">
                     <div class="float-end">
                         <button type="submit" class="btn btn-primary btn-lg float-end">Dodaj</button>
@@ -50,8 +58,6 @@ include 'mng_nav.php';
           
     </form>
 </div>
-
-
 
 <script>
 document.getElementById('content_collapse').classList.add('show');
