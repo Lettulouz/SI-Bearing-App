@@ -2,7 +2,7 @@
 
 return [
 	'host' => 'localhost',
-	'user' => 'root',
-	'password' => '',
-	'database' => 'pdo'
+	'user' => 'sidb',
+	'password' => 'gWLl12ITr9YV3DiSJaME',
+	'database' => 'sidb'
 ];
