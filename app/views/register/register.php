@@ -17,7 +17,7 @@
                         <label id="errorPassword"></label>
                     </div>
                     
-                    <div class="mb-3"> <button class="btn btn-dark w-100" onclick="calculateAmount()">Login</button> </div>
+                    <div class="mb-3"> <button class="btn btn-dark w-100" onclick="loginButton()">Login</button> </div>
 
                 </div>
                 <div style="display: none;" id="successLogin">
