@@ -4,10 +4,10 @@
  * @author Dominik
  */
 function loginButton() {
-    const emailOrLogin = document.getElementById('emailOrLogin').value;
+    var emailOrLogin = document.getElementById('emailOrLogin').value;
     let result = emailOrLogin.includes("@");
     
-    const loginMethod = "";
+    var loginMethod = "";
 
     if(result){
         loginMethod = "email";
@@ -17,7 +17,7 @@ function loginButton() {
         loginMethod = "login";
         verifyLogin(emailOrLogin);
     }
-    const password = document.getElementById('password').value;
+    var password = document.getElementById('password').value;
     if(verifyPassword(password)){
         document.getElementById('loginFields').style = "display: none;";
         document.getElementById('form1').style.border = "none";
@@ -39,7 +39,7 @@ function loginButton() {
  * @author Dominik
  */
 function verifyLogin(login){
-    const error = 0;
+    var error = 0;
     let result = login.toLowerCase();
     document.getElementById('emailOrLogin').value = result;
     login = result;
@@ -91,7 +91,7 @@ function verifyLogin(login){
  * @author Dominik
  */
 function verifyEmail(email){
-    const error = 0;
+    var error = 0;
     let result = email.toLowerCase();
     document.getElementById('emailOrLogin').value = result;
     email = result;
@@ -153,7 +153,7 @@ function verifyEmail(email){
  * @author Dominik
  */
 function verifyPassword(password) {  
-    const error = 0;
+    var error = 0;
     //check empty password field  
     if(password == "") {  
         document.getElementById('errorPassword').innerText = "*Należy uzupelnić hasło";  
@@ -224,7 +224,7 @@ function occurrences(string, subString, allowOverlapping) {
     subString += "";
     if (subString.length <= 0) return (string.length + 1);
 
-    const n = 0,
+    var n = 0,
         pos = 0,
         step = allowOverlapping ? 1 : subString.length;
 
