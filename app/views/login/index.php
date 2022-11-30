@@ -3,7 +3,7 @@
 <div class="container mt-5">
     <div class="row d-flex justify-content-center">
         <div class="col-12 col-md-6 mb-12">
-            <div class="card px-5 py-5 mb-12" id="form1">
+            <div class="card px-5 py-5 mb-12 h-100" id="form1">
                 <div class="form-data" id="loginFields">
                 <label id="mainName"> Logowanie </label>
                     <div class="forms-inputs mb-4"> 
@@ -20,6 +20,7 @@
                     </div>
                     
                     <div class="mb-3"> <button class="btn btn-dark w-100" onclick="loginButton()">Login</button> </div>
+                    <div class="mb-3"> <button class="btn btn-light w-100" onclick="moveToRegister()">Załóż konto</button> </div>
 
                 </div>
                 <div style="display: none;" id="successLogin">

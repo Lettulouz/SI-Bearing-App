@@ -1,3 +1,4 @@
+
 body{background: #000}
 .card{border: none;height: 320px}
 .forms-inputs{position: relative;}
@@ -9,5 +10,9 @@ body{background: #000}
 .bxs-badge-check{font-size: 90px}
 .form-data{display: flex; flex-direction: column;}
 .success-data{display: flex;}
+.btn-light{ background-color:rgb(214, 214, 214) !important;}
+.btn-light:hover{ background-color:rgb(140, 140, 140) !important;}
+.btn-dark{ background-color:rgb(72, 72, 72) !important; border-color: rgb(72, 72, 72) !important;}
+.btn-dark:hover{background-color:rgb(0, 0, 0) !important;}
 #mainName {position: absolute;top:-23px;left: 25px;background-color: rgb(255, 255, 255);padding: 5px 10px;font-size: 20px; font-weight: bolder;}
 #errorPassword, #errorEmailOrLogin, #errorLogin, #errorName, #errorEmail, #errorSurrname{font-size: small; color: rgb(255, 0, 0);}

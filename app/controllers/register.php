@@ -1,8 +1,8 @@
 <?php
 class Register extends Controller
 {
-    public function register(){
-        $this->view('register/register', []);
+    public function index(){
+        $this->view('register/index', []);
     }
 
 }

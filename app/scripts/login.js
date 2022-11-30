@@ -208,7 +208,14 @@ function verifyPassword(password) {
     return true;
   }  
 
-/** Function that checks if string is build only from some chars;
+/** Function that moves to register page
+ * @author Dominik
+ */
+  function moveToRegister(){
+        window.location.href = "http://83.230.14.95/si-project-php/public/register";
+  }
+
+/** Function that checks if string is build only from some chars
  * @param {String} string String to check
  * @param {int} custom Number used by switch, can filter different chars
  *

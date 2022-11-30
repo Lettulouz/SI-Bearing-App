@@ -43,6 +43,7 @@
                     </div>
                     
                     <div class="mb-3"> <button class="btn btn-dark w-100" onclick="registerButton()">Rejestracja</button> </div>
+                    <div class="mb-3"> <button class="btn btn-light w-100" onclick="moveToLogin()">Mam już konto</button> </div>
 
                 </div>
                 <div style="display: none;" id="successRegister">
