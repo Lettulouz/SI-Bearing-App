@@ -10,7 +10,7 @@
                         <span id="emailOrLoginSpan">Email lub login</span> 
                         <input type="text" name="emailOrLogin" id="emailOrLogin"> 
                         <i id="blinkingEmailOrLogin" class='bx bxs-error-circle bx-flip-horizontal bx-burst' style='color:#de1f1f; display: none;' ></i>
-                        <label id="errorEmailOrLogin"></labsel>
+                        <label id="errorEmailOrLogin"></label>
                     </div>
                     <div class="forms-inputs mb-4"> 
                         <span id="passwordSpan">Hasło</span> 
