@@ -36,7 +36,7 @@
   
 }
 
-/** Function that validates given name;
+/** Function that validates given name
 * @param {String} name Email to check
 *
 * @brief cond1 checks if domain of email is .pl
@@ -79,7 +79,7 @@ function verifyName(name){
 }
 
 
-/** Function that validates given name;
+/** Function that validates given name
 * @param {String} name Email to check
 *
 * @brief cond1 checks if domain of email is .pl
@@ -124,7 +124,7 @@ function verifySurrname(surrname){
 }
 
 
-/** Function that validates given login;
+/** Function that validates given login
 * @param {String} login Email to check
 *
 * @brief cond1 checks if domain of email is .pl
@@ -177,7 +177,7 @@ function verifyLogin(login){
   
 }
 
-/** Function that validates given email;
+/** Function that validates given email
 * @param {String} email Email to check
 *
 * @brief cond1 checks if domain of email is .pl
@@ -248,7 +248,7 @@ function verifyEmail(email){
 }
 
 
-/** Function that validates given password;
+/** Function that validates given password
 * @param {String} password Password to check
 *
 * @brief First if checks if field is not empty
@@ -304,7 +304,7 @@ function verifyPassword(password) {
   window.location.href = "http://83.230.14.95/si-project-php/public/login";
 }
 
-/** Function that checks if string is build only from some chars;
+/** Function that checks if string is build only from some chars
 * @param {String} string String to check
 * @param {int} custom Number used by switch, can filter different chars
 *
@@ -327,7 +327,7 @@ function checkIfOnlyAcceptedChars(string, custom){
   }  
 }
 
-/** Function that count occurrences of a substring in a string;
+/** Function that count occurrences of a substring in a string
 * @param {String} string               The string
 * @param {String} subString            The sub string to search for
 * @param {Boolean} [allowOverlapping]  Optional. (Default:false)

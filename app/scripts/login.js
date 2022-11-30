@@ -39,7 +39,7 @@ function loginButton() {
 }
 
 
-/** Function that validates given login;
+/** Function that validates given login
  * @param {String} login Email to check
  *
  * @brief cond1 checks if domain of email is .pl
@@ -90,7 +90,7 @@ function verifyLogin(login){
     
 }
 
-/** Function that validates given email;
+/** Function that validates given email
  * @param {String} email Email to check
  *
  * @brief cond1 checks if domain of email is .pl
@@ -162,7 +162,7 @@ function verifyEmail(email){
 }
 
 
-/** Function that validates given password;
+/** Function that validates given password
  * @param {String} password Password to check
  *
  * @brief First if checks if field is not empty
@@ -238,7 +238,7 @@ function checkIfOnlyAcceptedChars(string, custom){
     }  
 }
 
-/** Function that count occurrences of a substring in a string;
+/** Function that count occurrences of a substring in a string
  * @param {String} string               The string
  * @param {String} subString            The sub string to search for
  * @param {Boolean} [allowOverlapping]  Optional. (Default:false)
