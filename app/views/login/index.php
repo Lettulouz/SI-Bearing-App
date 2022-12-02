@@ -30,5 +30,4 @@
         </div>
     </div>
 </div>
-
 <?php include dirname(__FILE__,2) . "/footer.php"; ?>

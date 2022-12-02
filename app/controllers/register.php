@@ -5,5 +5,11 @@ class Register extends Controller
         $this->view('register/index', []);
     }
 
+    public function validate(){
+        
+        header("Location:" . ROOT . "/admin");
+        $this->view('register/index', []);
+    }
+
 }
 ?>

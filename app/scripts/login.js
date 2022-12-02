@@ -16,17 +16,26 @@ function loginButton() {
         if(!verifyEmail(emailOrLogin)){
             error = true;
         }
+        else{
+            createCookie("email", emailOrLogin, 5);
+        }
     }
     else{
         loginMethod = "login";
         if(!verifyLogin(emailOrLogin)){
             error = true;
         }
+        else{
+            createCookie("login", emailOrLogin, 5);
+        }
     }
     var password = document.getElementById('password').value;
 
     if(!verifyPassword(password)){
         error = true;
+    }
+    else{
+        createCookie("password", passowrd, 5);
     }
 
     if(!error){
@@ -36,6 +45,22 @@ function loginButton() {
     }
     //window.location.href = "http://83.230.14.95/si-project-php/public/admin";
     
+}
+
+function createCookie(name, value, minutes) {
+    var expires;
+      
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (minutes * 60 * 1000));
+        expires = "; expires=" + date.toGMTString();
+    }
+    else {
+        expires = "";
+    }
+      
+    document.cookie = escape(name) + "=" + 
+        escape(value) + expires + "; path=/";
 }
 
 
