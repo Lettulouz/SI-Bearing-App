@@ -99,16 +99,16 @@
           <a href="<?php echo ROOT."/admin/list_of_products"?>" id="prd_list" class="nav-link text-muted">
             Lista produktów
           </a>
-          <a href="#" class="nav-link text-muted">
+          <a href="<?php echo ROOT."/admin/add_item"?>" id="additem" class="nav-link text-muted">
             Dodaj produkty
           </a>
 
             <hr class="divider  ">
 
-          <a href="#" class="nav-link text-muted">
+          <a href="<?php echo ROOT."/admin/list_of_catalogs"?>" class="nav-link text-muted" id="cat_list">
             Lista katalogów
           </a>
-          <a href="#" class="nav-link text-muted">
+          <a href="<?php echo ROOT."/admin/add_catalog"?>" id="addcat" class="nav-link text-muted">
             Dodaj katalog
           </a>
 
@@ -117,7 +117,7 @@
           <a href="<?php echo ROOT."/admin/list_of_attributes"?>" id="attr_list" class="nav-link text-muted">
             Lista atrybutów
           </a>
-          <a href="#" class="nav-link text-muted">
+          <a href="<?php echo ROOT."/admin/add_attribute"?>" id="addattr" class="nav-link text-muted">
             Dodaj atrybut
           </a>
           

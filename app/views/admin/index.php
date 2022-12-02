@@ -87,7 +87,7 @@ include 'adm_nav.php';
                 <div class="col-12 col-sm-6 col-xl-4 mb-3">
                     <div class="card text-white bg-primary mb-3 h-100" >
                         <div class="card-header"><i class="bi bi-box-seam-fill"></i>&nbspProdukty
-                            <a style='float:right;' class="text-white" href="#" ><i class="bi bi-plus-lg"></i></a>
+                            <a style='float:right;' class="text-white" href="<?php echo ROOT."/admin/add_item"?>" ><i class="bi bi-plus-lg"></i></a>
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">Produktów: [ilość]</h5>
@@ -103,13 +103,13 @@ include 'adm_nav.php';
         <div class="col-12 col-sm-6 col-xl-4 mb-3">
             <div class="card text-white bg-custom-3 mb-3 h-100" >
                 <div class="card-header"><i class="bi bi-journals"></i>&nbspKatalogi
-                    <a style='float:right;' class="text-white" href="#" ><i class="bi bi-plus-lg"></i></a>
+                    <a style='float:right;' class="text-white" href="<?php echo ROOT."/admin/add_catalog"?>" ><i class="bi bi-plus-lg"></i></a>
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">Katalogów: [ilość]</h5>
                     <p class="card-text">Tutaj kilka nazw katalogów, jeżeli się wszystkie nie mieszczą to na końcu ...</p>
                 </div>
-                <a href=<?php echo ROOT."/admin/list_of_orders"?> id="orders_lists" class="nav-link text-white p-0">
+                <a href="<?php echo ROOT."/admin/list_of_catalogs"?>" id="orders_lists" class="nav-link text-white p-0">
                     <div class="card-footer p-3">
                                 Przeglądaj katalogi
                     </div>
@@ -119,7 +119,7 @@ include 'adm_nav.php';
         <div class="col-12 col-sm-6 col-xl-4 mb-3">
             <div class="card text-white bg-custom-1 mb-3 h-100" >
                 <div class="card-header"><i class="bi bi-journal-richtext"></i>&nbspAtrybuty
-                    <a style='float:right;' class="text-white" href="#" ><i class="bi bi-plus-lg"></i></a>
+                    <a style='float:right;' class="text-white" href="<?php echo ROOT."/admin/add_attribute"?>" ><i class="bi bi-plus-lg"></i></a>
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">Atrybutów: [ilość]</h5>

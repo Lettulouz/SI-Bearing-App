@@ -5,7 +5,7 @@ include 'adm_nav.php';
     <hr class="divider ">
 <div class="container" style="max-width:720px;">
     
-    <form>
+    <form autocomplete="off">
         <div class="row m-2">
             <div class="col-12 ">
                 <div class="row m-2">

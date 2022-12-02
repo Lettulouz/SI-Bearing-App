@@ -16,5 +16,17 @@ class Manager extends Controller
     public function add_catalog(){
         $this->view('manager/add_catalog', []);
     }
+
+    public function list_of_products(){
+        $this->view('manager/list_of_products_mng', []);
+    }
+
+    public function list_of_attributes(){
+        $this->view('manager/list_of_attributes_mng', []);
+    }
+
+    public function list_of_catalogs(){
+        $this->view('manager/list_of_catalogs_mng', []);
+    }
 }
 ?>
