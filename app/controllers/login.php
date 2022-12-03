@@ -5,7 +5,15 @@ class Login extends Controller
         $this->view('login/index');
     }
 
+    
     public function validate(){
+
+        //$DB = new DataBase();
+        //$wynik = $DB->select("SELECT * FROM `book`");
+
+        $login = "Admin";
+        $haslo = "Admin123";
+        
         echo "<script src='" . APPPATH . "/scripts/login.js" .  "'></script>";
         echo "<script>testFunction()</script>";
         if(isset($_POST['loginButton'])){
