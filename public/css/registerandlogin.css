@@ -1,10 +1,13 @@
 
 body{background: #000}
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px #fbfbfb inset;
+}
 .card{border: none;height: 320px}
 .forms-inputs{position: relative;}
-.forms-inputs span{position: absolute;top:-18px;left: 10px;background-color: rgb(255, 255, 255);padding: 5px 10px;font-size: 15px}
+.forms-inputs span{position: absolute;top:-18px;left: 10px;background-color: rgb(252, 252, 252);padding: 5px 10px;font-size: 15px; border-radius: 25px;}
 .forms-inputs i{position: absolute;top:13px;right: 10px;padding: 5px 10px;font-size: 15px}
-.forms-inputs input{height: 50px;border: 2px solid rgb(238, 238, 238); width: 100%;}
+.forms-inputs input{padding: 0px 0px 0px 15px;height: 50px;border: 2px solid rgb(238, 238, 238); width: 100%;}
 .forms-inputs input:focus{box-shadow: none;outline: none;border: 2px solid #000}
 .btn{height: 50px}.success-data{display: flex;flex-direction: column}
 .bxs-badge-check{font-size: 90px}

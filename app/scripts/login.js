@@ -47,6 +47,10 @@ function loginButton() {
     
 }
 
+function testFunction(){
+    alert("testowaFunkcja");
+}
+
 function createCookie(name, value, minutes) {
     var expires;
       
@@ -305,3 +309,14 @@ function occurrences(string, subString, allowOverlapping) {
 function containsAnyLetters(string) {
     return /[a-zA-Z]/.test(string);
   }
+
+/*
+function remake(e){
+    var val = e.value;
+    var id = e.id;
+    e.outerHTML = e.outerHTML;
+    document.getElementById(id).value = val;
+    
+    return true;
+}
+*/
