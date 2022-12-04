@@ -2,14 +2,7 @@
 class Login extends Controller
 {
     public function index(){
-        if(isset($_SESSION['errorEmailOrLogin'])){
-            $errorEmailOrLogin = $_SESSION['errorEmailOrLogin'];
-        }
-        else{
-            $errorEmailOrLogin = "";
-        }
-        $errorEmailOrLogin = "";
-        $this->view('login/index', ['errorEmailOrLogin' => $errorEmailOrLogin]);
+        header("Location:" . ROOT . "/login/validate");
     }
 
     
@@ -17,54 +10,102 @@ class Login extends Controller
         //$DB = new DataBase();
         //$wynik = $DB->select("SELECT * FROM `book`");
         $login = "admin";
+        $password = "admin123";
+        $check = 1;
         echo "<script src='" . APPPATH . "/scripts/login.js" .  "'></script>";
+        if(isset($_SESSION['emailOrLoginInput'])){
+            $emailOrLoginInput = $_SESSION['emailOrLoginInput'];
+        }else{
+            $emailOrLoginInput = "";
+        }
+        $errorPassword = "";
 
         if(isset($_POST['emailOrLogin'])){
-            $emailOrLoginInput = $_POST['emailOrLogin'];
-            $errorEmailOrLogin = "";
+            $emailOrLoginInput = strtolower($_POST['emailOrLogin']);
+            $passwordInput = $_POST['password'];
 
             if(str_contains($emailOrLoginInput, '@')){
-                if($emailOrLoginInput != $login){
-                    $errorEmailOrLogin = "*Podano błędny email lub hasło";
-                    $_SESSION['errorEmailOrLogin'] = $errorEmailOrLogin;
+                if($this->verifyEmail($emailOrLoginInput)){
+                    $_SESSION['emailOrLoginInput'] =  $emailOrLoginInput;
+                    if($emailOrLoginInput != $login){
+                        $errorPassword = "*Podano błędny email lub hasło";
+                        $_SESSION['errorPassword'] = $errorPassword;
+                        $check = 0;
+                    }
                 }
                 else{
-                    unset($_SESSION['errorEmailOrLogin']);
-                    $_SESSION['loggedUser'] = "admin";
-                    echo "<script> window.location.assign('" . ROOT . "/admin') </script>";
+                    $errorPassword = "*Dane dostarczone do serwera nie zgadzają się z danymi klienta";
+                    $_SESSION['errorPassword'] = $errorPassword;
+                    $check = 0;
                 }
             }
             else{
-                if($emailOrLoginInput != $login){
-                    $errorEmailOrLogin = "*Podano błędny login lub hasło";
-                    $_SESSION['errorEmailOrLogin'] = $errorEmailOrLogin;
+                if($this->verifyLogin($emailOrLoginInput)){
+                    $_SESSION['emailOrLoginInput'] =  $emailOrLoginInput;
+                    if($emailOrLoginInput != $login){
+                        $errorPassword = "*Podano błędny login lub hasło";
+                        $_SESSION['errorPassword'] = $errorPassword;
+                        $check = 0;
+                    }
                 }
                 else{
-                    unset($_SESSION['errorEmailOrLogin']);
-                    $_SESSION['loggedUser'] = "admin";
-                    echo "<script> window.location.assign('" . ROOT . "/admin') </script>";
+                    $errorPassword = "*Dane dostarczone do serwera nie zgadzają się z danymi klienta";
+                    $_SESSION['errorPassword'] = $errorPassword;
+                    $check = 0;
                 }
+            }
+            if($this->verifyPassword($passwordInput)){
+                if($passwordInput != $password){
+                    $errorPassword = "*Podano błędny email lub hasło";
+                    $_SESSION['errorPassword'] = $errorPassword;
+                    $check = 0;
+                }
+            }
+            else{
+                $errorPassword = "*Dane dostarczone do serwera nie zgadzają się z danymi klienta";
+                $_SESSION['errorPassword'] = $errorPassword;
+                $check = 0;
+            }
+            if($check == 1){
+                unset($_SESSION['errorPassword']);
+                $_SESSION['loggedUser'] = "admin";
+                header("Location:" . ROOT . "/admin");
             }
             
         }
-        $this->view('login/index', ['errorEmailOrLogin' => $errorEmailOrLogin]);
-        //echo "<script> window.location.assign('" . ROOT . "/login') </script>";
+        $this->view('login/index', ['errorPassword' => $errorPassword, 'emailOrLoginInput' => $emailOrLoginInput]);
     }
 
-    private function onValidateButtonClick(){
-        $login = "Admin";
-        $haslo = "Admin123";
-        if(isset($_POST['emailOrLogin'])){
-            $test = $_POST['emailOrLogin'];
-            if($test != $login){
-                
-            }
+    private function verifyEmail($email){
+        $regex = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/';
+
+        if(preg_match($regex, $email)){
+            return true;
         }
-        if(isset($_POST['password'])){
-            $test = $_POST['password'];
-        }
-        return;
+        else return false;
     }
 
+    private function verifyLogin($login){
+        $regex  = '/^[a-z]+$/';
+        if(!preg_match($regex, $login)){
+            return false;
+        }
+        $regex  = '/^[a-z0-9]+$/';
+        if(preg_match($regex, $login)){
+            return true;
+        }
+        else return false;
+    }
+
+    private function verifyPassword($password){
+        $password = trim($password, " ");
+        if(strlen($password) < 8){
+            return false;
+        }
+        if(strlen($password) > 25){
+            return false;
+        }
+        return true;
+    }
 }
 ?>

@@ -9,16 +9,17 @@
                     <label id="mainName"> Logowanie </label>
                         <div class="forms-inputs mb-4"> 
                             <span id="emailOrLoginSpan">Email lub login</span> 
-                            <input type="text" name="emailOrLogin" id="emailOrLogin" autocomplete="on" onblur="remake(this)"> 
+                            <input type="text" name="emailOrLogin" id="emailOrLogin" autocomplete="on" onblur="remake(this)" value="<?=$data['emailOrLoginInput']?>"> 
                             <i id="blinkingEmailOrLogin" class='bx bxs-error-circle bx-flip-horizontal bx-burst' style='color:#de1f1f; display: none;' ></i>
-                            <label id="errorEmailOrLogin"><?=$data['errorEmailOrLogin']?></label>
+                            <label id="errorEmailOrLogin"></label>
                         </div>
                         <div class="forms-inputs mb-4"> 
                             <span id="passwordSpan">Hasło</span> 
                             <input type="password" name="password" id="password">
                             <i id="blinkingPassword" class='bx bxs-error-circle bx-flip-horizontal bx-burst' style='color:#de1f1f; display: none;' ></i>
-                            <label id="errorPassword"></label>
+                            <label id="errorPassword"><?=$data['errorPassword']?></label>
                         </div>          
+
              
                         <div class="mb-3"> <button name="loginButtonSubmit" id="loginButtonSubmit" type="submit" class="btn btn-dark w-100">Login</button> </div>
                         <div class="mb-3"> <button class="btn btn-light w-100" onclick="moveToRegister()">Załóż konto</button> </div>

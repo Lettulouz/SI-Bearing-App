@@ -102,14 +102,6 @@ function verifyLogin(login){
 
 /** Function that validates given email
  * @param {String} email Email to check
- *
- * @brief cond1 checks if domain of email is .pl
- * @brief cond2 checks if domain of email is .com
- * @brief cond3 checks if @ is not first letter
- * @brief cond4 checks if there is only one @ in given email
- * @brief cond5 checks if there are any letter between @ and . of domain
- * @brief cond6 checks if only allowed chars are used
- * @brief Last if sets values to defaulty if everything is fine
  * 
  * @return Returns boolean, email is fine - true, else - false
  * 
@@ -119,52 +111,20 @@ function verifyEmail(email){
     let result = email.toLowerCase();
     document.getElementById('emailOrLogin').value = result;
     email = result;
-    let cond1 = email.includes(".pl"); true
-    let cond2 = email.includes(".com"); false
-    let cond3 = email.charAt(0).includes("@");
-    var cond4 = occurrences(email, "@");
-    var cond5 = email.charAt(email.indexOf("@")+1).includes(".");
-    var cond6 = checkIfOnlyAcceptedChars(email,2); false
-    if((!cond1 && !cond2)){
-        document.getElementById('errorEmailOrLogin').innerText = "*Nie podano prawidłowej domeny"; 
+    var regex = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/;
+    if(email.match(regex)){
+        document.getElementById('errorEmailOrLogin').innerText = ""; 
+        document.getElementById('emailOrLogin').style.border = "2px solid rgb(238, 238, 238)";
+        document.getElementById('blinkingEmailOrLogin').style = "display: none";
+        document.getElementById('emailOrLoginSpan').style.color = "rgb(0, 0, 0)";
+        return true;
+    }else{
+        document.getElementById('errorEmailOrLogin').innerText = "*Podano błędny email"; 
         document.getElementById('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
         document.getElementById('blinkingEmailOrLogin').style = "display: default; color:#de1f1f";
         document.getElementById('emailOrLoginSpan').style.color = "rgb(255, 0, 0)";
         return false;
-    }
-    if(cond3){
-        document.getElementById('errorEmailOrLogin').innerText = "*Mail nie może zaczynać się od @"; 
-        document.getElementById('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
-        document.getElementById('blinkingEmailOrLogin').style = "display: default; color:#de1f1f";
-        document.getElementById('emailOrLoginSpan').style.color = "rgb(255, 0, 0)";
-        return false;
-    }
-    if(cond4>1){
-        document.getElementById('errorEmailOrLogin').innerText = "*Mail nie może składać się z więcej niż jednej  @"; 
-        document.getElementById('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
-        document.getElementById('blinkingEmailOrLogin').style = "display: default; color:#de1f1f";
-        document.getElementById('emailOrLoginSpan').style.color = "rgb(255, 0, 0)";
-        return false;
-    }
-    if(cond5){
-        document.getElementById('errorEmailOrLogin').innerText = "*Podany mail nie posiada żadnych znaków między @ a ."; 
-        document.getElementById('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
-        document.getElementById('blinkingEmailOrLogin').style = "display: default; color:#de1f1f";
-        document.getElementById('emailOrLoginSpan').style.color = "rgb(255, 0, 0)";
-        return false;
-    }
-    if(!cond6){
-        document.getElementById('errorEmailOrLogin').innerText = "*Podano znaki różne od liter i cyfr"; 
-        document.getElementById('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
-        document.getElementById('blinkingEmailOrLogin').style = "display: default; color:#de1f1f";
-        document.getElementById('emailOrLoginSpan').style.color = "rgb(255, 0, 0)";
-        return false;
-    }
-    document.getElementById('errorEmailOrLogin').innerText = ""; 
-    document.getElementById('emailOrLogin').style.border = "2px solid rgb(238, 238, 238)";
-    document.getElementById('blinkingEmailOrLogin').style = "display: none";
-    document.getElementById('emailOrLoginSpan').style.color = "rgb(0, 0, 0)";
-    return true;
+    }   
 }
 
 
@@ -180,7 +140,9 @@ function verifyEmail(email){
  * 
  * @author Dominik
  */
-function verifyPassword(password) {  
+function verifyPassword(password) {
+    password = password.replace(/\s/g, '');  
+    document.getElementById('password').value = password;
     //check empty password field  
     if(password == "") {  
         document.getElementById('errorPassword').innerText = "*Należy uzupelnić hasło";  
@@ -200,8 +162,8 @@ function verifyPassword(password) {
     }  
     
   //maximum length of password validation  
-    if(password.length > 15) {  
-        document.getElementById('errorPassword').innerText = "*Hasło nie może być dłuższe niż 14 znaków"; 
+    if(password.length > 25) {  
+        document.getElementById('errorPassword').innerText = "*Hasło nie może być dłuższe niż 25 znaków"; 
         document.getElementById('password').style.border = "2px solid rgb(255, 0, 0)";
         document.getElementById('blinkingPassword').style = "display: default; color:#de1f1f";
         document.getElementById('passwordSpan').style.color = "rgb(255, 0, 0)";
