@@ -11,7 +11,7 @@
                             <span id="emailOrLoginSpan">Email lub login</span> 
                             <input type="text" name="emailOrLogin" id="emailOrLogin" autocomplete="on" onblur="remake(this)"> 
                             <i id="blinkingEmailOrLogin" class='bx bxs-error-circle bx-flip-horizontal bx-burst' style='color:#de1f1f; display: none;' ></i>
-                            <label id="errorEmailOrLogin"></label>
+                            <label id="errorEmailOrLogin"><?=$data['errorEmailOrLogin']?></label>
                         </div>
                         <div class="forms-inputs mb-4"> 
                             <span id="passwordSpan">Hasło</span> 

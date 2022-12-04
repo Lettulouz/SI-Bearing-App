@@ -21,8 +21,8 @@ class Login extends Controller
             }
         }
         
-        
-        $this->view('login/index');
+        $errorEmailOrLogin = "test";
+        $this->view('login/index',  ['errorEmailOrLogin' => $errorEmailOrLogin]);
     }
 
     private function onValidateButtonClick(){
