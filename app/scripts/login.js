@@ -9,7 +9,6 @@ function loginButton() {
     var loginMethod = "";
 
     var error = false;
-
     if(result){
         loginMethod = "email";
         if(!verifyEmail(emailOrLogin)){
@@ -34,6 +33,10 @@ function loginButton() {
         document.getElementById("loginForm").submit();
     }
     
+}
+
+function runScript(){
+    document.getElementById('successLogin').style.display = "default";
 }
 
 function setLoginError(){
@@ -151,21 +154,17 @@ function verifyEmail(email){
         return false;
     }
     if(!cond6){
-        error = 1;
         document.getElementById('errorEmailOrLogin').innerText = "*Podano znaki różne od liter i cyfr"; 
         document.getElementById('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
         document.getElementById('blinkingEmailOrLogin').style = "display: default; color:#de1f1f";
         document.getElementById('emailOrLoginSpan').style.color = "rgb(255, 0, 0)";
         return false;
     }
-    if(error == 0){
-        document.getElementById('errorEmailOrLogin').innerText = ""; 
-        document.getElementById('emailOrLogin').style.border = "2px solid rgb(238, 238, 238)";
-        document.getElementById('blinkingEmailOrLogin').style = "display: none";
-        document.getElementById('emailOrLoginSpan').style.color = "rgb(0, 0, 0)";
-        return true;
-    }
-
+    document.getElementById('errorEmailOrLogin').innerText = ""; 
+    document.getElementById('emailOrLogin').style.border = "2px solid rgb(238, 238, 238)";
+    document.getElementById('blinkingEmailOrLogin').style = "display: none";
+    document.getElementById('emailOrLoginSpan').style.color = "rgb(0, 0, 0)";
+    return true;
 }
 
 

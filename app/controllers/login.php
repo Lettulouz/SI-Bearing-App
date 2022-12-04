@@ -2,7 +2,14 @@
 class Login extends Controller
 {
     public function index(){
-        $this->view('login/index');
+        if(isset($_SESSION['errorEmailOrLogin'])){
+            $errorEmailOrLogin = $_SESSION['errorEmailOrLogin'];
+        }
+        else{
+            $errorEmailOrLogin = "";
+        }
+        $errorEmailOrLogin = "";
+        $this->view('login/index', ['errorEmailOrLogin' => $errorEmailOrLogin]);
     }
 
     
@@ -13,16 +20,35 @@ class Login extends Controller
         echo "<script src='" . APPPATH . "/scripts/login.js" .  "'></script>";
 
         if(isset($_POST['emailOrLogin'])){
-            $test = $_POST['emailOrLogin'];
-            if($test != $login){
-                echo "<script>setLoginError()</script>";
+            $emailOrLoginInput = $_POST['emailOrLogin'];
+            $errorEmailOrLogin = "";
+
+            if(str_contains($emailOrLoginInput, '@')){
+                if($emailOrLoginInput != $login){
+                    $errorEmailOrLogin = "*Podano błędny email lub hasło";
+                    $_SESSION['errorEmailOrLogin'] = $errorEmailOrLogin;
+                }
+                else{
+                    unset($_SESSION['errorEmailOrLogin']);
+                    $_SESSION['loggedUser'] = "admin";
+                    echo "<script> window.location.assign('" . ROOT . "/admin') </script>";
+                }
             }
             else{
+                if($emailOrLoginInput != $login){
+                    $errorEmailOrLogin = "*Podano błędny login lub hasło";
+                    $_SESSION['errorEmailOrLogin'] = $errorEmailOrLogin;
+                }
+                else{
+                    unset($_SESSION['errorEmailOrLogin']);
+                    $_SESSION['loggedUser'] = "admin";
+                    echo "<script> window.location.assign('" . ROOT . "/admin') </script>";
+                }
             }
+            
         }
-        
-        $errorEmailOrLogin = "test";
-        $this->view('login/index',  ['errorEmailOrLogin' => $errorEmailOrLogin]);
+        $this->view('login/index', ['errorEmailOrLogin' => $errorEmailOrLogin]);
+        //echo "<script> window.location.assign('" . ROOT . "/login') </script>";
     }
 
     private function onValidateButtonClick(){
