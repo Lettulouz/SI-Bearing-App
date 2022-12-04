@@ -4,7 +4,7 @@
     <div class="row d-flex justify-content-center">
         <div class="col-12 col-md-6 mb-12">
             <div class="card px-5 py-5 mb-12 h-100" id="form1">
-                <form method="post" action="<?php echo ROOT . "/login/validate";?>" >
+                <form method="post" id="loginForm" action="<?php echo ROOT . "/login/validate";?>" onsubmit="event.preventDefault(); loginButton();">
                     <div class="form-data" id="loginFields">
                     <label id="mainName"> Logowanie </label>
                         <div class="forms-inputs mb-4"> 
@@ -18,8 +18,9 @@
                             <input type="password" name="password" id="password">
                             <i id="blinkingPassword" class='bx bxs-error-circle bx-flip-horizontal bx-burst' style='color:#de1f1f; display: none;' ></i>
                             <label id="errorPassword"></label>
-                        </div>                        
-                        <div class="mb-3"> <button name="loginButton" type="submit" class="btn btn-dark w-100">Login</button> </div>
+                        </div>          
+             
+                        <div class="mb-3"> <button name="loginButtonSubmit" id="loginButtonSubmit" type="submit" class="btn btn-dark w-100">Login</button> </div>
                         <div class="mb-3"> <button class="btn btn-light w-100" onclick="moveToRegister()">Załóż konto</button> </div>
                     </div>
                 </form>

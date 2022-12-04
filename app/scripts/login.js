@@ -6,7 +6,6 @@
 function loginButton() {
     var emailOrLogin = document.getElementById('emailOrLogin').value;
     let result = emailOrLogin.includes("@");
-    
     var loginMethod = "";
 
     var error = false;
@@ -16,17 +15,11 @@ function loginButton() {
         if(!verifyEmail(emailOrLogin)){
             error = true;
         }
-        else{
-            createCookie("email", emailOrLogin, 5);
-        }
     }
     else{
         loginMethod = "login";
         if(!verifyLogin(emailOrLogin)){
             error = true;
-        }
-        else{
-            createCookie("login", emailOrLogin, 5);
         }
     }
     var password = document.getElementById('password').value;
@@ -34,39 +27,22 @@ function loginButton() {
     if(!verifyPassword(password)){
         error = true;
     }
-    else{
-        createCookie("password", passowrd, 5);
-    }
 
     if(!error){
         document.getElementById('loginFields').style = "display: none;";
         document.getElementById('form1').style.border = "none";
-        document.getElementById('successLogin').style = "display: default;";
+        document.getElementById("loginForm").submit();
     }
-    //window.location.href = "http://83.230.14.95/si-project-php/public/admin";
     
 }
 
-function testFunction(){
-    alert("testowaFunkcja");
+function setLoginError(){
+    document.getElementById('errorEmailOrLogin').innerText = "*Podano błędny login";  
+    document.getElementById('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
+    document.getElementById('blinkingEmailOrLogin').style = "display: default; color:#de1f1f";
+    document.getElementById('emailOrLoginSpan').style.color = "rgb(255, 0, 0)";
+    alert('test2');
 }
-
-function createCookie(name, value, minutes) {
-    var expires;
-      
-    if (days) {
-        var date = new Date();
-        date.setTime(date.getTime() + (minutes * 60 * 1000));
-        expires = "; expires=" + date.toGMTString();
-    }
-    else {
-        expires = "";
-    }
-      
-    document.cookie = escape(name) + "=" + 
-        escape(value) + expires + "; path=/";
-}
-
 
 /** Function that validates given login
  * @param {String} login Email to check
@@ -83,6 +59,8 @@ function verifyLogin(login){
     let result = login.toLowerCase();
     document.getElementById('emailOrLogin').value = result;
     login = result;
+
+
     
     if(login == "") {  
         document.getElementById('errorEmailOrLogin').innerText = "*Należy uzupelnić email lub login";  
