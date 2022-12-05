@@ -8,15 +8,33 @@
                     <div class="form-data" id="loginFields">
                     <label id="mainName"> Logowanie </label>
                         <div class="forms-inputs mb-4"> 
-                            <span id="emailOrLoginSpan">Email lub login</span> 
-                            <input type="text" name="emailOrLogin" id="emailOrLogin" autocomplete="on" onblur="remake(this)" value="<?=$data['emailOrLoginInput']?>"> 
-                            <i id="blinkingEmailOrLogin" class='bx bxs-error-circle bx-flip-horizontal bx-burst' style='color:#de1f1f; display: none;' ></i>
+                            <span style="color:<?php if($data['serverError']) echo "rgb(255, 0, 0)"; else echo ""?>" id="emailOrLoginSpan">Email lub login</span> 
+                            <input style="border:<?php if($data['serverError']) echo "2px solid rgb(255, 0, 0)"; else echo ""?>" 
+                                type="text" 
+                                name="emailOrLogin" 
+                                id="emailOrLogin" 
+                                autocomplete="on" 
+                                onblur="remake(this)" 
+                                value="<?=$data['emailOrLoginInput']?>"> 
+                            <i 
+                                id="blinkingEmailOrLogin" 
+                                class='bx bxs-error-circle bx-flip-horizontal bx-burst' 
+                                style='color:#de1f1f; <?php if($data['serverError']) echo "display: default;"; else echo "display: none;"?>'>
+                            </i>
                             <label id="errorEmailOrLogin"></label>
                         </div>
                         <div class="forms-inputs mb-4"> 
-                            <span id="passwordSpan">Hasło</span> 
-                            <input type="password" name="password" id="password">
-                            <i id="blinkingPassword" class='bx bxs-error-circle bx-flip-horizontal bx-burst' style='color:#de1f1f; display: none;' ></i>
+                            <span style="color:<?php if($data['serverError']) echo "rgb(255, 0, 0)"; else echo ""?>" id="passwordSpan">Hasło</span> 
+                            <input 
+                                style="border:<?php if($data['serverError']) echo "2px solid rgb(255, 0, 0)"; else echo ""?>" 
+                                type="password" 
+                                name="password" 
+                                id="password">
+                            <i 
+                                id="blinkingPassword" 
+                                class='bx bxs-error-circle bx-flip-horizontal bx-burst'
+                                style='color:#de1f1f; <?php if($data['serverError']) echo "display: default;"; else echo "display: none;"?>' >
+                            </i>
                             <label id="errorPassword"><?=$data['errorPassword']?></label>
                         </div>          
 

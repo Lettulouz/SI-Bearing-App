@@ -12,6 +12,7 @@ class Login extends Controller
         $login = "admin";
         $password = "admin123";
         $check = 1;
+        $serverError = false;
         echo "<script src='" . APPPATH . "/scripts/login.js" .  "'></script>";
         if(isset($_SESSION['emailOrLoginInput'])){
             $emailOrLoginInput = $_SESSION['emailOrLoginInput'];
@@ -35,6 +36,7 @@ class Login extends Controller
                 }
                 else{
                     $errorPassword = "*Dane dostarczone do serwera nie zgadzają się z danymi klienta";
+                    $serverError = true;
                     $_SESSION['errorPassword'] = $errorPassword;
                     $check = 0;
                 }
@@ -50,6 +52,7 @@ class Login extends Controller
                 }
                 else{
                     $errorPassword = "*Dane dostarczone do serwera nie zgadzają się z danymi klienta";
+                    $serverError = true;
                     $_SESSION['errorPassword'] = $errorPassword;
                     $check = 0;
                 }
@@ -57,15 +60,18 @@ class Login extends Controller
             if($this->verifyPassword($passwordInput)){
                 if($passwordInput != $password){
                     $errorPassword = "*Podano błędny email lub hasło";
+                    $serverError = true;
                     $_SESSION['errorPassword'] = $errorPassword;
                     $check = 0;
                 }
             }
             else{
                 $errorPassword = "*Dane dostarczone do serwera nie zgadzają się z danymi klienta";
+                $serverError = true;
                 $_SESSION['errorPassword'] = $errorPassword;
                 $check = 0;
             }
+
             if($check == 1){
                 unset($_SESSION['errorPassword']);
                 $_SESSION['loggedUser'] = "admin";
@@ -73,7 +79,9 @@ class Login extends Controller
             }
             
         }
-        $this->view('login/index', ['errorPassword' => $errorPassword, 'emailOrLoginInput' => $emailOrLoginInput]);
+
+        $this->view('login/index', ['errorPassword' => $errorPassword, 'emailOrLoginInput' => $emailOrLoginInput, 'serverError' => $serverError]);
+
     }
 
     private function verifyEmail($email){

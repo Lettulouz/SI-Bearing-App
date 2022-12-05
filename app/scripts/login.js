@@ -36,15 +36,16 @@ function loginButton() {
 }
 
 function runScript(){
+    event.preventDefault();
     document.getElementById('successLogin').style.display = "default";
+    document.getElementById('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
 }
 
 function setLoginError(){
     document.getElementById('errorEmailOrLogin').innerText = "*Podano błędny login";  
-    document.getElementById('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
+    document.getElementByName('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
     document.getElementById('blinkingEmailOrLogin').style = "display: default; color:#de1f1f";
     document.getElementById('emailOrLoginSpan').style.color = "rgb(255, 0, 0)";
-    alert('test2');
 }
 
 /** Function that validates given login
