@@ -2,18 +2,18 @@
     <hr class="divider ">
 <div class="container" style="max-width:720px;">
     
-    <form>
+    <form method="POST" action ="" >
         <div class="row m-2">
             <div class="col-12 ">
                 <div class="row m-2">
                     <div class="col-12">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="heightInput" name="height" placeholder="20">
-                            <label for="heightInput" >Wysokość</label>
+                            <input type="text" class="form-control" id="heightInput" name="attribute" placeholder="20">
+                            <label for="heightInput" >Dodaj Atrybut</label>
                         </div>
                     </div>
                 </div>
-                <div class="row m-2">
+                <!-- <div class="row m-2">
                     <div class="col-12">
                         <div class="form-floating">
                             <input type="text" class="form-control" id="lengthInput" name="length" placeholder="5">
@@ -28,11 +28,11 @@
                             <label for="widthInput" >Szerokość</label>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 
                 <div class="row m-2">
                     <div class="float-end">
-                        <button type="submit" class="btn btn-primary btn-lg float-end">Dodaj</button>
+                        <button type="submit"  class="btn btn-primary btn-lg float-end">Dodaj</button>
                     </div>
 
             </div>
