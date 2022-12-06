@@ -9,35 +9,35 @@
 
                     <div class="forms-inputs mb-4"> 
                         <span id="nameSpan">Imię</span> 
-                        <input type="text" name="name" id="name"> 
+                        <input type="text" name="name" id="name" value="<?=$data['nameInput']?>"> 
                         <i id="blinkingName" class='bx bxs-error-circle bx-flip-horizontal bx-burst' style='color:#de1f1f; display: none;' ></i>
                         <label id="errorName"></label>
                     </div>
 
                     <div class="forms-inputs mb-4"> 
-                        <span id="surrnameSpan">Nazwisko</span> 
-                        <input type="text" name="surrname" id="surrname"> 
-                        <i id="blinkingSurrname" class='bx bxs-error-circle bx-flip-horizontal bx-burst' style='color:#de1f1f; display: none;' ></i>
-                        <label id="errorSurrname"></label>
+                        <span id="surnameSpan">Nazwisko</span> 
+                        <input type="text" name="surname" id="surname" value="<?=$data['surnameInput']?>"> 
+                        <i id="blinkingSurname" class='bx bxs-error-circle bx-flip-horizontal bx-burst' style='color:#de1f1f; display: none;' ></i>
+                        <label id="errorSurname"></label>
                     </div>
 
                     <div class="forms-inputs mb-4"> 
                         <span id="loginSpan">Login</span> 
-                        <input type="text" name="login" id="login"> 
+                        <input type="text" name="login" id="login" value="<?=$data['loginInput']?>"> 
                         <i id="blinkingLogin" class='bx bxs-error-circle bx-flip-horizontal bx-burst' style='color:#de1f1f; display: none;' ></i>
                         <label id="errorLogin"></label>
                     </div>
 
                     <div class="forms-inputs mb-4"> 
                         <span id="passwordSpan">Hasło</span> 
-                        <input type="password" name="password" id="password">
+                        <input type="password" name="password" id="password" value="<?=$data['passwordInput']?>">
                         <i id="blinkingPassword" class='bx bxs-error-circle bx-flip-horizontal bx-burst' style='color:#de1f1f; display: none;' ></i>
                         <label id="errorPassword"></label>
                     </div>
 
                     <div class="forms-inputs mb-4"> 
                         <span id="emailSpan">Email</span> 
-                        <input type="text" name="email" id="email"> 
+                        <input type="text" name="email" id="email" value="<?=$data['emailInput']?>"> 
                         <i id="blinkingEmail" class='bx bxs-error-circle bx-flip-horizontal bx-burst' style='color:#de1f1f; display: none;' ></i>
                         <label id="errorEmail"></labsel>
                     </div>
