@@ -60,6 +60,10 @@
   height: 55px;
 }
 
+.sidebar-link .right-icon{
+  display:inline-flex;
+}
+
 .sidebar-link[aria-expanded="true"] .right-icon{
    transform: rotate(90deg);
 }

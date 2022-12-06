@@ -30,8 +30,8 @@
                                     ?>
                             </select>
                     </div>
-                    <span style="color:<?php if(isset($_POST['catsubmit'])) echo $data['msg_color']; ?>">
-                    <?php if(isset($_POST['catsubmit'])) echo $data['return_msg']; ?></span>
+                    <span style="color:<?php if(isset($_GET['color'])) echo $_GET['color']; ?>">
+                    <?php if(isset($_GET['msg'])) echo base64_decode($_GET['msg']); ?></span>
                 </div>
                            
                 <div class="row m-2">
