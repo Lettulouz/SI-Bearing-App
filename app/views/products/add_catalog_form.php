@@ -53,6 +53,7 @@ document.getElementById('content_collapse_btn').setAttribute('aria-expanded', 't
 document.getElementById('content_collapse_btn').setAttribute('style', 'color:white !important');
 document.getElementById('addcat').setAttribute('style', 'color:white !important');
 $('#item').select2({
+    width: 'auto',
     theme: 'bootstrap-5',
     placeholder: 'Wybierz produkty'
 });
