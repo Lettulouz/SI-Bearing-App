@@ -51,9 +51,13 @@
     background-color: rgb(55, 142, 218);
 }
 
+.headers-padding {
+  padding-left: 15px;
+  padding-top: 10px;
+}
 
-.sidebar-link .right-icon{
-    display:inline-flex;
+#catalogNameInput{
+  height: 55px;
 }
 
 .sidebar-link[aria-expanded="true"] .right-icon{

@@ -1,4 +1,4 @@
-<h1 class="text-muted">Dodawanie produktu</h1>
+<h1 class="text-muted headers-padding">Dodawanie produktu</h1>
     <hr class="divider ">
 <div class="container" style="max-width:720px;">
     

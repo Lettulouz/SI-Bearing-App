@@ -1,7 +1,7 @@
 <?php
 include 'adm_nav.php';
 ?>
-<h1 class="text-muted">Dodawanie użytkownika</h1>
+<h1 class="text-muted headers-padding">Dodawanie użytkownika</h1>
     <hr class="divider ">
 <div class="container" style="max-width:720px;">
     

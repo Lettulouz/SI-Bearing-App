@@ -1,10 +1,10 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
-<link href="https://rawgit.com/select2/select2/master/dist/css/select2.min.css" rel="stylesheet"/>
-<script src="https://rawgit.com/select2/select2/master/dist/js/select2.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />
 
 
-<h1 class="text-muted">Dodawanie katalogu</h1>
+<h1 class="text-muted headers-padding">Dodawanie katalogu</h1>
     <hr class="divider ">
 <div class="container" style="max-width:720px;">
     <!-- nie działa dla menedżera contentu jak coś-->
@@ -14,23 +14,21 @@
                 <div class="row m-2">
                     <div class="col-12">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="nameInput" name="catname" placeholder="Grontex">
-                            <label for="nameInput" >Nazwa katalogu</label>
+                            <input type="text" class="form-control" id="catalogNameInput" name="catname" placeholder="Grontex">
+                            <label for="catalogNameInput" >Nazwa katalogu</label>
                         </div>
                     </div>
                 </div>
                 <div class="row m-2">
                     <div class="col-12">
-                        <select class="select2 form-select " multiple="multiple" id="item" name="itemcat[]" aria-label="example">
-                                <?php
-                                    foreach($data['items'] as $i => $result) {
-                                        echo "<option value=".$result['item_id'].">".$result['mnf']." - ".$result['item']."</option>";
-
-                                    }
-                                
-                                ?>
-                        </select>
-
+                            <select class="select2 form-select-lg" multiple="multiple" id="item" name="itemcat[]" aria-label="example-xl">
+                                    <?php
+                                        foreach($data['items'] as $i => $result) {
+                                            echo "<option value=".$result['item_id'].">".$result['mnf']." - ".$result['item']."</option>";
+                                        }
+                                    
+                                    ?>
+                            </select>
                     </div>
                     <span style="color:<?php if(isset($_POST['catsubmit'])) echo $data['msg_color']; ?>">
                     <?php if(isset($_POST['catsubmit'])) echo $data['return_msg']; ?></span>
@@ -42,7 +40,7 @@
                     </div>
 
             </div>
-            </div>
+        </div>
           
     </form>
 </div>
