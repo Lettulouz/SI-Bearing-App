@@ -3,7 +3,6 @@
 class Login extends Controller
 {
     private $errorMessage = "";
-    private $inputError = false;
     private $serverError = false;
     private $check = true;
     private $emailOrLoginInput = "";
@@ -26,20 +25,21 @@ class Login extends Controller
 
         echo "<script src='" . APPPATH . "/scripts/login.js" .  "'></script>";
 
+        if(!isset($_POST['emailOrLogin']) || !isset($_POST['password'])){
+            $this->view('login/index', ['errorPassword' => $this->errorMessage, 'emailOrLoginInput' => $this->emailOrLoginInput, 'serverError' => $this->serverError]);
+            return;
+        }
+        
+
         isset($_SESSION['emailOrLoginInput']) ? $this->emailOrLoginInput = $_SESSION['emailOrLoginInput'] : $this->emailOrLoginInput = "";
 
+        $this->emailOrLoginInput = strtolower($_POST['emailOrLogin']);
+        $this->passwordInput = $_POST['password'];
 
-        if(isset($_POST['emailOrLogin'])){
-            
+        $this->checkIfEmailAsLoginOption() ? $this->emailVerificationFunction() : $this->loginVerificationFunction();
+        if($this->check == true) $this->checkPassword();
 
-            $this->emailOrLoginInput = strtolower($_POST['emailOrLogin']);
-            $this->passwordInput = $_POST['password'];
-
-            $this->checkIfEmailAsLoginOption() ? $this->emailVerificationFunction() : $this->loginVerificationFunction();
-            if($this->check == true) $this->checkPassword();
-
-            $_SESSION['errorPassword'] = $this->errorMessage;
-        }
+        $_SESSION['errorPassword'] = $this->errorMessage;
 
         $this->view('login/index', ['errorPassword' => $this->errorMessage, 'emailOrLoginInput' => $this->emailOrLoginInput, 'serverError' => $this->serverError]);
 
