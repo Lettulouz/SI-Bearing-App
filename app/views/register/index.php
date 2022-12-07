@@ -4,8 +4,9 @@
     <div class="row d-flex justify-content-center">
         <div class="col-12 col-md-6 mb-12">
             <div class="card px-5 py-5 mb-12 h-100" id="form1">
-                <div class="form-data" id="registerFields">
-                <label id="mainName"> Rejestracja </label>
+                <form method="post" id="loginForm" action="<?php echo ROOT . "/register/validate";?>" onsubmit="event.preventDefault(); registerButton();">
+                    <div class="form-data" id="registerFields">
+                    <label id="mainName"> Rejestracja </label>
 
                     <div class="forms-inputs mb-4"> 
                         <span id="nameSpan">Imię</span> 
@@ -25,27 +26,28 @@
                         <span id="loginSpan">Login</span> 
                         <input type="text" name="login" id="login" value="<?=$data['loginInput']?>"> 
                         <i id="blinkingLogin" class='bx bxs-error-circle bx-flip-horizontal bx-burst' style='color:#de1f1f; display: none;' ></i>
-                        <label id="errorLogin"></label>
+                        <label id="errorLogin"><?=$data['errorLogin']?></label>
                     </div>
 
                     <div class="forms-inputs mb-4"> 
                         <span id="passwordSpan">Hasło</span> 
                         <input type="password" name="password" id="password" value="<?=$data['passwordInput']?>">
                         <i id="blinkingPassword" class='bx bxs-error-circle bx-flip-horizontal bx-burst' style='color:#de1f1f; display: none;' ></i>
-                        <label id="errorPassword"></label>
+                        <label id="errorPassword"><?=$data['errorPassword']?></label>
                     </div>
 
                     <div class="forms-inputs mb-4"> 
                         <span id="emailSpan">Email</span> 
                         <input type="text" name="email" id="email" value="<?=$data['emailInput']?>"> 
                         <i id="blinkingEmail" class='bx bxs-error-circle bx-flip-horizontal bx-burst' style='color:#de1f1f; display: none;' ></i>
-                        <label id="errorEmail"></labsel>
+                        <label id="errorEmail"><?=$data['errorEmail']?></label>
                     </div>
                     
-                    <div class="mb-3"> <button class="btn btn-dark w-100" onclick="registerButton()">Rejestracja</button> </div>
+                    <div class="mb-3"> <button class="btn btn-dark w-100" type="submit" onclick="registerButton()">Rejestracja</button> </div>
                     <div class="mb-3"> <button class="btn btn-light w-100" onclick="moveToLogin()">Mam już konto</button> </div>
 
                 </div>
+                </form>
                 <div style="display: none;" id="successRegister">
                     <div class="text-center d-flex flex-column" > <i class='bx bxs-badge-check'></i> <span class="text-center fs-1">Zarejestrowano <br> pomyślnie!</span> </div>
                 </div>
