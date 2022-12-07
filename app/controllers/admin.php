@@ -53,11 +53,9 @@ class Admin extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
         $query="SELECT name FROM `attributes` ORDER BY id";
         $result = $db->query($query);
-        $attributesArray=array();
-         foreach($result as $catalog){
-            array_push($attributesArray, $catalog);
-        }
-        $this->view('admin/list_of_attributes', ['attributesArray'=>$attributesArray]);
+        $result = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        $this->view('admin/list_of_attributes', ['attributesArray'=>$result]);
 
     }
 
@@ -181,11 +179,9 @@ class Admin extends Controller
         $query="SELECT i.name AS item, i.id AS item_id, m.name AS mnf FROM items i LEFT JOIN manufactures m ON i.id_manufacturer = m.id";
         $result = $db->prepare($query);
         $result->execute();
-         $items=array();
-         foreach($result as $item){
-            array_push($items, $item);
-        }
-        $this->view('admin/add_catalog_admin', ['items'=>$items]);
+        $result = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        $this->view('admin/add_catalog_admin', ['items'=>$result]);
     }
 ////////////////////////////////////////////////////////////////////////////
     public function add_item(){
@@ -231,12 +227,9 @@ class Admin extends Controller
         $query="SELECT id, name FROM manufactures";
         $result = $db->prepare($query);
         $result->execute();
-         $items=array();
-         foreach($result as $item){
-            array_push($items, $item);
-        }
+        $result = $result->fetchAll(PDO::FETCH_ASSOC);
         
-        $this->view('admin/add_item_admin', ['items'=>$items]);
+        $this->view('admin/add_item_admin', ['items'=>$result]);
         
     }
 
