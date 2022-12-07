@@ -18,16 +18,16 @@ class Register extends Controller
     }
     
     public function validate(){
-        $this->errorMessage = "";
+
         $this->serverError = false;
         $this->inputError = false;
         $this->check = true;
         $this->emailInput = "";
         $this->ifUserExist = "";
         $this->passwordInput = "";
-        $this->$nameInput = "";
-        $this->$surnameInput = "";
-        $this->$loginInput = "";
+        $this->nameInput = "";
+        $this->surnameInput = "";
+        $this->loginInput = "";
 
         echo "<script src='" . APPPATH . "/scripts/register.js" .  "'></script>";
 
@@ -36,11 +36,16 @@ class Register extends Controller
         isset($_SESSION['loginInput']) ? $this->loginInput = $_SESSION['loginInput'] : $this->loginInput = "";
         isset($_SESSION['emailInput']) ? $this->emailInput = $_SESSION['emailInput'] : $this->emailInput = "";
 
-            $this->$nameInput = ($_POST['name']);
-            $this->$surnameInput = ($_POST['surname']);
-            $this->$loginInput = strtolower($_POST['login']);
-            $this->emailInput = strtolower($_POST['email']);
-            $this->passwordInput = $_POST['password'];
+        isset($_POST['name']) ? $this->nameInput = $_POST['name'] : $this->nameInput = "";        
+        isset($_POST['surname']) ? $this->suenameInput = $_POST['surname'] : $this->surnameInput = "";        
+        isset($_POST['login']) ? $this->loginInput = $_POST['login'] : $this->loginInput = "";        
+        isset($_POST['email']) ? $this->emailInput = $_POST['email'] : $this->emailInput = "";        
+        isset($_POST['password']) ? $this->passwordInput = $_POST['password'] : $this->passwordInput = "";
+
+        if(!isset($_POST['name']) || !isset($_POST['surname']) || !isset($_POST['login']) || !isset($_POST['email']) || !isset($_POST['password'])){
+            $this->view('register/index', ['errorPassword' => $this->errorMessage, 'emailInput' => $this->emailInput, 'nameInput' => $this->nameInput, 'surnameInput' => $this->surnameInput, 'loginInput' => $this->loginInput, 'passwordInput' => $this->passwordInput, 'serverError' => $this->serverError]);
+            return;
+        }
 
             if($this->verifyEmail($this->emailInput) == false)
                 $this->errorDuringValidation("*Nieprawidłowy adres email");
@@ -60,7 +65,7 @@ class Register extends Controller
 
             $_SESSION['errorPassword'] = $this->errorMessage;
 
-        $this->view('register/index', ['errorPassword' => $this->errorMessage, 'emailInput' => $this->emailInput, 'nameInput' => $this->nameInput, 'surnameInput' => $this->surnameInput, 'loginInput' => $this->loginInput, 'passwordInput' => $this->passwordInput, 'serverError' => $this->serverError]);
+        $this->view('register/index', ['errorPassword' => 'dupa', 'emailInput' => $this->emailInput, 'nameInput' => $this->nameInput, 'surnameInput' => $this->surnameInput, 'loginInput' => $this->loginInput, 'passwordInput' => $this->passwordInput, 'serverError' => $this->serverError]);
 
     }
 

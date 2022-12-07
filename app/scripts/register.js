@@ -8,14 +8,14 @@
   var login = document.getElementById('login').value;
   var email = document.getElementById('email').value;
   var name = document.getElementById('name').value;
-  var surrname = document.getElementById('surrname').value;
+  var surname = document.getElementById('surname').value;
   var password = document.getElementById('password').value;
   
 
   if(!verifyName(name))
     error = true;
 
-  if(!verifySurrname(surrname))
+  if(!verifySurname(surname))
     error = true;
   
   if(!verifyLogin(login))
@@ -90,34 +90,34 @@ function verifyName(name){
 * 
 * @author Dominik
 */
-function verifySurrname(surrname){
-  let result = surrname.charAt(0).toUpperCase() + surrname.toLowerCase().slice(1);
-  document.getElementById('surrname').value = result;
-  surrname = result;
+function verifySurname(surname){
+  let result = surname.charAt(0).toUpperCase() + surname.toLowerCase().slice(1);
+  document.getElementById('surname').value = result;
+  surname = result;
   
-  if(surrname == "") {  
-      document.getElementById('errorSurrname').innerText = "*Należy uzupelnić nazwisko";  
-      document.getElementById('surrname').style.border = "2px solid rgb(255, 0, 0)";
-      document.getElementById('blinkingSurrname').style = "display: default; color:#de1f1f";
-      document.getElementById('surrnameSpan').style.color = "rgb(255, 0, 0)";
+  if(surname == "") {  
+      document.getElementById('errorSurname').innerText = "*Należy uzupelnić nazwisko";  
+      document.getElementById('surname').style.border = "2px solid rgb(255, 0, 0)";
+      document.getElementById('blinkingSurname').style = "display: default; color:#de1f1f";
+      document.getElementById('surnameSpan').style.color = "rgb(255, 0, 0)";
       return false;  
   }  
 
-  let cond1 = checkIfOnlyAcceptedChars(surrname);
+  let cond1 = checkIfOnlyAcceptedChars(surname);
 
   if(!cond1){
-      document.getElementById('errorSurrname').innerText = "*Podano znaki różne od liter i cyfr"; 
-      document.getElementById('surrname').style.border = "2px solid rgb(255, 0, 0)";
-      document.getElementById('blinkingSurrname').style = "display: default; color:#de1f1f";
+      document.getElementById('errorSurname').innerText = "*Podano znaki różne od liter i cyfr"; 
+      document.getElementById('surname').style.border = "2px solid rgb(255, 0, 0)";
+      document.getElementById('blinkingSurname').style = "display: default; color:#de1f1f";
       document.getElementById('surrnameSpan').style.color = "rgb(255, 0, 0)";
       return false;
   }
 
 
-    document.getElementById('errorSurrname').innerText = ""; 
-    document.getElementById('surrname').style.border = "2px solid rgb(238, 238, 238)";
-    document.getElementById('blinkingSurrname').style = "display: none;";
-    document.getElementById('surrnameSpan').style.color = "rgb(0, 0, 0)";
+    document.getElementById('errorSurname').innerText = ""; 
+    document.getElementById('surname').style.border = "2px solid rgb(238, 238, 238)";
+    document.getElementById('blinkingSurname').style = "display: none;";
+    document.getElementById('surnameSpan').style.color = "rgb(0, 0, 0)";
     return true;
 
   
