@@ -109,7 +109,14 @@
     padding: 12px !important;
   }
   
+  .select2-selection--single{
+    height: 58px !important;
+    padding: 14px 0 14px 4px !important;
+  }
 
+  .select2-selection__arrow b{
+    display:none !important;
+}
 
 /*
 #naglowek {
