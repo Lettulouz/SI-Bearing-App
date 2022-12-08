@@ -4,7 +4,40 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class Admin extends Controller
 {
-   
+    public function success_page($sid){     
+        if(isset($_SESSION['success_page'])){
+            $path = $_SESSION['success_page'];
+            unset($_SESSION['success_page']);
+            if($sid==1){
+                $firstLine = "Dodano rekord";
+                $secondLine = "pomyślnie!";
+            }
+            $this->view('success_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
+            $_SESSION['successOrErrorResponse'] = true;
+            header("Refresh: 2; url=" . ROOT . "/admin/" . $path);
+        }
+        else header("Location:" . ROOT . "");
+    }
+
+    public function error_page($sid){     
+        if(isset($_SESSION['error_page'])){
+            $path = $_SESSION['error_page'];
+            unset($_SESSION['error_page']);
+            if($sid==1){
+                $firstLine = "Nie podano wszystkich wymaganych wartości";
+                $secondLine = "";
+            }
+            if($sid==2){
+                $firstLine = "Taki rekord już istnieje";
+                $secondLine = "";
+            }
+            $this->view('error_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
+            $_SESSION['successOrErrorResponse'] = true;
+            header("Refresh: 2; url=" . ROOT . "/admin/" . $path);
+
+        }
+        else header("Location:" . ROOT . "");
+    }
 
     public function index(){
         if(isset($_SESSION['loggedUser'])){
@@ -147,10 +180,16 @@ class Admin extends Controller
     public function add_attribute(){
 
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $tekst2 = "";
+        if(isset($_SESSION['successOrErrorResponse'])){
+            if(isset($_SESSION['attributeName'])) {$tekst2 = $_SESSION['attributeName']; unset($_SESSION['attributeName']);} 
 
+            unset($_SESSION['successOrErrorResponse']);
+        }
 
         if(isset($_POST['attribute']))
         {
+            /*
             try{
                 $config = require_once dirname(__FILE__,2) . '/core/mailerconfig.php';
                 $mail = new PHPMailer();
@@ -161,6 +200,7 @@ class Admin extends Controller
                 $mail->Port = $config['port'];
                 $mail->SMTPSecure =   PHPMailer::ENCRYPTION_SMTPS;
                 $mail->SMTPAuth = true;
+                $mail->SMTPSecure = "ssl";
 
                 $mail->Username = $config['username'];
                 $mail->Password = $config['password'];
@@ -188,29 +228,67 @@ class Admin extends Controller
             } catch(Exception $e){
                 echo "<script>alert('Błąd wysyłania maila!')</script>";
             }
-             $attribute = $_POST['attribute'];
-             $tekst1 = strtolower($attribute);
-             $tekst2 = ucfirst($tekst1);
-             $query = "INSERT INTO `attributes` (name) VALUES ('$tekst2');";
-             $result = $db->prepare($query);
-             $result->execute();
+            */
+            $attribute = $_POST['attribute'];
+            $tekst1 = strtolower($attribute);
+            $tekst2 = ucfirst($tekst1);
+;
+            $query="SELECT COUNT(id) as amount
+            FROM attributes WHERE name=:name";
+            $result = $db->prepare($query);
+            $result->bindParam(':name', $tekst2);
+            $result->execute();
+            $result = $result->fetch(PDO::FETCH_ASSOC);
+            if($result['amount']>0){
+                $_SESSION['error_page'] = "add_attribute";
+                $_SESSION['attributeName'] = $tekst2;
+                header("Location:" . ROOT . "/admin/error_page/2");
+            }
+            else{
+                $query = "INSERT INTO `attributes` (name) VALUES ('$tekst2');";
+                $result = $db->prepare($query);
+                $result->execute();
+                $_SESSION['success_page'] = "add_attribute";
+                header("Location:" . ROOT . "/admin/success_page/1");
+            }
         }
 
-
-
-        $this->view('admin/add_attribute_admin', []);
+        $this->view('admin/add_attribute_admin', ['attribute' => $tekst2]);
     }
 /////////////////////////////////////////////////////////////////////////////
     public function add_catalog(){
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $catname = "";
+        $itemstocat = "";
+
+        if(isset($_SESSION['successOrErrorResponse'])){
+            if(isset($_SESSION['catname'])) {$catname = $_SESSION['catname']; unset($_SESSION['catname']);} 
+            if(isset($_SESSION['itemcat'])) {$itemstocat = $_SESSION['itemcat']; unset($_SESSION['itemcat']);} 
+
+            unset($_SESSION['successOrErrorResponse']);
+        }
 
         $return_msg_color="";
         $return_msg="";
         if(isset($_POST['catsubmit'])){
+            isset($_POST['itemcat']) ? $itemstocat=$_POST['itemcat'] : $itemstocat="";
+            isset($_POST['catname']) ? $catname=$_POST['catname'] : $catname="";
+            $_SESSION['catname'] = $catname;
+            $_SESSION['itemcat'] = $itemstocat;
+
+
             if(isset($_POST['itemcat'])&&!empty($_POST['catname'])){
                 //add catalog to database
-                $itemstocat=$_POST['itemcat'];
-                $catname=$_POST['catname'];
+                $query="SELECT COUNT(id) FROM catalog WHERE name=:catname";
+                $result = $db->prepare($query);
+                $result->bindParam(':catname', $catname);
+                $result->execute();
+                $cat_id=$result->fetch(PDO::FETCH_ASSOC);
+                $temp = $cat_id['COUNT(id)'];
+                if($temp>0){
+                    $_SESSION['error_page'] = true;
+                    header("Location:" . ROOT . "/admin/error_page/2");
+                }else{
                 $query="INSERT INTO catalog (name) VALUES (:cat_name)";
                 $result = $db->prepare($query);
                 $result->bindParam(':cat_name',$catname);
@@ -231,25 +309,25 @@ class Admin extends Controller
                 }
                 //TODO zwrócenie komunikatów
                 $return_msg_color="rgb(25, 135, 84)";
-                $return_msg=base64_encode("pomyślnie dodano nowy katalog");
-
+                $return_msg="pomyślnie dodano nowy katalog";
+                $_SESSION['success_page'] = true;
+                unset($_SESSION['catname']);
+                header("Location:" . ROOT . "/admin/success_page/1");
+                }
             }
             else{
-                $return_msg_color="rgb(220, 53, 69)";
-                $return_msg=base64_encode("należy wybrać nazwę i produkty katalogu");
+                $_SESSION['error_page'] = true;
+                header("Location:" . ROOT . "/admin/error_page/1");
             }
-            $_GET['color']=$return_msg_color;
-            $_GET['msg']=$return_msg;
-            header("Refresh:0; ". ROOT ."/admin/add_catalog?msg=".$_GET['msg']."&color=".$_GET['color']);
 
         }
 
         $query="SELECT i.name AS item, i.id AS item_id, m.name AS mnf FROM items i LEFT JOIN manufactures m ON i.id_manufacturer = m.id";
         $result = $db->prepare($query);
         $result->execute();
-        $result = $result->fetchAll(PDO::FETCH_ASSOC);
-
-        $this->view('admin/add_catalog_admin', ['items'=>$result]);
+        $items = $result->fetchAll(PDO::FETCH_ASSOC);
+        
+        $this->view('admin/add_catalog_admin', ['items'=>$items, 'msg_color' => $return_msg_color , 'msg' => $return_msg, 'catname' => $catname, 'itemcat'=> $itemstocat]);
     }
 ////////////////////////////////////////////////////////////////////////////
     public function add_item(){
