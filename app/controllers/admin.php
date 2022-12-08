@@ -22,11 +22,79 @@ class Admin extends Controller
     }
 
     public function list_of_users(){
-        $this->view('admin/list_of_users', []);
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $query="SELECT id, name, lastName, email, login, password FROM users ORDER BY id";
+        $result = $db->query($query);
+        $result = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        $this->view('admin/list_of_users', ['usersArray'=>$result]);
+
     }
 
     public function add_user(){
-        $this->view('admin/add_user', []);
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        if(isset($_POST['senduser']))
+        {
+            /*try{
+                $config = require_once dirname(__FILE__,2) . '/core/mailerconfig.php';
+                $mail = new PHPMailer();
+
+                $mail->isSMTP();
+
+                $mail->Host = $config['host'];
+                $mail->Port = $config['port'];
+                $mail->SMTPSecure =   PHPMailer::ENCRYPTION_SMTPS;
+                $mail->SMTPAuth = true;
+
+                $mail->Username = $config['username'];
+                $mail->Password = $config['password'];
+
+                $mail->CharSet = 'UTF-8';
+                $mail->setFrom($config['username'], 'Grontsmar');
+                $mail->addAddress($config['addAddress']);
+                $mail->addReplyTo($config['username'], 'Grontsmar');
+
+                $mail->isHTML(true);
+                $mail->Subject = 'Przykładowy tytuł wiadomości';
+                $mail->Body = '<html>
+                <head>
+                <title> Przykładowy nagłówek </title>
+                </head>
+                <body>
+                <h1> Dzień dobry! </h1>
+                <p> Na ten email zostało utworzone konto w sklepie Grontsmar. Oto dane: </p>
+                </body>
+                </html>';
+
+                //$mail->addAttachment('ścieżka');
+
+                $mail->send();
+            } catch(Exception $e){
+                echo "<script>alert('Błąd wysyłania maila!')</script>";
+            }*/
+            $name = '';
+            $lastName = '';
+            $email = '';
+            $login = '';
+            $password = '';
+
+            if(!isset($_POST['name'])){
+                $this->view('admin/add_user', ['name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'pass'=>$password]);
+                return;
+            }
+            echo isset($_POST['name']);
+            die();
+            $name = ucfirst(strtolower($_POST['name']));
+            $lastName = ucfirst(strtolower($_POST['surname']));
+            $email = $_POST['mail'];
+            $login = strtolower($_POST['login']);
+            $password = $_POST['pass'];
+
+            $query = "INSERT INTO `users` (name, lastName, email, login, password) VALUES ('$name', '$lastName', '$email', '$login', '$password');";
+            $result = $db->prepare($query);
+            $result->execute();
+        }
+        $this->view('admin/add_user', ['name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'pass'=>$password]);
     }
 
     public function list_of_content_managers(){

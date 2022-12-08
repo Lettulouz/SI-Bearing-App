@@ -5,19 +5,19 @@ include 'adm_nav.php';
     <hr class="divider ">
 <div class="container" style="max-width:720px;">
     
-    <form autocomplete="off">
+    <form autocomplete="off" action="" method="POST">
         <div class="row m-2">
             <div class="col-12 ">
                 <div class="row m-2">
                     <div class="col-6">
                         <div class="form-floating ">
-                            <input type="text" class="form-control" id="nameInput" name="name" placeholder="Jan">
+                            <input type="text" class="form-control" id="nameInput" name="name" value="<?=$data['name'] ?>">
                             <label for="nameInput">Imię</label>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="form-floating ">
-                            <input type="text" class="form-control" id="surnameInput" name="surname" placeholder="Jan">
+                            <input type="text" class="form-control" id="surnameInput" name="surname" value="<?=$data['surname'] ?>">
                             <label for="surnameInput">Nazwisko</label>
                         </div>
                     </div>
@@ -25,7 +25,7 @@ include 'adm_nav.php';
                 <div class="row m-2">
                     <div class="col-12">
                         <div class="form-floating">
-                            <input type="email" class="form-control" id="mailInput" name="mail" placeholder="name@example.com">
+                            <input type="email" class="form-control" id="mailInput" name="mail" value="<?=$data['mail'] ?>">
                             <label for="mailInput" >Adres E-mail</label>
                         </div>
                     </div>
@@ -33,7 +33,7 @@ include 'adm_nav.php';
                 <div class="row m-2">
                     <div class="col-12">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="loginInput" name="login" placeholder="marik1234">
+                            <input type="text" class="form-control" id="loginInput" name="login" value="<?=$data['login'] ?>">
                             <label for="loginInput" >Login</label>
                         </div>
                     </div>
@@ -41,7 +41,7 @@ include 'adm_nav.php';
                 <div class="row m-2">
                     <div class="col-10">
                         <div class="form-floating ">
-                            <input type="text" class="form-control" id="passInput" name="pass" placeholder="1234">
+                            <input type="text" class="form-control" id="passInput" name="pass" value="<?=$data['pass'] ?>">
                             <label for="passInput" >Hasło</label> 
                         </div>
                     </div>
@@ -51,7 +51,7 @@ include 'adm_nav.php';
                 </div>
                 <div class="row m-2">
                     <div class="float-end">
-                        <button type="submit" class="btn btn-primary btn-lg float-end">Dodaj</button>
+                        <button type="submit" class="btn btn-primary btn-lg float-end" name="senduser">Dodaj</button>
                     </div>
 
             </div>
