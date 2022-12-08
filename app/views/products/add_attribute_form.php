@@ -8,27 +8,11 @@
                 <div class="row m-2">
                     <div class="col-12">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="heightInput" name="attribute" placeholder="20">
-                            <label for="heightInput" >Dodaj Atrybut</label>
+                            <input type="text" class="form-control" id="heightInput" name="attribute" placeholder="20" value=<?=$data['attribute']?>>
+                            <label for="heightInput" >Dodaj atrybut</label>
                         </div>
                     </div>
                 </div>
-                <!-- <div class="row m-2">
-                    <div class="col-12">
-                        <div class="form-floating">
-                            <input type="text" class="form-control" id="lengthInput" name="length" placeholder="5">
-                            <label for="lengthInput" >Długość</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="row m-2">
-                    <div class="col-12">
-                        <div class="form-floating">
-                            <input type="text" class="form-control" id="widthInput" name="width" placeholder="10">
-                            <label for="widthInput" >Szerokość</label>
-                        </div>
-                    </div>
-                </div> -->
                 
                 <div class="row m-2">
                     <div class="float-end">

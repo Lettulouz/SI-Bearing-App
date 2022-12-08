@@ -6,6 +6,7 @@ class Admin extends Controller
 {
     public function success_page($sid){     
         if(isset($_SESSION['success_page'])){
+            $path = $_SESSION['success_page'];
             unset($_SESSION['success_page']);
             if($sid==1){
                 $firstLine = "Dodano rekord";
@@ -13,16 +14,17 @@ class Admin extends Controller
             }
             $this->view('success_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
             $_SESSION['successOrErrorResponse'] = true;
-            header("Refresh: 2; url=" . ROOT . "/admin/add_catalog");
+            header("Refresh: 2; url=" . ROOT . "/admin/" . $path);
         }
         else header("Location:" . ROOT . "");
     }
 
     public function error_page($sid){     
         if(isset($_SESSION['error_page'])){
+            $path = $_SESSION['error_page'];
             unset($_SESSION['error_page']);
             if($sid==1){
-                $firstLine = "Nie podano nazwy";
+                $firstLine = "Nie podano wszystkich wymaganych wartości";
                 $secondLine = "";
             }
             if($sid==2){
@@ -31,7 +33,7 @@ class Admin extends Controller
             }
             $this->view('error_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
             $_SESSION['successOrErrorResponse'] = true;
-            header("Refresh: 2; url=" . ROOT . "/admin/add_catalog");
+            header("Refresh: 2; url=" . ROOT . "/admin/" . $path);
 
         }
         else header("Location:" . ROOT . "");
@@ -110,10 +112,16 @@ class Admin extends Controller
     public function add_attribute(){
 
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $tekst2 = "";
+        if(isset($_SESSION['successOrErrorResponse'])){
+            if(isset($_SESSION['attributeName'])) {$tekst2 = $_SESSION['attributeName']; unset($_SESSION['attributeName']);} 
 
+            unset($_SESSION['successOrErrorResponse']);
+        }
 
         if(isset($_POST['attribute']))
         {
+            /*
             try{
                 $config = require_once dirname(__FILE__,2) . '/core/mailerconfig.php';
                 $mail = new PHPMailer();
@@ -152,17 +160,32 @@ class Admin extends Controller
             } catch(Exception $e){
                 echo "<script>alert('Błąd wysyłania maila!')</script>";
             }
-             $attribute = $_POST['attribute'];
-             $tekst1 = strtolower($attribute);
-             $tekst2 = ucfirst($tekst1);
-             $query = "INSERT INTO `attributes` (name) VALUES ('$tekst2');";
-             $result = $db->prepare($query);
-             $result->execute();
+            */
+            $attribute = $_POST['attribute'];
+            $tekst1 = strtolower($attribute);
+            $tekst2 = ucfirst($tekst1);
+;
+            $query="SELECT COUNT(id) as amount
+            FROM attributes WHERE name=:name";
+            $result = $db->prepare($query);
+            $result->bindParam(':name', $tekst2);
+            $result->execute();
+            $result = $result->fetch(PDO::FETCH_ASSOC);
+            if($result['amount']>0){
+                $_SESSION['error_page'] = "add_attribute";
+                $_SESSION['attributeName'] = $tekst2;
+                header("Location:" . ROOT . "/admin/error_page/2");
+            }
+            else{
+                $query = "INSERT INTO `attributes` (name) VALUES ('$tekst2');";
+                $result = $db->prepare($query);
+                $result->execute();
+                $_SESSION['success_page'] = "add_attribute";
+                header("Location:" . ROOT . "/admin/success_page/1");
+            }
         }
 
-
-
-        $this->view('admin/add_attribute_admin', []);
+        $this->view('admin/add_attribute_admin', ['attribute' => $tekst2]);
     }
 /////////////////////////////////////////////////////////////////////////////
     public function add_catalog(){
