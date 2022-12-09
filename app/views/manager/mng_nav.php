@@ -24,7 +24,7 @@
   </head>
 <body>
     <!-- Navbar -->
-    
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
 <nav class="navbar navbar-expand navbar-dark fixed-top" style="background-color:#2B3036;">
   <div class="container-fluid">
     <!--Sidebar button-->

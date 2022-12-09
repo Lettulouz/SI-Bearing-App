@@ -162,12 +162,31 @@ class Admin extends Controller
 
     public function list_of_catalogs(){
         require_once dirname(__FILE__,2) . '/core/database.php';
-        $query="SELECT c.name, COUNT(iic.id_catalog) as amount
+        $query="SELECT c.name, COUNT(iic.id_catalog) as amount, c.id
         FROM catalog c LEFT JOIN itemsInCatalog iic ON c.id=iic.id_catalog GROUP BY c.id";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $this->view('admin/list_of_catalogs', ['catalogsArray'=>$result]);
+
+        $itemsInCat=array();
+
+        foreach($result as $res){
+            $query_items="SELECT `catalog`.`id` AS `cat_id`, `itemsincatalog`.`id_item` AS `id_item`,
+             `items`.`name` AS `name_item`, `items`.`amount` AS `amount`, `items`.`price` AS `price`,
+            `manufactures`.`name` AS `mn_name`
+            FROM `catalog` 
+                LEFT JOIN `itemsincatalog` ON `itemsincatalog`.`id_catalog` = `catalog`.`id` 
+                LEFT JOIN `items` ON `itemsincatalog`.`id_item` = `items`.`id` 
+                LEFT JOIN `manufactures` ON `items`.`id_manufacturer` = `manufactures`.`id` WHERE  `catalog`.`id` =:catid";
+                $result_id = $db->prepare($query_items);
+                $result_id->bindParam(':catid', $res['id']);
+                $result_id->execute();
+                $result_id =  $result_id->fetchAll(PDO::FETCH_ASSOC);
+                $itemsInCat[$res['id']]= $result_id;
+        }
+
+
+        $this->view('admin/list_of_catalogs', ['catalogsArray'=>$result, 'catalogsItems'=>$itemsInCat]);
     }
 
     public function list_of_orders(){
