@@ -13,7 +13,6 @@ class Admin extends Controller
                 $secondLine = "pomyślnie!";
             }
             $this->view('success_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
-            $_SESSION['successOrErrorResponse'] = true;
             header("Refresh: 2; url=" . ROOT . "/admin/" . $path);
         }
         else header("Location:" . ROOT . "");
@@ -32,7 +31,7 @@ class Admin extends Controller
                 $secondLine = "";
             }
             $this->view('error_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
-            $_SESSION['successOrErrorResponse'] = true;
+            $_SESSION['successOrErrorResponse'] = $path;
             header("Refresh: 2; url=" . ROOT . "/admin/" . $path);
 
         }
@@ -42,7 +41,7 @@ class Admin extends Controller
     public function index(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
-
+                unset($_SESSION['successOrErrorResponse']);
             }
             else{
                 header("Location:" . ROOT . "/login");
@@ -56,7 +55,7 @@ class Admin extends Controller
 
     public function list_of_users(){
         require_once dirname(__FILE__,2) . '/core/database.php';
-        $query="SELECT id, name, lastName, email, login, password FROM users ORDER BY id";
+        $query="SELECT id, name, lastName, email, login, password FROM users WHERE role='user' ORDER BY id";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -66,76 +65,115 @@ class Admin extends Controller
 
     public function add_user(){
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $name = '';
+        $lastName = '';
+        $email = '';
+        $login = '';
+        $password = '';
         if(isset($_POST['senduser']))
         {
-            /*try{
-                $config = require_once dirname(__FILE__,2) . '/core/mailerconfig.php';
-                $mail = new PHPMailer();
-
-                $mail->isSMTP();
-
-                $mail->Host = $config['host'];
-                $mail->Port = $config['port'];
-                $mail->SMTPSecure =   PHPMailer::ENCRYPTION_SMTPS;
-                $mail->SMTPAuth = true;
-
-                $mail->Username = $config['username'];
-                $mail->Password = $config['password'];
-
-                $mail->CharSet = 'UTF-8';
-                $mail->setFrom($config['username'], 'Grontsmar');
-                $mail->addAddress($config['addAddress']);
-                $mail->addReplyTo($config['username'], 'Grontsmar');
-
-                $mail->isHTML(true);
-                $mail->Subject = 'Przykładowy tytuł wiadomości';
-                $mail->Body = '<html>
-                <head>
-                <title> Przykładowy nagłówek </title>
-                </head>
-                <body>
-                <h1> Dzień dobry! </h1>
-                <p> Na ten email zostało utworzone konto w sklepie Grontsmar. Oto dane: </p>
-                </body>
-                </html>';
-
-                //$mail->addAttachment('ścieżka');
-
-                $mail->send();
-            } catch(Exception $e){
-                echo "<script>alert('Błąd wysyłania maila!')</script>";
-            }*/
-            $name = '';
-            $lastName = '';
-            $email = '';
-            $login = '';
-            $password = '';
-
-            if(!isset($_POST['name'])){
-                $this->view('admin/add_user', ['name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'pass'=>$password]);
-                return;
-            }
-            echo isset($_POST['name']);
-            die();
             $name = ucfirst(strtolower($_POST['name']));
             $lastName = ucfirst(strtolower($_POST['surname']));
             $email = $_POST['mail'];
             $login = strtolower($_POST['login']);
             $password = $_POST['pass'];
+            $role = "user";
 
-            $query = "INSERT INTO `users` (name, lastName, email, login, password) VALUES ('$name', '$lastName', '$email', '$login', '$password');";
-            $result = $db->prepare($query);
-            $result->execute();
+            if(empty($password)){
+                $length = 10;
+                $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                $charactersLength = strlen($characters);
+                for ($i = 0; $i < $length; $i++) {
+                    $password.= $characters[rand(0, $charactersLength - 1)];
+                }
+            }
+            if(empty($name) || empty($lastName) || empty($email) || empty($login)){
+                $_SESSION['error_page'] = "add_user";
+                header("Location:" . ROOT . "/admin/error_page/1");
+            }else{
+                $hashedPassword = hash('sha256', $password);
+
+                $query = "SELECT COUNT(id) AS amount FROM users WHERE login=:login";
+                $result = $db->prepare($query);
+                $result->bindParam(':login', $login);
+                $result->execute();
+                $result = $result->fetch(PDO::FETCH_ASSOC);
+                
+                $query = "SELECT COUNT(id) AS amount FROM users WHERE email=:email";
+                $result2 = $db->prepare($query);
+                $result2->bindParam(':email', $email);
+                $result2->execute();
+                $result2 = $result2->fetch(PDO::FETCH_ASSOC);
+                
+                if($result['amount']>0 || $result2['amount']>0){
+                    $_SESSION['error_page'] = "add_user";
+                    header("Location:" . ROOT . "/admin/error_page/2");
+                }
+                else{
+                    $query = "INSERT INTO `users` (name, lastName, email, login, password, role) VALUES ('$name', '$lastName', '$email', '$login', '$hashedPassword', '$role');";
+                    $result = $db->prepare($query);
+                    $result->execute();
+                    try{
+                    $config = require_once dirname(__FILE__,2) . '/core/mailerconfig.php';
+                    $mail = new PHPMailer();
+    
+                    $mail->isSMTP();
+    
+                    $mail->Host = $config['host'];
+                    $mail->Port = $config['port'];
+                    $mail->SMTPSecure =   PHPMailer::ENCRYPTION_SMTPS;
+                    $mail->SMTPAuth = true;
+    
+                    $mail->Username = $config['username'];
+                    $mail->Password = $config['password'];
+    
+                    $mail->CharSet = 'UTF-8';
+                    $mail->setFrom($config['username'], 'Grontsmar');
+                    $mail->addAddress($email);
+                    $mail->addReplyTo($config['username'], 'Grontsmar');
+    
+                    $mail->isHTML(true);
+                    $mail->Subject = 'Założone konto w sklepie Grontsmar';
+                    $mail->Body = "<html>
+                    <head>
+                    <title> Założone konto w sklepie Grontsmar </title>
+                    </head>
+                    <body>
+                    <h1> Dzień dobry! </h1>
+                    <p> Na ten email zostało utworzone konto w sklepie Grontsmar. Oto dane: </p>
+                    <p> Login: $login </p>
+                    <p> Hasło: $password </p>
+                    </body>
+                    </html>";
+    
+                    //$mail->addAttachment('ścieżka');
+    
+                    $mail->send();
+                } catch(Exception $e){
+                    echo "<script>alert('Błąd wysyłania maila!')</script>";
+                }
+                    $_SESSION['success_page'] = "add_user";
+                    header("Location:" . ROOT . "/admin/success_page/1");
+                }            
+            }
         }
         $this->view('admin/add_user', ['name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'pass'=>$password]);
     }
 
     public function list_of_content_managers(){
-        $this->view('admin/list_of_conent_managers', []);
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $query="SELECT id, name, lastName, email, login, password FROM users WHERE role='contentmanager' ORDER BY id";
+        $result = $db->query($query);
+        $result = $result->fetchAll(PDO::FETCH_ASSOC);
+        $this->view('admin/list_of_conent_managers', ['usersArray'=>$result]);
     }
 
     public function list_of_administrators(){
-        $this->view('admin/list_of_administrators', []);
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $query="SELECT id, name, lastName, email, login, password FROM users WHERE role='admin' ORDER BY id";
+        $result = $db->query($query);
+        $result = $result->fetchAll(PDO::FETCH_ASSOC);
+        $this->view('admin/list_of_administrators', ['usersArray'=>$result]);
     }
 
     public function list_of_products(){
@@ -182,57 +220,19 @@ class Admin extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
         $tekst2 = "";
         if(isset($_SESSION['successOrErrorResponse'])){
-            if(isset($_SESSION['attributeName'])) {$tekst2 = $_SESSION['attributeName']; unset($_SESSION['attributeName']);} 
-
+            if($_SESSION['successOrErrorResponse'] == "add_attribute"){
+                if(isset($_SESSION['attributeName'])) {$tekst2 = $_SESSION['attributeName']; unset($_SESSION['attributeName']);} 
+            }
             unset($_SESSION['successOrErrorResponse']);
         }
 
         if(isset($_POST['attribute']))
         {
-            /*
-            try{
-                $config = require_once dirname(__FILE__,2) . '/core/mailerconfig.php';
-                $mail = new PHPMailer();
-
-                $mail->isSMTP();
-
-                $mail->Host = $config['host'];
-                $mail->Port = $config['port'];
-                $mail->SMTPSecure =   PHPMailer::ENCRYPTION_SMTPS;
-                $mail->SMTPAuth = true;
-                $mail->SMTPSecure = "ssl";
-
-                $mail->Username = $config['username'];
-                $mail->Password = $config['password'];
-
-                $mail->CharSet = 'UTF-8';
-                $mail->setFrom($config['username'], 'Grontsmar');
-                $mail->addAddress($config['addAddress']);
-                $mail->addReplyTo($config['username'], 'Grontsmar');
-
-                $mail->isHTML(true);
-                $mail->Subject = 'Przykładowy tytuł wiadomości';
-                $mail->Body = '<html>
-                <head>
-                  <title> Przykładowy nagłówek </title>
-                </head>
-                <body>
-                <h1> Dzień dobry! </h1>
-                <p> Na ten email zostało utworzone konto w sklepie Grontsmar. Oto dane: </p>
-                </body>
-                </html>';
-
-                //$mail->addAttachment('ścieżka');
-
-                $mail->send();
-            } catch(Exception $e){
-                echo "<script>alert('Błąd wysyłania maila!')</script>";
-            }
-            */
+        
             $attribute = $_POST['attribute'];
             $tekst1 = strtolower($attribute);
             $tekst2 = ucfirst($tekst1);
-;
+
             $query="SELECT COUNT(id) as amount
             FROM attributes WHERE name=:name";
             $result = $db->prepare($query);
@@ -262,9 +262,10 @@ class Admin extends Controller
         $itemstocat = "";
 
         if(isset($_SESSION['successOrErrorResponse'])){
-            if(isset($_SESSION['catname'])) {$catname = $_SESSION['catname']; unset($_SESSION['catname']);} 
-            if(isset($_SESSION['itemcat'])) {$itemstocat = $_SESSION['itemcat']; unset($_SESSION['itemcat']);} 
-
+            if($_SESSION['successOrErrorResponse'] == "add_catalog"){
+                if(isset($_SESSION['catname'])) {$catname = $_SESSION['catname']; unset($_SESSION['catname']);} 
+                if(isset($_SESSION['itemcat'])) {$itemstocat = $_SESSION['itemcat']; unset($_SESSION['itemcat']);} 
+            }
             unset($_SESSION['successOrErrorResponse']);
         }
 
@@ -286,7 +287,7 @@ class Admin extends Controller
                 $cat_id=$result->fetch(PDO::FETCH_ASSOC);
                 $temp = $cat_id['COUNT(id)'];
                 if($temp>0){
-                    $_SESSION['error_page'] = true;
+                    $_SESSION['error_page'] = "add_catalog";
                     header("Location:" . ROOT . "/admin/error_page/2");
                 }else{
                 $query="INSERT INTO catalog (name) VALUES (:cat_name)";
@@ -310,13 +311,13 @@ class Admin extends Controller
                 //TODO zwrócenie komunikatów
                 $return_msg_color="rgb(25, 135, 84)";
                 $return_msg="pomyślnie dodano nowy katalog";
-                $_SESSION['success_page'] = true;
+                $_SESSION['success_page'] = "add_catalog";
                 unset($_SESSION['catname']);
                 header("Location:" . ROOT . "/admin/success_page/1");
                 }
             }
             else{
-                $_SESSION['error_page'] = true;
+                $_SESSION['error_page'] = "add_catalog";
                 header("Location:" . ROOT . "/admin/error_page/1");
             }
 
