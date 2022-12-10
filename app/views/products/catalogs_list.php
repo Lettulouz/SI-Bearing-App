@@ -23,15 +23,17 @@
             <td>{$i}</td>
             <td>{$catalog['name']}</td>
             <td>{$catalog['amount']}</td>
-            <td> <button type='button' data-toggle='collapse' class='btn btn-primary d-inline btn-sm tabBtn' 
+            <td> <button type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm tabBtn' 
             data-bs-toggle='collapse' data-bs-target='#row".$i."' aria-expanded='false'>
-            <i class='bi bi-eye-fill'></i></button></td>
+            <i class='bi bi-eye-fill'></i>
+            </button>
+            </td>
             </tr>
 
             <tr>
                 <td colspan='12' class='p-0'>
 					<div class=' collapse' id='row".$i."'>
-                        <table class='table coltab m-0'>
+                        <table class='table table-active coltab m-0'>
                             <thead>
                                 <tr>
                                 <th>Producent</th>

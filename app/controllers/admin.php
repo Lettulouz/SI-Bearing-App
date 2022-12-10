@@ -227,6 +227,10 @@ class Admin extends Controller
         $this->view('admin/list_of_catalogs', ['catalogsArray'=>$result, 'catalogsItems'=>$itemsInCat]);
     }
 
+    // public remove_catalog($cid){
+
+    // }
+
     public function list_of_orders(){
         $this->view('admin/list_of_orders', []);
     }
