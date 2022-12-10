@@ -378,6 +378,10 @@ class Admin extends Controller
                 $itemPrice = $_POST['price'];
                 $itemQuantity = $_POST['quantity'];
                 $itemManufacturer = $_POST['manufacturer'];
+                $test2 = "test";
+                $test2 = $_POST['attributes'];
+                $test3 = json_decode($_POST['attributes'],true);
+                
                   
                 
                 $query="INSERT INTO items (name, amount, price, id_manufacturer) 

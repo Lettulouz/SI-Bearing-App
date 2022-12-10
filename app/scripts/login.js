@@ -43,7 +43,7 @@ function runScript(){
 
 function setLoginError(){
     document.getElementById('errorEmailOrLogin').innerText = "*Podano błędny login";  
-    document.getElementByName('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
+    document.getElementById('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
     document.getElementById('blinkingEmailOrLogin').style = "display: default; color:#de1f1f";
     document.getElementById('emailOrLoginSpan').style.color = "rgb(255, 0, 0)";
 }
