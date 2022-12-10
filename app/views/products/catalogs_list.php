@@ -15,6 +15,7 @@
         <?php 
         $catalogs = $data['catalogsArray'];
         $itemsInCat = $data['catalogsItems'];
+        $rmPath=$data['rmpath'];
         $i = 1;
         foreach($catalogs as $catalog) 
         {
@@ -23,10 +24,13 @@
             <td>{$i}</td>
             <td>{$catalog['name']}</td>
             <td>{$catalog['amount']}</td>
-            <td> <button type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm tabBtn' 
+            <td class='px-0 mx-0'> <button type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm mx-1 tabBtn' 
             data-bs-toggle='collapse' data-bs-target='#row".$i."' aria-expanded='false'>
             <i class='bi bi-eye-fill'></i>
             </button>
+            <a href='".$rmPath."/".$catalog['id']."' type='button' data-toggle='collapse' class='btn btn-danger d-inline btn-sm mx-1 tabBtn'>
+            <i class='bi bi-trash-fill'></i>
+            </a>
             </td>
             </tr>
 

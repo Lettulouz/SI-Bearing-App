@@ -4,6 +4,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class Admin extends Controller
 {
+
     public function success_page($sid){     
         if(isset($_SESSION['success_page'])){
             $path = $_SESSION['success_page'];
@@ -200,6 +201,8 @@ class Admin extends Controller
 
     public function list_of_catalogs(){
         require_once dirname(__FILE__,2) . '/core/database.php';
+        
+
         $query="SELECT c.name, COUNT(iic.id_catalog) as amount, c.id
         FROM catalog c LEFT JOIN itemsInCatalog iic ON c.id=iic.id_catalog GROUP BY c.id";
         $result = $db->query($query);
@@ -223,13 +226,21 @@ class Admin extends Controller
                 $itemsInCat[$res['id']]= $result_id;
         }
 
+        $rmCatPath=ROOT."/admin/remove_catalog";
 
-        $this->view('admin/list_of_catalogs', ['catalogsArray'=>$result, 'catalogsItems'=>$itemsInCat]);
+        $this->view('admin/list_of_catalogs', ['catalogsArray'=>$result, 'catalogsItems'=>$itemsInCat, 'rmpath'=> $rmCatPath]);
     }
 
-    // public remove_catalog($cid){
-
-    // }
+    public function remove_catalog($cid){
+        if(isset($cid)){
+            require_once dirname(__FILE__,2) . '/core/database.php';
+            $query="DELETE FROM catalog WHERE id=:cid";
+            $result = $db->prepare($query);
+            $result->bindParam(':cid', $cid);
+            $result->execute();
+        }
+        header("Location:" . ROOT . "/admin/list_of_catalogs");
+    }
 
     public function list_of_orders(){
         $this->view('admin/list_of_orders', []);
