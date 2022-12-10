@@ -96,9 +96,8 @@
             var html = '';
             html+='<div class="row">';
             html+='<div class="col-5 mb-3">';
-            html+='<select class="select2 form-control" id="attribute_name' + i +  '" aria-label="example-xl" onchange="updateList();"';
+            html+='<select class="select2 form-control" id="attribute_name' + i +  '" placeholder="Atrybut" aria-label="example-xl" onchange="updateList();">';
             html+='<option>';
-            html+='test';
             html+='</option>';
             tempPossibleOptions.forEach((id) => {
                     html+='<option>';
