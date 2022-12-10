@@ -394,8 +394,13 @@ class Admin extends Controller
         $result = $db->prepare($query);
         $result->execute();
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        $query="SELECT name FROM attributes";
+        $result2 = $db->prepare($query);
+        $result2->execute();
+        $result2 = $result2->fetchAll(PDO::FETCH_ASSOC);
         
-        $this->view('admin/add_item_admin', ['items'=>$result]);
+        $this->view('admin/add_item_admin', ['items'=>$result, 'attributes' => $result2]);
         
     }
 

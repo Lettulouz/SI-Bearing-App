@@ -48,8 +48,21 @@
                             </select>
                     </div>
 
+
+
                     <span style="color:<?php if(isset($_GET['color'])) echo $_GET['color']; ?>">
                     <?php if(isset($_GET['msg'])) echo base64_decode($_GET['msg']); ?></span>
+                </div>
+
+                <div class="row m-2">
+                    <div class="col-12">
+                        <h4>Dodawanie atrybutów</h4>
+                        <div id="show_item">
+                        </div>
+                        <div>
+                            <button class="btn btn-success add_item_btn">Dodaj atrybut</button>
+                        </div>
+                    </div>
                 </div>
 
 
@@ -57,12 +70,74 @@
                     <div class="float-end">
                         <button type="submit" name="itemSubmit" class="btn btn-primary btn-lg float-end">Dodaj</button>
                     </div>
-
-            </div>
+                </div>
             </div>
           
     </form>
+    <div style="display:none" id="attributes" name="attributes" data-attr='<?php echo json_encode($data['attributes']); ?>'></div>
 </div>
+
+<script>
+	$(document).ready(function(){
+        var jsArr = JSON.parse($('#attributes').attr('data-attr'));
+
+
+        console.log(jsArr);
+        console.log(jsArr[0].name); 
+	    $(".add_item_btn").click(function(e){
+            e.preventDefault();
+            var html = '';
+            html+='<div class="row">';
+            html+='<div class="col-5 mb-3">';
+            html+='<select class="select2 form-control" id="attributes" name="attributes" aria-label="example-xl" >';
+            html+='<option>';
+            html+='</option>';
+            jsArr.forEach((id) => {
+                html+='<option>';
+                html+=id.name;
+                html+='</option>';
+            });
+            html+='</select>'
+            html+='</div>';
+            html+='<div class="col-5 mb-3">';
+            html+='<input type="text" name="attribute_value[]" class="form-control required" placeholder="Wartość atrybutu" required onkeyup="enableSubmit()" autocomplete="off">';
+            html+='</div>';
+            html+='<div class="col-2 mb-3 d-grid">'
+            html+='<button class="btn btn-danger remove_item_btn">-</button>'
+            html+='</div></div>'
+            $("#show_item").append(html);
+            enableSubmit();
+        });
+
+
+        
+
+        $(document).on('click', '.remove_item_btn', function(e){ 
+            e.preventDefault();
+            let row_item = $(this).parent().parent();
+            $(row_item).remove();
+            enableSubmit();
+        });
+	});
+</script>
+
+<script>
+function enableSubmit(){
+    let inputs = document.getElementsByClassName('required'); // Enter your class name for a required field, this should also be reflected within your form fields.
+    let btn = document.getElementsByClassName('add_item_btn');
+    for (var i = 0; i < inputs.length; i++){
+        let changedInput = inputs[i];
+        if (changedInput.value.trim() == "" || changedInput.value == null){
+            isValid = false;
+            break;
+        }
+        else{
+            isValid = true;
+        }
+    }
+   btn[0].disabled = !isValid;
+}
+</script>
 
 <script>
 document.getElementById('content_collapse').classList.add('show');
