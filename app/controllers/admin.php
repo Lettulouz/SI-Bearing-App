@@ -231,7 +231,7 @@ class Admin extends Controller
         $this->view('admin/list_of_catalogs', ['catalogsArray'=>$result, 'catalogsItems'=>$itemsInCat, 'rmpath'=> $rmCatPath]);
     }
 
-    public function remove_catalog($cid){
+    public function remove_catalog($cid=NULL){
         if(isset($cid)){
             require_once dirname(__FILE__,2) . '/core/database.php';
             $query="DELETE FROM catalog WHERE id=:cid";
