@@ -13,13 +13,20 @@
         <tbody>
         <?php 
         $attribut = $data['attributesArray'];
+        $rmPath=$data['rmpath'];
         $i = 1;
         foreach($attribut as $attribut) 
         {
+            $id = $attribut['id'];
             echo 
             "<tr>
             <td>{$i}</td>
             <td>{$attribut['name']}</td>
+            <td>
+            <a href='".$rmPath."/".$id ."' type='button' data-toggle='collapse' class='btn btn-danger d-inline btn-sm mx-1 tabBtn'>
+            <i class='bi bi-trash-fill'></i>
+            </a>
+            </td>
             </tr>";
             $i++;
         }

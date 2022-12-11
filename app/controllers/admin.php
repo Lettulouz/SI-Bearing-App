@@ -191,12 +191,28 @@ class Admin extends Controller
     public function list_of_attributes()
     {
         require_once dirname(__FILE__,2) . '/core/database.php';
-        $query="SELECT name FROM `attributes` ORDER BY id";
+        $query="SELECT * FROM `attributes` ORDER BY id";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $this->view('admin/list_of_attributes', ['attributesArray'=>$result]);
+        $rmCatPath=ROOT."/admin/remove_attribut";
+        $this->view('admin/list_of_attributes', ['attributesArray'=>$result, 'rmpath'=> $rmCatPath]);
 
+    }
+
+
+    public function remove_attribut($id_a=NULL){
+        
+        if(isset($id_a)){
+            require_once dirname(__FILE__,2) . '/core/database.php';
+            $query="DELETE FROM attributes WHERE id=:id_a";
+            $result = $db->prepare($query);
+            $result->bindParam(':id_a', $id_a);
+            $result->execute();
+        }
+        
+    
+        header("Location:" . ROOT . "/admin/list_of_attributes");
     }
 
     public function list_of_catalogs(){
