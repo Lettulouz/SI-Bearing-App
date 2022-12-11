@@ -15,6 +15,7 @@
         <?php 
         $attribut = $data['attributesArray'];
         $rmPath=$data['rmpath'];
+        $editPath = $data['editpath'];
         $i = 1;
         foreach($attribut as $attribut) 
         {
@@ -29,7 +30,7 @@
                 data-bs-toggle='collapse' data-bs-target='#row".$i."' aria-expanded='false'>
                 <i class='bi-gear-fill'> Edytuj</i>
                 </button>
-                <a href='".$rmPath."/".$id ."' type='button' data-toggle='collapse' class='btn btn-danger d-inline btn-sm mx-1 tabBtn'>
+                <a href='".$rmPath."/".$id."' type='button' data-toggle='collapse' class='btn btn-danger d-inline btn-sm mx-1 tabBtn'>
                 <i class='bi bi-trash-fill'> Usuń</i>
                 </a>
             </td>
@@ -38,9 +39,9 @@
                     <td colspan='12' class='p-0'>
                     <div class=' collapse' id='row".$i."'>
                     <br/>
-                    <form  method='post'>
+                    <form  method='POST' action ='".$editPath."/".$id."'>
                     <input type='submit' value='Edytuj' />
-                    <input type='text' value='{$attribut['name']}'/>
+                    <input type='text' name='edit_atr' value='{$attribut['name']}'/>
                     </form >
                     </div>
                     </td>

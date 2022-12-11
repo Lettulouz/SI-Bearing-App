@@ -194,15 +194,39 @@ class Admin extends Controller
         $query="SELECT * FROM `attributes` ORDER BY id";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
+         
 
         $rmCatPath=ROOT."/admin/remove_attribut";
-        $this->view('admin/list_of_attributes', ['attributesArray'=>$result, 'rmpath'=> $rmCatPath]);
+        $editCatPath=ROOT."/admin/edit_attribut";
+        $this->view('admin/list_of_attributes', ['attributesArray'=>$result, 'rmpath'=> $rmCatPath, 'editpath'=> $editCatPath]);
 
     }
 
+    public function edit_attribut($id_a=NULL){
+
+        require_once dirname(__FILE__,2) . '/core/database.php';
+
+        if(isset($_POST['edit_atr']))
+        {
+        
+            $attribute = $_POST['edit_atr'];
+            $tekst1 = strtolower($attribute);
+            $tekst2 = ucfirst($tekst1);
+
+
+            $query = "UPDATE `attributes` 
+                SET name = '$tekst2' 
+                WHERE id = '$id_a';";
+            $result = $db->prepare($query);
+            $result->execute();
+            $_SESSION['success_page'] = "list_of_attributes";
+
+        }
+        header("Location:" . ROOT . "/admin/list_of_attributes");
+    }
 
     public function remove_attribut($id_a=NULL){
-        
+
         if(isset($id_a)){
             require_once dirname(__FILE__,2) . '/core/database.php';
             $query="DELETE FROM attributes WHERE id=:id_a";
