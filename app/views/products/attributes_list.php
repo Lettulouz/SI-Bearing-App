@@ -8,6 +8,7 @@
         <tr>
         <th>Lp.</th>
         <th>Nazwa</th>
+        <th></th>
         </tr>
         </thead>
         <tbody>
@@ -18,16 +19,33 @@
         foreach($attribut as $attribut) 
         {
             $id = $attribut['id'];
+            $name = $attribut['name'];
             echo 
             "<tr>
-            <td>{$i}</td>
+            <td>{$i}</td>   
             <td>{$attribut['name']}</td>
-            <td>
-            <a href='".$rmPath."/".$id ."' type='button' data-toggle='collapse' class='btn btn-danger d-inline btn-sm mx-1 tabBtn'>
-            <i class='bi bi-trash-fill'></i>
-            </a>
+            <td class='px-0 mx-0'>
+                <button type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm mx-1 tabBtn' 
+                data-bs-toggle='collapse' data-bs-target='#row".$i."' aria-expanded='false'>
+                <i class='bi-gear-fill'> Edytuj</i>
+                </button>
+                <a href='".$rmPath."/".$id ."' type='button' data-toggle='collapse' class='btn btn-danger d-inline btn-sm mx-1 tabBtn'>
+                <i class='bi bi-trash-fill'> Usuń</i>
+                </a>
             </td>
             </tr>";
+            echo "<tr>
+                    <td colspan='12' class='p-0'>
+                    <div class=' collapse' id='row".$i."'>
+                    <br/>
+                    <form  method='post'>
+                    <input type='submit' value='Edytuj' />
+                    <input type='text' value='{$attribut['name']}'/>
+                    </form >
+                    </div>
+                    </td>
+                    </tr>";
+
             $i++;
         }
         ?>
