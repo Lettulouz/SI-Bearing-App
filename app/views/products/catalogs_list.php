@@ -156,14 +156,8 @@
 
 
     $('#editModal').on('hidden.bs.modal', function () {
-        var items=$('.itemList').map(function() {
-            return this;
-        }).get();
 
-        items.forEach(function(item) {
-            $(item).removeAttr('selected');
-        }
-        )
+        $('#item').val(null).trigger('change');
     })
 
 
