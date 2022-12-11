@@ -7,16 +7,27 @@
         <tr>
         <th>Lp.</th>
         <th>Nazwa</th>
-        <th>Nazwa</th>
+        <th>Nazwa firmy</th>
         <th>Ilość</th>
         <th>Cena</th>
         </tr>
         </thead>
         <tbody>
         <?php 
+        $j = 0; // dodałwm j, po jak wyświetlało z i to miałem errory. Wojtek
         $items = $data['itemsArray'];
         foreach($items as $i => $item) 
         {
+            $j++;
+            echo 
+            "<tr>
+            <td>".$j."</td>
+            <td>{$item['itemName']}</td>
+            <td>{$item['manufacturerName']}</td>
+            <td>{$item['amount']}</td>
+            <td>{$item['price']}</td>
+            </tr>";
+            /*
             echo 
             "<tr>
             <td>".$i+'1'."</td>
@@ -25,6 +36,7 @@
             <td>{$item['amount']}</td>
             <td>{$item['price']}</td>
             </tr>";
+            */
         }
         ?>
         </tbody>
