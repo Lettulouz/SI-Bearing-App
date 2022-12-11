@@ -19,7 +19,7 @@
     <form action="" id="addItemForm" method="POST">
 
         <div class="row m-2">
-            <div class="col-4 border-end border-2">
+            <div class="col-6 col-xl-4 border-end border-2">
                 <div class="row m-2">
                     <div class="col">
                         <div class="form-floating ">
@@ -31,7 +31,7 @@
                 <div class="row m-2">
                     <div class="col">
                         <div class="form-floating ">
-                            <input type="number" class="form-control" id="quantityInput" name="price" placeholder="23" step="any">
+                            <input type="number" class="form-control" id="quantityInput" min="0" name="price" placeholder="23" step="any">
                             <label for="quantityInput">Cena</label>
                         </div>
                     </div>
@@ -39,7 +39,7 @@
                 <div class="row m-2">
                     <div class="col">
                         <div class="form-floating ">
-                            <input type="number" class="form-control" id="quantityInput" name="quantity" placeholder="23">
+                            <input type="number" class="form-control" id="quantityInput" min="0" name="quantity" placeholder="23">
                             <label for="quantityInput">Ilość</label>
                         </div>
                     </div>
@@ -64,7 +64,7 @@
                     <?php if(isset($_GET['msg'])) echo base64_decode($_GET['msg']); ?></span>
                 </div>
             </div>   
-            <div class="col-4 border-end border-2">
+            <div class="col-6 col-xl-4 border-end border-2 px-4">
                 <h4>Dodawanie atrybutów</h4>
                 <div id="show_item">
                 </div>
@@ -95,7 +95,7 @@
             i++;
             var html = '';
             html+='<div class="row">';
-            html+='<div class="col-5 mb-3">';
+            html+='<div class="col-12 col-md-5 mb-3">';
             html+='<select class="select2 form-control" id="attribute_name' + i +  '" placeholder="Atrybut" aria-label="example-xl" onchange="updateList();">';
             html+='<option>';
             html+='</option>';
@@ -106,10 +106,10 @@
             });
             html+='</select>';
             html+='</div>';
-            html+='<div class="col-5 mb-3">';
+            html+='<div class="col-8 col-md-5 mb-3">';
             html+='<input type="text" id="attribute_value' + i + '" class="form-control required" placeholder="Wartość atrybutu" required onkeyup="enableSubmit()" autocomplete="off">';
             html+='</div>';
-            html+='<div class="col-2 mb-3 d-grid">';
+            html+='<div class="col-4 col-md-2 mb-3 d-grid">';
             html+='<button class="btn btn-danger remove_item_btn">-</button>';
             html+='</div></div>';
             $("#show_item").append(html)
