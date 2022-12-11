@@ -20,7 +20,7 @@
   </head>
 <body>
     <!-- Navbar -->
-    
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
 <nav class="navbar navbar-expand navbar-dark bg-dark fixed-top">
   <div class="container-fluid">
     <!--Sidebar button-->

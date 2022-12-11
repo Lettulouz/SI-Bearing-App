@@ -15,23 +15,26 @@
                     <div class="col-12">
                         <div class="form-floating">
                             <input type="text" class="form-control" id="catalogNameInput" name="catname" placeholder="Grontex">
-                            <label for="catalogNameInput" >Nazwa katalogu</label>
+                            <label for="catalogNameInput">Nazwa katalogu</label>
                         </div>
                     </div>
                 </div>
                 <div class="row m-2">
                     <div class="col-12">
-                            <select class="select2 form-select-lg" multiple="multiple" id="item" name="itemcat[]" aria-label="example-xl">
+                            <select class="select2 form-select-lg" multiple="multiple" id="item" name="itemcat[]" aria-label="example-xl" aria-selected="<?=$data['itemcat']?>" aria-autocomplete="TRUE">
                                     <?php
                                         foreach($data['items'] as $i => $result) {
-                                            echo "<option value=".$result['item_id'].">".$result['mnf']." - ".$result['item']."</option>";
+                                            $temp = "";
+                                            if(!empty($data['itemcat']))
+                                                if(in_array($result['item_id'], $data['itemcat'])) $temp = "selected=selected";
+                                            echo "<option value=".$result['item_id']. " " . $temp .">".$result['mnf']." - ".$result['item']."</option>";
                                         }
                                     
                                     ?>
                             </select>
                     </div>
-                    <span style="color:<?php if(isset($_GET['color'])) echo $_GET['color']; ?>">
-                    <?php if(isset($_GET['msg'])) echo base64_decode($_GET['msg']); ?></span>
+                    <span style="color:<?php echo $data['msg_color'] ?>">
+                    <?php echo $data['msg'] ?></span>
                 </div>
                            
                 <div class="row m-2">
