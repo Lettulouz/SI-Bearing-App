@@ -248,6 +248,10 @@ class Admin extends Controller
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
 
+        $queryIt="SELECT i.name AS item, i.id AS item_id, m.name AS mnf FROM items i LEFT JOIN manufactures m ON i.id_manufacturer = m.id";
+        $resultIt = $db->prepare($queryIt);
+        $resultIt->execute();
+        $items = $resultIt->fetchAll(PDO::FETCH_ASSOC);
 
         $itemsInCat=array();
 
@@ -266,9 +270,9 @@ class Admin extends Controller
                 $itemsInCat[$res['id']]= $result_id;
         }
 
-        $rmCatPath=ROOT."/admin/remove_catalog";
+        $rmCatPath=ROOT."/admin/";
 
-        $this->view('admin/list_of_catalogs', ['catalogsArray'=>$result, 'catalogsItems'=>$itemsInCat, 'rmpath'=> $rmCatPath]);
+        $this->view('admin/list_of_catalogs', ['catalogsArray'=>$result, 'catalogsItems'=>$itemsInCat,'items'=>$items ,'rmpath'=> $rmCatPath]);
     }
 
     public function remove_catalog($cid=NULL){
