@@ -95,15 +95,15 @@
             <h5 class="modal-title" id="exampleModalLabel">Edytuj Katalog</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form>
+        <form action="" method="POST">
             <div class="modal-body">
-            <input type='text' id="catid" class="form-control"> <!--to będzie ukryte-->
-                    <div class="form-floating my-1">
+            <input type='hidden' id="catid" name="catid" class="form-control"> 
+                    <div class="form-floating my-2">
                             <input type="text" class="form-control" id="catalogName" name="catname" placeholder="Grontex">
                             <label for="catalogNameInput">Nazwa katalogu</label>
                         </div>
-
-                            <select class="select2 form-select-lg"  multiple="multiple" id="item" name="itemcat[]" aria-label="example-xl"  aria-autocomplete="TRUE">
+                        <hr>
+                            <select class="select2 form-select-lg my-2"  multiple="multiple" id="item" name="itemcat[]" aria-label="example-xl"  aria-autocomplete="TRUE">
                                     <?php
                                            foreach($data['items'] as $i => $result) {
                                             echo "<option class='itemList' value=".$result['item_id'].">".$result['mnf']." - ".$result['item']."</option>";
@@ -115,7 +115,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="submit" name="catEditSub" class="btn btn-primary">Edytuj</button>
             </div>
         </form>
         </div>

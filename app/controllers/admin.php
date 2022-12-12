@@ -243,6 +243,58 @@ class Admin extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
         
 
+        $return_msg_color="";
+        $return_msg="";
+        if(isset($_POST['catEditSub'])){
+            isset($_POST['itemcat']) ? $itemstocat=$_POST['itemcat'] : $itemstocat="";
+            isset($_POST['catname']) ? $catname=$_POST['catname'] : $catname="";
+            isset($_POST['catid']) ? $catid=$_POST['catid'] : $catid="";
+
+            if(isset($_POST['itemcat'])&&!empty($_POST['catname'])){
+                    //update catalog name
+                    $query="SELECT id, COUNT(id) FROM catalog WHERE name=:catname";
+                $result = $db->prepare($query);
+                $result->bindParam(':catname', $catname);
+                $result->execute();
+                $cat_id=$result->fetch(PDO::FETCH_ASSOC);
+                $temp = $cat_id['COUNT(id)'];
+                echo $cat_id['id']."<br>";
+                echo $catid."<br>";
+
+                //check if catalog name is already use by different catalog
+                if($temp>0&&$cat_id['id']!=$catid){
+                    $_SESSION['error_page'] = "list_of_catalogs";
+                    header("Location:" . ROOT . "/admin/error_page/2");
+                }else{
+                    $query="UPDATE catalog SET name=:catname WHERE id=:catid";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':catname',$catname);
+                    $result->bindParam(':catid',$catid);
+                    $result->execute();
+
+                    //delete old items and add new to catalog
+                    $query="DELETE FROM itemsincatalog WHERE id_catalog=:catid";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':catid',$catid);
+                    $result->execute();
+
+                    $query="INSERT INTO itemsincatalog (id_catalog,id_item) VALUES (:cat_id,:item_id)";
+                 foreach ($itemstocat as $item_id){
+                     $result = $db->prepare($query);
+                     $result->bindParam(':cat_id',$catid);
+                     $result->bindParam(':item_id',$item_id);
+                     $result->execute();
+                    }
+                $_SESSION['success_page'] = "list_of_catalogs";
+                header("Location:" . ROOT . "/admin/success_page/1");
+                }
+                }else{
+                    $_SESSION['error_page'] = "list_of_catalogs";
+                    header("Location:" . ROOT . "/admin/error_page/1");
+                }
+            }
+        
+
         $query="SELECT c.name, COUNT(iic.id_catalog) as amount, c.id
         FROM catalog c LEFT JOIN itemsInCatalog iic ON c.id=iic.id_catalog GROUP BY c.id";
         $result = $db->query($query);
@@ -438,7 +490,6 @@ class Admin extends Controller
                 $result->bindParam(':item_manufacturer',$itemManufacturer);
                 $result->execute();
 
-                //TODO zwrócenie komunikatów
                 $return_msg_color="rgb(25, 135, 84)";
                 $return_msg=base64_encode("pomyślnie dodano nowy przedmiot");
 
