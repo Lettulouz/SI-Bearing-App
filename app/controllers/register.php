@@ -1,5 +1,6 @@
 <?php
-
+error_reporting(-1);
+ini_set('display_errors', 'On');
 class Register extends Controller
 {
     private $errorMessage = "";
@@ -140,10 +141,13 @@ class Register extends Controller
 
     private function insertUser(){
         require_once dirname(__FILE__,2) . '/core/database.php';
-        $commandString = "INSERT INTO users (name, surname, login, email, password) VALUES (?,?,?,?,?)";
-        $db->exec($commandString);
-        //$userQuery= $db->prepare($commandString);
-        //$userQuery->execute([$this->name, $this->surname, $this->login, $this->email, $this->password]);
+        $commandString = $db->prepare("INSERT INTO users (name, surname, login, email, password) VALUES (:name, :surname, :login, :email, :password)");
+        $commandString->bindValue(":name", $this->name, PDO::PARAM_STR);
+        $commandString->bindValue(":surname", $this->surname, PDO::PARAM_STR);
+        $commandString->bindValue(":login", $this->login, PDO::PARAM_STR);
+        $commandString->bindValue(":email", $this->email, PDO::PARAM_STR);
+        $commandString->bindValue(":password", $this->password, PDO::PARAM_STR);
+        $commandString->execute();
     }
 }
 ?>
