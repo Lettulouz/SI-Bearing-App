@@ -14,9 +14,9 @@
 
 
 
-            echo "<div class='col-4'>
+            echo "<div class='col-3'>
                     <div class='card'>
-                        <img src='https://i.imgur.com/dMNzMwu.jpg'  alt='zdjęcie łożyska' class='card-img-top'>
+                        <img src='https://i.imgur.com/uqTzNBt.jpg'  alt='zdjęcie łożyska' class='card-img-top'>
                         <div class='card-body'>
                             <h5 class='card-title'> {$item['itemName']}</h5>
                             <p class='card-text'> {$item['manufacturerName']}</p>
