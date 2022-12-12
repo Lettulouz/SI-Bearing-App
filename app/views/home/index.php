@@ -14,7 +14,7 @@
 
 
 
-            echo "<div class='col-3'>
+            echo "<div class='col-12 col-md-6 col-lg-3'>
                     <div class='card'>
                         <img src='https://i.imgur.com/uqTzNBt.jpg'  alt='zdjęcie łożyska' class='card-img-top'>
                         <div class='card-body'>
