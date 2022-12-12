@@ -204,25 +204,41 @@ class Admin extends Controller
 
     public function edit_attribut($id_a=NULL){
 
-        require_once dirname(__FILE__,2) . '/core/database.php';
-
-        if(isset($_POST['edit_atr']))
-        {
         
-            $attribute = $_POST['edit_atr'];
-            $tekst1 = strtolower($attribute);
-            $tekst2 = ucfirst($tekst1);
+        if(isset($id_a)){
+        isset($_POST['edit_atr']) ? $attribute=$_POST['edit_atr'] : $attribute="";
+            if(!empty($attribute))
+            {
+                require_once dirname(__FILE__,2) . '/core/database.php';
+                $tekst1 = strtolower($attribute);
+                $tekst2 = ucfirst($tekst1);
 
+                $query="SELECT id, COUNT(id) FROM attributes WHERE name=:attr";
+                $result = $db->prepare($query);
+                $result->bindParam(':attr', $attribute);
+                $result->execute();
+                $attr_id=$result->fetch(PDO::FETCH_ASSOC);
+                $temp = $attr_id['COUNT(id)'];
+                if($temp>0&&$attr_id['id']!=$id_a){
+                    $_SESSION['error_page'] = "list_of_attributes";
+                    header("Location:" . ROOT . "/admin/error_page/2");
+                }else{
+                $query = "UPDATE `attributes` 
+                    SET name = '$tekst2' 
+                    WHERE id = '$id_a';";
+                $result = $db->prepare($query);
+                $result->execute();
+                $_SESSION['success_page'] = "list_of_attributes";
+                header("Location:" . ROOT . "/admin/success_page/1");
+                }
 
-            $query = "UPDATE `attributes` 
-                SET name = '$tekst2' 
-                WHERE id = '$id_a';";
-            $result = $db->prepare($query);
-            $result->execute();
-            $_SESSION['success_page'] = "list_of_attributes";
-
-        }
+            }else{
+                $_SESSION['error_page'] = "list_of_attributes";
+                header("Location:" . ROOT . "/admin/error_page/1");
+            }
+        }else{
         header("Location:" . ROOT . "/admin/list_of_attributes");
+        }
     }
 
     public function remove_attribut($id_a=NULL){
@@ -258,8 +274,7 @@ class Admin extends Controller
                 $result->execute();
                 $cat_id=$result->fetch(PDO::FETCH_ASSOC);
                 $temp = $cat_id['COUNT(id)'];
-                echo $cat_id['id']."<br>";
-                echo $catid."<br>";
+
 
                 //check if catalog name is already use by different catalog
                 if($temp>0&&$cat_id['id']!=$catid){

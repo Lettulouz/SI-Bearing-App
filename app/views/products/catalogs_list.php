@@ -2,10 +2,10 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />
-<div class="row">
+<div class="row m-0">
 <h1 class="text-muted headers-padding col-6">Lista katalogów</h1>
     <hr class="divider "> 
-    <div class="headers-padding" style="padding-right: 15px;">
+    <div class="headers-padding container-fluid" style="padding-right: 15px;">
     
         <div class="col-12 col-md-6 col-lg-4">
             <div class="input-group">
