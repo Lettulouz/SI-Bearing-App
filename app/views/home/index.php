@@ -4,12 +4,19 @@
     <center> <h1>Firma Grontsmar</h1> </center>
     <?php
     $search = '';
+    $limit1 = 1;
+
     if(isset($data['search']))
         $search = $data['search'];
+
+    if(isset($data['limit1']))
+        $limit1 = $data['limit1'];
 
     echo '<form method="POST" action ="" >';
     echo "<input type='submit' value='Szukaj' />";
     echo "<input type='text' value='".$search."' name='search'/>";
+    echo "<br/>";
+    echo "numer strony: <input type='number' value='".$limit1."' name='limit1'/>";
 
 
     ?>
