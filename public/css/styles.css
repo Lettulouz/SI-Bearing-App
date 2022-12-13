@@ -39,8 +39,15 @@
   }
 }
 
+.btn-custom-1{
+  background-color: rgb(255, 59, 219);
+  color: white;
+}
+
 .bg-custom-1 {
     background-color: rgb(255, 59, 219);
+    color: white;
+    text-decoration-color: white;
 }
 
 .bg-custom-2 {
@@ -50,6 +57,8 @@
 .bg-custom-3 {
     background-color: rgb(55, 142, 218);
 }
+
+
 
 .headers-padding {
   padding-left: 15px;
@@ -117,8 +126,6 @@
   .select2-selection__arrow b{
     display:none !important;
 }
-
-
 
 
 /*
