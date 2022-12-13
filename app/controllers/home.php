@@ -11,8 +11,8 @@ class Home extends Controller
     public function index(){
         require_once dirname(__FILE__,2) . '/core/database.php';
 
-        $query="SELECT i.name as itemName, m.name as manufacturerName, amount, price
-        FROM items i INNER JOIN manufactures m ON i.id_manufacturer=m.id";
+        $query="SELECT title, description, name
+        FROM items i INNER JOIN descriptions d ON d.id_item=i.id";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
         
