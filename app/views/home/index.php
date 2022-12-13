@@ -2,6 +2,13 @@
 <?php// include "menu.php"; ?>
 
     <center> <h1>Firma Grontsmar</h1> </center>
+    <?php
+    echo '<form method="POST" action ="" >';
+    echo "<input type='submit' value='Szukaj' />";
+    echo "<input type='text' name='search'/>";
+
+
+    ?>
 
     <?php
     $j = 0;
