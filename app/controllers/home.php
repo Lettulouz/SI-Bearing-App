@@ -19,12 +19,12 @@ class Home extends Controller
         }
 
         $query="SELECT title, description, name
-        FROM items i INNER JOIN descriptions d ON d.id_item=i.id
+        FROM items i LEFT JOIN descriptions d ON d.id_item=i.id
             WHERE name LIKE '%".$search."%'";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
         
-        $this->view('home/index', ['itemsArray'=>$result]);
+        $this->view('home/index', ['itemsArray'=>$result, 'search' => $search]);
     }
 
 

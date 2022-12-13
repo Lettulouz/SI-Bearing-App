@@ -3,9 +3,13 @@
 
     <center> <h1>Firma Grontsmar</h1> </center>
     <?php
+    $search = '';
+    if(isset($data['search']))
+        $search = $data['search'];
+
     echo '<form method="POST" action ="" >';
     echo "<input type='submit' value='Szukaj' />";
-    echo "<input type='text' name='search'/>";
+    echo "<input type='text' value='".$search."' name='search'/>";
 
 
     ?>
