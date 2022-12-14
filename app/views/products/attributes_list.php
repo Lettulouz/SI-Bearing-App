@@ -28,10 +28,10 @@
             <td class='px-0 mx-0'>
                 <button type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm mx-1 tabBtn' 
                 data-bs-toggle='collapse' data-bs-target='#row".$i."' aria-expanded='false'>
-                <i class='bi-gear-fill'> Edytuj</i>
+                <i class='bi-gear-fill'> </i>
                 </button>
                 <a href='".$rmPath."/".$id."' type='button' data-toggle='collapse' class='btn btn-danger d-inline btn-sm mx-1 tabBtn'>
-                <i class='bi bi-trash-fill'> Usuń</i>
+                <i class='bi bi-trash-fill'> </i>
                 </a>
             </td>
             </tr>";
@@ -41,12 +41,12 @@
                             <br/>
                         
                             <form  method='POST' class='form-inline row p-1' action ='".$editPath."/".$id."'>
-                            <div class='col-6'>
+                            <div class='col-3 col-sm-5 col-md-7'>
                             </div>
-                            <div class='col-1'>
+                            <div class='col-2'>
                                 <input type='submit' class='btn btn-primary p-1' value='Edytuj' />
                             </div>
-                            <div class='col-3'>
+                            <div class='col-sm-3 col-5'>
                                 <input type='text' name='edit_atr' class='form-control ' value='{$attribut['name']}'/>
                             </div>
                             </form >
