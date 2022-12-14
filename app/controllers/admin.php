@@ -45,7 +45,7 @@ class Admin extends Controller
                 unset($_SESSION['successOrErrorResponse']);
             }
             else{
-                header("Location:" . ROOT . "/login");
+                header("Location:" . ROOT . "/home");
             }
         }
         else{
