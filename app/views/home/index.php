@@ -18,14 +18,13 @@
     echo "<br/>";
     echo "numer strony: <input type='number' value='".$limit1."' name='limit1'/>";
     echo '</form>';
-
     ?>
 
     <?php
     $j = 0;
     $three = 3;
     $items = $data['itemsArray'];
-    echo "<div class='container h-100'>";
+    echo "<div class='container mb-1'>";
     echo "<div class='row'>";
     foreach($items as $j => $item) 
     {

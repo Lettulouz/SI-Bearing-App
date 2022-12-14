@@ -1,6 +1,6 @@
 <?php include "registerHeader.php"; ?>
 
-<div class="container mt-5 h-75">
+<div class="container mt-5 mb-1 h-75">
     <div class="row d-flex justify-content-center">
         <div class="col-12 col-md-6 mb-12">
             <div class="card px-5 py-5 mb-12 h-100" id="form1">
