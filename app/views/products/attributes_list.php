@@ -37,13 +37,20 @@
             </tr>";
             echo "<tr>
                     <td colspan='12' class='p-0'>
-                    <div class=' collapse' id='row".$i."'>
-                    <br/>
-                    <form  method='POST' action ='".$editPath."/".$id."'>
-                    <input type='submit' value='Edytuj' />
-                    <input type='text' name='edit_atr' value='{$attribut['name']}'/>
-                    </form >
-                    </div>
+                            <div class='collapse container' id='row".$i."'>
+                            <br/>
+                        
+                            <form  method='POST' class='form-inline row p-1' action ='".$editPath."/".$id."'>
+                            <div class='col-6'>
+                            </div>
+                            <div class='col-1'>
+                                <input type='submit' class='btn btn-primary p-1' value='Edytuj' />
+                            </div>
+                            <div class='col-3'>
+                                <input type='text' name='edit_atr' class='form-control ' value='{$attribut['name']}'/>
+                            </div>
+                            </form >
+                            </div>
                     </td>
                     </tr>";
 
@@ -53,6 +60,7 @@
         </tbody>
         </table>
         <?php } else {echo "Brak dodanych atrybutów.";}?>
+        
     </div>
 
 <script>

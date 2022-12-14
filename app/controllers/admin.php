@@ -371,30 +371,36 @@ class Admin extends Controller
             unset($_SESSION['successOrErrorResponse']);
         }
 
-        if(isset($_POST['attribute']))
-        {
-        
-            $attribute = $_POST['attribute'];
-            $tekst1 = strtolower($attribute);
-            $tekst2 = ucfirst($tekst1);
+        if(isset($_POST['attrEditSub'])){
+            if(!empty($_POST['attribute']))
+            {
+            
+            
+                $attribute = $_POST['attribute'];
+                $tekst1 = strtolower($attribute);
+                $tekst2 = ucfirst($tekst1);
 
-            $query="SELECT COUNT(id) as amount
-            FROM attributes WHERE name=:name";
-            $result = $db->prepare($query);
-            $result->bindParam(':name', $tekst2);
-            $result->execute();
-            $result = $result->fetch(PDO::FETCH_ASSOC);
-            if($result['amount']>0){
-                $_SESSION['error_page'] = "add_attribute";
-                $_SESSION['attributeName'] = $tekst2;
-                header("Location:" . ROOT . "/admin/error_page/2");
-            }
-            else{
-                $query = "INSERT INTO `attributes` (name) VALUES ('$tekst2');";
+                $query="SELECT COUNT(id) as amount
+                FROM attributes WHERE name=:name";
                 $result = $db->prepare($query);
+                $result->bindParam(':name', $tekst2);
                 $result->execute();
-                $_SESSION['success_page'] = "add_attribute";
-                header("Location:" . ROOT . "/admin/success_page/1");
+                $result = $result->fetch(PDO::FETCH_ASSOC);
+                if($result['amount']>0){
+                    $_SESSION['error_page'] = "add_attribute";
+                    $_SESSION['attributeName'] = $tekst2;
+                    header("Location:" . ROOT . "/admin/error_page/2");
+                }
+                else{
+                    $query = "INSERT INTO `attributes` (name) VALUES ('$tekst2');";
+                    $result = $db->prepare($query);
+                    $result->execute();
+                    $_SESSION['success_page'] = "add_attribute";
+                    header("Location:" . ROOT . "/admin/success_page/1");
+                }
+            }else{
+                $_SESSION['error_page'] = "add_attribute";
+                header("Location:" . ROOT . "/admin/error_page/1");
             }
         }
 
