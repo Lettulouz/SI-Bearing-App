@@ -17,7 +17,7 @@
     echo "<input type='text' value='".$search."' name='search'/>";
     echo "<br/>";
     echo "numer strony: <input type='number' value='".$limit1."' name='limit1'/>";
-
+    echo '</form>';
 
     ?>
 
