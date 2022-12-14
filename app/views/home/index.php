@@ -25,7 +25,7 @@
     $j = 0;
     $three = 3;
     $items = $data['itemsArray'];
-    echo "<div class='container'>";
+    echo "<div class='container h-100'>";
     echo "<div class='row'>";
     foreach($items as $j => $item) 
     {
