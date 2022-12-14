@@ -8,6 +8,8 @@ class Login extends Controller
     private $emailOrLoginInput = "";
     private $ifUserExist = "";
     private $passwordInput = "";
+    private $userRole = "";
+
 
     public function index(){
         header("Location:" . ROOT . "/login/validate");
@@ -22,6 +24,7 @@ class Login extends Controller
         $this->emailOrLoginInput = "";
         $this->ifUserExist = "";
         $this->passwordInput = "";
+        $this->userRole = "";
 
         echo "<script src='" . APPPATH . "/scripts/login.js" .  "'></script>";
 
@@ -77,13 +80,15 @@ class Login extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
         $_SESSION['emailOrLoginInput'] =  $this->emailOrLoginInput;
         $email 
-        ? $userQuery = $db->prepare('SELECT id, password FROM users WHERE email = :emailorlogin') 
-        : $userQuery = $db->prepare('SELECT id, password FROM users WHERE login = :emailorlogin');
+        ? $userQuery = $db->prepare('SELECT id, password, role FROM users WHERE email = :emailorlogin') 
+        : $userQuery = $db->prepare('SELECT id, password, role FROM users WHERE login = :emailorlogin');
         $userQuery->bindValue(':emailorlogin', $this->emailOrLoginInput, PDO::PARAM_STR);
         $userQuery->execute();
 
+        
+
         $this->ifUserExist = $userQuery->fetch(PDO::FETCH_ASSOC);
-        if(!$this->ifUserExist) $this->errorDuringValidation("*Podano błędny email lub hasło");
+        $this->ifUserExist ? ($this->userRole = $this->ifUserExist['role']) : $this->errorDuringValidation("*Podano błędny email lub hasło");
     }
 
     /** Function that sets errors
@@ -111,10 +116,6 @@ class Login extends Controller
      * 
      */
     private function verifyLogin($login){
-        $regex  = '/^[a-z]+$/';
-        if(!preg_match($regex, $login)){
-            return false;
-        }
         $regex  = '/^[a-z0-9]+$/';
         if(preg_match($regex, $login)){
             return true;
@@ -166,8 +167,11 @@ class Login extends Controller
      */
     private function loginSuccessful(){
         unset($_SESSION['errorMessage']);
-        $_SESSION['loggedUser'] = "admin";
-        header("Location:" . ROOT . "/admin");
+        $_SESSION['loggedUser'] = $this->userRole;
+        if($this->userRole == "admin")
+            header("Location:" . ROOT . "/admin");
+        else if($this->userRole == "user")
+            header("Location:" . ROOT . "/home");
     }
 }
 ?>
