@@ -1,13 +1,11 @@
 <?php include "header.php"; ?>
-<?php include "navbar.php"; ?>
+<?php //include "navbar.php"; ?>
+<?php include "navbar_top.php"; ?>
 <?php// include "menu.php"; ?>
 
-<div class='homeMain container mb-1'>
-    <div class="row">
-                <?php
 
 
-
+            <?php
             if(isset($data['limit1'])){
                 $limit1 = $data['limit1'];
             }
@@ -22,18 +20,20 @@
             echo '<form method="POST" class="d-flex" id="nwm" action ="" >';
                 echo "<input type='submit' class='btn btn-primary' value='Szukaj' />";
                 echo "<div class='col-3 px-2'>";
-                echo "<input type='text' class='form-control' id='searchBox' value='".$search."' name='search'/>";
+                echo "<input type='text' size='200' class='form-control' id='searchBox' value='".$search."' name='search'/>";
                 echo "</div>";
                 echo "<div class='d-flex px-3'>";
                 echo "<button type='button' id='lft' class='btn btn-primary'/><i class='bi bi-arrow-left'></i></button>";
                 echo "<div class='col-3'>";
-                echo "<input type='number' id='page' class='form-control' value='".$limit1."' name='limit1'/>";
+                echo "<input type='number' size='5' id='page' class='form-control' value='".$limit1."' name='limit1'/>";
                 echo "</div>";
                 echo "<button type='button' id='rgt' class='btn btn-primary'/><i class='bi bi-arrow-right'></i></button>";
                 echo "</div>";
 
             ?>
-    </div>
+<?php include "navbar_bottom.php"; ?>
+
+<div class='homeMain container mb-1'>
 <div class="row">          
     <?php
     
@@ -61,7 +61,7 @@
     </div>
     <div class="row">
     </div>
-    </div>
+</div>
 
 
 <script>
