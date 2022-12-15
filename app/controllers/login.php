@@ -170,6 +170,8 @@ class Login extends Controller
         $_SESSION['loggedUser'] = $this->userRole;
         if($this->userRole == "admin")
             header("Location:" . ROOT . "/admin");
+        else if($this->userRole == "contentmanager")
+            header("Location:" . ROOT . "/manager");
         else if($this->userRole == "user")
             header("Location:" . ROOT . "/home");
     }

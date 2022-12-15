@@ -99,6 +99,18 @@ class Admin extends Controller
     }
 
     public function list_of_users(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+
         require_once dirname(__FILE__,2) . '/core/database.php';
         $query="SELECT id, name, lastName, email, login, password FROM users WHERE role='user' ORDER BY id";
         $result = $db->query($query);
@@ -109,6 +121,18 @@ class Admin extends Controller
     }
 
     public function add_user(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
         require_once dirname(__FILE__,2) . '/core/database.php';
         $name = '';
         $lastName = '';
@@ -206,6 +230,30 @@ class Admin extends Controller
     }
 
     public function list_of_content_managers(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
         require_once dirname(__FILE__,2) . '/core/database.php';
         $query="SELECT id, name, lastName, email, login, password FROM users WHERE role='contentmanager' ORDER BY id";
         $result = $db->query($query);
@@ -214,6 +262,30 @@ class Admin extends Controller
     }
 
     public function list_of_administrators(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
         require_once dirname(__FILE__,2) . '/core/database.php';
         $query="SELECT id, name, lastName, email, login, password FROM users WHERE role='admin' ORDER BY id";
         $result = $db->query($query);
@@ -222,6 +294,18 @@ class Admin extends Controller
     }
 
     public function list_of_products(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
         require_once dirname(__FILE__,2) . '/core/database.php';
 
         $query="SELECT i.name as itemName, m.name as manufacturerName, amount, price
@@ -234,6 +318,18 @@ class Admin extends Controller
 
     public function list_of_attributes()
     {
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
         require_once dirname(__FILE__,2) . '/core/database.php';
         $query="SELECT * FROM `attributes` ORDER BY id";
         $result = $db->query($query);
@@ -247,7 +343,18 @@ class Admin extends Controller
     }
 
     public function edit_attribut($id_a=NULL){
-
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
         
         if(isset($id_a)){
         isset($_POST['edit_atr']) ? $attribute=$_POST['edit_atr'] : $attribute="";
@@ -286,6 +393,18 @@ class Admin extends Controller
     }
 
     public function remove_attribut($id_a=NULL){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
 
         if(isset($id_a)){
             require_once dirname(__FILE__,2) . '/core/database.php';
@@ -300,6 +419,18 @@ class Admin extends Controller
     }
 
     public function list_of_catalogs(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
         require_once dirname(__FILE__,2) . '/core/database.php';
         
 
@@ -387,6 +518,18 @@ class Admin extends Controller
     }
 
     public function remove_catalog($cid=NULL){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
         if(isset($cid)){
             require_once dirname(__FILE__,2) . '/core/database.php';
             $query="DELETE FROM catalog WHERE id=:cid";
@@ -398,6 +541,18 @@ class Admin extends Controller
     }
 
     public function list_of_orders(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
         $this->view('admin/list_of_orders', []);
     }
 
@@ -405,6 +560,18 @@ class Admin extends Controller
     * @author Ur_mum
     */
     public function add_attribute(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
 
         require_once dirname(__FILE__,2) . '/core/database.php';
         $tekst2 = "";
@@ -452,6 +619,18 @@ class Admin extends Controller
     }
 /////////////////////////////////////////////////////////////////////////////
     public function add_catalog(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
         require_once dirname(__FILE__,2) . '/core/database.php';
         $catname = "";
         $itemstocat = "";
@@ -527,6 +706,18 @@ class Admin extends Controller
     }
 ////////////////////////////////////////////////////////////////////////////
     public function add_item(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
         require_once dirname(__FILE__,2) . '/core/database.php';
 
         $return_msg_color="";

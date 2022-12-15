@@ -17,8 +17,12 @@ include 'mng_nav.php';
                                 <i class="bi bi-plus-lg"></i></a>
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">Produktów: [ilość]</h5>
-                            <p class="card-text">Tu kilka nazw produktów, jeżeli się wszyscy nie mieszczą to na końcu ...</p>
+                            <h5 class="card-title">Produktów: <?php echo $data['itemsCount']?></h5>
+                            <p class="card-text"><?php
+                            foreach($data['items'] as $item)
+                            echo $item['manufacturer']."-".$item['item']."<br>";
+                            ?>
+                            ...</p>
                         </div>
                         <a href="<?php echo ROOT."/manager/list_of_products"?>" id="orders_lists" class="nav-link text-white p-0">
                     <div class="card-footer p-3">
@@ -34,8 +38,11 @@ include 'mng_nav.php';
                         <i class="bi bi-plus-lg"></i></a>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">Katalogów: [ilość]</h5>
-                    <p class="card-text">Tutaj kilka nazw katalogów, jeżeli się wszystkie nie mieszczą to na końcu ...</p>
+                    <h5 class="card-title">Katalogów: <?php echo $data['catalogsCount']?></h5>
+                    <p class="card-text"><?php
+                            foreach($data['catalogs'] as $catalog)
+                            echo $catalog['name']."<br>";
+                            ?> ...</p>
                 </div>
                 <a href="<?php echo ROOT."/manager/list_of_catalogs"?>" id="orders_lists" class="nav-link text-white p-0">
                     <div class="card-footer p-3">
@@ -51,8 +58,11 @@ include 'mng_nav.php';
                         <i class="bi bi-plus-lg"></i></a>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">Atrybutów: [ilość]</h5>
-                    <p class="card-text">Tutaj kilka nazw atrybutów, jeżeli się wszystkie nie mieszczą to na końcu ...</p>
+                    <h5 class="card-title">Atrybutów: <?php echo $data['attributesCount']?></h5>
+                    <p class="card-text"><?php
+                            foreach($data['attributes'] as $attribute)
+                            echo $attribute['name']."<br>";
+                            ?>  ...</p>
                 </div>
                 <a href="<?php echo ROOT."/manager/list_of_attributes"?>" id="orders_lists" class="nav-link text-white p-0">
                     <div class="card-footer p-3">
