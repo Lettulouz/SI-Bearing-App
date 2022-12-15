@@ -7,8 +7,6 @@
                 <?php
 
 
-            if(isset($data['search']))
-                $search = $data['search'];
 
             if(isset($data['limit1'])){
                 $limit1 = $data['limit1'];
@@ -17,10 +15,14 @@
                 $limit1=1;
             }
 
+            if(isset($data['search'])){
+                $search = $data['search'];
+            }
+
             echo '<form method="POST" class="d-flex" id="nwm" action ="" >';
                 echo "<input type='submit' class='btn btn-primary' value='Szukaj' />";
                 echo "<div class='col-3 px-2'>";
-                echo "<input type='text' class='form-control' value='".$search."' name='search'/>";
+                echo "<input type='text' class='form-control' id='searchBox' value='".$search."' name='search'/>";
                 echo "</div>";
                 echo "<div class='d-flex px-3'>";
                 echo "<button type='button' id='lft' class='btn btn-primary'/><i class='bi bi-arrow-left'></i></button>";
@@ -79,6 +81,10 @@
         a=$('#page').val();
         $('#page').val(--a);
         $('#nwm').submit();
+    })
+
+    $('#searchBox').click(function(){
+        $(this).val('');
     })
 
     </script>
