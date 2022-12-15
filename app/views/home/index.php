@@ -2,47 +2,44 @@
 <?php include "navbar.php"; ?>
 <?php// include "menu.php"; ?>
 
-<!--<nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                <div class="navbar-nav">
-                    <center> <h1>Firma Grontsmar</h1> </center>
-                    /*<?php
-    $search = '';
-    $limit1 = 1;
+<div class='homeMain container mb-1'>
+    <div class="row">
+                <?php
 
-    if(isset($data['search']))
-        $search = $data['search'];
 
-    if(isset($data['limit1']))
-        $limit1 = $data['limit1'];
+            if(isset($data['search']))
+                $search = $data['search'];
 
-    echo '<form method="POST" action ="" >';
-    echo "<input type='submit' value='Szukaj' />";
-    echo "<input type='text' value='".$search."' name='search'/>";
-    echo "numer strony: <input type='number' value='".$limit1."' name='limit1'/>";
-    echo "<a class='nav-link' href='shopping.php'><i class='bi bi-basket2'></i></a>";
+            if(isset($data['limit1'])){
+                $limit1 = $data['limit1'];
+            }
+            else{
+                $limit1=1;
+            }
 
-    ?>*/
-                </div>
-            </div>
-        </div>
-    </nav>-->
+            echo '<form method="POST" class="d-flex" id="nwm" action ="" >';
+                echo "<input type='submit' class='btn btn-primary' value='Szukaj' />";
+                echo "<div class='col-3 px-2'>";
+                echo "<input type='text' class='form-control' value='".$search."' name='search'/>";
+                echo "</div>";
+                echo "<div class='d-flex px-3'>";
+                echo "<button type='button' id='lft' class='btn btn-primary'/><i class='bi bi-arrow-left'></i></button>";
+                echo "<div class='col-3'>";
+                echo "<input type='number' id='page' class='form-control' value='".$limit1."' name='limit1'/>";
+                echo "</div>";
+                echo "<button type='button' id='rgt' class='btn btn-primary'/><i class='bi bi-arrow-right'></i></button>";
+                echo "</div>";
 
+            ?>
+    </div>
+<div class="row">          
     <?php
+    
     $j = 0;
     $three = 3;
     $items = $data['itemsArray'];
-    echo "<div class='container mb-1'>";
-    echo "<div class='row'>";
     foreach($items as $j => $item) 
     {
-
-
-
             echo "<div class='col-12 col-md-6 col-lg-3'>
                     <div class='card'>
                         <img src='https://i.imgur.com/uqTzNBt.jpg'  alt='zdjęcie łożyska' class='card-img-top'>
@@ -56,56 +53,33 @@
                     </div>
                 </div> ";
         
-        
-
-
-    
         $j++;
-            /*
-        echo 
-        "<tr>
-        <td>".$j."</td>
-        <td>{$item['itemName']}</td>
-        <td>{$item['manufacturerName']}</td>
-        <td>{$item['amount']}</td>
-        <td>{$item['price']} zł</td>
-        </tr>";
-        */
     }
-    echo "</div>";
-    echo  "</div>";
     ?>
-    <!--
-    <div class="container">
-        <div class="row">
-            <div class="col-4">
-                <div class="card">
-                    <img src="https://i.imgur.com/dMNzMwu.jpg"  alt="zdjęcie łożyska" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title"> nazwa łożyska z bazy danych </h5>
-                        <p class="card-text"> Opis łożyska z bazy danych</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="card">
-                    <img src="https://i.imgur.com/dMNzMwu.jpg"  alt="zdjęcie łożyska" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title"> nazwa łożyska z bazy danych </h5>
-                        <p class="card-text"> Opis łożyska z bazy danych</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="card">
-                    <img src="https://i.imgur.com/dMNzMwu.jpg"  alt="zdjęcie łożyska" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title"> nazwa łożyska z bazy danych </h5>
-                        <p class="card-text"> Opis łożyska z bazy danych</p>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
-    -->
+    <div class="row">
+    </div>
+    </div>
+
+
+<script>
+    $(document).ready(function(){
+        if($('#page').val()<=1){
+            $('#lft').addClass('disabled');
+        }
+    })
+
+    $('#rgt').click(function(){
+        a=$('#page').val();
+        $('#page').val(++a);
+        $('#nwm').submit();
+    })
+
+    $('#lft').click(function(){
+        a=$('#page').val();
+        $('#page').val(--a);
+        $('#nwm').submit();
+    })
+
+    </script>
 <?php include dirname(__FILE__,2) . "/footer.php"; ?>

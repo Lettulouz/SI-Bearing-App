@@ -21,4 +21,5 @@
 
     </head>
     <body class="d-flex flex-column min-vh-100">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
 

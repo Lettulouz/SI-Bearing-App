@@ -87,6 +87,8 @@
 .siderbar-link{
     color:#61757D;
 }
+
+
 /* width */
 ::-webkit-scrollbar {
     width: 10px;
@@ -127,89 +129,7 @@
     display:none !important;
 }
 
-
-
-/*
-#naglowek {
-    background-color: #0D3F82;
-    padding: 20px;
-    padding-left: 20px;
-    border-bottom: 5px solid #466EA1;
-    height: 5vh;
+/*for home*/
+.homeMain{
+  margin-top: 75px!important;
 }
-
-#naglowek1 {
-    float: left;
-    width: 20%;
-}
-
-#naglowek2 {
-    float: left;
-    width: 70%;
-}
-
-
-
-#wnetrze{
-    background-color: yellow;
-    padding-bottom: 40px;
-    height: 80vh;
-}
-
-#wnetrze1 {
-    float: left;
-    width: 20%;
-    background-color: white;
-    padding-left: 20px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    height: 80vh;
-}
-
-#wnetrze2 {
-    float: right;
-    width: 70%;
-    background-color: yellow;
-    padding-left: 20px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    height: 80vh;
-}
-
-
-#fieldleft {
-    float: left;
-    width: 50vh;
-    text-align: right;
-    right: 20px;
-    position: relative;
-    line-height: 22px;
-}
-
-
-#fieldmiddle {
-    float: left;
-    width:50vh;
-    line-height: 22px;
-}
-
-
-
-
-
-fieldset {
-    margin-left: 80px;
-    border-style: dotted;
-    width: 600px;
-}
-
-
-
-#kradio {
-    margin-right: 25px;
-}
-
-#lista {
-    width: 170px;
-}
-*/
