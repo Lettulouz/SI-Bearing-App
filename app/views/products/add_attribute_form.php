@@ -16,7 +16,7 @@
                 
                 <div class="row m-2">
                     <div class="float-end">
-                        <button type="submit"  class="btn btn-primary btn-lg float-end">Dodaj</button>
+                        <button type="submit" name="attrEditSub" class="btn btn-primary btn-lg float-end">Dodaj</button>
                     </div>
 
             </div>

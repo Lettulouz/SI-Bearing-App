@@ -51,7 +51,51 @@ class Admin extends Controller
         else{
             header("Location:" . ROOT . "/login");
         }
-        $this->view('admin/index', []);
+
+        require_once dirname(__FILE__,2) . '/core/database.php';
+
+        $query="SELECT `items`.`name` AS item, `manufactures`.`name` AS manufacturer
+        FROM `items` 
+            LEFT JOIN `manufactures` ON `items`.`id_manufacturer` = `manufactures`.`id` LIMIT 5";
+        $result = $db->query($query);
+        $items = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        $query="SELECT Count(name)
+        FROM `items`";
+        $result = $db->query($query);
+        
+        $itemsCount = $result->fetchAll(PDO::FETCH_ASSOC);
+        $itemsCount = $itemsCount[0]['Count(name)'];
+
+
+        $query="SELECT name
+        FROM catalog LIMIT 5";
+        $result = $db->query($query);
+        $catalogs = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        $query="SELECT Count(name)
+        FROM `catalog`";
+        $result = $db->query($query);
+        
+        $catalogsCount = $result->fetchAll(PDO::FETCH_ASSOC);
+        $catalogsCount = $catalogsCount[0]['Count(name)'];
+
+
+        $query="SELECT name
+        FROM attributes LIMIT 5";
+        $result = $db->query($query);
+        $attributes = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        $query="SELECT Count(name)
+        FROM attributes";
+        $result = $db->query($query);
+        
+        $attributesCount = $result->fetchAll(PDO::FETCH_ASSOC);
+        $attributesCount = $attributesCount[0]['Count(name)'];
+   
+
+        $this->view('admin/index', ['items'=>$items, 'itemsCount'=>$itemsCount, 'catalogs'=>$catalogs, 'catalogsCount'=>$catalogsCount,
+        'attributes'=>$attributes, 'attributesCount'=>$attributesCount]);
     }
 
     public function list_of_users(){
@@ -402,9 +446,9 @@ class Admin extends Controller
                 $_SESSION['error_page'] = "add_attribute";
                 header("Location:" . ROOT . "/admin/error_page/1");
             }
-        }
-
+        }else{
         $this->view('admin/add_attribute_admin', ['attribute' => $tekst2]);
+        }
     }
 /////////////////////////////////////////////////////////////////////////////
     public function add_catalog(){
