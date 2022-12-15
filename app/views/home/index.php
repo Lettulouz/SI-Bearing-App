@@ -1,5 +1,4 @@
 <?php include "header.php"; ?>
-<?php //include "navbar.php"; ?>
 <?php include "navbar_top.php"; ?>
 <?php// include "menu.php"; ?>
 
@@ -85,9 +84,11 @@
         $('#nwm').submit();
     })
 
-    $('#searchBox').click(function(){
-        $(this).val('');
-    })
+    // wykomentowałem, bo to nie powinno tak działać. Wojtek
+    //$('#searchBox').click(function(){
+        //$(this).val('');
+        
+    //})
 
     </script>
 <?php include dirname(__FILE__,2) . "/footer.php"; ?>
