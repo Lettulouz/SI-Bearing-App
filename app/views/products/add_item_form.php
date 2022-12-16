@@ -144,6 +144,7 @@
                 getValue += tempRMV;
                 getValue +=' :selected';
             var attribute_name = $(getValue).text();
+
             $(row_attr).remove();
             attrNum--;
             if(attrNum==0){
@@ -152,7 +153,8 @@
                 enableAttrSubmit();
             }
             alreadyUsed = alreadyUsed.filter(e => e !== attribute_name);
-            updateAttrList();
+            updateAttrList()
+            
 
         });
 
@@ -221,7 +223,7 @@
             var input = '#' + $(tempRMV[i-1]).attr('id');
             for(var j=0;j<possibleOptions.length;j++){
                 // sprawdzić czy value znajduje się w already used
-                $(input + ' option[value="' + alreadyUsed[j] + '"]').attr('disabled',false);
+                $(input + ' option').attr('disabled',false);
             }
         }
 
