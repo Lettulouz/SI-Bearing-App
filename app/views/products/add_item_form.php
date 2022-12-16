@@ -216,11 +216,14 @@
 	});
 
     function updateAttrList(){
-        let tempRMV = $("#show_attr").find("select");
-        console.log(tempRMV);
-        //console.log(alreadyUsed);
-
-        
+        let tempRMV = $("#show_attr").find("select");  
+        for(var i=1;i<=tempRMV.length;i++){
+            var input = '#' + $(tempRMV[i-1]).attr('id');
+            for(var j=0;j<possibleOptions.length;j++){
+                // sprawdzić czy value znajduje się w already used
+                $(input + ' option[value="' + alreadyUsed[j] + '"]').attr('disabled',false);
+            }
+        }
 
         for(var i=1;i<=tempRMV.length;i++){
             var input = '#' + $(tempRMV[i-1]).attr('id');
@@ -231,30 +234,15 @@
             }
             //console.log(alreadyUsed);
         }
-
-        for(var i=1;i<=tempRMV.length;i++){
-            var input = '#' + $(tempRMV[i-1]).attr('id');
-
-            for(var j=0;j<possibleOptions.length;j++){
-                // sprawdzić czy value znajduje się w already used
-                $(input + ' option[value="' + alreadyUsed[j] + '"]').attr('style' , "display:default");
-            }
-        }
-
-        
+  
         for(var i=1;i<=tempRMV.length;i++){
             var input = '#' + $(tempRMV[i-1]).attr('id');
 
             
             for(var j=0;j<alreadyUsed.length;j++){
                 // sprawdzić czy value znajduje się w already used
-                $(input + ' option[value="' + alreadyUsed[j] + '"]').attr('style', 'display: none');
+                $(input + ' option[value="' + alreadyUsed[j] + '"]').attr('disabled','disabled');
             }
-           
-
-          //  $(input).trigger('change');
-
-            //console.log(alreadyUsed);
 
         }
         
