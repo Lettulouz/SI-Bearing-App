@@ -42,7 +42,7 @@
                         
                             <form  method='POST' class='form-inline row p-1' action ='".$editPath."/".$id."'>
                             <div class='d-flex justify-content-end'>
-                                <input type='submit' class='btn btn-primary btn-sm p-1' value='Edytuj' />
+                                <input type='submit' class='btn btn-primary  p-1' value='Edytuj' />
                             <div class='col-sm-2 col-5 mx-2'>
                                 <input type='text' name='edit_atr' class='form-control ' value='{$attribut['name']}'/>
                             </div>
