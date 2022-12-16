@@ -1,6 +1,5 @@
 <?php include "header.php"; ?>
 <?php include "navbar_top.php"; ?>
-<?php// include "menu.php"; ?>
 
 
     <div class="row">
