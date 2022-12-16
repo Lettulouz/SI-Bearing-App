@@ -41,13 +41,11 @@
                             <br/>
                         
                             <form  method='POST' class='form-inline row p-1' action ='".$editPath."/".$id."'>
-                            <div class='col-3 col-sm-5 col-md-7'>
-                            </div>
-                            <div class='col-2'>
-                                <input type='submit' class='btn btn-primary p-1' value='Edytuj' />
-                            </div>
-                            <div class='col-sm-3 col-5'>
+                            <div class='d-flex justify-content-end'>
+                                <input type='submit' class='btn btn-primary btn-sm p-1' value='Edytuj' />
+                            <div class='col-sm-2 col-5 mx-2'>
                                 <input type='text' name='edit_atr' class='form-control ' value='{$attribut['name']}'/>
+                            </div>
                             </div>
                             </form >
                             </div>
