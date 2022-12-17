@@ -129,6 +129,19 @@
     display:none !important;
 }
 
+
+@media (max-width:576px){
+  .itemField1{
+    border: none !important;
+  }
+}
+
+@media (max-width:1200px){
+  .itemField2{
+    border: none !important;
+  }
+}
+
 /*for home*/
 .homeMain{
   margin-top: 75px!important;

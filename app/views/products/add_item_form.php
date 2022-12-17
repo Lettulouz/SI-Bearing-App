@@ -17,7 +17,7 @@
     <form action="" id="addItemForm" method="POST">
 
         <div class="row m-2">
-            <div class="col-12 col-sm-6 col-xl-4 border-end border-2">
+            <div class="col-12 col-sm-6 col-xl-4 itemField1 border-end border-2">
                 <div class="row m-2">
                     <div class="col">
                         <div class="form-floating ">
@@ -57,7 +57,7 @@
                     <?php if(isset($_GET['msg'])) echo base64_decode($_GET['msg']); ?></span>
                 </div>
             </div>   
-            <div class="col-12 col-sm-6 col-xl-4 border-end border-2 px-4">
+            <div class="col-12 col-sm-6 col-xl-4 border-end border-2 itemField2 px-4">
                 <h4>Dodawanie atrybutów</h4>
                 <div id="show_attr">
                 </div>
@@ -66,7 +66,7 @@
                 </div>
                 <input type="text" style="display:none" id="attributes" name="attributes" data-attr='<?php echo json_encode($data['attributes']); ?>'>
             </div>   
-            <div class="col-12 col-sm-12 col-xl-4 border-end border-2 px-4">
+            <div class="col-12 col-sm-12 col-xl-4 px-4">
                 <h4>Dodawanie opisów</h4>
                 <div id="show_desc">
                 </div>
