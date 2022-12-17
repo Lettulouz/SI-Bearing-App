@@ -17,7 +17,7 @@
     <form action="" id="addItemForm" method="POST">
 
         <div class="row m-2">
-            <div class="col-6 col-xl-4 border-end border-2">
+            <div class="col-12 col-sm-6 col-xl-4 border-end border-2">
                 <div class="row m-2">
                     <div class="col">
                         <div class="form-floating ">
@@ -57,7 +57,7 @@
                     <?php if(isset($_GET['msg'])) echo base64_decode($_GET['msg']); ?></span>
                 </div>
             </div>   
-            <div class="col-6 col-xl-4 border-end border-2 px-4">
+            <div class="col-12 col-sm-6 col-xl-4 border-end border-2 px-4">
                 <h4>Dodawanie atrybutów</h4>
                 <div id="show_attr">
                 </div>
@@ -65,7 +65,16 @@
                     <button class="btn btn-success" id="add_attr_btn">Dodaj atrybut</button>
                 </div>
                 <input type="text" style="display:none" id="attributes" name="attributes" data-attr='<?php echo json_encode($data['attributes']); ?>'>
-            </div>          
+            </div>   
+            <div class="col-12 col-sm-12 col-xl-4 border-end border-2 px-4">
+                <h4>Dodawanie opisów</h4>
+                <div id="show_desc">
+                </div>
+                <div>
+                    <button class="btn btn-success" id="add_description_btn">Dodaj opis</button>
+                </div>
+                <input type="text" style="display:none" id="descriptions" name="descriptions" data-attr='<?php echo json_encode($data['descriptions']); ?>'>
+            </div>  
         </div>  
         <button type="submit" id="itemSubmit" name="itemSubmit" class="btn btn-primary btn-lg float-end" style="display:none"></button>
     </form>
@@ -87,19 +96,25 @@
     possibleOptions.sort();
     var alreadyUsed = [];
     var attrNum=0;
+    var attrNum2=0;
     var descNum=0;
 	$(document).ready(function(){
+
+
+        // --Attributes-- //
+
+
 	    $("#add_attr_btn").click(function(e){
             e.preventDefault();
             alreadyUsed.push("");
             tempPossibleOptions = possibleOptions;
-            //console.log(tempPossibleOptions);
             attrNum++;
+            attrNum2++;
             var input = '#attribute_name' + attrNum;
             var html = '';
             html+='<div class="row">';
             html+='<div class="col-12 col-md-5 mb-3">';
-            html+='<select class="select2 form-control selectattr" id="attribute_name' + attrNum +  '" aria-label="example-xl" onchange="updateAttrList();">';
+            html+='<select class="select2 form-control selectattr requiredattr" id="attribute_name' + attrNum +  '" aria-label="example-xl" onchange="updateAttrList();">';
             html+='<option>';
             html+='</option>';
             tempPossibleOptions.forEach((id) => {
@@ -111,7 +126,7 @@
             html+='</div>';
             html+='<div class="col-8 col-md-5 mb-3">';
             html+='<div class="form-floating">';
-            html+='<input type="text" id="' + input + '" class="form-control required" placeholder="Wartość" required onkeyup="enableAttrSubmit()" autocomplete="off">';
+            html+='<input type="text" id="' + input + '" class="form-control requiredattr" placeholder="Wartość" required onkeyup="enableAttrSubmit()" autocomplete="off">';
             html+='<label for="'+ input +'">Wartość</label>';
             html+='</div>';
             html+='</div>';
@@ -146,8 +161,8 @@
             var attribute_name = $(getValue).text();
 
             $(row_attr).remove();
-            attrNum--;
-            if(attrNum==0){
+            attrNum2--;
+            if(attrNum2==0){
                 $("#add_attr_btn").prop('disabled', false);
             }else{
                 enableAttrSubmit();
@@ -158,43 +173,56 @@
 
         });
 
-    
 
-        // ---------------------------------- //
+        // --Descriptions-- //
+
 
         $("#add_description_btn").click(function(e){
             e.preventDefault();
             descNum++;
             var html = '';
             html+='<div class="row">';
-            html+='<textarea class="form-control " style="overflow:hidden;" id="description' + descNum + '" name="text" maxlength="1000" placeholder="Type in your message" rows="2" cols="5" onkeyup="test()" onkeydown="test1()" onclick="test1()"></textarea>';
-            html+='<span class="pull-right label label-default" id="count_message' + descNum + '">TESTs</span><br><br>';
+            html+='<textarea class="form-control desc requireddesc" style="overflow:hidden;" id="description' + descNum + '" name="text" maxlength="1000" placeholder="Opis..." rows="2" cols="5"></textarea>';
+            html+='<span class="pull-right label label-default" style="margin-top: 3px" id="count_message' + descNum + '"></span><br><br>';
             html+='</div>';
 
             $("#show_desc").append(html)
-            if(descNum>=jsArr.length){
-                $("#add_desc_btn").prop('disabled', true);
-            }
-            else{
-               // enableDescriptionsSubmit();
-            }
-
+   
             var text_max = 1000;
 
-            $('#count_message1').text('0 / ' + text_max );
+            inputcm = '#count_message' + descNum; 
+            $(inputcm).text('0 / ' + text_max );
 
-            var sch = $('#description1').prop('scrollHeight');
+            inputdesc = '#description' + descNum;
+            var sch = $(inputdesc).prop('scrollHeight');
             sch = sch+10;
-            $('#description1').attr('style', `resize:none; font-size: 18px; height:${sch}px; overflow:hidden;`);
+            $(inputdesc).attr('style', `resize:none; font-size: 18px; height:${sch}px; overflow:hidden;`);
 
-
+            enableDescSubmit();
 
 
         });
 
+        $(document).on('keydown', '.desc', function(e){ 
+            $(this).attr('style', 'height:auto; resize:none; font-size: 18px; overflow:hidden;');
+            var sch = $(this).prop('scrollHeight');
+            sch = sch+10;
+            $(this).attr('style', `height:${sch}px; resize:none; font-size: 18px; overflow:hidden;`);
+        });
+
+        $(document).on('keyup', '.desc', function(e){ 
+            var text_max = 1000;
+            var text_length = $(this).val().length;
+            var text_remaining = text_max - text_length;
+
+            var test = $(this).parent().find('span');
+
+            $(test).html(text_length + ' / ' + text_max);
+            enableDescSubmit();
+        });
 
 
-
+        // --Submit form-- //
 
 
         $("#itemSubmitRemote").click(function(e){
@@ -247,12 +275,14 @@
             }
 
         }
+        enableAttrSubmit();
         
     }
 
     function enableAttrSubmit(){
-        let inputs = document.getElementsByClassName('required'); // Enter your class name for a required field, this should also be reflected within your form fields.
+        let inputs = document.getElementsByClassName('requiredattr'); // Enter your class name for a required field, this should also be reflected within your form fields.
         let btn = $('#add_attr_btn');
+        var isValid;
         for (var i = 0; i < inputs.length; i++){
             let changedInput = inputs[i];
             if (changedInput.value.trim() == "" || changedInput.value == null){
@@ -268,6 +298,35 @@
                 $("#add_attr_btn").prop('disabled', true);
             }
     }
+
+    function enableDescSubmit(){
+        let inputs = document.getElementsByClassName('requireddesc'); // Enter your class name for a required field, this should also be reflected within your form fields.
+
+        let btn = $('#add_description_btn');
+        var isValid;
+        console.log(inputs.length);
+        for (var i = 0; i < inputs.length; i++){
+            let changedInput = inputs[i];
+            console.log(changedInput);
+            if (changedInput.value.trim() == "" || changedInput.value == null){
+                isValid = false;
+                break;
+            }
+            else{
+                isValid = true;
+            }
+        }
+        btn.prop('disabled', !isValid);
+    }
+
+
+    
+
+
+    $(window).resize(function() {
+        test();
+});
+
 </script>
 
 
