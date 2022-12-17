@@ -29,13 +29,49 @@ class Home extends Controller
         $limit1 *= 8;
         $limit2 *= 8;
 
-        $query="SELECT title, description, name
-        FROM items i LEFT JOIN descriptions d ON d.id_item=i.id
-            WHERE name LIKE '%".$search."%' LIMIT ".$limit1.",".$limit2." ";
+        $table = array();
+
+        $query_m="SELECT id FROM manufactures;";
+        $manufacturer = $db->query($query_m);
+        $manufacturer = $manufacturer->fetchAll(PDO::FETCH_ASSOC);
+
+        // pobiera do tablicy id producetnów
+        $i = 0;
+        foreach($manufacturer as $manufacturer)
+        {
+            $table[$i] = $manufacturer['id'];
+            $i++;
+        }
+
+        $id_manufacturer = '';
+
+        // zamienia tablice w jednego stringa
+        // wystarczy dostarczyć tablice wypełnioną id producenta i polecenie sql działa
+        for($j = 0; $j < count($table); $j++)
+        {
+            if($j != 0)
+            {
+                $id_manufacturer = $id_manufacturer.', '.$table[$j];
+            }
+            else
+            {
+                $id_manufacturer = $id_manufacturer = $id_manufacturer.$table[$j];
+            }
+        }
+
+        $query="SELECT d.title, d.description, i.name, m.id
+            FROM items i 
+            LEFT JOIN descriptions d ON d.id_item=i.id 
+            INNER JOIN manufactures m ON i.id_manufacturer = m.id 
+            WHERE i.name LIKE '%".$search."%' 
+            AND m.id IN (".$id_manufacturer.")
+            ORDER BY i.name ASC
+            LIMIT ".$limit1.",".$limit2." ";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
         
-        $this->view('home/index', ['itemsArray'=>$result, 'search' => $search, 'limit1' => $przechowanie]);
+        $this->view('home/index', ['itemsArray'=>$result, 'search' => $search, 'limit1' => $przechowanie, 
+            'test' => $id_manufacturer]); // ten 'test' to do wywalenia na koniec
     }
 
 
