@@ -1,7 +1,6 @@
 <?php include "header.php"; ?>
 <?php include "navbar_top.php"; ?>
 
-
     <div class="row">
             <?php
             if(isset($data['limit1'])){
@@ -15,7 +14,7 @@
                 $search = $data['search'];
             }
 
-            echo '<form method="POST" class="d-flex" id="nwm" action ="" >';
+            echo '<form method="POST" class="d-flex mb-0" id="nwm" action ="" >';
                 echo "<input type='submit' class='btn btn-primary' value='Szukaj' />";
                 echo "<div class=' col-xs-3 px-2'>";
                 echo "<input type='text' class='form-control' id='searchBox' value='".$search."' name='search'/>";
@@ -32,6 +31,9 @@
 
     </div>
 <?php include "navbar_bottom.php"; ?>
+
+<?php include "sidebar_top.php"; ?>
+<?php include "sidebar_bottom.php"; ?>
 
 <div class='homeMain container mb-1'>
 <div class="row">          
