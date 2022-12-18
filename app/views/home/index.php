@@ -38,8 +38,11 @@
         foreach($manufacturer as $manufacturer) 
         {
             echo "<div class='form-check'>
-                <input class='form-check-input' type='checkbox' name='checkboxvar[]' value='".$manufacturer['id']."' ";
-                //echo "checked"; //tutaj robić zapamietywanie
+                <input class='form-check-input' id='checkboxvar' type='checkbox' name='checkboxvar[]' value='".$manufacturer['id']."' ";
+                if ((!empty($_POST["checkboxvar"]) && in_array($manufacturer['id'], $_POST["checkboxvar"])))
+                {
+                    echo "checked";
+                }
                  echo ">";
                 echo "<label class='form-check-label' for='manufacturer'>".$manufacturer['name']."</label>
             </div>";
