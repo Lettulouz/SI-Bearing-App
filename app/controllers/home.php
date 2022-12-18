@@ -35,6 +35,8 @@ class Home extends Controller
         $manufacturer = $db->query($query_m);
         $manufacturer = $manufacturer->fetchAll(PDO::FETCH_ASSOC);
 
+
+        /* do destów przydawało się
         // pobiera do tablicy id producetnów
         $i = 0;
         foreach($manufacturer as $manufacturers)
@@ -42,9 +44,14 @@ class Home extends Controller
             $table[$i] = $manufacturers['id'];
             $i++;
         }
+        */
+
+        if (isset($_POST['checkboxvar'])) 
+        {
+            $table = $_POST['checkboxvar']; 
+        }
 
         $id_manufacturer = '';
-
         // zamienia tablice w jednego stringa
         // wystarczy dostarczyć tablice wypełnioną id producenta i polecenie sql działa
         for($j = 0; $j < count($table); $j++)

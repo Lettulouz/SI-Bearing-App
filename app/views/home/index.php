@@ -39,12 +39,17 @@
         {
             echo "
             <div class='form-check'>
-                <input class='form-check-input' type='checkbox' name='check' id='manufacturer1' value='optionpr1'>
+                <input class='form-check-input' type='checkbox' name='checkboxvar[]' value='".$manufacturer['id']."' checked>
                 <label class='form-check-label' for='manufacturer'>".$manufacturer['name']."</label>
             </div>";
 
         }
 
+        if (isset($_POST['checkboxvar'])) 
+        {
+            print_r($_POST['checkboxvar']); 
+        }
+        echo "</from>";
     ?>
 <?php include "sidebar_bottom.php"; ?>
 
