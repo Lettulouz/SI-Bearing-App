@@ -160,7 +160,9 @@ input::-webkit-inner-spin-button {
     -moz-appearance:textfield; /* Firefox */
 }
 
+
+/* Chrome to słaba przeglądarka dla frajerów. Tylko Firefox, tam css działa jak powinien! */
 input.form-check-input{
-  width : 22px;
-  height : 22px;
+  width : 20px;
+  height : 20px;
 }
