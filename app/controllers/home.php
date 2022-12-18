@@ -31,15 +31,15 @@ class Home extends Controller
 
         $table = array();
 
-        $query_m="SELECT id FROM manufactures;";
+        $query_m="SELECT id, name FROM manufactures;";
         $manufacturer = $db->query($query_m);
         $manufacturer = $manufacturer->fetchAll(PDO::FETCH_ASSOC);
 
         // pobiera do tablicy id producetnów
         $i = 0;
-        foreach($manufacturer as $manufacturer)
+        foreach($manufacturer as $manufacturers)
         {
-            $table[$i] = $manufacturer['id'];
+            $table[$i] = $manufacturers['id'];
             $i++;
         }
 
@@ -71,6 +71,7 @@ class Home extends Controller
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
         
         $this->view('home/index', ['itemsArray'=>$result, 'search' => $search, 'limit1' => $przechowanie, 
+            'manufacturerArray' => $manufacturer,
             'test' => $id_manufacturer]); // ten 'test' to do wywalenia na koniec
     }
 

@@ -33,14 +33,19 @@
 <?php include "navbar_bottom.php"; ?>
 
 <?php include "sidebar_top.php"; ?>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" name="check" id="manufacturer1" value="optionpr1">
-        <label class="form-check-label" for="manufacturer">Producent1</label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" name="check" id="manufacturer1" value="optionpr1">
-        <label class="form-check-label" for="manufacturer">Producent1</label>
-    </div>
+    <?php
+        $manufacturer = $data['manufacturerArray'];
+        foreach($manufacturer as $manufacturer) 
+        {
+            echo "
+            <div class='form-check'>
+                <input class='form-check-input' type='checkbox' name='check' id='manufacturer1' value='optionpr1'>
+                <label class='form-check-label' for='manufacturer'>".$manufacturer['name']."</label>
+            </div>";
+
+        }
+
+    ?>
 <?php include "sidebar_bottom.php"; ?>
 
 <div class='homeMain container mb-1'>
