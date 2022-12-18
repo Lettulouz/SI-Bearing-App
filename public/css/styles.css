@@ -156,6 +156,11 @@ input::-webkit-inner-spin-button {
     margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 }
 
-input[type=number] {
+[type=number] {
     -moz-appearance:textfield; /* Firefox */
+}
+
+input.form-check-input{
+  width : 22px;
+  height : 22px;
 }

@@ -37,10 +37,11 @@
         $manufacturer = $data['manufacturerArray'];
         foreach($manufacturer as $manufacturer) 
         {
-            echo "
-            <div class='form-check'>
-                <input class='form-check-input' type='checkbox' name='checkboxvar[]' value='".$manufacturer['id']."' >
-                <label class='form-check-label' for='manufacturer'>".$manufacturer['name']."</label>
+            echo "<div class='form-check'>
+                <input class='form-check-input' type='checkbox' name='checkboxvar[]' value='".$manufacturer['id']."' ";
+
+                 echo ">";
+                echo "<label class='form-check-label' for='manufacturer'>".$manufacturer['name']."</label>
             </div>";
 
         }
