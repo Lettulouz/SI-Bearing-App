@@ -38,8 +38,6 @@
             echo "<tr>
                     <td colspan='12' class='p-0'>
                             <div class='collapse container' id='row".$i."'>
-                            <br/>
-                        
                             <form  method='POST' class='form-inline row p-1' action ='".$editPath."/".$id."'>
                             <div class='d-flex justify-content-end'>
                                 <input type='submit' class='btn btn-primary  p-1' value='Edytuj' />

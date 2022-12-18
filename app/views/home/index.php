@@ -45,10 +45,12 @@
 
         }
 
+        /*
         if (isset($_POST['checkboxvar'])) 
         {
             print_r($_POST['checkboxvar']); 
         }
+        */
         echo "</from>";
     ?>
 <?php include "sidebar_bottom.php"; ?>
