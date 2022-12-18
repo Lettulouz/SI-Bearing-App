@@ -36,7 +36,7 @@ class Home extends Controller
         $manufacturer = $manufacturer->fetchAll(PDO::FETCH_ASSOC);
 
 
-        /* do destów przydawało się
+
         // pobiera do tablicy id producetnów
         $i = 0;
         foreach($manufacturer as $manufacturers)
@@ -44,7 +44,7 @@ class Home extends Controller
             $table[$i] = $manufacturers['id'];
             $i++;
         }
-        */
+        
 
         if (isset($_POST['checkboxvar'])) 
         {

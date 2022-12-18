@@ -39,7 +39,7 @@
         {
             echo "
             <div class='form-check'>
-                <input class='form-check-input' type='checkbox' name='checkboxvar[]' value='".$manufacturer['id']."' checked>
+                <input class='form-check-input' type='checkbox' name='checkboxvar[]' value='".$manufacturer['id']."' >
                 <label class='form-check-label' for='manufacturer'>".$manufacturer['name']."</label>
             </div>";
 
