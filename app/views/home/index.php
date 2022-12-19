@@ -33,7 +33,7 @@
 <?php include "navbar_bottom.php"; ?>
 <?php include "sidebar_top.php"; ?>
 
-<div class='collapse' id="manufacturersGroup">
+<div class='collapse show' id="manufacturersGroup">
     <?php
         $manufacturer = $data['manufacturerArray'];
         foreach($manufacturer as $manufacturer) 
