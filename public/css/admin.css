@@ -28,18 +28,15 @@
     display:none;
   }
 
-  .homeMain{
-    margin-left: var( --offcanvas-width);
-  }
-
-  /*nargines dla stopki, gdy pasek z filtrami jest na stronie, jak nie pasuje to usuńcie*/
-  .homeF{
+  #adm-main{
     margin-left: var( --offcanvas-width);
   }
 }
 
 @media (min-width:992px){
-
+  .sidebar #adm-main{
+    margin-left: var( --offcanvas-width);
+  }
 }
 
 .btn-custom-1{
@@ -92,37 +89,55 @@
 }
 
 
-
-  ul.navbar-nav a:hover { color: #000 !important; }
-
-
-.homeMain{
-  margin-top: 75px!important;
-}
-
-@media (max-width:822px){
-  .homeMain{
-    margin-top: 94px!important;
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #272C31; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #212529; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3A4148; 
   }
 
+  ul.navbar-nav a:hover { color: #fff !important; }
+
+  .select2-selection__choice__display, .select2-search{
+    font-size:1rem;
+  }
+
+
+  .select2-selection{
+    padding: 12px !important;
+  }
+  
+  .select2-selection--single{
+    height: 58px !important;
+    padding: 14px 0 14px 4px !important;
+  }
+
+  .select2-selection__arrow b{
+    display:none !important;
 }
 
 
-    /* usuwa strzałeczki przy inputah number */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-    /* display: none; <- Crashes Chrome on hover */
-    -webkit-appearance: none;
-    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+@media (max-width:576px){
+  .itemField1{
+    border: none !important;
+  }
 }
 
-[type=number] {
-    -moz-appearance:textfield; /* Firefox */
-}
-
-
-/* Chrome to słaba przeglądarka dla frajerów. Tylko Firefox, tam css działa jak powinien! */
-input.form-check-input{
-  width : 20px;
-  height : 20px;
+@media (max-width:1200px){
+  .itemField2{
+    border: none !important;
+  }
 }

@@ -31,8 +31,9 @@
 
     </div>
 <?php include "navbar_bottom.php"; ?>
-
 <?php include "sidebar_top.php"; ?>
+
+<div class='collapse' id="manufacturersGroup">
     <?php
         $manufacturer = $data['manufacturerArray'];
         foreach($manufacturer as $manufacturer) 
@@ -48,6 +49,7 @@
             </div>";
 
         }
+        
 
         /*
         if (isset($_POST['checkboxvar'])) 
@@ -55,8 +57,9 @@
             print_r($_POST['checkboxvar']); 
         }
         */
-        echo "</from>";
+        echo "</form>";
     ?>
+</div>
 <?php include "sidebar_bottom.php"; ?>
 
 <div class='homeMain container mb-1'>

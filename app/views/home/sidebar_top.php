@@ -1,4 +1,4 @@
-<div class="offcanvas bg-light sidebar" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="sidebar" aria-labelledby="offcanvasDarkLabel">
+<div class="offcanvas offcanvas-start bg-light sidebar mb-auto" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="sidebar" aria-labelledby="offcanvasDarkLabel">
   <div class="offcanvas-body">
     <nav class="navbar-light">
       <ul class="navbar-nav">
@@ -8,7 +8,7 @@
         </li>
         <li>
         <a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link"
-         data-bs-toggle="collapse" role="button"  aria-controls="users_collapse" aria-expanded="false" id="users_collapse_btn">Producenci
+         data-bs-toggle="collapse" role="button" data-bs-target="#manufacturersGroup"  aria-controls="#manufacturersGroup" aria-expanded="false">Producenci
          <span class="bi bi-chevron-right right-icon ms-auto"></span>
         </a>
 
