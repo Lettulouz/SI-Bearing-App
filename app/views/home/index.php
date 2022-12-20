@@ -49,7 +49,7 @@
         foreach($manufacturer as $manufacturer) 
         {
             echo "<div class='form-check'>
-                <input class='form-check-input' id='checkboxvar' type='checkbox' name='checkboxvar[]' value='".$manufacturer['id']."' ";
+                <input class='form-check-input checkboxvar' id='checkboxvar' type='checkbox' name='checkboxvar[]' value='".$manufacturer['id']."' ";
                 if ((!empty($_POST["checkboxvar"]) && in_array($manufacturer['id'], $_POST["checkboxvar"])))
                 {
                     echo "checked";
@@ -120,6 +120,9 @@
         $('#nwm').submit();
     })
 
+    $('.checkboxvar').click(function(){
+        $('#nwm').submit();
+    })
     // wykomentowałem, bo to nie powinno tak działać. Wojtek
     //$('#searchBox').click(function(){
         //$(this).val('');
