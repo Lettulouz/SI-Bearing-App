@@ -1,7 +1,7 @@
 <?php include "header.php"; ?>
 <?php include "navbar_top.php"; ?>
 
-    <div class="row">
+    <div>
             <?php
             if(isset($data['limit1'])){
                 $limit1 = $data['limit1'];
@@ -31,9 +31,19 @@
 
     </div>
 <?php include "navbar_bottom.php"; ?>
-<?php include "sidebar_top.php"; ?>
 
-<div class='collapse show' id="manufacturersGroup">
+<button class="btn btn-light btn-lg panelBtn mx-3" type="button" data-bs-toggle="offcanvas" href=".sidebar" role="button" aria-controls="sidebar">
+    <i class="bi bi-list"></i>
+        </button>
+
+<?php include "sidebar_top.php"; ?>
+<a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link"
+         data-bs-toggle="collapse" role="button" data-bs-target="#manufacturersGroup"  aria-controls="#manufacturersGroup" 
+         aria-expanded="<?=!empty($_POST['checkboxvar']) ? 'true' : 'false' ?>">Producenci
+         <span class="bi bi-chevron-right right-icon ms-auto"></span>
+        </a>
+
+<div class='collapse <?=!empty($_POST['checkboxvar']) ? 'show' : '' ?>' id="manufacturersGroup">
     <?php
         $manufacturer = $data['manufacturerArray'];
         foreach($manufacturer as $manufacturer) 
@@ -61,8 +71,7 @@
     ?>
 </div>
 <?php include "sidebar_bottom.php"; ?>
-
-<div class='homeMain container mb-1'>
+<div class='homeMain container mw-75 mb-1 px-5'>
 <div class="row">          
     <?php
     
@@ -71,8 +80,8 @@
     $items = $data['itemsArray'];
     foreach($items as $j => $item) 
     {
-            echo "<div class='col-12 col-md-6 col-lg-3'>
-                    <div class='card'>
+            echo "<div class='col-12 col-md-6 col-lg-3 mb-4'>
+                    <div class='card h-100'>
                         <img src='https://i.imgur.com/uqTzNBt.jpg'  alt='zdjęcie łożyska' class='card-img-top'>
                         <div class='card-body'>
                             <h4  class='card-title'><b>  {$item['name']} </b></h5>
@@ -88,8 +97,7 @@
     }
     ?>
     </div>
-    <div class="row">
-    </div>
+
 </div>
 
 

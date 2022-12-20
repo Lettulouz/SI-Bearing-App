@@ -13,6 +13,12 @@
   background-color: #272C31;
 }
 
+.sideBtn{
+position: fixed;
+ z-index:2;
+ margin-top:60px!important;
+}
+
 @media (min-width:1050px){
   body{
     overflow: auto !important;
@@ -20,22 +26,14 @@
   .offcanvas-backdrop::before{
     display: none;
   }
-  .sidebar{
-    transform: none;
-    visibility: visible !important;
-  }
+
   .side-btn{
     display:none;
   }
 
-  .homeMain{
-    margin-left: var( --offcanvas-width);
-  }
 
   /*nargines dla stopki, gdy pasek z filtrami jest na stronie, jak nie pasuje to usuńcie*/
-  .homeF{
-    margin-left: var( --offcanvas-width);
-  }
+
 }
 
 @media (min-width:992px){
@@ -61,7 +59,11 @@
     background-color: rgb(55, 142, 218);
 }
 
-
+.panelBtn{
+  position:fixed;
+   z-index:2;
+   margin-top:60px;
+}
 
 .headers-padding {
   padding-left: 15px;
@@ -97,13 +99,21 @@
 
 
 .homeMain{
-  margin-top: 75px!important;
+  margin-top: 115px!important;
 }
 
 @media (max-width:822px){
   .homeMain{
-    margin-top: 94px!important;
+    margin-top: 144px!important;
   }
+
+  .sidebar{
+    top: 94px!important;
+}
+
+.panelBtn{
+   margin-top:100px;
+}
 
 }
 
