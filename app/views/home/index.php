@@ -21,8 +21,8 @@
                 echo "</div>";
                 echo "<div class='d-flex px-3'>";
                 echo "<button type='button' id='lft' class='btn btn-primary'/><i class='bi bi-arrow-left'></i></button>";
-                echo "<div class='col-2'>";
-                echo "<input type='number' style='text-align:center;'  id='page' class='form-control' value='".$limit1."' name='limit1'/>";
+                echo "<div class='col-4 col-sm-2'>";
+                echo "<input type='number' style='text-align:center;'  id='page' class='form-control px-0' value='".$limit1."' name='limit1'/>";
                 echo "</div>";
                 echo "<button type='button' id='rgt' class='btn btn-primary'/><i class='bi bi-arrow-right'></i></button>";
                 echo "</div>";
