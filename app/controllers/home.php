@@ -77,9 +77,11 @@ class Home extends Controller
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
         
+        $test = 0;
         $this->view('home/index', ['itemsArray'=>$result, 'search' => $search, 'limit1' => $przechowanie, 
             'manufacturerArray' => $manufacturer,
             'test' => $id_manufacturer]); // ten 'test' to do wywalenia na koniec
+            
     }
 
 
