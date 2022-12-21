@@ -45,19 +45,20 @@
 
 <div class='collapse <?=!empty($_POST['checkboxvar']) ? 'show' : '' ?>' id="manufacturersGroup">
     <?php
+        $k = 0;
         $manufacturer = $data['manufacturerArray'];
         foreach($manufacturer as $manufacturer) 
         {
             echo "<div class='form-check'>
-                <input class='form-check-input checkboxvar' id='checkboxvar' type='checkbox' name='checkboxvar[]' value='".$manufacturer['id']."' ";
+                <input class='form-check-input checkboxvar' id='manufacturer".$k."' type='checkbox' name='checkboxvar[]' value='".$manufacturer['id']."' ";
                 if ((!empty($_POST["checkboxvar"]) && in_array($manufacturer['id'], $_POST["checkboxvar"])))
                 {
                     echo "checked";
                 }
                  echo ">";
-                echo "<label class='form-check-label' for='manufacturer'>".$manufacturer['name']."</label>
+                echo "<label class='form-check-label' for='manufacturer".$k."''>".$manufacturer['name']."</label>
             </div>";
-
+            $k++;
         }
         
 
