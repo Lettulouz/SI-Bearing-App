@@ -66,7 +66,7 @@ class Home extends Controller
             }
         }
 
-        $query="SELECT d.title, d.description, i.name, m.id
+        $query="SELECT d.title, d.description, i.name, m.id, m.name as 'name2'
             FROM items i 
             LEFT JOIN descriptions d ON d.id_item=i.id 
             INNER JOIN manufactures m ON i.id_manufacturer = m.id 

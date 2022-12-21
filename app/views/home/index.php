@@ -87,6 +87,7 @@
                         <div class='card-body'>
                             <h4  class='card-title'><b>  {$item['name']} </b></h5>
                             <div class='card-text'> 
+                            <h5>firma: {$item['name2']} </h5>
                             <p> <b> {$item['title']} </b> <br/>
                             {$item['description']}</p>
                             </div>
