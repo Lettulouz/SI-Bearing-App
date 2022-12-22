@@ -2,32 +2,30 @@
 <?php include "navbar_top.php"; ?>
 
     <div>
-            <?php
-            if(isset($data['limit1'])){
-                $limit1 = $data['limit1'];
-            }
-            else{
-                $limit1=1;
-            }
+            
+             <form method="POST" class="d-flex mb-0" id="nwm" action ="">
+                 <div class=' col-xs-3 px-2'>
+                 <div class="input-group">
+                    <input type='text' class='form-control' id='searchBox' 
+                        value='<?=isset($data['search']) ? $data['search'] : '' ?>' name='search' placeholder="szukaj">
+                        <button type="button" class="btn bg-transparent clrBtn" style="margin-left: -40px; z-index: 100;">
+                        <i class="bi bi-x"></i>
+                        </button>
+                        <button class="btn btn-outline-primary" type="submit">szukaj</button>
+                </div>
+                 </div>
+                 <div class='d-flex px-3'>
+                    <div class="input-group">
+                        <button type='button' id='lft' class='btn btn-outline-primary'><i class='bi bi-arrow-left'></i></button>
+                            <div class='col-4 col-sm-2'>
+                                <input type='number' style='text-align:center;'  id='page' class='form-control px-0' 
+                                value='<?=isset($data['limit1']) ? $data['limit1'] : 1 ?>' name='limit1'/>
+                            </div>
+                        <button type='button' id='rgt' class='btn btn-outline-primary'><i class='bi bi-arrow-right'></i></button>
+                    </div>
+                 </div>
 
-            if(isset($data['search'])){
-                $search = $data['search'];
-            }
-
-            echo '<form method="POST" class="d-flex mb-0" id="nwm" action ="" >';
-                echo "<input type='submit' class='btn btn-primary' value='Szukaj' />";
-                echo "<div class=' col-xs-3 px-2'>";
-                echo "<input type='text' class='form-control' id='searchBox' value='".$search."' name='search'/>";
-                echo "</div>";
-                echo "<div class='d-flex px-3'>";
-                echo "<button type='button' id='lft' class='btn btn-primary'/><i class='bi bi-arrow-left'></i></button>";
-                echo "<div class='col-4 col-sm-2'>";
-                echo "<input type='number' style='text-align:center;'  id='page' class='form-control px-0' value='".$limit1."' name='limit1'/>";
-                echo "</div>";
-                echo "<button type='button' id='rgt' class='btn btn-primary'/><i class='bi bi-arrow-right'></i></button>";
-                echo "</div>";
-
-            ?>
+            
 
     </div>
 <?php include "navbar_bottom.php"; ?>
@@ -62,18 +60,14 @@
         }
         
 
-        /* //
-        if (isset($_POST['checkboxvar'])) 
-        {
-            print_r($_POST['checkboxvar']); 
-        }
-        */
-        echo "</form>";
+
     ?>
+
+ </form>
 </div>
 <div class="mt-2">
-    <button type="button" class="btn btn-primary filterSub">Prześlij</button>
-    <button type="button" class="btn btn-danger resetSub">Resetuj</button>
+    <button type="button" class="btn btn-outline-primary filterSub">Prześlij</button>
+    <button type="button" class="btn btn-outline-danger">Resetuj</button>
     </div>
 <?php include "sidebar_bottom.php"; ?>
 <div class='homeMain container mw-75 mb-1 px-5'>
@@ -110,7 +104,7 @@
 <script>
     $(document).ready(function(){
         if($('#page').val()<=1){
-            $('#lft').addClass('disabled');
+            $('#lft').addClass('btn btn-outline-secondary disabled');
         }
     })
 
@@ -127,7 +121,7 @@
     })
 
     //show sidebar at load page if at least one of checkboxes is checked
-    //and window is
+    //and window is wide enough
     $( document ).ready(function() {
         if($(window).width()>1536 && $(".sidebar").find(':checkbox:checked').length > 0){
             $(".sidebar").addClass('show');
@@ -142,11 +136,11 @@
         $('.checkboxvar').removeAttr('checked');
         $('#nwm').submit();
     })
-    // wykomentowałem, bo to nie powinno tak działać. Wojtek
-    //$('#searchBox').click(function(){
-        //$(this).val('');
+    
+    $('.clrBtn').click(function(){
+        $('#searchBox').val('');
         
-    //})
+    })
 
     </script>
 <?php include dirname(__FILE__,2) . "/footer.php"; ?>

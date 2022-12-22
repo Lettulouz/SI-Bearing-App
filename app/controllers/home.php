@@ -66,6 +66,26 @@ class Home extends Controller
             }
         }
 
+        //blokowanie przechodzenia na kolejne strony
+        //gdy nie ma więcej przedmiotów do wyświetlenia na razie nie działa
+        // $query="SELECT COUNT(i.name) AS countItems
+        //     FROM items i 
+        //     LEFT JOIN descriptions d ON d.id_item=i.id 
+        //     INNER JOIN manufactures m ON i.id_manufacturer = m.id 
+        //     WHERE i.name LIKE '%".$search."%' 
+        //     AND m.id IN (".$id_manufacturer.")
+        //     ORDER BY i.name ASC
+        //     LIMIT ".$limit1.",".$limit2." ";
+        // $result = $db->query($query);
+        // $result = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        // if(empty($result)){
+        //     $limit1++;
+        //     $limit2--;
+        //     $limit1 *= 8;
+        //     $limit2 *= 8;
+        // }
+
         $query="SELECT d.title, d.description, i.name, m.id, m.name as 'name2'
             FROM items i 
             LEFT JOIN descriptions d ON d.id_item=i.id 
