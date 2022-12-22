@@ -71,9 +71,13 @@
         echo "</form>";
     ?>
 </div>
+<div class="mt-2">
+    <button type="button" class="btn btn-primary filterSub">Prześlij</button>
+    <button type="button" class="btn btn-danger resetSub">Resetuj</button>
+    </div>
 <?php include "sidebar_bottom.php"; ?>
 <div class='homeMain container mw-75 mb-1 px-5'>
-<div class="row">          
+<div class="row ">          
     <?php
     
     $j = 0;
@@ -122,7 +126,20 @@
         $('#nwm').submit();
     })
 
-    $('.checkboxvar').click(function(){
+    //show sidebar at load page if at least one of checkboxes is checked
+    //and window is
+    $( document ).ready(function() {
+        if($(window).width()>1536 && $(".sidebar").find(':checkbox:checked').length > 0){
+            $(".sidebar").addClass('show');
+        }
+    });
+
+    $('.filterSub').click(function(){
+        $('#nwm').submit();
+    })
+
+    $('.resetSub').click(function(){
+        $('.checkboxvar').removeAttr('checked');
         $('#nwm').submit();
     })
     // wykomentowałem, bo to nie powinno tak działać. Wojtek

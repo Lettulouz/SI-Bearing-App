@@ -1,4 +1,4 @@
-<div class="offcanvas offcanvas-start bg-light sidebar <?=!empty($_POST['checkboxvar']) ? 'show' : '' ?>" data-bs-scroll="true" data-bs-backdrop="false" id="sidebar" aria-labelledby="offcanvasDarkLabel">
+<div class="offcanvas offcanvas-start bg-light sidebar" data-bs-scroll="true" data-bs-backdrop="false" id="sidebar" aria-labelledby="offcanvasDarkLabel">
   <div class="offcanvas-body pt-1">
     <nav class="navbar-light">
       <ul class="navbar-nav">
