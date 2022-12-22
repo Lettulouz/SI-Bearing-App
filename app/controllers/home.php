@@ -13,7 +13,7 @@ class Home extends Controller
 
         $search = '';
         $limit1 = 1;
-
+        $endofitems=0;
         if(isset($_POST['search']))
             $search = $_POST['search'];
 
@@ -66,27 +66,9 @@ class Home extends Controller
             }
         }
 
-        //blokowanie przechodzenia na kolejne strony
-        //gdy nie ma więcej przedmiotów do wyświetlenia na razie nie działa
-        // $query="SELECT COUNT(i.name) AS countItems
-        //     FROM items i 
-        //     LEFT JOIN descriptions d ON d.id_item=i.id 
-        //     INNER JOIN manufactures m ON i.id_manufacturer = m.id 
-        //     WHERE i.name LIKE '%".$search."%' 
-        //     AND m.id IN (".$id_manufacturer.")
-        //     ORDER BY i.name ASC
-        //     LIMIT ".$limit1.",".$limit2." ";
-        // $result = $db->query($query);
-        // $result = $result->fetchAll(PDO::FETCH_ASSOC);
+       
 
-        // if(empty($result)){
-        //     $limit1++;
-        //     $limit2--;
-        //     $limit1 *= 8;
-        //     $limit2 *= 8;
-        // }
-
-        $query="SELECT d.title, d.description, i.name, m.id, m.name as 'name2'
+        $query="SELECT d.title, d.description, i.name, m.id, i.id as itemID, m.name as 'name2'
             FROM items i 
             LEFT JOIN descriptions d ON d.id_item=i.id 
             INNER JOIN manufactures m ON i.id_manufacturer = m.id 
@@ -96,10 +78,27 @@ class Home extends Controller
             LIMIT ".$limit1.",".$limit2." ";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
-        
+
+        $query2="SELECT i.id as id FROM items i 
+        LEFT JOIN descriptions d ON d.id_item=i.id 
+        INNER JOIN manufactures m ON i.id_manufacturer = m.id 
+        WHERE i.name LIKE '%".$search."%' 
+        AND m.id IN (".$id_manufacturer.")
+        ORDER BY i.name DESC LIMIT 1";
+
+        $last = $db->query($query2);
+        $last = $last->fetchAll(PDO::FETCH_ASSOC);
+        $currentLast=end($result);
+
+        if($currentLast!=false){
+            if($currentLast['itemID']==$last[0]['id']){
+                $endofitems=1;
+            }
+        }
+
         $test = 1;
         $this->view('home/index', ['itemsArray'=>$result, 'search' => $search, 'limit1' => $przechowanie, 
-            'manufacturerArray' => $manufacturer,
+            'manufacturerArray' => $manufacturer, 'last'=> $endofitems,
             'test' => $id_manufacturer]); // ten 'test' to do wywalenia na koniec
             
     }

@@ -11,7 +11,7 @@
                         <button type="button" class="btn bg-transparent clrBtn" style="margin-left: -40px; z-index: 100;">
                         <i class="bi bi-x"></i>
                         </button>
-                        <button class="btn btn-outline-primary" type="submit">szukaj</button>
+                        <button class="btn btn-outline-primary sub" type="submit">szukaj</button>
                 </div>
                  </div>
                  <div class='d-flex px-3'>
@@ -21,7 +21,8 @@
                                 <input type='number' style='text-align:center;'  id='page' class='form-control px-0' 
                                 value='<?=isset($data['limit1']) ? $data['limit1'] : 1 ?>' name='limit1'/>
                             </div>
-                        <button type='button' id='rgt' class='btn btn-outline-primary'><i class='bi bi-arrow-right'></i></button>
+                        <button type='button' id='rgt' class='<?=$data['last']==1 ? 'btn btn-outline-secondary disabled' : 'btn btn-outline-primary'?>'>
+                        <i class='bi bi-arrow-right'></i></button>
                     </div>
                  </div>
 
@@ -79,7 +80,7 @@
     $items = $data['itemsArray'];
     foreach($items as $j => $item) 
     {
-            echo "<div class='col-12 col-md-6 col-lg-3 mb-4'>
+            echo "<div class='col-12 col-md-6 col-lg-4 col-xl-3 mb-4'>
                     <div class='card h-100'>
                         <img src='https://i.imgur.com/uqTzNBt.jpg'  alt='zdjęcie łożyska' class='card-img-top'>
                         <div class='card-body'>
@@ -128,18 +129,27 @@
         }
     });
 
+    //filter products
     $('.filterSub').click(function(){
+        $('#page').val(1);
         $('#nwm').submit();
     })
 
+    //reset filters
     $('.resetSub').click(function(){
         $('.checkboxvar').removeAttr('checked');
+        $('#page').val(1);
         $('#nwm').submit();
     })
     
+    //clear searchBox
     $('.clrBtn').click(function(){
         $('#searchBox').val('');
         
+    })
+
+    $('.sub').click(function(){
+        $('#page').val(1);
     })
 
     </script>
