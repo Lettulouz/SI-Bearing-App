@@ -67,7 +67,7 @@
 </div>
 <div class="mt-2">
     <button type="button" class="btn btn-outline-primary filterSub">Prześlij</button>
-    <button type="button" class="btn btn-outline-danger">Resetuj</button>
+    <button type="button" class="btn btn-outline-danger resetSub">Resetuj</button>
     </div>
 <?php include "sidebar_bottom.php"; ?>
 <div class='homeMain container mw-75 mb-1 px-5'>
