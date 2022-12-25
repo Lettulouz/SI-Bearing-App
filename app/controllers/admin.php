@@ -779,7 +779,7 @@ public function add_countries_to_manufacturer(){
         $selManufacturer = "";
 
         if(isset($_SESSION['successOrErrorResponse'])){
-            if($_SESSION['successOrErrorResponse'] == "add_manufacturer"){
+            if($_SESSION['successOrErrorResponse'] == "add_countries_to_manufacturer"){
                 if(isset($_SESSION['manufacturername'])) {$manufacturername = $_SESSION['manufacturername']; unset($_SESSION['manufacturername']);} 
                 if(isset($_SESSION['selCountries'])) {$selCountries = $_SESSION['selCountries']; unset($_SESSION['selCountries']);} 
             }
@@ -805,11 +805,11 @@ public function add_countries_to_manufacturer(){
                 $temp = $selCountries_id['COUNT(id)'];
                 
                 if($temp>0){
-                    $_SESSION['error_page'] = "add_manufacturer";
+                    $_SESSION['error_page'] = "add_countries_to_manufacturer";
                     header("Location:" . ROOT . "/admin/error_page/2");
                 }else{
                  //connect items with catalog
-                 $query="INSERT INTO manufacturers (name,id_country) VALUES (:manufacturername,:selCountries_id)";
+                 $query="INSERT INTO manufacturercountries (id_manufacturer,id_country) VALUES (:manufacturername,:selCountries_id)";
                  foreach ($selCountries as $selCountries_id){
                      $result = $db->prepare($query);
                      $result->bindParam(':manufacturername',$manufacturername);
@@ -825,7 +825,7 @@ public function add_countries_to_manufacturer(){
                 }
             }
             else{
-                $_SESSION['error_page'] = "add_manufacturer";
+                $_SESSION['error_page'] = "add_countries_to_manufacturer";
                 header("Location:" . ROOT . "/admin/error_page/1");
             }
 
@@ -862,10 +862,24 @@ public function add_countries_to_manufacturer(){
         $result = $db->prepare($query);
         $result->execute();
         $manufacturers = $result->fetchAll(PDO::FETCH_ASSOC);
+        $mnfCountries=array();
+
+        foreach($manufacturers as $mnf){
+            $query_country="SELECT `manufacturers`.id as m_id, `manufacturers`.name as mname, countries.id as c_id,
+            countries.name as cname
+            FROM `manufacturers` 
+                LEFT JOIN `manufacturercountries` ON `manufacturercountries`.`id_manufacturer` = `manufacturers`.`id` 
+                LEFT JOIN `countries` ON `manufacturercountries`.`id_country` = `countries`.`id` WHERE `manufacturers`.id=:mnfid";
+            $result_id = $db->prepare($query_country);
+            $result_id->bindParam(':mnfid', $mnf['m_id']);
+            $result_id->execute();
+            $result_id =  $result_id->fetchAll(PDO::FETCH_ASSOC);
+            $mnfCountries[$mnf['m_id']]= $result_id;    
+        }
 
         $rmPath=ROOT."/admin/";
 
-        $this->view('admin/list_of_manufacturers',['mnfArray'=> $manufacturers, 'rmpath'=> $rmPath]);
+        $this->view('admin/list_of_manufacturers',['mnfArray'=> $manufacturers, 'mnfCts'=> $mnfCountries, 'rmpath'=> $rmPath]);
 
     }
 

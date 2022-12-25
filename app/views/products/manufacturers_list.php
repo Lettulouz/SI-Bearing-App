@@ -29,7 +29,7 @@
         <tbody class="tab">
         <?php 
         $manufacturers = $data['mnfArray'];
-        //$itemsInCat = $data['catalogsItems'];
+        $mnfCts = $data['mnfCts'];
         $rmPath=$data['rmpath'];
         $i = 1;
         foreach($manufacturers as $mnf)
@@ -66,22 +66,22 @@
                                 </tr>
                                 </thead>	
                                 <tbody>";
-                                   /* foreach($itemsInCat[$catalog['id']] as $item){
+                                     foreach($mnfCts[$mnf['m_id']] as $ctr){
                                         echo  "<tr>
                                                 <td>
-                                                    {$item['mn_name']}
+
                                                 </td>
-                                                <td class='itemName".$catalog['id']." ".$item['id_item']."'>
-                                                    {$item['name_item']}
-                                                </td>
-                                                <td>
-                                                    {$item['amount']}
+                                                <td class='itemName'>
+                                                    {$ctr['cname']}
                                                 </td>
                                                 <td>
-                                                    {$item['price']}
+
+                                                </td>
+                                                <td>
+
                                                 </td>
                                             </tr>";
-                                    }*/
+                                    }
                               echo  "</tbody>
                         </table>
                     </div>
