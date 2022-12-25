@@ -30,10 +30,17 @@
   if(!error){
       document.getElementById('registerFields').style = "display: none;";
       document.getElementById('form1').style.border = "none";
-      document.getElementById('successRegister').style = "display: default;";
+      document.getElementById("registerForm").submit();
+      //document.getElementById('successRegister').style = "display: default;";
   }
   //window.location.href = "http://83.230.14.95/si-project-php/public/admin";
   
+}
+
+function runScript(){
+  event.preventDefault();
+  document.getElementById('successRegister').style.display = "default";
+  //document.getElementById('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
 }
 
 /** Function that validates given name
@@ -64,7 +71,7 @@ function verifyName(name){
   let cond1 = checkIfOnlyAcceptedChars(name);
 
   if(!cond1){
-      document.getElementById('errorName').innerText = "*Podano znaki różne od liter i cyfr"; 
+      document.getElementById('errorName').innerText = "*Podano znaki różne od liter"; 
       document.getElementById('name').style.border = "2px solid rgb(255, 0, 0)";
       document.getElementById('blinkingName').style = "display: default; color:#de1f1f";
       document.getElementById('nameSpan').style.color = "rgb(255, 0, 0)";
@@ -106,10 +113,10 @@ function verifySurname(surname){
   let cond1 = checkIfOnlyAcceptedChars(surname);
 
   if(!cond1){
-      document.getElementById('errorSurname').innerText = "*Podano znaki różne od liter i cyfr"; 
+      document.getElementById('errorSurname').innerText = "*Podano znaki różne od liter"; 
       document.getElementById('surname').style.border = "2px solid rgb(255, 0, 0)";
       document.getElementById('blinkingSurname').style = "display: default; color:#de1f1f";
-      document.getElementById('surrnameSpan').style.color = "rgb(255, 0, 0)";
+      document.getElementById('surnameSpan').style.color = "rgb(255, 0, 0)";
       return false;
   }
 
