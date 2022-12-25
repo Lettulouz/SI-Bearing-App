@@ -837,6 +837,34 @@ public function add_manufacturersss(){
         
         $this->view('admin/add_manufacturer_admin', ['countries'=>$countries, 'msg_color' => $return_msg_color , 'msg' => $return_msg, 'manufacturername' => $manufacturername, 'selCountries'=> $selCountries]);
     }
+
+    public function list_of_manufacturers(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+
+        require_once dirname(__FILE__,2) . '/core/database.php';
+
+        $query="SELECT m.id as m_id, m.name as mnf FROM manufacturers m";
+        $result = $db->prepare($query);
+        $result->execute();
+        $manufacturers = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        $rmPath=ROOT."/admin/";
+
+        $this->view('admin/list_of_manufacturers',['mnfArray'=> $manufacturers, 'rmpath'=> $rmPath]);
+
+    }
+
+    /////////////////////////////////
     public function add_item(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
