@@ -130,6 +130,9 @@
           <a href="<?php echo ROOT."/admin/add_manufacturer"?>" id="addmanuf" class="nav-link text-muted">
             Dodaj producenta
           </a>
+          <a href="<?php echo ROOT."/admin/add_countries_to_manufacturer"?>" id="addcounttomanuf" class="nav-link text-muted">
+            Kraje producenta
+          </a>
 
           <hr class="divider ">
 

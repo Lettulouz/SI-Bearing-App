@@ -760,7 +760,7 @@ public function add_manufacturer(){
     $this->view('admin/add_manufacturer_admin', ['manufacturer' => $manufacturerName]);
     }
 }
-public function add_manufacturersss(){
+public function add_countries_to_manufacturer(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
                 unset($_SESSION['successOrErrorResponse']);
@@ -776,6 +776,7 @@ public function add_manufacturersss(){
         require_once dirname(__FILE__,2) . '/core/database.php';
         $manufacturername = "";
         $selCountries = "";
+        $selManufacturer = "";
 
         if(isset($_SESSION['successOrErrorResponse'])){
             if($_SESSION['successOrErrorResponse'] == "add_manufacturer"){
@@ -834,8 +835,12 @@ public function add_manufacturersss(){
         $result = $db->prepare($query);
         $result->execute();
         $countries = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        $query="SELECT * FROM `manufacturers`";
+        $result = $db->query($query);
+        $manufacturers = $result->fetchAll(PDO::FETCH_ASSOC);
         
-        $this->view('admin/add_manufacturer_admin', ['countries'=>$countries, 'msg_color' => $return_msg_color , 'msg' => $return_msg, 'manufacturername' => $manufacturername, 'selCountries'=> $selCountries]);
+        $this->view('admin/add_countries_to_manufacturer_admin', ['countries'=>$countries, 'manufacturers'=>$manufacturers, 'msg_color' => $return_msg_color , 'msg' => $return_msg, 'manufacturername' => $manufacturername, 'selCountries'=> $selCountries]);
     }
     public function add_item(){
         if(isset($_SESSION['loggedUser'])){

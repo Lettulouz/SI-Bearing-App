@@ -15,13 +15,16 @@
                     <div class="col-12">
                         <div class="form-floating">
                             <input type="text" class="form-control" id="catalogNameInput" name="catname" placeholder="Grontex">
-                            <label for="catalogNameInput">Nazwa katalogu</label>
+                            <label class="form-control-lg" for="catalogNameInput" style="margin-left: 5px !important; margin-top: -5px !important; color: #757575;">
+                                Nazwa katalogu
+                            </label>
                         </div>
                     </div>
                 </div>
                 <div class="row m-2">
                     <div class="col-12">
-                        <select class="select2 form-select-lg" multiple="multiple" id="item" name="itemcat[]" aria-label="example-xl" aria-selected="<?=$data['itemcat']?>" aria-autocomplete="TRUE">
+                        <select class="select2 form-select-lg" multiple="multiple" id="item" name="itemcat[]" aria-label="example-xl" 
+                        aria-selected="<?=$data['itemcat']?>" aria-autocomplete="TRUE">
                             <?php
                                 foreach($data['items'] as $i => $result) {
                                     $temp = "";
@@ -54,6 +57,7 @@ document.getElementById('content_collapse_btn').setAttribute('aria-expanded', 't
 document.getElementById('content_collapse_btn').setAttribute('style', 'color:white !important');
 document.getElementById('addcat').setAttribute('style', 'color:white !important');
 $('#item').select2({
+    language: { noResults: () => "Brak dodanych produktów.",},
     width: 'auto',
     theme: 'bootstrap-5',
     placeholder: 'Wybierz produkty'

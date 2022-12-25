@@ -21,7 +21,7 @@
                     <div class="col">
                         <div class="form-floating ">
                             <input type="text" class="form-control" id="nameInput" name="name" placeholder="Grontomat">
-                            <label for="nameInput">Nazwa</label>
+                            <label class="form-control-lg" for="nameInput" style="margin-left: 5px !important; margin-top: -5px !important; color: #757575;">Nazwa</label>
                         </div>
                     </div>
                 </div>
@@ -29,7 +29,7 @@
                     <div class="col">
                         <div class="form-floating ">
                             <input type="number" class="form-control" id="quantityInput" min="0" name="price" placeholder="23" step="any">
-                            <label for="quantityInput">Cena</label>
+                            <label class="form-control-lg" for="quantityInput" style="margin-left: 5px !important; margin-top: -5px !important; color: #757575;">Cena</label>
                         </div>
                     </div>
                 </div>
@@ -37,20 +37,20 @@
                     <div class="col">
                         <div class="form-floating ">
                             <input type="number" class="form-control" id="quantityInput" min="0" name="quantity" placeholder="23">
-                            <label for="quantityInput">Ilość</label>
+                            <label class="form-control-lg" for="quantityInput" style="margin-left: 5px !important; margin-top: -5px !important; color: #757575;">Ilość</label>
                         </div>
                     </div>
                 </div>
                 <div class="row m-2">
                     <div class="col-12">
-                            <select class="select2 form-control" id="manufacturer" name="manufacturer" aria-label="example-xl" >
-                                    <?php
-                                        echo "<option></option>";
-                                        foreach($data['items'] as $i => $result) {
-                                            echo "<option value=".$result['id'].">".$result['name']."</option>";
-                                        }
-                                    ?>
-                            </select>
+                        <select class="select2 form-control form-select-lg" id="manufacturer" name="manufacturer" aria-label="example-xl" >
+                                <?php
+                                    echo "<option></option>";
+                                    foreach($data['items'] as $i => $result) {
+                                        echo "<option value=".$result['id'].">".$result['name']."</option>";
+                                    }
+                                ?>
+                        </select>
                     </div>
                     <span style="color:<?php if(isset($_GET['color'])) echo $_GET['color']; ?>">
                     <?php if(isset($_GET['msg'])) echo base64_decode($_GET['msg']); ?></span>
@@ -421,8 +421,9 @@ document.getElementById('content_collapse_btn').setAttribute('aria-expanded', 't
 document.getElementById('content_collapse_btn').setAttribute('style', 'color:white !important');
 document.getElementById('additem').setAttribute('style', 'color:white !important');
 $('#manufacturer').select2({
-    width: '100%',
-    placeholder: 'Wybierz producenta'
+    theme: 'bootstrap-5',
+    placeholder: 'Wybierz producenta',
+    width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
 });
 
 

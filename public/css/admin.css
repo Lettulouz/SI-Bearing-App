@@ -106,29 +106,49 @@
   
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
-    background: #3A4148; 
+    background: #8f969c; 
   }
 
   ul.navbar-nav a:hover { color: #fff !important; }
 
-  .select2-selection__choice__display, .select2-search{
-    font-size:1rem;
-  }
-
-
-  .select2-selection{
-    padding: 12px !important;
-  }
-  
-  .select2-selection--single{
-    height: 58px !important;
-    padding: 14px 0 14px 4px !important;
-  }
-
-  .select2-selection__arrow b{
-    display:none !important;
+  .select2-container--default .select2-selection--single{
+    padding:6px;
+    height: 55px;
+    width: 148px; 
+    font-size: 1.2em;  
+    position: relative;
 }
 
+.select2-selection .select2-selection--multiple{
+  height: 55px;
+}
+
+.select2-container--bootstrap-5 .select2-selection--single{
+    height: 55px;
+    padding: 0px ;
+    background-image: none !important;
+}
+
+.select2-container .select2-search--inline .select2-search__field{
+  margin-left: 0px !important;
+}
+
+.form-select-lg~.select2-container--bootstrap-5 .select2-selection--single {
+  padding: 0.5rem 1rem !important;
+  
+}
+.form-select-lg~.select2-container--bootstrap-5 .select2-selection{
+  height: 55px !important;
+  padding-top: 11px !important;
+}
+
+.form-floating>.form-control, .form-floating>.form-select {
+  height: 55px;
+}
+
+.select2-selection__choice__display{
+  margin-left: 5px !important;
+}
 
 @media (max-width:576px){
   .itemField1{
