@@ -104,7 +104,7 @@
             Dodaj produkty
           </a>
 
-            <hr class="divider  ">
+          <hr class="divider  ">
 
           <a href="<?php echo ROOT."/admin/list_of_catalogs"?>" class="nav-link text-muted" id="cat_list">
             Lista katalogów
@@ -113,13 +113,31 @@
             Dodaj katalog
           </a>
 
-            <hr class="divider ">
+          <hr class="divider ">
 
           <a href="<?php echo ROOT."/admin/list_of_attributes"?>" id="attr_list" class="nav-link text-muted">
             Lista atrybutów
           </a>
           <a href="<?php echo ROOT."/admin/add_attribute"?>" id="addattr" class="nav-link text-muted">
             Dodaj atrybut
+          </a>
+
+          <hr class="divider ">
+
+          <a href="<?php echo ROOT."/admin/list_of_manufacturers"?>" id="manuf_list" class="nav-link text-muted">
+            Lista producentów
+          </a>
+          <a href="<?php echo ROOT."/admin/add_manufacturer"?>" id="addmanuf" class="nav-link text-muted">
+            Dodaj producenta
+          </a>
+
+          <hr class="divider ">
+
+          <a href="<?php echo ROOT."/admin/list_of_categories"?>" id="categ_list" class="nav-link text-muted">
+            Lista kategorii
+          </a>
+          <a href="<?php echo ROOT."/admin/add_categories"?>" id="addcateg" class="nav-link text-muted">
+            Dodaj kategorię
           </a>
           
          </div>

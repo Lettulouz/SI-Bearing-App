@@ -15,7 +15,6 @@
     <hr class="divider">
 <div class="container-fluid justify-content-between">
     <form action="" id="addItemForm" method="POST">
-
         <div class="row m-2">
             <div class="col-12 col-sm-6 col-xl-4 itemField1 border-end border-2">
                 <div class="row m-2">
@@ -77,16 +76,9 @@
             </div>  
         </div>  
         <button type="submit" id="itemSubmit" name="itemSubmit" class="btn btn-primary btn-lg float-end" style="display:none"></button>
-    </form>
-
-    
-        
-          
-    
-
-        
-  
+    </form> 
 </div>
+
 <script>
     var jsArr = JSON.parse($('#attributes').attr('data-attr'));
     var possibleOptions = [];
@@ -169,8 +161,6 @@
             }
             alreadyUsed = alreadyUsed.filter(e => e !== attribute_name);
             updateAttrList()
-            
-
         });
 
 
@@ -181,13 +171,22 @@
             e.preventDefault();
             descNum++;
             var html = '';
-            html+='<div class="row">';
-            html+='<textarea class="form-control desc requireddesc" style="overflow:hidden;" id="description' + descNum + '" name="text" maxlength="1000" placeholder="Opis..." rows="2" cols="5"></textarea>';
-            html+='<span class="pull-right label label-default" style="margin-top: 3px" id="count_message' + descNum + '"></span><br><br>';
+            html+='<div class="row mx-2">';
+            html+='<label class="fw-bold">Tytuł</label>';
+           // html+='<input type="text" class="form-control desctitle requireddesc" style="margin-top: 10px" id="descriptionTitle' + descNum  + '" placeholder="Tytuł..." maxlength="50">';
+            html+='<textarea class="form-control mt-1 desctitle requireddesc" style="overflow:hidden;"'; 
+            html+='id="descriptionTitle' + descNum + '" name="text" maxlength="100" placeholder="Tytuł..." rows="1" cols="5"></textarea>';
+            html+='<span class="pull-right mt-1 label label-default spanTitle" id="titleCount_message' + descNum + '"></span>';
+            html+='<label class="fw-bold mt-1">Opis</label>';
+            html+='<textarea class="form-control mt-1 desc requireddesc" style="overflow:hidden;" id="description' + descNum + '" name="text" maxlength="1000" placeholder="Opis..." rows="2" cols="5"></textarea>';
+            html+='<span class="pull-right mt-1 label label-default spanDesc" id="count_message' + descNum + '"></span>';
+            html+='<button class="btn btn-danger mt-3 remove_desc_btn">-</button>';
+            html+='<hr class="divider mt-3">';
             html+='</div>';
 
             $("#show_desc").append(html)
    
+            var textTitle_max = 100;
             var text_max = 1000;
 
             inputcm = '#count_message' + descNum; 
@@ -195,12 +194,17 @@
 
             inputdesc = '#description' + descNum;
             var sch = $(inputdesc).prop('scrollHeight');
-            sch = sch+10;
+            //sch = sch+10;
             $(inputdesc).attr('style', `resize:none; font-size: 18px; height:${sch}px; overflow:hidden;`);
 
+            inputcmtitle = '#titleCount_message' + descNum; 
+            $(inputcmtitle).text('0 / ' + textTitle_max );
+
+            inputdesctitle = '#descriptionTitle' + descNum;
+            var schtitle = $(inputdesctitle).prop('scrollHeight');
+            //schtitle = schtitle+10;
+            $(inputdesctitle).attr('style', `resize:none; font-size: 18px; height:${schtitle}px; overflow:hidden;`);
             enableDescSubmit();
-
-
         });
 
         $(document).on('keydown', '.desc', function(e){ 
@@ -215,9 +219,68 @@
             var text_length = $(this).val().length;
             var text_remaining = text_max - text_length;
 
-            var test = $(this).parent().find('span');
+            var test = $(this).parent().find('.spanDesc');
 
             $(test).html(text_length + ' / ' + text_max);
+            enableDescSubmit();
+        });
+
+        $(document).on('keyup', '.desctitle', function(e){ 
+            enableDescSubmit();
+        });
+
+        $(document).on('click', '.remove_desc_btn', function(e){ 
+            e.preventDefault();
+            let row_desc = $(this).parent();
+
+            $(row_desc).remove();
+            enableDescSubmit();
+        });
+
+
+        $(document).on('keydown', '.desc', function(e){ 
+            $(this).attr('style', 'height:auto; resize:none; font-size: 18px; overflow:hidden;');
+            var sch = $(this).prop('scrollHeight');
+            $(this).attr('style', `height:${sch}px; resize:none; font-size: 18px; overflow:hidden;`);
+        });
+
+        $(document).on('keyup', '.desc', function(e){ 
+            var text_max = 1000;
+            var text_length = $(this).val().length;
+            var text_remaining = text_max - text_length;
+
+            var test = $(this).parent().find('.spanDesc');
+
+            $(test).html(text_length + ' / ' + text_max);
+            enableDescSubmit();
+        });
+
+        $(document).on('keydown', '.desctitle', function(e){ 
+            $(this).attr('style', 'height:auto; resize:none; font-size: 18px; overflow:hidden;');
+            var sch = $(this).prop('scrollHeight');
+            $(this).attr('style', `height:${sch}px; resize:none; font-size: 18px; overflow:hidden;`);
+        });
+
+        $(document).on('keyup', '.desctitle', function(e){ 
+            var text_max = 100;
+            var text_length = $(this).val().length;
+            var text_remaining = text_max - text_length;
+
+            var test = $(this).parent().find('.spanTitle');
+
+            $(test).html(text_length + ' / ' + text_max);
+            enableDescSubmit();
+        });
+
+        $(document).on('keyup', '.desctitle', function(e){ 
+            enableDescSubmit();
+        });
+
+        $(document).on('click', '.remove_desc_btn', function(e){ 
+            e.preventDefault();
+            let row_desc = $(this).parent();
+
+            $(row_desc).remove();
             enableDescSubmit();
         });
 
@@ -275,57 +338,79 @@
             }
 
         }
-        enableAttrSubmit();
-        
+        enableAttrSubmit();     
     }
 
     function enableAttrSubmit(){
         let inputs = document.getElementsByClassName('requiredattr'); // Enter your class name for a required field, this should also be reflected within your form fields.
         let btn = $('#add_attr_btn');
         var isValid;
-        for (var i = 0; i < inputs.length; i++){
-            let changedInput = inputs[i];
-            if (changedInput.value.trim() == "" || changedInput.value == null){
-                isValid = false;
-                break;
+        if(inputs.length!=0){
+            for (var i = 0; i < inputs.length; i++){
+                let changedInput = inputs[i];
+                if (changedInput.value.trim() == "" || changedInput.value == null){
+                    isValid = false;
+                    break;
+                }
+                else{
+                    isValid = true;
+                }
             }
-            else{
-                isValid = true;
-            }
+        }else{
+            isValid = true;
         }
         btn.prop('disabled', !isValid);
-        if(attrNum>=jsArr.length){
-                $("#add_attr_btn").prop('disabled', true);
-            }
+        if((inputs.length/2)>=jsArr.length){
+            $("#add_attr_btn").prop('disabled', true);
+        }
     }
 
     function enableDescSubmit(){
-        let inputs = document.getElementsByClassName('requireddesc'); // Enter your class name for a required field, this should also be reflected within your form fields.
-
+        let inputs = document.getElementsByClassName('requireddesc');
         let btn = $('#add_description_btn');
         var isValid;
-        console.log(inputs.length);
-        for (var i = 0; i < inputs.length; i++){
-            let changedInput = inputs[i];
-            console.log(changedInput);
-            if (changedInput.value.trim() == "" || changedInput.value == null){
-                isValid = false;
-                break;
+        if(inputs.length!=0){
+            for (var i = 0; i < inputs.length; i++){
+                let changedInput = inputs[i];
+                if (changedInput.value.trim() == "" || changedInput.value == null){
+                    isValid = false;
+                    break;
+                }else{
+                    isValid = true;
+                }
             }
-            else{
-                isValid = true;
-            }
+        }else{
+            isValid = true;
         }
         btn.prop('disabled', !isValid);
     }
 
-
-    
-
-
     $(window).resize(function() {
-        test();
-});
+        let inputs = document.getElementsByClassName('desc');
+        console.log(inputs.length);
+        var text_max = 1000;
+        var textTitle_max = 100;
+        for(var i=0;i<inputs.length;i++){
+            var temp = i+1;
+            var text_length = $('#description' + temp).val().length;
+            var text_remaining = text_max - text_length;
+
+            $('#count_message' + temp).html(text_length + ' / ' + text_max);
+
+            $('#description' + temp).attr('style', 'height:auto; resize:none; font-size: 18px; overflow:hidden;');
+            var sch = $('#description' + temp).prop('scrollHeight');
+            $('#description' + temp).attr('style', `height:${sch}px; resize:none; font-size: 18px; overflow:hidden;`);
+
+            text_length = $('#descriptionTitle' + temp).val().length;
+            text_remaining = textTitle_max - text_length;
+
+            $('#titleCount_message' + temp).html(text_length + ' / ' + textTitle_max);
+
+            $('#descriptionTitle' + temp).attr('style', 'height:auto; resize:none; font-size: 18px; overflow:hidden;');
+            var sch = $('#descriptionTitle' + temp).prop('scrollHeight');
+            $('#descriptionTitle' + temp).attr('style', `height:${sch}px; resize:none; font-size: 18px; overflow:hidden;`);
+        }
+    });
 
 </script>
 

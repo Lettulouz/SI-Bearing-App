@@ -31,7 +31,7 @@ class Home extends Controller
 
         $table = array();
 
-        $query_m="SELECT id, name FROM manufactures;";
+        $query_m="SELECT id, name FROM manufacturers;";
         $manufacturer = $db->query($query_m);
         $manufacturer = $manufacturer->fetchAll(PDO::FETCH_ASSOC);
 
@@ -71,7 +71,7 @@ class Home extends Controller
         $query="SELECT d.title, d.description, i.name, m.id, i.id as itemID, m.name as 'name2'
             FROM items i 
             LEFT JOIN descriptions d ON d.id_item=i.id 
-            INNER JOIN manufactures m ON i.id_manufacturer = m.id 
+            INNER JOIN manufacturers m ON i.id_manufacturer = m.id 
             WHERE i.name LIKE '%".$search."%' 
             AND m.id IN (".$id_manufacturer.")
             ORDER BY i.name ASC
@@ -81,7 +81,7 @@ class Home extends Controller
 
         $query2="SELECT i.id as id FROM items i 
         LEFT JOIN descriptions d ON d.id_item=i.id 
-        INNER JOIN manufactures m ON i.id_manufacturer = m.id 
+        INNER JOIN manufacturers m ON i.id_manufacturer = m.id 
         WHERE i.name LIKE '%".$search."%' 
         AND m.id IN (".$id_manufacturer.")
         ORDER BY i.name DESC LIMIT 1";

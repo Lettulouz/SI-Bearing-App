@@ -101,36 +101,36 @@
         <div class="modal fade" id="editModal"  aria-labelledby="editModal" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Edytuj Katalog</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <form action="" method="POST">
-            <div class="modal-body">
-            <input type='hidden' id="catid" name="catid" class="form-control"> 
-                    <div class="form-floating my-2">
-                            <input type="text" class="form-control" id="catalogName" name="catname" placeholder="Grontex">
-                            <label for="catalogNameInput">Nazwa katalogu</label>
-                        </div>
-                        <hr>
-                            <select class="select2 form-select-lg my-2"  multiple="multiple" id="item" name="itemcat[]" aria-label="example-xl"  aria-autocomplete="TRUE">
-                                    <?php
-                                           foreach($data['items'] as $i => $result) {
-                                            echo "<option class='itemList' value=".$result['item_id'].">".$result['mnf']." - ".$result['item']."</option>";
-                                        }
-                                    ?>
-                            </select>
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edytuj Katalog</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="" method="POST">
+                <div class="modal-body">
+                <input type='hidden' id="catid" name="catid" class="form-control"> 
+                        <div class="form-floating my-2">
+                                <input type="text" class="form-control" id="catalogName" name="catname" placeholder="Grontex">
+                                <label for="catalogNameInput">Nazwa katalogu</label>
+                            </div>
+                            <hr>
+                                <select class="select2 form-select-lg my-2"  multiple="multiple" id="item" name="itemcat[]" aria-label="example-xl"  aria-autocomplete="TRUE">
+                                        <?php
+                                            foreach($data['items'] as $i => $result) {
+                                                echo "<option class='itemList' value=".$result['item_id'].">".$result['mnf']." - ".$result['item']."</option>";
+                                            }
+                                        ?>
+                                </select>
 
 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
-                <button type="submit" name="catEditSub" class="btn btn-primary">Edytuj</button>
-            </div>
-        </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <button type="submit" name="catEditSub" class="btn btn-primary">Edytuj</button>
+                </div>
+            </form>
         </div>
     </div>
-    </div>
+</div>
 
 
 <script>

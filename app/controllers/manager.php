@@ -55,9 +55,9 @@ class Manager extends Controller
 
         require_once dirname(__FILE__,2) . '/core/database.php';
 
-        $query="SELECT `items`.`name` AS item, `manufactures`.`name` AS manufacturer
+        $query="SELECT `items`.`name` AS item, `manufacturers`.`name` AS manufacturer
         FROM `items` 
-            LEFT JOIN `manufactures` ON `items`.`id_manufacturer` = `manufactures`.`id` LIMIT 5";
+            LEFT JOIN `manufacturers` ON `items`.`id_manufacturer` = `manufacturers`.`id` LIMIT 5";
         $result = $db->query($query);
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -153,7 +153,7 @@ class Manager extends Controller
 
         }
 
-        $query="SELECT id, name FROM manufactures";
+        $query="SELECT id, name FROM manufacturers";
         $result = $db->prepare($query);
         $result->execute();
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -405,7 +405,7 @@ class Manager extends Controller
         }
 
         $query="SELECT i.name AS item, i.id AS item_id, m.name AS mnf FROM items i LEFT JOIN
-         manufactures m ON i.id_manufacturer = m.id";
+         manufacturers m ON i.id_manufacturer = m.id";
         $result = $db->prepare($query);
         $result->execute();
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -486,7 +486,7 @@ class Manager extends Controller
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $queryIt="SELECT i.name AS item, i.id AS item_id, m.name AS mnf FROM items i LEFT JOIN manufactures m ON i.id_manufacturer = m.id";
+        $queryIt="SELECT i.name AS item, i.id AS item_id, m.name AS mnf FROM items i LEFT JOIN manufacturers m ON i.id_manufacturer = m.id";
         $resultIt = $db->prepare($queryIt);
         $resultIt->execute();
         $items = $resultIt->fetchAll(PDO::FETCH_ASSOC);
@@ -496,11 +496,11 @@ class Manager extends Controller
         foreach($result as $res){
             $query_items="SELECT `catalog`.`id` AS `cat_id`, `itemsincatalog`.`id_item` AS `id_item`,
              `items`.`name` AS `name_item`, `items`.`amount` AS `amount`, `items`.`price` AS `price`,
-            `manufactures`.`name` AS `mn_name`
+            `manufacturers`.`name` AS `mn_name`
             FROM `catalog` 
                 LEFT JOIN `itemsincatalog` ON `itemsincatalog`.`id_catalog` = `catalog`.`id` 
                 LEFT JOIN `items` ON `itemsincatalog`.`id_item` = `items`.`id` 
-                LEFT JOIN `manufactures` ON `items`.`id_manufacturer` = `manufactures`.`id` WHERE  `catalog`.`id` =:catid";
+                LEFT JOIN `manufacturers` ON `items`.`id_manufacturer` = `manufacturers`.`id` WHERE  `catalog`.`id` =:catid";
                 $result_id = $db->prepare($query_items);
                 $result_id->bindParam(':catid', $res['id']);
                 $result_id->execute();
@@ -552,7 +552,7 @@ class Manager extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
 
         $query="SELECT i.name as itemName, m.name as manufacturerName, amount, price
-        FROM items i INNER JOIN manufactures m ON i.id_manufacturer=m.id";
+        FROM items i INNER JOIN manufacturers m ON i.id_manufacturer=m.id";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
         $this->view('manager/list_of_products_mng', ['itemsArray'=>$result]);

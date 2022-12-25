@@ -54,9 +54,9 @@ class Admin extends Controller
 
         require_once dirname(__FILE__,2) . '/core/database.php';
 
-        $query="SELECT `items`.`name` AS item, `manufactures`.`name` AS manufacturer
+        $query="SELECT `items`.`name` AS item, `manufacturers`.`name` AS manufacturer
         FROM `items` 
-            LEFT JOIN `manufactures` ON `items`.`id_manufacturer` = `manufactures`.`id` LIMIT 5";
+            LEFT JOIN `manufacturers` ON `items`.`id_manufacturer` = `manufacturers`.`id` LIMIT 5";
         $result = $db->query($query);
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -309,7 +309,7 @@ class Admin extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
 
         $query="SELECT i.name as itemName, m.name as manufacturerName, amount, price
-        FROM items i INNER JOIN manufactures m ON i.id_manufacturer=m.id";
+        FROM items i INNER JOIN manufacturers m ON i.id_manufacturer=m.id";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
         
@@ -490,7 +490,7 @@ class Admin extends Controller
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $queryIt="SELECT i.name AS item, i.id AS item_id, m.name AS mnf FROM items i LEFT JOIN manufactures m ON i.id_manufacturer = m.id";
+        $queryIt="SELECT i.name AS item, i.id AS item_id, m.name AS mnf FROM items i LEFT JOIN manufacturers m ON i.id_manufacturer = m.id";
         $resultIt = $db->prepare($queryIt);
         $resultIt->execute();
         $items = $resultIt->fetchAll(PDO::FETCH_ASSOC);
@@ -500,11 +500,11 @@ class Admin extends Controller
         foreach($result as $res){
             $query_items="SELECT `catalog`.`id` AS `cat_id`, `itemsincatalog`.`id_item` AS `id_item`,
              `items`.`name` AS `name_item`, `items`.`amount` AS `amount`, `items`.`price` AS `price`,
-            `manufactures`.`name` AS `mn_name`
+            `manufacturers`.`name` AS `mn_name`
             FROM `catalog` 
                 LEFT JOIN `itemsincatalog` ON `itemsincatalog`.`id_catalog` = `catalog`.`id` 
                 LEFT JOIN `items` ON `itemsincatalog`.`id_item` = `items`.`id` 
-                LEFT JOIN `manufactures` ON `items`.`id_manufacturer` = `manufactures`.`id` WHERE  `catalog`.`id` =:catid";
+                LEFT JOIN `manufacturers` ON `items`.`id_manufacturer` = `manufacturers`.`id` WHERE  `catalog`.`id` =:catid";
                 $result_id = $db->prepare($query_items);
                 $result_id->bindParam(':catid', $res['id']);
                 $result_id->execute();
@@ -697,7 +697,7 @@ class Admin extends Controller
 
         }
 
-        $query="SELECT i.name AS item, i.id AS item_id, m.name AS mnf FROM items i LEFT JOIN manufactures m ON i.id_manufacturer = m.id";
+        $query="SELECT i.name AS item, i.id AS item_id, m.name AS mnf FROM items i LEFT JOIN manufacturers m ON i.id_manufacturer = m.id";
         $result = $db->prepare($query);
         $result->execute();
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -705,6 +705,138 @@ class Admin extends Controller
         $this->view('admin/add_catalog_admin', ['items'=>$items, 'msg_color' => $return_msg_color , 'msg' => $return_msg, 'catname' => $catname, 'itemcat'=> $itemstocat]);
     }
 ////////////////////////////////////////////////////////////////////////////
+
+public function add_manufacturer(){
+    if(isset($_SESSION['loggedUser'])){
+        if($_SESSION['loggedUser'] == "admin"){
+            unset($_SESSION['successOrErrorResponse']);
+        }
+        else{
+            header("Location:" . ROOT . "/home");
+        }
+    }
+    else{
+        header("Location:" . ROOT . "/login");
+    }
+    
+
+    require_once dirname(__FILE__,2) . '/core/database.php';
+    $manufacturerName = "";
+    if(isset($_SESSION['successOrErrorResponse'])){
+        if($_SESSION['successOrErrorResponse'] == "add_manufacturer"){
+            if(isset($_SESSION['manufacturerName'])) {$manufacturerName = $_SESSION['manufacturerName']; unset($_SESSION['manufacturerName']);} 
+        }
+        unset($_SESSION['successOrErrorResponse']);
+    }
+
+    if(isset($_POST['attrEditSub'])){
+        if(!empty($_POST['manufacturer']))
+        {      
+            $manufacturerName = $_POST['manufacturer'];
+
+            $query="SELECT COUNT(id) as amount
+            FROM manufacturers WHERE name=:name";
+            $result = $db->prepare($query);
+            $result->bindParam(':name', $manufacturerName);
+            $result->execute();
+            $result = $result->fetch(PDO::FETCH_ASSOC);
+            if($result['amount']>0){
+                $_SESSION['error_page'] = "add_manufacturer";
+                $_SESSION['manufacturer'] = $manufacturerName;
+                header("Location:" . ROOT . "/admin/error_page/2");
+            }
+            else{
+                $query = "INSERT INTO `manufacturers` (name) VALUES ('$manufacturerName');";
+                $result = $db->prepare($query);
+                $result->execute();
+                $_SESSION['success_page'] = "add_manufacturer";
+                header("Location:" . ROOT . "/admin/success_page/1");
+            }
+        }else{
+            $_SESSION['error_page'] = "add_manufacturer";
+            header("Location:" . ROOT . "/admin/error_page/1");
+        }
+    }else{
+    $this->view('admin/add_manufacturer_admin', ['manufacturer' => $manufacturerName]);
+    }
+}
+public function add_manufacturersss(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $manufacturername = "";
+        $selCountries = "";
+
+        if(isset($_SESSION['successOrErrorResponse'])){
+            if($_SESSION['successOrErrorResponse'] == "add_manufacturer"){
+                if(isset($_SESSION['manufacturername'])) {$manufacturername = $_SESSION['manufacturername']; unset($_SESSION['manufacturername']);} 
+                if(isset($_SESSION['selCountries'])) {$selCountries = $_SESSION['selCountries']; unset($_SESSION['selCountries']);} 
+            }
+            unset($_SESSION['successOrErrorResponse']);
+        }
+
+        $return_msg_color="";
+        $return_msg="";
+        if(isset($_POST['manufsubmit'])){
+            isset($_POST['selCountries']) ? $selCountries=$_POST['selCountries'] : $selCountries="";
+            isset($_POST['manufacturername']) ? $manufacturername=$_POST['manufacturername'] : $manufacturername="";
+            $_SESSION['manufacturername'] = $manufacturername;
+            $_SESSION['selCountries'] = $selCountries;
+
+
+            if(isset($_POST['selCountries'])&&!empty($_POST['manufacturername'])){
+                //add catalog to database
+                $query="SELECT COUNT(id) FROM manufacturers WHERE name=:manufacturername";
+                $result = $db->prepare($query);
+                $result->bindParam(':manufacturername', $manufacturername);
+                $result->execute();
+                $selCountries_id=$result->fetch(PDO::FETCH_ASSOC);
+                $temp = $selCountries_id['COUNT(id)'];
+                
+                if($temp>0){
+                    $_SESSION['error_page'] = "add_manufacturer";
+                    header("Location:" . ROOT . "/admin/error_page/2");
+                }else{
+                 //connect items with catalog
+                 $query="INSERT INTO manufacturers (name,id_country) VALUES (:manufacturername,:selCountries_id)";
+                 foreach ($selCountries as $selCountries_id){
+                     $result = $db->prepare($query);
+                     $result->bindParam(':manufacturername',$manufacturername);
+                     $result->bindParam(':selCountries_id',$selCountries_id);
+                     $result->execute();
+                }
+                //TODO zwrócenie komunikatów
+                $return_msg_color="rgb(25, 135, 84)";
+                $return_msg="pomyślnie dodano nowy katalog";
+                $_SESSION['success_page'] = "add_manufacturer";
+                unset($_SESSION['manufacturername']);
+                header("Location:" . ROOT . "/admin/success_page/1");
+                }
+            }
+            else{
+                $_SESSION['error_page'] = "add_manufacturer";
+                header("Location:" . ROOT . "/admin/error_page/1");
+            }
+
+        }
+
+        $query="SELECT id as countryid, name as countryname FROM countries ORDER BY countryname";
+        $result = $db->prepare($query);
+        $result->execute();
+        $countries = $result->fetchAll(PDO::FETCH_ASSOC);
+        
+        $this->view('admin/add_manufacturer_admin', ['countries'=>$countries, 'msg_color' => $return_msg_color , 'msg' => $return_msg, 'manufacturername' => $manufacturername, 'selCountries'=> $selCountries]);
+    }
     public function add_item(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -760,7 +892,7 @@ class Admin extends Controller
 
         }
 
-        $query="SELECT id, name FROM manufactures";
+        $query="SELECT id, name FROM manufacturers";
         $result = $db->prepare($query);
         $result->execute();
         $result = $result->fetchAll(PDO::FETCH_ASSOC);

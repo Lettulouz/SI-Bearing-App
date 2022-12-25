@@ -1,4 +1,4 @@
-<h1 class="text-muted headers-padding">Dodawanie atrybutu</h1>
+<h1 class="text-muted headers-padding">Dodawanie producenta</h1>
     <hr class="divider ">
 <div class="container" style="max-width:720px;">
     
@@ -8,8 +8,9 @@
                 <div class="row m-2">
                     <div class="col-12">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="heightInput" name="attribute" placeholder="20" value=<?=$data['attribute']?>>
-                            <label for="heightInput" >Dodaj atrybut</label>
+                            <input type="text" class="form-control" id="heightInput" 
+                            name="manufacturer" placeholder="20" value="<?=$data['manufacturer']?>">
+                            <label for="heightInput" >Dodaj producenta</label>
                         </div>
                     </div>
                 </div>
