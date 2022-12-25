@@ -16,6 +16,7 @@
                     <div class="col-12">
                         <select class="select2 form-select-lg" id="manufacturerName" name="manufacturername" 
                         aria-label="example-xl">
+                        <option></option>
                             <?php
                                 foreach($data['manufacturers'] as $i => $result) {
                                     echo 
@@ -63,15 +64,15 @@ document.getElementById('content_collapse_btn').setAttribute('style', 'color:whi
 document.getElementById('addcounttomanuf').setAttribute('style', 'color:white !important');
 $('#manufacturerName').select2({
     theme: 'bootstrap-5',
-    width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
     placeholder: 'Wybierz producenta',
+    width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
     
 });
 $('#countries').select2({
     theme: 'bootstrap-5',
     width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
     placeholder: 'Wybierz kraje',
-    closeOnSelect: false,
+    //closeOnSelect: false,
 });
 
 </script>
