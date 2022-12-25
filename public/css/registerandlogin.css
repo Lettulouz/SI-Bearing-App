@@ -18,4 +18,4 @@ input:-webkit-autofill {
 .btn-dark{ background-color:rgb(72, 72, 72) !important; border-color: rgb(72, 72, 72) !important;}
 .btn-dark:hover{background-color:rgb(0, 0, 0) !important;}
 #mainName {position: absolute;top:-23px;left: 25px;background-color: rgb(255, 255, 255);padding: 5px 10px;font-size: 20px; font-weight: bolder;}
-#errorPassword, #errorEmailOrLogin, #errorLogin, #errorName, #errorEmail, #errorSurrname{font-size: small; color: rgb(255, 0, 0);}
+#errorPassword, #errorEmailOrLogin, #errorLogin, #errorName, #errorEmail, #errorSurname{font-size: small; color: rgb(255, 0, 0);}
