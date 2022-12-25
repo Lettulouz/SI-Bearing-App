@@ -212,6 +212,7 @@ class Admin extends Controller
                     <p> Na ten email zostało utworzone konto w sklepie Grontsmar. Oto dane: </p>
                     <p> Login: $login </p>
                     <p> Hasło: $password </p>
+                    <a href='https://www.lettulouz.usermd.net'>Link</a>
                     </body>
                     </html>";
     
