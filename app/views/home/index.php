@@ -2,9 +2,6 @@
 <?php include "navbar_top.php"; ?>
 
 
-<button class="btn btn-light btn-lg panelBtn mx-3" type="button" data-bs-toggle="offcanvas" href=".sidebar" role="button" aria-controls="sidebar">
-    <i class="bi bi-list"></i>
-        </button>
 
 <?php include "sidebar_top.php"; ?>
 <form method="POST" id="nwm" action ="">
@@ -42,33 +39,38 @@
     <button type="button" class="btn btn-outline-danger resetSub">Resetuj</button>
     </div>
 <?php include "sidebar_bottom.php"; ?>
-<div class='homeMain container mw-75 mb-1 px-5'>
-    <div class="row mb-3 ps-3"> 
-    <div class="d-flex justify-content-center" >
-                 <div class=' col-7 col-md-4 px-2'>
-                 <div class="input-group">
-                    <input type='text' class='form-control' id='searchBox' 
-                        value='<?=isset($data['search']) ? $data['search'] : '' ?>' name='search' placeholder="szukaj">
-                        <button type="button" class="btn bg-transparent clrBtn" style="margin-left: -40px; z-index: 100;">
-                        <i class="bi bi-x"></i>
-                        </button>
-                        <button class="btn btn-outline-primary sub" type="submit">szukaj</button>
-                </div>
-                 </div>
-                 <div class='d-flex px-3'>
-                    <div class="input-group d-flex">
-                        <button type='button' id='lft' class='btn btn-outline-primary'><i class='bi bi-arrow-left'></i></button>
-                            <div class='col-3 col-md-2'>
-                                <input type='number' style='text-align:center;'  id='page' class='form-control px-0' 
-                                value='<?=isset($data['limit1']) ? $data['limit1'] : 1 ?>' name='limit1'/>
-                            </div>
-                        <button type='button' id='rgt' class='<?=$data['last']==1 ? 'btn btn-outline-secondary disabled' : 'btn btn-outline-primary'?>'>
-                        <i class='bi bi-arrow-right'></i></button>
+<div class="row mb-3 panelBtn"> 
+    <div class="d-flex ">
+        <div>
+            <button class="btn btn-light btn-lg ms-3 me-2" type="button" data-bs-toggle="offcanvas" href=".sidebar" role="button" aria-controls="sidebar">
+                <i class="bi bi-list"></i>
+                    </button>
+        </div>
+                    <div class='col-6 '>
+                    <div class="input-group">
+                        <input type='text' class='form-control form-sm' id='searchBox' 
+                            value='<?=isset($data['search']) ? $data['search'] : '' ?>' name='search' placeholder="szukaj">
+                            <button type="button" class="btn bg-transparent clrBtn" style="margin-left: -40px; z-index: 100;">
+                            <i class="bi bi-x"></i>
+                            </button>
+                            <button class="btn btn-outline-primary sub" type="submit">szukaj</button>
                     </div>
-                 </div> 
+                    </div>
+                    
+                        <div class="ms-2 me-1 input-group d-flex">
+                            <button type='button' id='lft' class='btn btn-outline-primary btn-sm'><i class='bi bi-arrow-left'></i></button>
+                                <div class='col-3 col-md-2'>
+                                    <input type='number' style='text-align:center;'  id='page' class='form-control px-0' 
+                                    value='<?=isset($data['limit1']) ? $data['limit1'] : 1 ?>' name='limit1'/>
+                                </div>
+                            <button type='button' id='rgt' class='<?=$data['last']==1 ? 'btn btn-outline-secondary disabled' : 'btn btn-outline-primary'?> btn-sm'>
+                            <i class='bi bi-arrow-right'></i></button>
+                        </div>
+                   
     </div>
     </div>
     </form>
+<div class='homeMain container mw-75 mb-1 mt-5W px-5'>
 <div class="row ">          
     <?php
     

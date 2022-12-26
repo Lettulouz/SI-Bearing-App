@@ -58,9 +58,10 @@ position: fixed;
 }
 
 .panelBtn{
+  margin-top:60px;
   position:fixed;
    z-index:2;
-   margin-top:60px;
+   
 }
 
 .headers-padding {
@@ -93,14 +94,12 @@ position: fixed;
 
 
 
-  ul.navbar-nav a:hover { color: #000 !important; }
+ul.navbar-nav a:hover { color: #000 !important; }
 
 
 .homeMain{
-  margin-top: 75px!important;
+  margin-top: 115px!important;
 }
-
-
 
 
     /* usuwa strzałeczki przy inputah number */
