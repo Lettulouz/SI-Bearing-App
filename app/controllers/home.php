@@ -27,7 +27,7 @@ class Home extends Controller
         $limit1--;
         $limit2 = $limit1 + 1;
         $limit1 *= 8;
-        $limit2 *= 8;
+        $limit2 = 8;
 
         $table = array();
 
@@ -74,7 +74,7 @@ class Home extends Controller
             INNER JOIN manufacturers m ON i.id_manufacturer = m.id 
             WHERE i.name LIKE '%".$search."%' 
             AND m.id IN (".$id_manufacturer.")
-            ORDER BY i.name ASC
+            ORDER BY i.id ASC
             LIMIT ".$limit1.",".$limit2." ";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -84,7 +84,7 @@ class Home extends Controller
         INNER JOIN manufacturers m ON i.id_manufacturer = m.id 
         WHERE i.name LIKE '%".$search."%' 
         AND m.id IN (".$id_manufacturer.")
-        ORDER BY i.name DESC LIMIT 1";
+        ORDER BY i.id DESC LIMIT 1";
 
         $last = $db->query($query2);
         $last = $last->fetchAll(PDO::FETCH_ASSOC);

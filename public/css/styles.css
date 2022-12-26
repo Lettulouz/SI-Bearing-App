@@ -97,23 +97,10 @@ position: fixed;
 
 
 .homeMain{
-  margin-top: 115px!important;
+  margin-top: 75px!important;
 }
 
-@media (max-width:798px){
-  .homeMain{
-    margin-top: 144px!important;
-  }
 
-  .sidebar{
-    top: 94px!important;
-}
-
-.panelBtn{
-   margin-top:100px;
-}
-
-}
 
 
     /* usuwa strzałeczki przy inputah number */
