@@ -46,7 +46,15 @@
                 <i class="bi bi-list"></i>
                     </button>
         </div>
-                    <div class='col-6 '>
+                    
+                   
+    </div>
+    </div>
+<div class='homeMain container mb-1 mt-5W px-5'>
+<div class="row mb-3 searchBar"> 
+    <div class="d-flex">
+
+                    <div class='col-7 '>
                     <div class="input-group">
                         <input type='text' class='form-control form-sm' id='searchBox' 
                             value='<?=isset($data['search']) ? $data['search'] : '' ?>' name='search' placeholder="szukaj">
@@ -70,8 +78,7 @@
     </div>
     </div>
     </form>
-<div class='homeMain container mw-75 mb-1 mt-5W px-5'>
-<div class="row ">          
+<div class="row products mw-75">          
     <?php
     
     $j = 0;

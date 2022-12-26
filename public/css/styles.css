@@ -30,13 +30,16 @@ position: fixed;
   .side-btn{
     display:none;
   }
-
-
-}
-
-@media (min-width:992px){
+  
 
 }
+
+@media (max-width:1050px){
+  .searchBar{
+    padding-left: 2rem !important;
+  }
+}
+
 
 .btn-custom-1{
   background-color: rgb(255, 59, 219);
@@ -60,8 +63,13 @@ position: fixed;
 .panelBtn{
   margin-top:60px;
   position:fixed;
-   z-index:2;
+   z-index:3;
    
+}
+
+.searchBar{
+  position:fixed;
+   z-index:2;
 }
 
 .headers-padding {
@@ -98,9 +106,12 @@ ul.navbar-nav a:hover { color: #000 !important; }
 
 
 .homeMain{
-  margin-top: 115px!important;
+  margin-top: 60px!important;
 }
 
+.products{
+  margin-top: 60px!important;
+}
 
     /* usuwa strzałeczki przy inputah number */
 input::-webkit-outer-spin-button,
@@ -119,4 +130,13 @@ input::-webkit-inner-spin-button {
 input.form-check-input{
   width : 20px;
   height : 20px;
+}
+
+#lft, .sub,#rgt,#lft.disabled,#rgt.disabled{
+  opacity: 1 !important;
+  background-color: #fff!important;
+}
+
+#lft:hover, .sub:hover,#rgt:hover{
+  background-color: #0D6EFD!important;
 }
