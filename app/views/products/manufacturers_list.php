@@ -3,7 +3,7 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />
 <div class="row m-0">
-<h1 class="text-muted headers-padding col-6">Lista Producentów</h1>
+<h1 class="text-muted headers-padding col-6">Lista producentów</h1>
     <hr class="divider "> 
     <div class="headers-padding container-fluid" style="padding-right: 15px;">
     
@@ -59,26 +59,14 @@
                         <table class='table table-active coltab m-0'>
                             <thead>
                                 <tr>
-                                <th>Producent</th>
-                                <th>Produkt</th>
-                                <th>Stan magazynowy</th>		
-                                <th>Cena</th>	
+                                <th>Kraj</th>
                                 </tr>
                                 </thead>	
                                 <tbody>";
                                      foreach($mnfCts[$mnf['m_id']] as $ctr){
                                         echo  "<tr>
-                                                <td>
-
-                                                </td>
                                                 <td class='itemName'>
                                                     {$ctr['cname']}
-                                                </td>
-                                                <td>
-
-                                                </td>
-                                                <td>
-
                                                 </td>
                                             </tr>";
                                     }
