@@ -20,7 +20,7 @@
                             <?php
                                 foreach($data['manufacturers'] as $i => $result) {
                                     echo 
-                                    "<option value=".$result['id'].">".$result['name']."</option>";
+                                    "<option value=".$result['id']." data=".json_encode($data['mnf_countries'][$result['id']])." >".$result['name']."</option>";
                                 }
                             
                             ?>
@@ -74,5 +74,15 @@ $('#countries').select2({
     placeholder: 'Wybierz kraje',
     //closeOnSelect: false,
 });
+
+$('#manufacturerName').on('change',function(){
+    var data = JSON.parse($('#manufacturerName option:selected').attr('data'))
+    var countries=[];
+    for(var i in data)
+        countries.push(data[i].id_country)
+
+    $('#countries').val(countries)
+    $('#countries').trigger('change')
+})
 
 </script>

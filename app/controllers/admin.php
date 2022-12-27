@@ -763,6 +763,7 @@ public function add_manufacturer(){
     $this->view('admin/add_manufacturer_admin', ['manufacturer' => $manufacturerName]);
     }
 }
+
 public function add_countries_to_manufacturer(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -799,18 +800,11 @@ public function add_countries_to_manufacturer(){
 
 
             if(isset($_POST['selCountries'])&&!empty($_POST['manufacturername'])){
-                //add catalog to database
-                $query="SELECT COUNT(id) FROM manufacturers WHERE name=:manufacturername";
-                $result = $db->prepare($query);
-                $result->bindParam(':manufacturername', $manufacturername);
-                $result->execute();
-                $selCountries_id=$result->fetch(PDO::FETCH_ASSOC);
-                $temp = $selCountries_id['COUNT(id)'];
-                
-                if($temp>0){
-                    $_SESSION['error_page'] = "add_countries_to_manufacturer";
-                    header("Location:" . ROOT . "/admin/error_page/2");
-                }else{
+
+                 $query="DELETE FROM manufacturercountries WHERE id_manufacturer=:manufacturername";
+                 $result = $db->prepare($query);
+                 $result->bindParam(':manufacturername',$manufacturername);
+                 $result->execute();
                  //connect items with catalog
                  $query="INSERT INTO manufacturercountries (id_manufacturer,id_country) VALUES (:manufacturername,:selCountries_id)";
                  foreach ($selCountries as $selCountries_id){
@@ -825,7 +819,7 @@ public function add_countries_to_manufacturer(){
                 $_SESSION['success_page'] = "add_manufacturer";
                 unset($_SESSION['manufacturername']);
                 header("Location:" . ROOT . "/admin/success_page/1");
-                }
+                
             }
             else{
                 $_SESSION['error_page'] = "add_countries_to_manufacturer";
@@ -842,8 +836,21 @@ public function add_countries_to_manufacturer(){
         $query="SELECT * FROM `manufacturers`";
         $result = $db->query($query);
         $manufacturers = $result->fetchAll(PDO::FETCH_ASSOC);
-        
-        $this->view('admin/add_countries_to_manufacturer_admin', ['countries'=>$countries, 'manufacturers'=>$manufacturers, 'msg_color' => $return_msg_color , 'msg' => $return_msg, 'manufacturername' => $manufacturername, 'selCountries'=> $selCountries]);
+
+        $mnfCountries=array();
+        foreach($manufacturers as $mnf){
+            $query_country="SELECT id_country FROM manufacturercountries WHERE
+            id_manufacturer=:mnfid";
+              $result_id = $db->prepare($query_country);
+              $result_id->bindParam(':mnfid', $mnf['id']);
+              $result_id->execute();
+              $result_id =  $result_id->fetchAll(PDO::FETCH_ASSOC);
+              $mnfCountries[$mnf['id']]= $result_id;    
+ 
+        }
+
+        $this->view('admin/add_countries_to_manufacturer_admin', ['countries'=>$countries, 'manufacturers'=>$manufacturers, 'msg_color' => $return_msg_color ,
+        'msg' => $return_msg, 'manufacturername' => $manufacturername, 'selCountries'=> $selCountries, 'mnf_countries'=>$mnfCountries]);
     }
 
     public function list_of_manufacturers(){
