@@ -944,7 +944,7 @@ public function add_countries_to_manufacturer(){
 
         }
 
-        $query="SELECT id, name FROM manufacturers";
+        $query="SELECT m.id as id, m.name as mname,c.name as cname FROM (manufacturercountries mc INNER JOIN manufacturers m ON mc.id_manufacturer=m.id) INNER JOIN countries c ON mc.id_country=c.id";
         $result = $db->prepare($query);
         $result->execute();
         $result = $result->fetchAll(PDO::FETCH_ASSOC);

@@ -47,7 +47,7 @@
                                 <?php
                                     echo "<option></option>";
                                     foreach($data['items'] as $i => $result) {
-                                        echo "<option value=".$result['id'].">".$result['name']."</option>";
+                                        echo "<option value=".$result['id'].">".$result['mname']." - ".$result['cname']."</option>";
                                     }
                                 ?>
                         </select>
@@ -119,7 +119,7 @@
             html+='<div class="col-8 col-md-5 mb-3">';
             html+='<div class="form-floating">';
             html+='<input type="text" id="' + input + '" class="form-control requiredattr" placeholder="Wartość" required onkeyup="enableAttrSubmit()" autocomplete="off">';
-            html+='<label class="form-control-lg lg-custom" for="'+ input +'">Wartość</label>';
+            html+='<label class="form-control-lg lg-custom" for="'+ input +'">Wartość...</label>';
             html+='</div>';
             html+='</div>';
             html+='<div class="col-4 col-md-2 mb-3 d-grid">';
@@ -131,7 +131,7 @@
 
             $(input).select2({
                 theme: 'bootstrap-5',
-                placeholder: 'Producent...',
+                placeholder: 'Atrybut...',
                 width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
             });
 
