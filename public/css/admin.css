@@ -88,6 +88,12 @@
     color:#61757D;
 }
 
+.lg-custom{
+  margin-left: 5px !important; 
+  margin-top: -3px !important; 
+  color: #757575 !important;
+}
+
 
 /* width */
 ::-webkit-scrollbar {

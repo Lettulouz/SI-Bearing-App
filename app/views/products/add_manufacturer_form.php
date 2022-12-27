@@ -10,7 +10,7 @@
                         <div class="form-floating">
                             <input type="text" class="form-control" id="heightInput" 
                             name="manufacturer" placeholder="20" value="<?=$data['manufacturer']?>">
-                            <label class="form-control-lg" for="heightInput" style="margin-left: 5px !important; margin-top: -5px !important; color: #757575;">Dodaj producenta</label>
+                            <label class="form-control-lg lg-custom" for="heightInput">Dodaj producenta</label>
                         </div>
                     </div>
                 </div>
@@ -31,6 +31,6 @@
 document.getElementById('content_collapse').classList.add('show');
 document.getElementById('content_collapse_btn').setAttribute('aria-expanded', 'true');
 document.getElementById('content_collapse_btn').setAttribute('style', 'color:white !important');
-document.getElementById('addattr').setAttribute('style', 'color:white !important');
+document.getElementById('addmanuf').setAttribute('style', 'color:white !important');
 
 </script>

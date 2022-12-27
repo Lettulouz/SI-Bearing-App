@@ -15,7 +15,7 @@
                     <div class="col-12">
                         <div class="form-floating">
                             <input type="text" class="form-control" id="catalogNameInput" name="catname" placeholder="Grontex">
-                            <label class="form-control-lg" for="catalogNameInput" style="margin-left: 5px !important; margin-top: -5px !important; color: #757575;">
+                            <label class="form-control-lg lg-custom" for="catalogNameInput">
                                 Nazwa katalogu
                             </label>
                         </div>

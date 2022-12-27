@@ -14,14 +14,14 @@
 </div>
     <hr class="divider">
 <div class="container-fluid justify-content-between">
-    <form action="" id="addItemForm" method="POST">
+    <form action="" id="addItemForm" method="POST" autocomplete="off"> 
         <div class="row m-2">
             <div class="col-12 col-sm-6 col-xl-4 itemField1 border-end border-2">
                 <div class="row m-2">
                     <div class="col">
                         <div class="form-floating ">
                             <input type="text" class="form-control" id="nameInput" name="name" placeholder="Grontomat">
-                            <label class="form-control-lg" for="nameInput" style="margin-left: 5px !important; margin-top: -5px !important; color: #757575;">Nazwa</label>
+                            <label class="form-control-lg lg-custom" for="nameInput">Nazwa</label>
                         </div>
                     </div>
                 </div>
@@ -29,7 +29,7 @@
                     <div class="col">
                         <div class="form-floating ">
                             <input type="number" class="form-control" id="quantityInput" min="0" name="price" placeholder="23" step="any">
-                            <label class="form-control-lg" for="quantityInput" style="margin-left: 5px !important; margin-top: -5px !important; color: #757575;">Cena</label>
+                            <label class="form-control-lg lg-custom" for="quantityInput">Cena</label>
                         </div>
                     </div>
                 </div>
@@ -37,7 +37,7 @@
                     <div class="col">
                         <div class="form-floating ">
                             <input type="number" class="form-control" id="quantityInput" min="0" name="quantity" placeholder="23">
-                            <label class="form-control-lg" for="quantityInput" style="margin-left: 5px !important; margin-top: -5px !important; color: #757575;">Ilość</label>
+                            <label class="form-control-lg lg-custom" for="quantityInput">Ilość</label>
                         </div>
                     </div>
                 </div>
@@ -106,7 +106,7 @@
             var html = '';
             html+='<div class="row">';
             html+='<div class="col-12 col-md-5 mb-3">';
-            html+='<select class="select2 form-control selectattr requiredattr" id="attribute_name' + attrNum +  '" aria-label="example-xl" onchange="updateAttrList();">';
+            html+='<select class="select2 form-control selectattr requiredattr form-select-lg" id="attribute_name' + attrNum +  '" aria-label="example-xl" onchange="updateAttrList();">';
             html+='<option>';
             html+='</option>';
             tempPossibleOptions.forEach((id) => {
@@ -119,7 +119,7 @@
             html+='<div class="col-8 col-md-5 mb-3">';
             html+='<div class="form-floating">';
             html+='<input type="text" id="' + input + '" class="form-control requiredattr" placeholder="Wartość" required onkeyup="enableAttrSubmit()" autocomplete="off">';
-            html+='<label for="'+ input +'">Wartość</label>';
+            html+='<label class="form-control-lg lg-custom" for="'+ input +'">Wartość</label>';
             html+='</div>';
             html+='</div>';
             html+='<div class="col-4 col-md-2 mb-3 d-grid">';
@@ -130,8 +130,9 @@
             var input = '#attribute_name' + attrNum;
 
             $(input).select2({
-                width: '100%',
-                placeholder: 'Atrybut'
+                theme: 'bootstrap-5',
+                placeholder: 'Producent...',
+                width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
             });
 
             if(attrNum>=jsArr.length){
