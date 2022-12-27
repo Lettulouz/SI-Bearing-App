@@ -109,10 +109,12 @@
 
 
 <script>
+    var temp;
     $(document).ready(function(){
         if($('#page').val()<=1){
             $('#lft').addClass('btn btn-outline-secondary disabled');
         }
+        temp=$('#searchBox').val();
     })
 
     $('#rgt').click(function(){
@@ -151,11 +153,12 @@
     //clear searchBox
     $('.clrBtn').click(function(){
         $('#searchBox').val('');
-        
     })
 
     $('.sub').click(function(){
-        $('#page').val(1);
+        if(temp!=$('#searchBox').val()){
+            $('#page').val(1);
+        }
     })
 
     </script>

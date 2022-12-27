@@ -8,22 +8,24 @@ class Home extends Controller
     }
     */
 
-    public function index(){
+    public function index($limit1=1){
         require_once dirname(__FILE__,2) . '/core/database.php';
 
+
         $search = '';
-        $limit1 = 1;
         $endofitems=0;
         if(isset($_POST['search']))
             $search = $_POST['search'];
 
-        if(isset($_POST['limit1']))
+        if(isset($_POST['limit1'])){
             $limit1 = $_POST['limit1'];
+        }
 
+        
         if($limit1 < 1)
             $limit1 = 1;
 
-        $przechowanie = $limit1;
+        $page = $limit1;
         $limit1--;
         $limit2 = $limit1 + 1;
         $limit1 *= 8;
@@ -75,8 +77,10 @@ class Home extends Controller
             WHERE i.name LIKE '%".$search."%' 
             AND m.id IN (".$id_manufacturer.")
             ORDER BY i.id ASC
-            LIMIT ".$limit1.",".$limit2." ";
-        $result = $db->query($query);
+            LIMIT :limit1,".$limit2." ";
+        $result = $db->prepare($query);
+        $result->bindParam('limit1',$limit1);
+        $result -> execute();
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
 
         $query2="SELECT i.id as id FROM items i 
@@ -95,9 +99,26 @@ class Home extends Controller
                 $endofitems=1;
             }
         }
+        if($currentLast==false){
+            $limit1=0;
+            $page=1;
+            $result = $db->prepare($query);
+            $result->bindParam('limit1',$limit1);
+            $result -> execute();
+            $result = $result->fetchAll(PDO::FETCH_ASSOC);
+            $currentLast=end($result);
+            if($currentLast!=false){
+                if($currentLast['itemID']==$last[0]['id']){
+                    $endofitems=1;
+                }
+            }
+            else{
+                $endofitems=1;
+            }
+        }
 
         $test = 1;
-        $this->view('home/index', ['itemsArray'=>$result, 'search' => $search, 'limit1' => $przechowanie, 
+        $this->view('home/index', ['itemsArray'=>$result, 'search' => $search, 'limit1' => $page, 
             'manufacturerArray' => $manufacturer, 'last'=> $endofitems,
             'test' => $id_manufacturer]); // ten 'test' to do wywalenia na koniec
             
