@@ -861,7 +861,7 @@ public function add_countries_to_manufacturer(){
 
         require_once dirname(__FILE__,2) . '/core/database.php';
 
-        $query="SELECT m.id as m_id, m.name as mnf FROM manufacturers m";
+        $query="SELECT m.id as m_id, m.name as mnf,COUNT(mc.id_manufacturer) as mnfctsam FROM manufacturers m LEFT JOIN manufacturercountries mc ON m.id=mc.id_manufacturer GROUP BY m.id";
         $result = $db->prepare($query);
         $result->execute();
         $manufacturers = $result->fetchAll(PDO::FETCH_ASSOC);

@@ -9,7 +9,7 @@
     
         <div class="col-12 col-md-6 col-lg-4">
             <div class="input-group">
-            <input type="text" class="form-control" id="searchBox" placeholder="Wyszukaj Producenta">
+            <input type="text" class="form-control" id="searchBox" placeholder="Wyszukaj producenta">
             <div class="input-group-append">
                 <span class="input-group-text"><i class="bi bi-search"></i></span>
             </div>
@@ -38,7 +38,7 @@
             "<tr class='tabRow'>
             <td>{$i}</td>
             <td>{$mnf['mnf']}</td>
-            <td>elo</td>
+            <td>{$mnf['mnfctsam']}</td>
             <td class='px-0 mx-0'>
             <button type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm mx-1 tabBtn' 
             data-bs-toggle='collapse' data-bs-target='#row".$i."' aria-expanded='false'>
@@ -127,17 +127,17 @@
     document.getElementById('content_collapse_btn').setAttribute( 'style', 'color:white !important' );
     document.getElementById('manuf_list').setAttribute( 'style', 'color:white !important' );
 
-//     //change collapse button icon during collapsing
-//     $('.tabBtn').click(function() {
-//      if($(this).attr('aria-expanded')=='true'){
-//         $(this).find('i').removeClass('bi-eye-fill');
-//         $(this).find('i').addClass('bi-eye-slash-fill');
-//      }
-//      else if($(this).attr('aria-expanded')=='false'){
-//         $(this).find('i').removeClass('bi-eye-slash-fill');
-//         $(this).find('i').addClass('bi-eye-fill');
-//      }   
-//     });
+     //change collapse button icon during collapsing
+     $('.tabBtn').click(function() {
+      if($(this).attr('aria-expanded')=='true'){
+         $(this).find('i').removeClass('bi-eye-fill');
+         $(this).find('i').addClass('bi-eye-slash-fill');
+      }
+      else if($(this).attr('aria-expanded')=='false'){
+         $(this).find('i').removeClass('bi-eye-slash-fill');
+         $(this).find('i').addClass('bi-eye-fill');
+      }   
+     });
 
 //     //pass catalog data to edit modal
 //     $('.editBtn').click(function(){
@@ -167,16 +167,16 @@
 
 //     });
 
-//     $(document).ready(function(){
-//   $("#searchBox").on("keyup", function() {
-//     var value = $(this).val().toLowerCase();
-//     $(".tab .tabRow").filter(function() {
-//       $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-//       $('.hidTab').collapse('hide');
-//       $(this).find('.eye').removeClass('bi-eye-slash-fill');
-//       $(this).find('.eye').addClass('bi-eye-fill');
-//     });
-//   });
-// });
+    $(document).ready(function(){
+        $("#searchBox").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $(".tab .tabRow").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            $('.hidTab').collapse('hide');
+            $(this).find('.eye').removeClass('bi-eye-slash-fill');
+            $(this).find('.eye').addClass('bi-eye-fill');
+            });
+        });
+    });
 
- </script>
+</script>
