@@ -139,7 +139,7 @@
           <a href="<?php echo ROOT."/admin/list_of_categories"?>" id="categ_list" class="nav-link text-muted">
             Lista kategorii
           </a>
-          <a href="<?php echo ROOT."/admin/add_categories"?>" id="addcateg" class="nav-link text-muted">
+          <a href="<?php echo ROOT."/admin/add_category"?>" id="addcateg" class="nav-link text-muted">
             Dodaj kategorię
           </a>
           

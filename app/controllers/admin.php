@@ -954,8 +954,65 @@ public function add_countries_to_manufacturer(){
         $result2->execute();
         $result2 = $result2->fetchAll(PDO::FETCH_ASSOC);
         
-        $this->view('admin/add_item_admin', ['items'=>$result, 'attributes' => $result2]);
+        $this->view('admin/add_item_admin', ['items'=>$result, 'attributes' => $result2, 'categories'=>$categories, 'selCategories'=>$selCategories]);
         
+    }
+
+    public function add_category(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
+
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $tekst2 = "";
+        if(isset($_SESSION['successOrErrorResponse'])){
+            if($_SESSION['successOrErrorResponse'] == "add_category"){
+                if(isset($_SESSION['categoryName'])) {$tekst2 = $_SESSION['categoryName']; unset($_SESSION['categoryName']);} 
+            }
+            unset($_SESSION['successOrErrorResponse']);
+        }
+
+        if(isset($_POST['categSub'])){
+            if(!empty($_POST['category']))
+            {
+                $category = $_POST['category'];
+                $tekst1 = strtolower($category);
+                $tekst2 = ucfirst($tekst1);
+
+                $query="SELECT COUNT(id) as amount
+                FROM categories WHERE name=:name";
+                $result = $db->prepare($query);
+                $result->bindParam(':name', $tekst2);
+                $result->execute();
+                $result = $result->fetch(PDO::FETCH_ASSOC);
+                if($result['amount']>0){
+                    $_SESSION['error_page'] = "add_category";
+                    $_SESSION['categoryName'] = $tekst2;
+                    header("Location:" . ROOT . "/admin/error_page/2");
+                }
+                else{
+                    $query = "INSERT INTO `categories` (name) VALUES ('$tekst2');";
+                    $result = $db->prepare($query);
+                    $result->execute();
+                    $_SESSION['success_page'] = "add_category";
+                    header("Location:" . ROOT . "/admin/success_page/1");
+                }
+            }else{
+                $_SESSION['error_page'] = "add_category";
+                header("Location:" . ROOT . "/admin/error_page/1");
+            }
+        }else{
+        $this->view('admin/add_category_admin', ['category' => $tekst2]);
+        }
     }
 
     public function logout(){

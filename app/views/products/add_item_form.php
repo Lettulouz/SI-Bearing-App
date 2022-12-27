@@ -52,8 +52,23 @@
                                 ?>
                         </select>
                     </div>
-                    <span style="color:<?php if(isset($_GET['color'])) echo $_GET['color']; ?>">
-                    <?php if(isset($_GET['msg'])) echo base64_decode($_GET['msg']); ?></span>
+                </div>
+                <div class="row m-2">
+                    <div class="col-12">
+                        <select class="select2 form-select-lg" multiple id="categories" name="selCategories[]" 
+                        aria-label="example-xl" aria-selected="<?=$data['selCategories']?>" aria-autocomplete="TRUE">
+                            <?php
+                                foreach($data['categories'] as $i => $result) {
+                                    $temp = "";
+                                    if(!empty($data['selCategories']))
+                                        if(in_array($result['categoryid'], $data['selCategories'])) $temp = "selected=selected";
+                                    echo 
+                                    "<option value=".$result['categoryid']. " " . $temp .">".$result['categoryname']."</option>";
+                                }
+                            
+                            ?>
+                        </select>
+                    </div>
                 </div>
             </div>   
             <div class="col-12 col-sm-6 col-xl-4 border-end border-2 itemField2 px-4">
@@ -426,6 +441,11 @@ $('#manufacturer').select2({
     placeholder: 'Wybierz producenta',
     width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
 });
-
+$('#categories').select2({
+    theme: 'bootstrap-5',
+    width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+    placeholder: 'Wybierz kategorie',
+    //closeOnSelect: false,
+});
 
 </script>
