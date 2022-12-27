@@ -54,7 +54,7 @@
 
 <div class="offcanvas offcanvas-start sidecustomcolor text-white sidebar " data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" 
  style="background:#2F353B;" id="sidebar" aria-labelledby="offcanvasDarkLabel">
-  <div class="offcanvas-body">
+  <div class="offcanvas-body mng_side">
     <nav class="navbar-dark">
       <ul class="navbar-nav">
         <li class="my-2"><a id="gotomngmain" class="text-muted small fw-bold text-uppercase text-decoration-none"  href=<?php echo ROOT."/manager"?>>Strona główna</a></li>

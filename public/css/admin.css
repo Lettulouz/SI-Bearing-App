@@ -96,25 +96,46 @@
 
 
 /* width */
-::-webkit-scrollbar {
+.sidebar_body::-webkit-scrollbar {
     width: 10px;
   }
   
   /* Track */
-  ::-webkit-scrollbar-track {
+  .sidebar_body::-webkit-scrollbar-track {
     background: #272C31; 
   }
    
   /* Handle */
-  ::-webkit-scrollbar-thumb {
+  .sidebar_body::-webkit-scrollbar-thumb {
     background: #212529; 
   }
   
   /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #8f969c; 
+  .sidebar_body::-webkit-scrollbar-thumb:hover {
+    background: #383d42; 
   }
 
+
+  /* width */
+.mng_side::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+.mng_side::-webkit-scrollbar-track {
+  background: #2F353B; 
+}
+ 
+/* Handle */
+.mng_side::-webkit-scrollbar-thumb {
+  background: #2B3036; 
+}
+
+/* Handle on hover */
+.mng_side::-webkit-scrollbar-thumb:hover {
+  background: #383d42; 
+}
+  
   ul.navbar-nav a:hover { color: #fff !important; }
 
   .select2-container--default .select2-selection--single{

@@ -49,7 +49,7 @@
     <!-- Sidebar -->
 
 <div class="offcanvas offcanvas-start sidecustomcolor text-white sidebar" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="sidebar" aria-labelledby="offcanvasDarkLabel">
-  <div class="offcanvas-body">
+  <div class="offcanvas-body sidebar_body">
     <nav class="navbar-dark">
       <ul class="navbar-nav">
         <li class="my-2"><a id="gotoadmain" class="text-muted small fw-bold text-uppercase text-decoration-none"  href=<?php echo ROOT."/admin/"?>>Strona główna</a></li>
