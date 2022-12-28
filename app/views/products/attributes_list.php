@@ -13,18 +13,18 @@
         </thead>
         <tbody>
         <?php 
-        $attribut = $data['attributesArray'];
+        $attributes = $data['attributesArray'];
         $rmPath=$data['rmpath'];
         $editPath = $data['editpath'];
         $i = 1;
-        foreach($attribut as $attribut) 
+        foreach($attributes as $attribute) 
         {
-            $id = $attribut['id'];
-            $name = $attribut['name'];
+            $id = $attribute['id'];
+            $name = $attribute['name'];
             echo 
             "<tr>
             <td>{$i}</td>   
-            <td>{$attribut['name']}</td>
+            <td>{$attribute['name']}</td>
             <td class='px-0 mx-0'>
                 <button type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm mx-1 tabBtn' 
                 data-bs-toggle='collapse' data-bs-target='#row".$i."' aria-expanded='false'>
@@ -42,7 +42,7 @@
                             <div class='d-flex justify-content-end'>
                                 <input type='submit' class='btn btn-primary  p-1' value='Edytuj' />
                             <div class='col-sm-2 col-5 mx-2'>
-                                <input type='text' name='edit_atr' class='form-control ' value='{$attribut['name']}'/>
+                                <input type='text' name='edit_atr' class='form-control ' value='{$attribute['name']}'/>
                             </div>
                             </div>
                             </form >
