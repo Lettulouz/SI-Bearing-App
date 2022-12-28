@@ -65,7 +65,7 @@
                                 <tbody>";
                                      foreach($mnfCts[$mnf['m_id']] as $ctr){
                                         echo  "<tr>
-                                                <td class='itemName'>
+                                                <td class='countryName".$mnf['m_id']." ".$ctr['c_id']."'>
                                                     {$ctr['cname']}
                                                 </td>
                                             </tr>";
@@ -84,27 +84,27 @@
     </div>
 
 
-        <!--Edit catalog window-->
+        <!--Edit manufacturer window-->
 
         <div class="modal fade" id="editModal"  aria-labelledby="editModal" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Edytuj Katalog</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Edytuj Producenta</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="" method="POST">
                 <div class="modal-body">
-                <input type='hidden' id="catid" name="catid" class="form-control"> 
-                        <div class="form-floating my-2">
-                                <input type="text" class="form-control" id="catalogName" name="catname" placeholder="Grontex">
-                                <label for="catalogNameInput">Nazwa katalogu</label>
+                <input type='hidden' id="mnfid" name="mnfid" class="form-control"> 
+                            <div class="form-floating my-2">
+                                <input type="text" class="form-control" id="manufacturerName" name="mnfname" placeholder="Grontex">
+                                <label for="manufacturerNameInput">Producent</label>
                             </div>
                             <hr>
-                                <select class="select2 form-select-lg my-2"  multiple="multiple" id="item" name="itemcat[]" aria-label="example-xl"  aria-autocomplete="TRUE">
+                                <select class="select2 form-select-lg my-2"  multiple="multiple" id="country" name="countrymnf[]" aria-label="example-xl"  aria-autocomplete="TRUE">
                                         <?php
-                                            foreach($data['items'] as $i => $result) {
-                                                echo "<option class='itemList' value=".$result['item_id'].">".$result['mnf']." - ".$result['item']."</option>";
+                                            foreach($data['countries'] as $i => $country) {
+                                                echo "<option class='countryList' value=".$country['id'].">".$country['name']."</option>";
                                             }
                                         ?>
                                 </select>
@@ -113,7 +113,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
-                    <button type="submit" name="catEditSub" class="btn btn-primary">Edytuj</button>
+                    <button type="submit" name="mnfEditSub" class="btn btn-primary">Edytuj</button>
                 </div>
             </form>
         </div>
@@ -139,33 +139,33 @@
       }   
      });
 
-//     //pass catalog data to edit modal
-//     $('.editBtn').click(function(){
-//         var catName=$(this).parent().parent().children('td').eq(1).text();
-//         var catItems=$('.itemName'+$(this).attr('value')).map(function() {
-//             return this.className.split(' ')[1];
-//             }).get();
-//         $('#item').val(catItems);
-//         $('#item').trigger('change');
-//         $('#catid').val($(this).attr('value'));
-//         $('#catalogName').val(catName);
+//     //pass manufacturer data to edit modal
+    $('.editBtn').click(function(){
+        var mnfName=$(this).parent().parent().children('td').eq(1).text();
+        var mnfcountrys=$('.countryName'+$(this).attr('value')).map(function() {
+            return this.className.split(' ')[1];
+            }).get();
+        $('#country').val(mnfcountrys);
+        $('#country').trigger('change');
+        $('#mnfid').val($(this).attr('value'));
+        $('#manufacturerName').val(mnfName);
         
-//     })
+    })
 
-//     //remove items from select after hide modal
-//     $('#editModal').on('hidden.bs.modal', function () {
+    //remove countrys from select after hide modal
+    $('#editModal').on('hidden.bs.modal', function () {
 
-//         $('#item').val(null).trigger('change');
-//     })
+        $('#country').val(null).trigger('change');
+    })
 
 //     //select properties
-//     $('#item').select2({
-//     width: 'auto',
-//     theme: 'bootstrap-5',
-//     placeholder: 'Wybierz produkty',
-//     dropdownParent: $("#editModal")
+    $('#country').select2({
+    width: 'auto',
+    theme: 'bootstrap-5',
+    placeholder: 'Wybierz kraje',
+    dropdownParent: $("#editModal")
 
-//     });
+     });
 
     $(document).ready(function(){
         $("#searchBox").on("keyup", function() {

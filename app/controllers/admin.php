@@ -536,6 +536,8 @@ class Admin extends Controller
                 $itemsInCat[$res['id']]= $result_id;
         }
 
+
+        
         $rmCatPath=ROOT."/admin/";
 
         $this->view('admin/list_of_catalogs', ['catalogsArray'=>$result, 'catalogsItems'=>$itemsInCat,'items'=>$items ,'rmpath'=> $rmCatPath]);
@@ -910,10 +912,59 @@ public function add_countries_to_manufacturer(){
             $mnfCountries[$mnf['m_id']]= $result_id;    
         }
 
+        $queryCnt="SELECT id, name FROM countries";
+        $resultCnt= $db->query($queryCnt);
+        $resultCnt = $resultCnt->fetchAll(PDO::FETCH_ASSOC);
+
+        if(isset($_POST['mnfEditSub'])){
+            isset($_POST['countrymnf']) ? $countrymnf=$_POST['countrymnf'] : $countrymnf=array();
+            isset($_POST['mnfname']) ? $mnfname=$_POST['mnfname'] : $mnfname="";
+            isset($_POST['mnfid']) ? $mnfid=$_POST['mnfid'] : $mnfid="";
+
+            if(!empty($_POST['mnfname'])){
+                $query="SELECT id, COUNT(id) FROM manufacturers WHERE name=:mnfname";
+                $result = $db->prepare($query);
+                $result->bindParam(':mnfname', $mnfname);
+                $result->execute();
+                $mnf_id=$result->fetch(PDO::FETCH_ASSOC);
+                $temp = $mnf_id['COUNT(id)'];
+                if($temp>0&&$mnf_id['id']!=$mnfid){
+                    $_SESSION['error_page'] = "list_of_manufacturers";
+                    header("Location:" . ROOT . "/admin/error_page/2");
+                }else{
+                    $query="UPDATE catalog SET name=:mnfname WHERE id=:mnfid";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':mnfname',$mnfname);
+                    $result->bindParam(':mnfid',$mnfid);
+                    $result->execute();
+
+                    $query="DELETE FROM manufacturercountries WHERE id_manufacturer=:mnfid";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':mnfid',$mnfid);
+                    $result->execute();
+
+                    $query="INSERT INTO manufacturercountries (id_manufacturer,id_country) VALUES (:mnf_id,:ctr_id)";
+                 foreach ($countrymnf as $country){
+                     $result = $db->prepare($query);
+                     $result->bindParam(':mnf_id',$mnfid);
+                     $result->bindParam(':ctr_id',$country);
+                     $result->execute();
+                    }
+                $_SESSION['success_page'] = "list_of_manufacturers";
+                header("Location:" . ROOT . "/admin/success_page/1");
+                }
+
+            }else{
+                $_SESSION['error_page'] = "list_of_manufacturers";
+                header("Location:" . ROOT . "/admin/error_page/1");
+            }
+        }
+
         $rmPath=ROOT."/admin/remove_manufacturer";
         //$editPath=ROOT."/admin/edit_category";
 
-        $this->view('admin/list_of_manufacturers',['mnfArray'=> $manufacturers, 'mnfCts'=> $mnfCountries, 'rmpath'=> $rmPath]);
+        $this->view('admin/list_of_manufacturers',['mnfArray'=> $manufacturers, 'mnfCts'=> $mnfCountries,
+         'rmpath'=> $rmPath, 'countries'=>$resultCnt]);
 
     }
 

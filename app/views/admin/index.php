@@ -183,10 +183,17 @@ include 'adm_nav.php';
         <div class="col-12 col-sm-6 col-xl-4 mb-3">
             <div class="card text-white bg-custom-4 h-100" >
                 <div class="card-header">
+                    
                     <i class="bi bi-journal-richtext"></i>&nbspProducenci
+
                     <a style='float:right;' class="text-white" href="<?php echo ROOT."/admin/add_manufacturer"?>" >
                         <i class="bi bi-plus-lg"></i>
                     </a>
+
+                    <a style='float:right;' class="text-white me-2" href="<?php echo ROOT."/admin/add_countries_to_manufacturer"?>" >
+                    <i class="bi bi-globe-americas"></i>
+                    </a>
+
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">Producentów: <?php echo $data['manufacturersCount']?></h5>
