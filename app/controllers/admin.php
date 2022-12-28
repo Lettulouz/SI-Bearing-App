@@ -363,13 +363,13 @@ class Admin extends Controller
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
          
 
-        $rmCatPath=ROOT."/admin/remove_attribut";
-        $editCatPath=ROOT."/admin/edit_attribut";
+        $rmCatPath=ROOT."/admin/remove_attribute";
+        $editCatPath=ROOT."/admin/edit_attribute";
         $this->view('admin/list_of_attributes', ['attributesArray'=>$result, 'rmpath'=> $rmCatPath, 'editpath'=> $editCatPath]);
 
     }
 
-    public function edit_attribut($id_a=NULL){
+    public function edit_attribute($id_a=NULL){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
                 unset($_SESSION['successOrErrorResponse']);
@@ -419,7 +419,7 @@ class Admin extends Controller
         }
     }
 
-    public function remove_attribut($id_a=NULL){
+    public function remove_attribute($id_a=NULL){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
                 unset($_SESSION['successOrErrorResponse']);
@@ -913,7 +913,8 @@ public function add_countries_to_manufacturer(){
             $mnfCountries[$mnf['m_id']]= $result_id;    
         }
 
-        $rmPath=ROOT."/admin/";
+        $rmPath=ROOT."/admin/remove_manufacturer";
+        //$editPath=ROOT."/admin/edit_category";
 
         $this->view('admin/list_of_manufacturers',['mnfArray'=> $manufacturers, 'mnfCts'=> $mnfCountries, 'rmpath'=> $rmPath]);
 
@@ -1046,6 +1047,133 @@ public function add_countries_to_manufacturer(){
         }else{
         $this->view('admin/add_category_admin', ['category' => $tekst2]);
         }
+    }
+
+    public function list_of_categories()
+    {
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $query="SELECT * FROM `categories` ORDER BY id";
+        $result = $db->query($query);
+        $result = $result->fetchAll(PDO::FETCH_ASSOC);
+         
+
+        $rmCatPath=ROOT."/admin/remove_category";
+        $editCatPath=ROOT."/admin/edit_category";
+        $this->view('admin/list_of_categories', ['categoriesArray'=>$result, 'rmpath'=> $rmCatPath, 'editpath'=> $editCatPath]);
+    }
+
+    public function edit_category($id_categ=NULL){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
+        
+        if(isset($id_categ)){
+        isset($_POST['edit_categ']) ? $category=$_POST['edit_categ'] : $category="";
+            if(!empty($category))
+            {
+                require_once dirname(__FILE__,2) . '/core/database.php';
+                $tekst1 = strtolower($category);
+                $tekst2 = ucfirst($tekst1);
+
+                $query="SELECT id, COUNT(id) FROM categories WHERE name=:categ";
+                $result = $db->prepare($query);
+                $result->bindParam(':categ', $category);
+                $result->execute();
+                $categ_id=$result->fetch(PDO::FETCH_ASSOC);
+                $temp = $categ_id['COUNT(id)'];
+                if($temp>0&&$categ_id['id']!=$id_categ){
+                    $_SESSION['error_page'] = "list_of_categories";
+                    header("Location:" . ROOT . "/admin/error_page/2");
+                }else{
+                $query = "UPDATE `categories` 
+                    SET name = '$tekst2' 
+                    WHERE id = '$id_categ';";
+                $result = $db->prepare($query);
+                $result->execute();
+                $_SESSION['success_page'] = "list_of_categories";
+                header("Location:" . ROOT . "/admin/success_page/1");
+                }
+
+            }else{
+                $_SESSION['error_page'] = "list_of_categories";
+                header("Location:" . ROOT . "/admin/error_page/1");
+            }
+        }else{
+        header("Location:" . ROOT . "/admin/list_of_categories");
+        }
+    }
+
+    public function remove_category($id_categ=NULL){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
+
+        if(isset($id_categ)){
+            require_once dirname(__FILE__,2) . '/core/database.php';
+            $query="DELETE FROM categories WHERE id=:id_categ";
+            $result = $db->prepare($query);
+            $result->bindParam(':id_categ', $id_categ);
+            $result->execute();
+        }
+        
+    
+        header("Location:" . ROOT . "/admin/list_of_categories");
+    }
+
+    public function remove_manufacturer($id_manuf=NULL){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
+
+        if(isset($id_manuf)){
+            require_once dirname(__FILE__,2) . '/core/database.php';
+            $query="DELETE FROM manufacturers WHERE id=:id_manuf";
+            $result = $db->prepare($query);
+            $result->bindParam(':id_manuf', $id_manuf);
+            $result->execute();
+        }
+        
+    
+        header("Location:" . ROOT . "/admin/list_of_manufacturers");
     }
 
     public function logout(){

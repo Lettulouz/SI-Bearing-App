@@ -44,12 +44,12 @@
             data-bs-toggle='collapse' data-bs-target='#row".$i."' aria-expanded='false'>
             <i class='eye bi bi-eye-fill'></i>
             </button>
-            <!--<button type='button' class='btn btn-dark d-inline btn-sm mx-1 editBtn' data-bs-toggle='modal' data-bs-target='#editModal' value='{$mnf['m_id']}'>
+            <button type='button' class='btn btn-dark d-inline btn-sm mx-1 editBtn' data-bs-toggle='modal' data-bs-target='#editModal' value='{$mnf['m_id']}'>
             <i class='bi bi-gear-fill'></i>
             </button>
-            <a href='".$rmPath."remove_catalog/".$mnf['m_id']."' type='button' data-toggle='collapse' class='btn btn-danger d-inline btn-sm mx-1 tabBtn'>
+            <a href='".$rmPath."/".$mnf['m_id']."' type='button' data-toggle='collapse' class='btn btn-danger d-inline btn-sm mx-1 tabBtn'>
             <i class='bi bi-trash-fill'></i>
-            </a>-->
+            </a>
             </td>
             </tr>
 
