@@ -58,6 +58,18 @@
     background-color: rgb(55, 142, 218);
 }
 
+.bg-custom-4 {
+  background-color: rgb(19, 125, 107);
+  color: white;
+  text-decoration-color: white;
+}
+
+.bg-custom-5 {
+  background-color: rgb(127, 209, 11);
+  color: white;
+  text-decoration-color: white;
+}
+
 
 
 .headers-padding {

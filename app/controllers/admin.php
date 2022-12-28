@@ -92,10 +92,36 @@ class Admin extends Controller
         
         $attributesCount = $result->fetchAll(PDO::FETCH_ASSOC);
         $attributesCount = $attributesCount[0]['Count(name)'];
+
+        $query="SELECT name
+        FROM manufacturers LIMIT 5";
+        $result = $db->query($query);
+        $manufacturers = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        $query="SELECT Count(name)
+        FROM manufacturers";
+        $result = $db->query($query);
+        
+        $manufacturersCount = $result->fetchAll(PDO::FETCH_ASSOC);
+        $manufacturersCount = $manufacturersCount[0]['Count(name)'];
+
+        $query="SELECT name
+        FROM categories LIMIT 5";
+        $result = $db->query($query);
+        
+        $categories = $result->fetchAll(PDO::FETCH_ASSOC);
+        
+        $query="SELECT Count(name)
+        FROM categories";
+        $result = $db->query($query);
+        
+        $categoriesCount = $result->fetchAll(PDO::FETCH_ASSOC);
+        $categoriesCount = $categoriesCount[0]['Count(name)'];
    
 
         $this->view('admin/index', ['items'=>$items, 'itemsCount'=>$itemsCount, 'catalogs'=>$catalogs, 'catalogsCount'=>$catalogsCount,
-        'attributes'=>$attributes, 'attributesCount'=>$attributesCount]);
+        'attributes'=>$attributes, 'attributesCount'=>$attributesCount, 'manufacturers'=>$manufacturers, 
+        'manufacturersCount'=>$manufacturersCount,'categories'=>$categories, 'categoriesCount'=>$categoriesCount]);
     }
 
     public function list_of_users(){

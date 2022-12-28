@@ -179,7 +179,71 @@ include 'adm_nav.php';
                     </div>
                 </a>
             </div>    
-        </div>     
+        </div> 
+        <div class="col-12 col-sm-6 col-xl-4 mb-3">
+            <div class="card text-white bg-custom-4 h-100" >
+                <div class="card-header">
+                    <i class="bi bi-journal-richtext"></i>&nbspProducenci
+                    <a style='float:right;' class="text-white" href="<?php echo ROOT."/admin/add_manufacturer"?>" >
+                        <i class="bi bi-plus-lg"></i>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Producentów: <?php echo $data['manufacturersCount']?></h5>
+                    <p class="card-text">
+                        <?php
+                            $i = 0;
+                            foreach($data['manufacturers'] as $manufacturers){
+                                $i++;
+                                if($i<5)
+                                    echo $manufacturers['name']."<br>";
+                                else if(($i==5 && $data['manufacturersCount']<=5))
+                                    echo $manufacturers['name'];
+                                else if($i==5 && $data['manufacturersCount']>5)
+                                    echo "...";
+                            } 
+                        ?> 
+                    </p>
+                </div>
+                <a href=<?php echo ROOT."/admin/list_of_manufacturers"?> id="orders_lists" class="nav-link text-white p-0">
+                    <div class="card-footer p-3">
+                        Przeglądaj producentów
+                    </div>
+                </a>
+            </div>    
+        </div>  
+        <div class="col-12 col-sm-6 col-xl-4 mb-3">
+            <div class="card text-white bg-custom-5 h-100" >
+                <div class="card-header">
+                    <i class="bi bi-journal-richtext"></i>&nbspKategorie
+                    <a style='float:right;' class="text-white" href="<?php echo ROOT."/admin/add_category"?>" >
+                        <i class="bi bi-plus-lg"></i>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Kategorii: <?php echo $data['categoriesCount']?></h5>
+                    <p class="card-text">
+                        <?php
+                            $i = 0;
+                            foreach($data['categories'] as $categories){
+                                $i++;
+                                if($i<5)
+                                    echo $categories['name']."<br>";
+                                else if(($i==5 && $data['categoriesCount']<=5))
+                                    echo $categories['name'];
+                                else if($i==5 && $data['categoriesCount']>5)
+                                    echo "...";
+                            } 
+                        ?> 
+                    </p>
+                </div>
+                <a href=<?php echo ROOT."/admin/list_of_categories"?> id="orders_lists" class="nav-link text-white p-0">
+                    <div class="card-footer p-3">
+                        Przeglądaj kategorie
+                    </div>
+                </a>
+            </div>    
+        </div>        
     </div>
 </div>
 
