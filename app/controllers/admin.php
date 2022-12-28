@@ -944,6 +944,8 @@ public function add_countries_to_manufacturer(){
         if(isset($_POST['itemSubmit'])){
             if(isset($_POST['name']) && isset($_POST['price']) && isset($_POST['quantity']) && !empty($_POST['manufacturer'])){
                 //add catalog to database
+                var_dump('test');
+                die();
                 $itemName = $_POST['name'];
                 $itemPrice = $_POST['price'];
                 $itemQuantity = $_POST['quantity'];
@@ -982,11 +984,18 @@ public function add_countries_to_manufacturer(){
         $result = $db->prepare($query);
         $result->execute();
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
-
         $query="SELECT name FROM attributes";
         $result2 = $db->prepare($query);
         $result2->execute();
         $result2 = $result2->fetchAll(PDO::FETCH_ASSOC);
+
+        $query="SELECT id as categoryid, name as categoryname FROM categories";
+        $categories = $db->prepare($query);
+        $categories->execute();
+        $categories = $categories->fetchAll(PDO::FETCH_ASSOC);
+
+        $selCategories = "";
+
         
         $this->view('admin/add_item_admin', ['items'=>$result, 'attributes' => $result2, 'categories'=>$categories, 'selCategories'=>$selCategories]);
         

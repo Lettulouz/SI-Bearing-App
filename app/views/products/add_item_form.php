@@ -305,22 +305,7 @@
 
 
         $("#itemSubmitRemote").click(function(e){
-            for(var j=1; j<=i; j++){
-                var getValue = "";
-                getValue += '#attribute_name';
-                getValue +=  j;
-                getValue +=' :selected';
-                var attribute_name = $(getValue).text();
-                getValue = "";
-                getValue += '#attribute_value';
-                getValue +=  j;
-                var attribute_value = $(getValue).val();
-                const person = {attribute_name:attribute_name, attribute_value:attribute_value};
-                alreadyUsed.push(person);
-            }
-            document.getElementById('attributes').value = JSON.stringify(alreadyUsed);
             $("#itemSubmit").click();
-
         });
 	});
 
