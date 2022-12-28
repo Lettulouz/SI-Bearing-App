@@ -3,7 +3,7 @@
  *
  * @author Dominik
  */
- function registerButton() {
+function registerButton() {
   var error = false;
   var login = document.getElementById('login').value;
   var email = document.getElementById('email').value;
@@ -11,7 +11,6 @@
   var surname = document.getElementById('surname').value;
   var password = document.getElementById('password').value;
   
-
   if(!verifyName(name))
     error = true;
 
@@ -31,16 +30,7 @@
       document.getElementById('registerFields').style = "display: none;";
       document.getElementById('form1').style.border = "none";
       document.getElementById("registerForm").submit();
-      //document.getElementById('successRegister').style = "display: default;";
   }
-  //window.location.href = "http://83.230.14.95/si-project-php/public/admin";
-  
-}
-
-function runScript(){
-  event.preventDefault();
-  document.getElementById('successRegister').style.display = "default";
-  //document.getElementById('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
 }
 
 /** Function that validates given name
@@ -49,34 +39,33 @@ function runScript(){
 * @brief cond1 checks if domain of email is .pl
 * @brief cond2 checks if domain of email is .com
 * @brief Second if sets values to defaulty if everything is fine
-* s
+* 
 * @return Returns boolean, name is fine - true, else - false
 * 
 * @author Dominik
 */
 function verifyName(name){
-  let result = name.charAt(0).toUpperCase() + name.toLowerCase().slice(1);
-  document.getElementById('name').value = result;
-  name = result;
+    let result = name.charAt(0).toUpperCase() + name.toLowerCase().slice(1);
+    document.getElementById('name').value = result;
+    name = result;
 
+    if(name == "") {  
+        document.getElementById('errorName').innerText = "*Należy uzupelnić imię";  
+        document.getElementById('name').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingName').style = "display: default; color:#de1f1f";
+        document.getElementById('nameSpan').style.color = "rgb(255, 0, 0)";
+        return false;  
+    }  
 
-  if(name == "") {  
-      document.getElementById('errorName').innerText = "*Należy uzupelnić imię";  
-      document.getElementById('name').style.border = "2px solid rgb(255, 0, 0)";
-      document.getElementById('blinkingName').style = "display: default; color:#de1f1f";
-      document.getElementById('nameSpan').style.color = "rgb(255, 0, 0)";
-      return false;  
-  }  
+    let cond1 = checkIfOnlyAcceptedChars(name,3);
 
-  let cond1 = checkIfOnlyAcceptedChars(name);
-
-  if(!cond1){
-      document.getElementById('errorName').innerText = "*Podano znaki różne od liter"; 
-      document.getElementById('name').style.border = "2px solid rgb(255, 0, 0)";
-      document.getElementById('blinkingName').style = "display: default; color:#de1f1f";
-      document.getElementById('nameSpan').style.color = "rgb(255, 0, 0)";
-      return false;
-  }
+    if(!cond1){
+        document.getElementById('errorName').innerText = "*Podano znaki różne od liter"; 
+        document.getElementById('name').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingName').style = "display: default; color:#de1f1f";
+        document.getElementById('nameSpan').style.color = "rgb(255, 0, 0)";
+        return false;
+    }
 
     document.getElementById('errorName').innerText = ""; 
     document.getElementById('name').style.border = "2px solid rgb(238, 238, 238)";
@@ -92,42 +81,39 @@ function verifyName(name){
 * @brief cond1 checks if domain of email is .pl
 * @brief cond2 checks if domain of email is .com
 * @brief Second if sets values to defaulty if everything is fine
-* s
+* 
 * @return Returns boolean, name is fine - true, else - false
 * 
 * @author Dominik
 */
 function verifySurname(surname){
-  let result = surname.charAt(0).toUpperCase() + surname.toLowerCase().slice(1);
-  document.getElementById('surname').value = result;
-  surname = result;
-  
-  if(surname == "") {  
-      document.getElementById('errorSurname').innerText = "*Należy uzupelnić nazwisko";  
-      document.getElementById('surname').style.border = "2px solid rgb(255, 0, 0)";
-      document.getElementById('blinkingSurname').style = "display: default; color:#de1f1f";
-      document.getElementById('surnameSpan').style.color = "rgb(255, 0, 0)";
-      return false;  
-  }  
+    let result = surname.charAt(0).toUpperCase() + surname.toLowerCase().slice(1);
+    document.getElementById('surname').value = result;
+    surname = result;
+    
+    if(surname == "") {  
+        document.getElementById('errorSurname').innerText = "*Należy uzupelnić nazwisko";  
+        document.getElementById('surname').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingSurname').style = "display: default; color:#de1f1f";
+        document.getElementById('surnameSpan').style.color = "rgb(255, 0, 0)";
+        return false;  
+    }  
 
-  let cond1 = checkIfOnlyAcceptedChars(surname);
+    let cond1 = checkIfOnlyAcceptedChars(surname,3);
 
-  if(!cond1){
-      document.getElementById('errorSurname').innerText = "*Podano znaki różne od liter"; 
-      document.getElementById('surname').style.border = "2px solid rgb(255, 0, 0)";
-      document.getElementById('blinkingSurname').style = "display: default; color:#de1f1f";
-      document.getElementById('surnameSpan').style.color = "rgb(255, 0, 0)";
-      return false;
-  }
-
+    if(!cond1){
+        document.getElementById('errorSurname').innerText = "*Podano znaki różne od liter"; 
+        document.getElementById('surname').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingSurname').style = "display: default; color:#de1f1f";
+        document.getElementById('surnameSpan').style.color = "rgb(255, 0, 0)";
+        return false;
+    }
 
     document.getElementById('errorSurname').innerText = ""; 
     document.getElementById('surname').style.border = "2px solid rgb(238, 238, 238)";
     document.getElementById('blinkingSurname').style = "display: none;";
     document.getElementById('surnameSpan').style.color = "rgb(0, 0, 0)";
     return true;
-
-  
 }
 
 
@@ -137,51 +123,48 @@ function verifySurname(surname){
 * @brief cond1 checks if domain of email is .pl
 * @brief cond2 checks if domain of email is .com
 * @brief Second if sets values to defaulty if everything is fine
-* s
+* 
 * @return Returns boolean, login is fine - true, else - false
 * 
 * @author Dominik
 */
 function verifyLogin(login){
-  let result = login.toLowerCase();
-  document.getElementById('login').value = result;
-  login = result;
-  
-  if(login == "") {  
-      document.getElementById('errorLogin').innerText = "*Należy uzupelnić login";  
-      document.getElementById('login').style.border = "2px solid rgb(255, 0, 0)";
-      document.getElementById('blinkingLogin').style = "display: default; color:#de1f1f";
-      document.getElementById('loginSpan').style.color = "rgb(255, 0, 0)";
-      return false;  
-  }  
+    let result = login.toLowerCase();
+    document.getElementById('login').value = result;
+    login = result;
+    
+    if(login == "") {  
+        document.getElementById('errorLogin').innerText = "*Należy uzupelnić login";  
+        document.getElementById('login').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingLogin').style = "display: default; color:#de1f1f";
+        document.getElementById('loginSpan').style.color = "rgb(255, 0, 0)";
+        return false;  
+    }  
 
-  let cond1 = checkIfOnlyAcceptedChars(login, 1);
-  let cond2 = containsAnyLetters(login);
+    let cond1 = checkIfOnlyAcceptedChars(login, 1);
+    let cond2 = containsAnyLetters(login);
 
-  if(!cond1){
-      document.getElementById('errorLogin').innerText = "*Podano znaki różne od liter i cyfr"; 
-      document.getElementById('login').style.border = "2px solid rgb(255, 0, 0)";
-      document.getElementById('blinkingLogin').style = "display: default; color:#de1f1f";
-      document.getElementById('loginSpan').style.color = "rgb(255, 0, 0)";
-      return false;
-  }
+    if(!cond1){
+        document.getElementById('errorLogin').innerText = "*Podano znaki różne od liter i cyfr"; 
+        document.getElementById('login').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingLogin').style = "display: default; color:#de1f1f";
+        document.getElementById('loginSpan').style.color = "rgb(255, 0, 0)";
+        return false;
+    }
 
-  if(!cond2){
-      document.getElementById('errorLogin').innerText = "*Brak liter w loginie"; 
-      document.getElementById('login').style.border = "2px solid rgb(255, 0, 0)";
-      document.getElementById('blinkingLogin').style = "display: default; color:#de1f1f";
-      document.getElementById('loginSpan').style.color = "rgb(255, 0, 0)";
-      return false;
-  }
-
+    if(!cond2){
+        document.getElementById('errorLogin').innerText = "*Brak liter w loginie"; 
+        document.getElementById('login').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingLogin').style = "display: default; color:#de1f1f";
+        document.getElementById('loginSpan').style.color = "rgb(255, 0, 0)";
+        return false;
+    }
 
     document.getElementById('errorLogin').innerText = ""; 
     document.getElementById('login').style.border = "2px solid rgb(238, 238, 238)";
     document.getElementById('blinkingLogin').style = "display: none;";
     document.getElementById('loginSpan').style.color = "rgb(0, 0, 0)";
     return true;
-
-  
 }
 
 /** Function that validates given email
@@ -200,58 +183,56 @@ function verifyLogin(login){
 * @author Dominik
 */
 function verifyEmail(email){
-  let result = email.toLowerCase();
-  document.getElementById('email').value = result;
-  email = result;
-  let cond1 = email.includes(".pl"); true
-  let cond2 = email.includes(".com"); false
-  let cond3 = email.charAt(0).includes("@");
-  var cond4 = occurrences(email, "@");
-  var cond5 = email.charAt(email.indexOf("@")+1).includes(".");
-  var cond6 = checkIfOnlyAcceptedChars(email,2); false
-  if((!cond1 && !cond2)){
-      document.getElementById('errorEmail').innerText = "*Nie podano prawidłowej domeny"; 
-      document.getElementById('email').style.border = "2px solid rgb(255, 0, 0)";
-      document.getElementById('blinkingEmail').style = "display: default; color:#de1f1f";
-      document.getElementById('emailSpan').style.color = "rgb(255, 0, 0)";
-      return false;
-  }
-  if(cond3){
-      document.getElementById('errorEmail').innerText = "*Mail nie może zaczynać się od @"; 
-      document.getElementById('email').style.border = "2px solid rgb(255, 0, 0)";
-      document.getElementById('blinkingEmail').style = "display: default; color:#de1f1f";
-      document.getElementById('emailSpan').style.color = "rgb(255, 0, 0)";
-      return false;
-  }
-  if(cond4>1){
-      document.getElementById('errorEmail').innerText = "*Mail nie może składać się z więcej niż jednej  @"; 
-      document.getElementById('email').style.border = "2px solid rgb(255, 0, 0)";
-      document.getElementById('blinkingEmail').style = "display: default; color:#de1f1f";
-      document.getElementById('emailSpan').style.color = "rgb(255, 0, 0)";
-      return false;
-  }
-  if(cond5){
-      document.getElementById('errorEmail').innerText = "*Podany mail nie posiada żadnych znaków między @ a ."; 
-      document.getElementById('email').style.border = "2px solid rgb(255, 0, 0)";
-      document.getElementById('blinkingEmail').style = "display: default; color:#de1f1f";
-      document.getElementById('emailSpan').style.color = "rgb(255, 0, 0)";
-      return false;
-  }
-  if(!cond6){
-      document.getElementById('errorEmail').innerText = "*Podano znaki różne od liter i cyfr"; 
-      document.getElementById('email').style.border = "2px solid rgb(255, 0, 0)";
-      document.getElementById('blinkingEmail').style = "display: default; color:#de1f1f";
-      document.getElementById('emailSpan').style.color = "rgb(255, 0, 0)";
-      return false;
-  }
+    let result = email.toLowerCase();
+    document.getElementById('email').value = result;
+    email = result;
+    let cond1 = email.includes(".pl"); true
+    let cond2 = email.includes(".com"); false
+    let cond3 = email.charAt(0).includes("@");
+    var cond4 = occurrences(email, "@");
+    var cond5 = email.charAt(email.indexOf("@")+1).includes(".");
+    var cond6 = checkIfOnlyAcceptedChars(email,2); false
+    if((!cond1 && !cond2)){
+        document.getElementById('errorEmail').innerText = "*Nie podano prawidłowej domeny"; 
+        document.getElementById('email').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingEmail').style = "display: default; color:#de1f1f";
+        document.getElementById('emailSpan').style.color = "rgb(255, 0, 0)";
+        return false;
+    }
+    if(cond3){
+        document.getElementById('errorEmail').innerText = "*Mail nie może zaczynać się od @"; 
+        document.getElementById('email').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingEmail').style = "display: default; color:#de1f1f";
+        document.getElementById('emailSpan').style.color = "rgb(255, 0, 0)";
+        return false;
+    }
+    if(cond4>1){
+        document.getElementById('errorEmail').innerText = "*Mail nie może składać się z więcej niż jednej  @"; 
+        document.getElementById('email').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingEmail').style = "display: default; color:#de1f1f";
+        document.getElementById('emailSpan').style.color = "rgb(255, 0, 0)";
+        return false;
+    }
+    if(cond5){
+        document.getElementById('errorEmail').innerText = "*Podany mail nie posiada żadnych znaków między @ a ."; 
+        document.getElementById('email').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingEmail').style = "display: default; color:#de1f1f";
+        document.getElementById('emailSpan').style.color = "rgb(255, 0, 0)";
+        return false;
+    }
+    if(!cond6){
+        document.getElementById('errorEmail').innerText = "*Podano znaki różne od liter i cyfr"; 
+        document.getElementById('email').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingEmail').style = "display: default; color:#de1f1f";
+        document.getElementById('emailSpan').style.color = "rgb(255, 0, 0)";
+        return false;
+    }
 
     document.getElementById('errorEmail').innerText = ""; 
     document.getElementById('email').style.border = "2px solid rgb(238, 238, 238)";
     document.getElementById('blinkingEmail').style = "display: none";
     document.getElementById('emailSpan').style.color = "rgb(0, 0, 0)";
     return true;
-
-
 }
 
 
@@ -268,47 +249,45 @@ function verifyEmail(email){
 * @author Dominik
 */
 function verifyPassword(password) {  
-  var error = 0;
-  //check empty password field  
-  if(password == "") {  
-      document.getElementById('errorPassword').innerText = "*Należy uzupelnić hasło";  
-      document.getElementById('password').style.border = "2px solid rgb(255, 0, 0)";
-      document.getElementById('blinkingPassword').style = "display: default; color:#de1f1f";
-      document.getElementById('passwordSpan').style.color = "rgb(255, 0, 0)";
-      return false;  
-  }  
-   
- //minimum password length validation  
-  if(password.length < 8) {  
-      document.getElementById('errorPassword').innerText = "*Hasło musi mieć długość conajmniej 8 znaków";  
-      document.getElementById('password').style.border = "2px solid rgb(255, 0, 0)";
-      document.getElementById('blinkingPassword').style = "display: default; color:#de1f1f";
-      document.getElementById('passwordSpan').style.color = "rgb(255, 0, 0)";
-      return false;  
-  }  
-  
-//maximum length of password validation  
-  if(password.length > 15) {  
-      document.getElementById('errorPassword').innerText = "*Hasło nie może być dłuższe niż 14 znaków"; 
-      document.getElementById('password').style.border = "2px solid rgb(255, 0, 0)";
-      document.getElementById('blinkingPassword').style = "display: default; color:#de1f1f";
-      document.getElementById('passwordSpan').style.color = "rgb(255, 0, 0)";
-      return false;  
-  } 
+    //check empty password field  
+    if(password == "") {  
+        document.getElementById('errorPassword').innerText = "*Należy uzupelnić hasło";  
+        document.getElementById('password').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingPassword').style = "display: default; color:#de1f1f";
+        document.getElementById('passwordSpan').style.color = "rgb(255, 0, 0)";
+        return false;  
+    }  
+    
+  //minimum password length validation  
+    if(password.length < 8) {  
+        document.getElementById('errorPassword').innerText = "*Hasło musi mieć długość conajmniej 8 znaków";  
+        document.getElementById('password').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingPassword').style = "display: default; color:#de1f1f";
+        document.getElementById('passwordSpan').style.color = "rgb(255, 0, 0)";
+        return false;  
+    }  
+    
+  //maximum length of password validation  
+    if(password.length > 25) {  
+        document.getElementById('errorPassword').innerText = "*Hasło nie może być dłuższe niż 25 znaków"; 
+        document.getElementById('password').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingPassword').style = "display: default; color:#de1f1f";
+        document.getElementById('passwordSpan').style.color = "rgb(255, 0, 0)";
+        return false;  
+    } 
 
     document.getElementById('errorPassword').innerText = ""; 
     document.getElementById('password').style.border = "2px solid rgb(238, 238, 238)";
     document.getElementById('blinkingPassword').style = "display: none";
     document.getElementById('passwordSpan').style.color = "rgb(0, 0, 0)";
     return true;
-
 }  
 
 /** Function that moves to login page
  * @author Dominik
  */
- function moveToLogin(){
-  window.location.href = "http://83.230.14.95/si-project-php/public/login";
+function moveToLogin(){
+    window.location.href = "http://localhost/si-project-php/public/login";
 }
 
 /** Function that checks if string is build only from some chars
@@ -324,14 +303,16 @@ function verifyPassword(password) {
 * @author Dominik
 */
 function checkIfOnlyAcceptedChars(string, custom){
-  switch(custom){
-      case 1:
-          return /^[A-Za-z0-9]*$/.test(string);
-      case 2:
-          return /^[A-Za-z0-9@.]*$/.test(string);
-      default:
-          return /^[A-Za-z]*$/.test(string);
-  }  
+    switch(custom){
+        case 1:
+            return /^[A-Za-z0-9]*$/.test(string);
+        case 2:
+            return /^[A-Za-z0-9@.]*$/.test(string);
+        case 3:
+            return /^[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]*$/.test(string);
+        default:
+            return /^[A-Za-z]*$/.test(string);
+    }  
 }
 
 /** Function that count occurrences of a substring in a string
@@ -347,22 +328,22 @@ function checkIfOnlyAcceptedChars(string, custom){
 */
 function occurrences(string, subString, allowOverlapping) {
 
-  string += "";
-  subString += "";
-  if (subString.length <= 0) return (string.length + 1);
+    string += "";
+    subString += "";
+    if (subString.length <= 0) return (string.length + 1);
 
-  var n = 0,
-      pos = 0,
-      step = allowOverlapping ? 1 : subString.length;
+    var n = 0,
+        pos = 0,
+        step = allowOverlapping ? 1 : subString.length;
 
-  while (true) {
-      pos = string.indexOf(subString, pos);
-      if (pos >= 0) {
-          ++n;
-          pos += step;
-      } else break;
-  }
-  return n;
+    while (true) {
+        pos = string.indexOf(subString, pos);
+        if (pos >= 0) {
+            ++n;
+            pos += step;
+        } else break;
+    }
+    return n;
 }
 
 
@@ -374,5 +355,5 @@ function occurrences(string, subString, allowOverlapping) {
 * @author Dominik
 */
 function containsAnyLetters(string) {
-  return /[a-zA-Z]/.test(string);
+    return /[a-zA-Z]/.test(string);
 }

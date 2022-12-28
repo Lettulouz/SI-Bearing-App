@@ -26,7 +26,6 @@ class Login extends Controller
         $this->passwordInput = "";
         $this->userRole = "";
 
-        echo "<script src='" . APPPATH . "/scripts/login.js" .  "'></script>";
 
         if(!isset($_POST['emailOrLogin']) || !isset($_POST['password'])){
             $this->view('login/index', ['errorPassword' => $this->errorMessage, 'emailOrLoginInput' => $this->emailOrLoginInput, 'serverError' => $this->serverError]);
