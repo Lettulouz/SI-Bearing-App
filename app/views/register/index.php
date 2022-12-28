@@ -2,7 +2,7 @@
 
 <div class="container mt-5 mb-1">
     <div class="row d-flex justify-content-center">
-        <div class="col-12 col-md-6 mb-12">
+        <div class="col-12 col-md-6 mb-5">
             <div class="card px-5 py-5 mb-12 h-100" id="form1">
                 <form method="post" id="registerForm" action="<?php echo ROOT . "/register/validate";?>" onsubmit="event.preventDefault(); registerButton();">
                     <div class="form-data" id="registerFields">
@@ -48,14 +48,11 @@
                         <label id="errorEmail"><?=$data['errorEmail']?></label>
                     </div>
 
-                    <div class="mb-3"> <button class="btn btn-dark w-100" type="submit">Rejestracja</button> </div>
+                    <div class="mb-3"> <button class="btn btn-dark w-100" name="registerSubmit" type="submit">Rejestracja</button> </div>
                     <div class="mb-3"> <button class="btn btn-light w-100" onclick="moveToLogin()">Mam już konto</button> </div>
 
                 </div>
                 </form>
-                <div style="display: none;" id="successRegister">
-                    <div class="text-center d-flex flex-column" > <i class='bx bxs-badge-check'></i> <span class="text-center fs-1">Zarejestrowano <br> pomyślnie!</span> </div>
-                </div>
             </div>
         </div>
     </div>

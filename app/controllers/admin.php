@@ -460,9 +460,6 @@ class Admin extends Controller
         
         require_once dirname(__FILE__,2) . '/core/database.php';
         
-
-        $return_msg_color="";
-        $return_msg="";
         if(isset($_POST['catEditSub'])){
             isset($_POST['itemcat']) ? $itemstocat=$_POST['itemcat'] : $itemstocat="";
             isset($_POST['catname']) ? $catname=$_POST['catname'] : $catname="";

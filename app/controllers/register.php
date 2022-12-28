@@ -24,6 +24,20 @@ class Register extends Controller
     public function index(){
         header("Location:" . ROOT . "/register/validate");
     }
+
+    public function success_page($sid){     
+        if(isset($_SESSION['success_page'])){
+            $path = $_SESSION['success_page'];
+            unset($_SESSION['success_page']);
+            if($sid==1){
+                $firstLine = "Dodano użytkownika";
+                $secondLine = "pomyślnie!";
+            }
+            $this->view('success_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
+            header("Refresh: 2; url=" . ROOT );
+        }
+        else header("Location:" . ROOT . "");
+    }
     
     public function validate(){
 
@@ -36,23 +50,20 @@ class Register extends Controller
         $this->nameInput = "";
         $this->surnameInput = "";
         $this->loginInput = "";
-        
+    
+    if(!isset($_POST['name']) || !isset($_POST['surname']) || !isset($_POST['login']) || !isset($_POST['email']) || !isset($_POST['password'])){
+        $this->view('register/index', ['errorPassword' => $this->errorMessage, 'errorLogin' => $this->errorMessage, 
+        'errorEmail' => $this->errorMessage, 'emailInput' => $this->emailInput, 'nameInput' => $this->nameInput, 
+        'surnameInput' => $this->surnameInput, 'loginInput' => $this->loginInput, 'passwordInput' => $this->passwordInput, 
+        'serverError' => $this->serverError, 'errorName' => '', 'errorSurname' => '']);
+        return;
+    }
 
-        echo "<script src='" . APPPATH . "/scripts/register.js" .  "'></script>";
-
-        if(!isset($_POST['name']) || !isset($_POST['surname']) || !isset($_POST['login']) || !isset($_POST['email']) || !isset($_POST['password'])){
-            $this->view('register/index', ['errorPassword' => $this->errorMessage, 'errorLogin' => $this->errorMessage, 
-            'errorEmail' => $this->errorMessage, 'emailInput' => $this->emailInput, 'nameInput' => $this->nameInput, 
-            'surnameInput' => $this->surnameInput, 'loginInput' => $this->loginInput, 'passwordInput' => $this->passwordInput, 
-            'serverError' => $this->serverError, 'errorName' => '', 'errorSurname' => '']);
-            return;
-        }
-
-        if(isset($_SESSION['nameInput'])) $this->nameInput = $_SESSION['nameInput'];
-        if(isset($_SESSION['surnameInput'])) $this->surnameInput = $_SESSION['surnameInput'];
-        if(isset($_SESSION['loginInput'])) $this->loginInput = $_SESSION['loginInput'];
-        if(isset($_SESSION['emailInput'])) $this->emailInput = $_SESSION['emailInput'];
-        
+    if(isset($_SESSION['nameInput'])) $this->nameInput = $_SESSION['nameInput'];
+    if(isset($_SESSION['surnameInput'])) $this->surnameInput = $_SESSION['surnameInput'];
+    if(isset($_SESSION['loginInput'])) $this->loginInput = $_SESSION['loginInput'];
+    if(isset($_SESSION['emailInput'])) $this->emailInput = $_SESSION['emailInput'];
+    
         $this->nameInput = $_POST['name'];
         $this->surnameInput = $_POST['surname'];
         $this->loginInput = strtolower($_POST['login']);
@@ -65,11 +76,10 @@ class Register extends Controller
         }
 
         if(($this->check = $this->verifyName($this->surnameInput)) == false){
-            $this->errorDuringValidation("*Nieprawidłowe Nazwisko");
+            $this->errorDuringValidation("*Nieprawidłowe nazwisko");
             $this->errorSurname = $this->errorMessage;
         }
             
-        
         if(($this->check = $this->verifyLogin($this->loginInput)) == false){
             $this->errorDuringValidation("*Nieprawidłowy login");
             $this->errorLogin = $this->errorMessage;
@@ -91,18 +101,18 @@ class Register extends Controller
             $this->checkIfUserExists($db);
         }
 
-
-        
         $_SESSION['errorPassword'] = $this->errorPassword;
         $_SESSION['errorLogin'] = $this->errorLogin;
         $_SESSION['errorEmail'] = $this->errorEmail;
         $_SESSION['errorSurname'] = $this->errorSurname;
         $_SESSION['errorName'] = $this->errorName;
 
-        
-        if($this->check==true)
+        if($this->check==true){
             $this->insertUser($db);
-
+            $_SESSION['success_page'] = "validate";
+            header("Location:" . ROOT . "/admin/success_page/1");
+        }
+        
         $this->view('register/index', ['errorPassword' => $this->errorPassword, 'errorLogin' => $this->errorLogin, 
         'errorEmail' => $this->errorEmail, 'emailInput' => $this->emailInput, 'nameInput' => $this->nameInput, 
         'surnameInput' => $this->surnameInput, 'loginInput' => $this->loginInput, 'passwordInput' => $this->passwordInput, 
@@ -110,8 +120,6 @@ class Register extends Controller
     }
 
     private function checkIfUserExists($db){
-        
-        
         $_SESSION['loginInput'] =  $this->loginInput;
         $_SESSION['emailInput'] =  $this->emailInput;
         
@@ -121,7 +129,6 @@ class Register extends Controller
         $userQuery2->bindValue(':login', $this->loginInput, PDO::PARAM_STR);
         $userQuery1->execute();
         $userQuery2->execute();
-
 
         $this->ifEmailExist = $userQuery1->fetch(PDO::FETCH_ASSOC);
         $this->ifLoginExist = $userQuery2->fetch(PDO::FETCH_ASSOC);
@@ -134,7 +141,6 @@ class Register extends Controller
             $this->errorDuringValidation("*Użytkownik o takim loginie już istnieje");
             $this->errorLogin = $this->errorMessage;
         }
-
     }
 
     /** Function that sets errors
@@ -158,13 +164,11 @@ class Register extends Controller
         else return false;
     }
 
-
-
     /** Function that checks if given name meets the conditions
      * 
      */
     private function verifyName($name){
-        $regex  = '/^[A-Za-z]+$/';
+        $regex  = '/^[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+$/';
         if(preg_match($regex, $name)){
             return true;
         }
