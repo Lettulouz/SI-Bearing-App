@@ -7,12 +7,13 @@
     <hr class="divider "> 
     <div class="headers-padding container-fluid" style="padding-right: 15px;">
     
-        <div class="col-12 col-md-6 col-lg-4">
+    <div class="col-12 col-md-6 col-lg-4">
             <div class="input-group">
-            <input type="text" class="form-control" id="searchBox" placeholder="Wyszukaj producenta">
-            <div class="input-group-append">
+            <input type="text" class="form-control" id="searchBox" placeholder="Wyszukaj katalog">
+            <button type="button" class="btn bg-transparent clrBtn" style="margin-left: -40px; z-index: 100;">
+                            <i class="bi bi-x"></i>
+                            </button>
                 <span class="input-group-text"><i class="bi bi-search"></i></span>
-            </div>
             </div>
         </div>
 
@@ -179,4 +180,13 @@
         });
     });
 
+    $('.clrBtn').click(function(){
+        $('#searchBox').val('');
+        $(".tab .tabRow").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf('') > -1)
+      $('.hidTab').collapse('hide');
+      $(this).find('.eye').removeClass('bi-eye-slash-fill');
+      $(this).find('.eye').addClass('bi-eye-fill');
+    });
+    })
 </script>
