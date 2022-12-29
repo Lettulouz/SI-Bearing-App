@@ -54,9 +54,11 @@ class Admin extends Controller
 
         require_once dirname(__FILE__,2) . '/core/database.php';
 
-        $query="SELECT `items`.`name` AS item, `manufacturers`.`name` AS manufacturer
-        FROM `items` 
-            LEFT JOIN `manufacturers` ON `items`.`id_manufacturer` = `manufacturers`.`id` LIMIT 5";
+        $query="SELECT i.name AS item, m.name AS manufacturer
+        FROM items i 
+            INNER JOIN itemmanufacturercountry imc ON i.id = imc.id_item
+            INNER JOIN manufacturercountries mc ON imc.id_manufacturercountry=mc.id
+            INNER JOIN manufacturers m ON m.id=mc.id_manufacturer LIMIT 5";
         $result = $db->query($query);
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -335,8 +337,13 @@ class Admin extends Controller
         
         require_once dirname(__FILE__,2) . '/core/database.php';
 
-        $query="SELECT i.name as itemName, m.name as manufacturerName, amount, price
-        FROM items i INNER JOIN manufacturers m ON i.id_manufacturer=m.id";
+        $query="SELECT i.name AS itemName, m.name AS manufacturerName, 
+        c.name AS manufacturerCountry, i.amount AS amount, i.price AS price
+        FROM items i 
+            INNER JOIN itemmanufacturercountry imc ON i.id = imc.id_item
+            INNER JOIN manufacturercountries mc ON imc.id_manufacturercountry=mc.id
+            INNER JOIN manufacturers m ON m.id=mc.id_manufacturer
+            INNER JOIN countries c ON mc.id_country=c.id";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
         
@@ -514,7 +521,11 @@ class Admin extends Controller
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $queryIt="SELECT i.name AS item, i.id AS item_id, m.name AS mnf FROM items i LEFT JOIN manufacturers m ON i.id_manufacturer = m.id";
+        $queryIt="SELECT i.name AS item, i.id AS item_id, m.name AS mnf 
+        FROM items i
+        INNER JOIN itemmanufacturercountry imc ON i.id = imc.id_item
+        INNER JOIN manufacturercountries mc ON imc.id_manufacturercountry=mc.id
+        INNER JOIN manufacturers m ON mc.id_manufacturer=m.id";
         $resultIt = $db->prepare($queryIt);
         $resultIt->execute();
         $items = $resultIt->fetchAll(PDO::FETCH_ASSOC);
@@ -522,13 +533,16 @@ class Admin extends Controller
         $itemsInCat=array();
 
         foreach($result as $res){
-            $query_items="SELECT `catalog`.`id` AS `cat_id`, `itemsincatalog`.`id_item` AS `id_item`,
-             `items`.`name` AS `name_item`, `items`.`amount` AS `amount`, `items`.`price` AS `price`,
-            `manufacturers`.`name` AS `mn_name`
-            FROM `catalog` 
-                LEFT JOIN `itemsincatalog` ON `itemsincatalog`.`id_catalog` = `catalog`.`id` 
-                LEFT JOIN `items` ON `itemsincatalog`.`id_item` = `items`.`id` 
-                LEFT JOIN `manufacturers` ON `items`.`id_manufacturer` = `manufacturers`.`id` WHERE  `catalog`.`id` =:catid";
+            $query_items="SELECT catalog.id AS cat_id, itemsincatalog.id_item AS id_item,
+            i.name AS name_item, i.amount AS amount, i.price AS price,
+            m.name AS mn_name
+            FROM catalog 
+                INNER JOIN itemsincatalog ON itemsincatalog.id_catalog = catalog.id 
+                INNER JOIN items i ON itemsincatalog.id_item = i.id 
+                INNER JOIN itemmanufacturercountry imc ON i.id = imc.id_item
+                INNER JOIN manufacturercountries mc ON imc.id_manufacturercountry=mc.id
+                INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
+                WHERE  catalog.id =:catid";
                 $result_id = $db->prepare($query_items);
                 $result_id->bindParam(':catid', $res['id']);
                 $result_id->execute();

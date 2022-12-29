@@ -141,6 +141,14 @@ function verifyLogin(login){
         return false;  
     }  
 
+    if(login.length()<8) {  
+        document.getElementById('errorLogin').innerText = "*Podany login jest zbyt krótki";  
+        document.getElementById('login').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingLogin').style = "display: default; color:#de1f1f";
+        document.getElementById('loginSpan').style.color = "rgb(255, 0, 0)";
+        return false;  
+    }  
+
     let cond1 = checkIfOnlyAcceptedChars(login, 1);
     let cond2 = containsAnyLetters(login);
 

@@ -180,7 +180,7 @@ class Register extends Controller
      */
     private function verifyLogin($login){
         $regex  = '/^[a-z0-9]+$/';
-        if(preg_match($regex, $login)){
+        if(preg_match($regex, $login) && strlen($login)>=8){
             return true;
         }
         else return false;

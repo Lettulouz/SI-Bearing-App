@@ -184,7 +184,7 @@ include 'adm_nav.php';
             <div class="card text-white bg-custom-4 h-100" >
                 <div class="card-header">
                     
-                    <i class="bi bi-journal-richtext"></i>&nbspProducenci
+                    <i class="bi bi-buildings"></i>&nbspProducenci
 
                     <a style='float:right;' class="text-white" href="<?php echo ROOT."/admin/add_manufacturer"?>" >
                         <i class="bi bi-plus-lg"></i>
@@ -222,7 +222,7 @@ include 'adm_nav.php';
         <div class="col-12 col-sm-6 col-xl-4 mb-3">
             <div class="card text-white bg-custom-5 h-100" >
                 <div class="card-header">
-                    <i class="bi bi-journal-richtext"></i>&nbspKategorie
+                    <i class="bi bi-bar-chart-steps"></i>&nbspKategorie
                     <a style='float:right;' class="text-white" href="<?php echo ROOT."/admin/add_category"?>" >
                         <i class="bi bi-plus-lg"></i>
                     </a>

@@ -22,6 +22,7 @@
         <th>Lp.</th>
         <th>Nazwa</th>
         <th>Nazwa firmy</th>
+        <th>Kraj</th>
         <th>Ilość</th>
         <th>Cena</th>
         </tr>
@@ -39,6 +40,7 @@
             <td>".$j."</td>
             <td>{$item['itemName']}</td>
             <td>{$item['manufacturerName']}</td>
+            <td>{$item['manufacturerCountry']}</td>
             <td>{$item['amount']}</td>
             <td>{$item['price']} zł</td>
             </tr>";
