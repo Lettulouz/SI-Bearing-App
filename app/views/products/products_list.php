@@ -94,7 +94,7 @@
                         <table class='table table-active coltab m-0'>
                             <thead>
                                 <tr>
-                                <th>Atrybuty</th>
+                                <th>Katalogi</th>
                                 </tr>
                                 </thead>	
                                 <tbody>";
