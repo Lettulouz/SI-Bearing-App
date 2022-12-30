@@ -602,9 +602,11 @@ class Admin extends Controller
 
         }
 
-        $query="SELECT i.name AS item, i.id AS item_id, m.name AS mnf FROM items i 
+        $query="SELECT i.name AS item, i.id AS item_id, m.name AS mnf,
+        c.name AS  mnfCountry FROM items i 
         INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
-        INNER JOIN manufacturers m ON mc.id_manufacturer=m.id";
+        INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
+        INNER JOIN countries c ON mc.id_country=c.id";
         $result = $db->prepare($query);
         $result->execute();
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -681,10 +683,12 @@ class Admin extends Controller
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $queryIt="SELECT i.name AS item, i.id AS item_id, m.name AS mnf 
+        $queryIt="SELECT i.name AS item, i.id AS item_id, m.name AS mnf,
+        c.name AS  mnfCountry
         FROM items i
         INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
-        INNER JOIN manufacturers m ON mc.id_manufacturer=m.id";
+        INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
+        INNER JOIN countries c ON mc.id_country=c.id";
         $resultIt = $db->prepare($queryIt);
         $resultIt->execute();
         $items = $resultIt->fetchAll(PDO::FETCH_ASSOC);

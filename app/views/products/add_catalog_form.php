@@ -30,7 +30,7 @@
                                     $temp = "";
                                     if(!empty($data['itemcat']))
                                         if(in_array($result['item_id'], $data['itemcat'])) $temp = "selected=selected";
-                                    echo "<option value=".$result['item_id']. " " . $temp .">".$result['mnf']." - ".$result['item']."</option>";
+                                    echo "<option value=".$result['item_id']. " " . $temp .">".$result['mnf']." ".$result['mnfCountry']." - ".$result['item']."</option>";
                                 }
                             
                             ?>

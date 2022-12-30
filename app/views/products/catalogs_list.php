@@ -121,7 +121,7 @@
                                 <select class="select2 form-select-lg my-2"  multiple="multiple" id="item" name="itemcat[]" aria-label="example-xl"  aria-autocomplete="TRUE">
                                         <?php
                                             foreach($data['items'] as $i => $result) {
-                                                echo "<option class='itemList' value=".$result['item_id'].">".$result['mnf']." - ".$result['item']."</option>";
+                                                echo "<option class='itemList' value=".$result['item_id'].">".$result['mnf']." ".$result['mnfCountry']." - ".$result['item']."</option>";
                                             }
                                         ?>
                                 </select>
