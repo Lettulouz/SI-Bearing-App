@@ -14,7 +14,7 @@
             <div class="col-12 ">
                 <div class="row m-2">
                     <div class="col-12">
-                        <select class="select2 form-select-lg" id="manufacturerName" name="manufacturername" 
+                        <select class="select2 form-select-lg" id="manufacturerName" name="manufacturerid" 
                         aria-label="example-xl">
                         <option></option>
                             <?php

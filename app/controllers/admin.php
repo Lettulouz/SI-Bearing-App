@@ -826,29 +826,47 @@ public function add_countries_to_manufacturer(){
         $return_msg_color="";
         $return_msg="";
         if(isset($_POST['manufsubmit'])){
-            isset($_POST['selCountries']) ? $selCountries=$_POST['selCountries'] : $selCountries="";
-            isset($_POST['manufacturername']) ? $manufacturername=$_POST['manufacturername'] : $manufacturername="";
-            $_SESSION['manufacturername'] = $manufacturername;
+            isset($_POST['selCountries']) ? $selCountries=$_POST['selCountries'] : $selCountries=array();
+            isset($_POST['manufacturerid']) ? $manufacturername=$_POST['manufacturerid'] : $manufacturerid="";
+            $_SESSION['manufacturerid'] = $manufacturername;
             $_SESSION['selCountries'] = $selCountries;
+            $countryArray = array();
 
+            if(isset($_POST['selCountries'])&&!empty($_POST['manufacturerid'])){
 
-            if(isset($_POST['selCountries'])&&!empty($_POST['manufacturername'])){
-
-                 $query="DELETE FROM manufacturercountries WHERE id_manufacturer=:manufacturername";
-                 $result = $db->prepare($query);
-                 $result->bindParam(':manufacturername',$manufacturername);
-                 $result->execute();
-                 //connect items with catalog
-                 $query="INSERT INTO manufacturercountries (id_manufacturer,id_country) VALUES (:manufacturername,:selCountries_id)";
-                 foreach ($selCountries as $selCountries_id){
-                     $result = $db->prepare($query);
-                     $result->bindParam(':manufacturername',$manufacturername);
-                     $result->bindParam(':selCountries_id',$selCountries_id);
-                     $result->execute();
+                $queryI="INSERT INTO manufacturercountries (id_manufacturer,id_country) VALUES (:mnf_id,:ctr_id)";
+                foreach ($selCountries as $country){
+                    array_push($countryArray, $country);
+                    $query="SELECT COUNT(id) FROM manufacturercountries WHERE id_manufacturer=:id_manufacturer AND id_country=:id_country";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':id_manufacturer',$manufacturerid);
+                    $result->bindParam(':id_country',$country);
+                    $result->execute();
+                    $mnf_id=$result->fetch(PDO::FETCH_ASSOC);
+                    if($mnf_id['COUNT(id)']>0)
+                        continue;
+                    $result = $db->prepare($queryI);
+                    $result->bindParam(':mnf_id',$mnfid);
+                    $result->bindParam(':ctr_id',$country);
+                    $result->execute();
                 }
-                //TODO zwrócenie komunikatów
-                $return_msg_color="rgb(25, 135, 84)";
-                $return_msg="pomyślnie dodano nowy katalog";
+                $query="SELECT id, id_country FROM manufacturercountries WHERE id_manufacturer=:id_manufacturer";
+                $result = $db->prepare($query);
+                $result->bindParam(':id_manufacturer',$manufacturerid);
+                $result->execute();
+                $arr=$result->fetchAll(PDO::FETCH_ASSOC);   
+                $i=0;
+                foreach($arr as $element){
+                    if(in_array(strval($element['id_country']), $countryArray)){
+                        print_r('jest');
+                    }else{
+                        $query="DELETE FROM manufacturercountries WHERE id=:id";
+                        $result = $db->prepare($query);
+                        $result->bindParam(':id',$arr[$i]['id']);
+                        $result->execute();
+                    }        
+                    $i++;
+                } 
                 $_SESSION['success_page'] = "add_manufacturer";
                 unset($_SESSION['manufacturername']);
                 header("Location:" . ROOT . "/admin/success_page/1");
