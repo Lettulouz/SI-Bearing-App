@@ -61,6 +61,7 @@
                             <thead>
                                 <tr>
                                 <th>Producent</th>
+                                <th>Kraj</th>
                                 <th>Produkt</th>
                                 <th>Stan magazynowy</th>		
                                 <th>Cena</th>	
@@ -71,6 +72,9 @@
                                         echo  "<tr>
                                                 <td>
                                                     {$item['mn_name']}
+                                                </td>
+                                                <td>
+                                                    {$item['mn_country']}
                                                 </td>
                                                 <td class='itemName".$catalog['id']." ".$item['id_item']."'>
                                                     {$item['name_item']}

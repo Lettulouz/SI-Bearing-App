@@ -130,11 +130,12 @@
                     html+='</option>';
             });
             html+='</select>';
+            html+='<input type="hidden" name="attribute_name' + attrNum +  '">';
             html+='</div>';
             html+='<div class="col-8 col-md-5 mb-3">';
             html+='<div class="form-floating">';
-            html+='<input type="text" id="' + input + '" class="form-control requiredattr" placeholder="Wartość" required onkeyup="enableAttrSubmit()" autocomplete="off">';
-            html+='<label class="form-control-lg lg-custom" for="'+ input +'">Wartość...</label>';
+            html+='<input type="text" name="attribute_value' + attrNum + '" id="attribute_value' + attrNum + '" class="form-control requiredattr" placeholder="Wartość" required onkeyup="enableAttrSubmit()" autocomplete="off">';
+            html+='<label class="form-control-lg lg-custom" for="attribute_value'+ attrNum +'">Wartość...</label>';
             html+='</div>';
             html+='</div>';
             html+='<div class="col-4 col-md-2 mb-3 d-grid">';
@@ -305,6 +306,12 @@
 
 
         $("#itemSubmitRemote").click(function(e){
+            var input = $('[id ^= "attribute_name"]');
+            var inputSel = input.find(':selected');
+            for(var i=1;i<=inputSel.length;i++){
+               var name = input[i-1].getAttribute('id');
+               $('[name="' + name + '"]').attr('value', inputSel[i-1].value);
+            }
             $("#itemSubmit").click();
         });
 	});
@@ -331,8 +338,7 @@
   
         for(var i=1;i<=tempRMV.length;i++){
             var input = '#' + $(tempRMV[i-1]).attr('id');
-
-            
+           
             for(var j=0;j<alreadyUsed.length;j++){
                 // sprawdzić czy value znajduje się w already used
                 $(input + ' option[value="' + alreadyUsed[j] + '"]').attr('disabled','disabled');

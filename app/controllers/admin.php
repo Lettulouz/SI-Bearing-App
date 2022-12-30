@@ -56,8 +56,7 @@ class Admin extends Controller
 
         $query="SELECT i.name AS item, m.name AS manufacturer
         FROM items i 
-            INNER JOIN itemmanufacturercountry imc ON i.id = imc.id_item
-            INNER JOIN manufacturercountries mc ON imc.id_manufacturercountry=mc.id
+            INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
             INNER JOIN manufacturers m ON m.id=mc.id_manufacturer LIMIT 5";
         $result = $db->query($query);
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -340,9 +339,8 @@ class Admin extends Controller
         $query="SELECT i.name AS itemName, m.name AS manufacturerName, 
         c.name AS manufacturerCountry, i.amount AS amount, i.price AS price
         FROM items i 
-            INNER JOIN itemmanufacturercountry imc ON i.id = imc.id_item
-            INNER JOIN manufacturercountries mc ON imc.id_manufacturercountry=mc.id
-            INNER JOIN manufacturers m ON m.id=mc.id_manufacturer
+            INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
+            INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
             INNER JOIN countries c ON mc.id_country=c.id";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -523,8 +521,7 @@ class Admin extends Controller
 
         $queryIt="SELECT i.name AS item, i.id AS item_id, m.name AS mnf 
         FROM items i
-        INNER JOIN itemmanufacturercountry imc ON i.id = imc.id_item
-        INNER JOIN manufacturercountries mc ON imc.id_manufacturercountry=mc.id
+        INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
         INNER JOIN manufacturers m ON mc.id_manufacturer=m.id";
         $resultIt = $db->prepare($queryIt);
         $resultIt->execute();
@@ -535,14 +532,13 @@ class Admin extends Controller
         foreach($result as $res){
             $query_items="SELECT catalog.id AS cat_id, itemsincatalog.id_item AS id_item,
             i.name AS name_item, i.amount AS amount, i.price AS price,
-            m.name AS mn_name
+            m.name AS mn_name, c.name AS mn_country
             FROM catalog 
                 INNER JOIN itemsincatalog ON itemsincatalog.id_catalog = catalog.id 
                 INNER JOIN items i ON itemsincatalog.id_item = i.id 
-                INNER JOIN itemmanufacturercountry imc ON i.id = imc.id_item
-                INNER JOIN manufacturercountries mc ON imc.id_manufacturercountry=mc.id
-                INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-                WHERE  catalog.id =:catid";
+                INNER JOIN manufacturers m ON i.id_manufacturer=m.id
+                INNER JOIN countries c ON i.id_country=c.id
+                WHERE catalog.id =:catid";
                 $result_id = $db->prepare($query_items);
                 $result_id->bindParam(':catid', $res['id']);
                 $result_id->execute();
@@ -722,9 +718,6 @@ class Admin extends Controller
                      $result->bindParam(':item_id',$item_id);
                      $result->execute();
                 }
-                //TODO zwrócenie komunikatów
-                $return_msg_color="rgb(25, 135, 84)";
-                $return_msg="pomyślnie dodano nowy katalog";
                 $_SESSION['success_page'] = "add_catalog";
                 unset($_SESSION['catname']);
                 header("Location:" . ROOT . "/admin/success_page/1");
@@ -737,7 +730,9 @@ class Admin extends Controller
 
         }
 
-        $query="SELECT i.name AS item, i.id AS item_id, m.name AS mnf FROM items i LEFT JOIN manufacturers m ON i.id_manufacturer = m.id";
+        $query="SELECT i.name AS item, i.id AS item_id, m.name AS mnf FROM items i 
+        INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
+        INNER JOIN manufacturers m ON mc.id_manufacturer=m.id";
         $result = $db->prepare($query);
         $result->execute();
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -936,36 +931,60 @@ public function add_countries_to_manufacturer(){
             isset($_POST['mnfid']) ? $mnfid=$_POST['mnfid'] : $mnfid="";
 
             if(!empty($_POST['mnfname'])){
+                $query="UPDATE manufacturers SET name=:mnfname WHERE id=:mnfid";
+                $result = $db->prepare($query);
+                $result->bindParam(':mnfid', $mnfid);
+                $result->bindParam(':mnfname', $mnfname);
+                $result->execute();
+
                 $query="SELECT id, COUNT(id) FROM manufacturers WHERE name=:mnfname";
                 $result = $db->prepare($query);
                 $result->bindParam(':mnfname', $mnfname);
                 $result->execute();
                 $mnf_id=$result->fetch(PDO::FETCH_ASSOC);
                 $temp = $mnf_id['COUNT(id)'];
+                $countryArray = array();
                 if($temp>0&&$mnf_id['id']!=$mnfid){
                     $_SESSION['error_page'] = "list_of_manufacturers";
                     header("Location:" . ROOT . "/admin/error_page/2");
                 }else{
-                    $query="UPDATE catalog SET name=:mnfname WHERE id=:mnfid";
-                    $result = $db->prepare($query);
-                    $result->bindParam(':mnfname',$mnfname);
-                    $result->bindParam(':mnfid',$mnfid);
-                    $result->execute();
-
-                    $query="DELETE FROM manufacturercountries WHERE id_manufacturer=:mnfid";
-                    $result = $db->prepare($query);
-                    $result->bindParam(':mnfid',$mnfid);
-                    $result->execute();
-
-                    $query="INSERT INTO manufacturercountries (id_manufacturer,id_country) VALUES (:mnf_id,:ctr_id)";
-                 foreach ($countrymnf as $country){
-                     $result = $db->prepare($query);
-                     $result->bindParam(':mnf_id',$mnfid);
-                     $result->bindParam(':ctr_id',$country);
-                     $result->execute();
+                    $queryI="INSERT INTO manufacturercountries (id_manufacturer,id_country) VALUES (:mnf_id,:ctr_id)";
+                    foreach ($countrymnf as $country){
+                        array_push($countryArray, strval($country));
+                        print_r($countryArray);
+                        $query="SELECT COUNT(id) FROM manufacturercountries WHERE id_manufacturer=:id_manufacturer AND id_country=:id_country";
+                        $result = $db->prepare($query);
+                        $result->bindParam(':id_manufacturer',$mnfid);
+                        $result->bindParam(':id_country',$country);
+                        $result->execute();
+                        $mnf_id=$result->fetch(PDO::FETCH_ASSOC);
+                        if($mnf_id['COUNT(id)']>0)
+                            continue;
+                        $result = $db->prepare($queryI);
+                        $result->bindParam(':mnf_id',$mnfid);
+                        $result->bindParam(':ctr_id',$country);
+                        $result->execute();
                     }
-                $_SESSION['success_page'] = "list_of_manufacturers";
-                header("Location:" . ROOT . "/admin/success_page/1");
+                    $query="SELECT id, id_country FROM manufacturercountries WHERE id_manufacturer=:id_manufacturer";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':id_manufacturer',$mnfid);
+                    $result->execute();
+                    $arr=$result->fetchAll(PDO::FETCH_ASSOC);   
+                    $i=0;
+                    foreach($arr as $element){
+                        if(in_array(strval($element['id_country']), $countryArray)){
+                            print_r('jest');
+                        }else{
+                            $query="DELETE FROM manufacturercountries WHERE id=:id";
+                            $result = $db->prepare($query);
+                            $result->bindParam(':id',$arr[$i]['id']);
+                            $result->execute();
+                        }        
+                        $i++;
+                    }
+
+                    $_SESSION['success_page'] = "list_of_manufacturers";
+                    header("Location:" . ROOT . "/admin/success_page/1");
                 }
 
             }else{
@@ -999,50 +1018,79 @@ public function add_countries_to_manufacturer(){
         }
         
         require_once dirname(__FILE__,2) . '/core/database.php';
-
-        $return_msg_color="";
-        $return_msg="";
         
         if(isset($_POST['itemSubmit'])){
-            if(isset($_POST['name']) && isset($_POST['price']) && isset($_POST['quantity']) && !empty($_POST['manufacturer'])){
+            if(isset($_POST['name']) && isset($_POST['price']) && isset($_POST['quantity']) && !empty($_POST['manufacturer']) && !empty($_POST['selCategories'])){
                 //add catalog to database
-                var_dump('test');
-                die();
+
+                                  
                 $itemName = $_POST['name'];
                 $itemPrice = $_POST['price'];
                 $itemQuantity = $_POST['quantity'];
                 $itemManufacturer = $_POST['manufacturer'];
-                $test2 = "test";
-                $test2 = $_POST['attributes'];
-                $test3 = json_decode($_POST['attributes'],true);
-                
-                  
-                
-                $query="INSERT INTO items (name, amount, price, id_manufacturer) 
-                VALUES (:item_name, :item_quantity, :item_price, :item_manufacturer)";
+                $selCategories = $_POST['selCategories'];
+
+                $query="INSERT INTO items (id_manufacturercountry, name, amount, price) 
+                VALUES (:id_manufacturercountry, :item_name, :item_quantity, :item_price)";
 
                 $result = $db->prepare($query);
+                $result->bindParam(':id_manufacturercountry',$itemManufacturer);
                 $result->bindParam(':item_name',$itemName);
                 $result->bindParam(':item_price',$itemPrice);
                 $result->bindParam(':item_quantity',$itemQuantity);
-                $result->bindParam(':item_manufacturer',$itemManufacturer);
                 $result->execute();
 
-                $return_msg_color="rgb(25, 135, 84)";
-                $return_msg=base64_encode("pomyślnie dodano nowy przedmiot");
+                $query="SELECT id FROM items WHERE name=:item_name ORDER BY id DESC LIMIT 1";
+                $result = $db->prepare($query);
+                $result->bindParam(':item_name', $itemName);
+                $result->execute();
+                $item_id=$result->fetch(PDO::FETCH_ASSOC);
+                $item_id=$item_id['id'];
+
+                foreach($selCategories as $i){
+                    $query="INSERT INTO categoriesofitem (id_category, id_item) 
+                    VALUES (:id_categ, :id_item)";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':id_categ',$i);
+                    $result->bindParam(':id_item',$item_id);                                                                      
+                    $result->execute();
+                }
+
+                $i = 1;
+                while(isset($_POST["attribute_name" . $i])){
+                    $query="SELECT id FROM attributes WHERE name=:attr_name";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':attr_name', $_POST["attribute_name" . $i]);
+                    $result->execute();
+                    $attr_id=$result->fetch(PDO::FETCH_ASSOC); 
+
+                    $query="INSERT INTO attributesofitems (id_item, id_attribute, value) 
+                    VALUES (:id_item, :id_attribute, :in_value)";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':id_item',$item_id);
+                    $result->bindParam(':id_attribute',$attr_id['id']);
+                    $result->bindParam(':in_value',$_POST["attribute_value" . $i]);
+                    $result->execute();
+
+                   // var_dump($_POST["attribute_name" . $i] . ", " . $_POST["attribute_value" . $i]);
+                    $i += 1;
+                }      
+                
+                
+                $_SESSION['success_page'] = "list_of_products";
+                header("Location:" . ROOT . "/admin/success_page/1");
 
             }
             else{
-                $return_msg_color="rgb(220, 53, 69)";
-                $return_msg=base64_encode("należy wybrać nazwę, cenę, ilość i producenta przedmiotu");
+                $_SESSION['error_page'] = "list_of_products";
+                header("Location:" . ROOT . "/admin/error_page/1");
             }
-            $_GET['color']=$return_msg_color;
-            $_GET['msg']=$return_msg;
-            header("Refresh:0; ". ROOT ."/admin/add_item?msg=".$_GET['msg']."&color=".$_GET['color']);
-
         }
 
-        $query="SELECT m.id as id, m.name as mname,c.name as cname FROM (manufacturercountries mc INNER JOIN manufacturers m ON mc.id_manufacturer=m.id) INNER JOIN countries c ON mc.id_country=c.id";
+        $query="SELECT mc.id as id, m.name as mname,c.name as cname
+        FROM manufacturercountries mc 
+        INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
+        INNER JOIN countries c ON mc.id_country=c.id";
         $result = $db->prepare($query);
         $result->execute();
         $result = $result->fetchAll(PDO::FETCH_ASSOC);

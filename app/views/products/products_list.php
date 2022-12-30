@@ -20,7 +20,7 @@
         <thead>
         <tr>
         <th>Lp.</th>
-        <th>Nazwa</th>
+        <th>Nazwa produktu</th>
         <th>Nazwa firmy</th>
         <th>Kraj</th>
         <th>Ilość</th>
@@ -43,7 +43,43 @@
             <td>{$item['manufacturerCountry']}</td>
             <td>{$item['amount']}</td>
             <td>{$item['price']} zł</td>
+            <td class='px-0 mx-0'>
+            <button type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm mx-1 tabBtn' 
+            data-bs-toggle='collapse' data-bs-target='#row".$j."' aria-expanded='false'>
+            <i class='eye bi bi-eye-fill'></i>
+            </button>
+            <button type='button' class='btn btn-dark d-inline btn-sm mx-1 editBtn' data-bs-toggle='modal' data-bs-target='#editModal' value='{$mnf['m_id']}'>
+            <i class='bi bi-gear-fill'></i>
+            </button>
+            <a href='".$rmPath."/".$mnf['m_id']."' type='button' data-toggle='collapse' class='btn btn-danger d-inline btn-sm mx-1 tabBtn'>
+            <i class='bi bi-trash-fill'></i>
+            </a>
+            </td>
+            </tr>
+            
+            <tr>
+                <td colspan='12' class='p-0'>
+					          <div class='hidTab collapse' id='row".$j."'>
+                        <table class='table table-active coltab m-0'>
+                            <thead>
+                                <tr>
+                                <th>Kraj</th>
+                                </tr>
+                                </thead>	
+                                <tbody>";
+                                     foreach($mnfCts[$mnf['m_id']] as $ctr){
+                                        echo  "<tr>
+                                                <td class='countryName".$mnf['m_id']." ".$ctr['c_id']."'>
+                                                    {$ctr['cname']}
+                                                </td>
+                                            </tr>";
+                                    }
+                              echo  "</tbody>
+                        </table>
+                    </div>
+                </td> 
             </tr>";
+            
             /*
             echo 
             "<tr>
