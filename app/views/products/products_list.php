@@ -46,10 +46,23 @@
                 <td>{$item['amount']}</td>
                 <td>{$item['price']} zł</td>
                 <td class='px-0 mx-0'>
-                    <button type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm mx-1 tabBtn' 
-                    data-bs-toggle='collapse' data-bs-target='#row".$j."' aria-expanded='false'>
-                        <i class='eye bi bi-eye-fill'></i>
-                    </button>
+                    <div class='btn-group' role='group' aria-label='Basic example'>
+                        <button type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm tabBtn' 
+                        data-bs-toggle='collapse' data-bs-target='#row".$j."' aria-expanded='false'>
+                            <i class='bi bi-bar-chart-steps'></i>
+                        </button>
+
+                        <button type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm  tabBtn' 
+                        data-bs-toggle='collapse' data-bs-target='#row".$j."2' aria-expanded='false'>
+                            <i class='bi bi-journals'></i>
+                        </button>
+
+                        <button type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm  tabBtn' 
+                        data-bs-toggle='collapse' data-bs-target='#row".$j."3' aria-expanded='false'>
+                            <i class='bi bi-journal-richtext'></i>
+                        </button>
+                    </div>
+
                     <button type='button' class='btn btn-dark d-inline btn-sm mx-1 editBtn' data-bs-toggle='modal' data-bs-target='#editModal' value=''>
                         <i class='bi bi-gear-fill'></i>
                     </button>
@@ -62,13 +75,13 @@
                         <table class='table table-active coltab m-0'>
                             <thead>
                                 <tr>
-                                <th>Kraj</th>
+                                <th>Kategorie</th>
                                 </tr>
                                 </thead>	
                                 <tbody>";
-                                     foreach($data['categoriesArray'] as $ctr){
+                                     foreach($data['categoriesArray'][$item['iid']] as $ctr){
                                         echo  "<tr>
-                                                <td class='catalogName'>
+                                                <td class='categName'>
                                                     {$ctr['categname']}
                                                 </td>
                                             </tr>";
@@ -76,7 +89,50 @@
                               echo  "</tbody>
                         </table>
                     </div>
-                </td> 
+
+                    <div class='hidTab collapse' id='row".$j."2'>
+                        <table class='table table-active coltab m-0'>
+                            <thead>
+                                <tr>
+                                <th>Atrybuty</th>
+                                </tr>
+                                </thead>	
+                                <tbody>";
+                                     foreach($data['catalogArray'][$item['iid']] as $cat){
+                                        echo  "<tr>
+                                                <td class='catalogName'>
+                                                    {$cat['catname']}
+                                                </td>
+                                            </tr>";
+                                    }
+                              echo  "</tbody>
+                        </table>
+                    </div>
+
+                    <div class='hidTab collapse' id='row".$j."3'>
+                        <table class='table table-active coltab m-0'>
+                            <thead>
+                                <tr>
+                                <th>Atrybut</th>
+                                <th>Wartość</th>
+                                </tr>
+                                </thead>	
+                                <tbody>";
+                                     foreach($data['attrArray'][$item['iid']] as $attr){
+                                        echo  "<tr>
+                                                <td class='attrName'>
+                                                    {$attr['attrname']}
+                                                </td>
+                                                <td >
+                                                    {$attr['aval']}
+                                                </td>
+                                            </tr>";
+                                    }
+                              echo  "</tbody>
+                        </table>
+                    </div>
+
+                </td>
             </tr>";
             
             /*
@@ -108,18 +164,16 @@
     var value = $(this).val().toLowerCase();
     $(".tabrow").filter(function() {
       $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      $('.hidTab').collapse('hide');
     });
   });
 });
 
 $('.tabBtn').click(function() {
       if($(this).attr('aria-expanded')=='true'){
-         $(this).find('i').removeClass('bi-eye-fill');
-         $(this).find('i').addClass('bi-eye-slash-fill');
+
       }
       else if($(this).attr('aria-expanded')=='false'){
-         $(this).find('i').removeClass('bi-eye-slash-fill');
-         $(this).find('i').addClass('bi-eye-fill');
       }   
      });
 
@@ -127,6 +181,7 @@ $('.clrBtn').click(function(){
         $('#searchBox').val('');
         $(".tabrow").filter(function() {
       $(this).toggle($(this).text().toLowerCase().indexOf('') > -1)
+      $('.hidTab').collapse('hide');
     });
     })
 </script>

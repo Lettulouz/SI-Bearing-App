@@ -1156,7 +1156,7 @@ public function add_countries_to_manufacturer(){
         
         require_once dirname(__FILE__,2) . '/core/database.php';
 
-        $query="SELECT i.name AS itemName, m.name AS manufacturerName, 
+        $query="SELECT i.id AS iid, i.name AS itemName, m.name AS manufacturerName, 
         c.name AS manufacturerCountry, i.amount AS amount, i.price AS price
         FROM items i 
             INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
@@ -1165,14 +1165,49 @@ public function add_countries_to_manufacturer(){
         $result = $db->query($query);
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $query="SELECT c.name AS categname
+        $queryCateg="SELECT c.name AS categname
         FROM items i 
         INNER JOIN categoriesofitem coi ON i.id=coi.id_item
-        INNER JOIN categories c ON coi.id_category=c.id";
-        $result = $db->query($query);
-        $categoriesArray = $result->fetchAll(PDO::FETCH_ASSOC);
+        INNER JOIN categories c ON coi.id_category=c.id
+        WHERE i.id=:iid";
+
+        $queryCat="SELECT c.name AS catname
+        FROM items i 
+        INNER JOIN itemsincatalog ic ON i.id=ic.id_item
+        INNER JOIN catalog c ON ic.id_catalog=c.id
+        WHERE i.id=:iid";
+
+        $queryAttr="SELECT a.name AS attrname, ai.value AS aval
+        FROM items i 
+        INNER JOIN attributesofitems ai ON i.id=ai.id_item
+        INNER JOIN attributes a ON ai.id_attribute=a.id
+        WHERE i.id=:iid";
+
+        $categoriesArray=array();
+        $catalogArray=array();
+        $attrArray=array();
+
+        foreach($items as $id){
+            $result = $db->prepare($queryCateg);
+            $result->bindParam(':iid', $id['iid']);
+            $result->execute();
+            $result =  $result->fetchAll(PDO::FETCH_ASSOC);
+            $categoriesArray[$id['iid']]= $result;
+
+            $result = $db->prepare($queryCat);
+            $result->bindParam(':iid', $id['iid']);
+            $result->execute();
+            $result =  $result->fetchAll(PDO::FETCH_ASSOC);
+            $catalogArray[$id['iid']]= $result;
+
+            $result = $db->prepare($queryAttr);
+            $result->bindParam(':iid', $id['iid']);
+            $result->execute();
+            $result =  $result->fetchAll(PDO::FETCH_ASSOC);
+            $attrArray[$id['iid']]= $result;
+        }
         
-        $this->view('admin/list_of_products', ['itemsArray'=>$items, 'categoriesArray' => $categoriesArray]);
+        $this->view('admin/list_of_products', ['itemsArray'=>$items, 'categoriesArray' => $categoriesArray, 'catalogArray'=>$catalogArray, 'attrArray'=>$attrArray]);
     }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////CATEGORIES////////////////////////////////////////////////////////////////////////

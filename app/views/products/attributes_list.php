@@ -4,7 +4,7 @@
     <div class="headers-padding" style="padding-right: 15px;">
     <div class="col-12 col-md-6 col-lg-4">
             <div class="input-group">
-            <input type="text" class="form-control" id="searchBox" placeholder="Wyszukaj produkt">
+            <input type="text" class="form-control" id="searchBox" placeholder="Wyszukaj atrybut">
             <button type="button" class="btn bg-transparent clrBtn" style="margin-left: -40px; z-index: 100;">
                             <i class="bi bi-x"></i>
                             </button>

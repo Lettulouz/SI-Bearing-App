@@ -9,7 +9,7 @@
     
     <div class="col-12 col-md-6 col-lg-4">
             <div class="input-group">
-            <input type="text" class="form-control" id="searchBox" placeholder="Wyszukaj katalog">
+            <input type="text" class="form-control" id="searchBox" placeholder="Wyszukaj producenta">
             <button type="button" class="btn bg-transparent clrBtn" style="margin-left: -40px; z-index: 100;">
                             <i class="bi bi-x"></i>
                             </button>
