@@ -827,8 +827,8 @@ public function add_countries_to_manufacturer(){
         $return_msg="";
         if(isset($_POST['manufsubmit'])){
             isset($_POST['selCountries']) ? $selCountries=$_POST['selCountries'] : $selCountries=array();
-            isset($_POST['manufacturerid']) ? $manufacturername=$_POST['manufacturerid'] : $manufacturerid="";
-            $_SESSION['manufacturerid'] = $manufacturername;
+            isset($_POST['manufacturerid']) ? $manufacturerid=$_POST['manufacturerid'] : $manufacturerid="";
+            $_SESSION['manufacturerid'] = $manufacturerid;
             $_SESSION['selCountries'] = $selCountries;
             $countryArray = array();
 
@@ -846,7 +846,7 @@ public function add_countries_to_manufacturer(){
                     if($mnf_id['COUNT(id)']>0)
                         continue;
                     $result = $db->prepare($queryI);
-                    $result->bindParam(':mnf_id',$mnfid);
+                    $result->bindParam(':mnf_id',$manufacturerid);
                     $result->bindParam(':ctr_id',$country);
                     $result->execute();
                 }
