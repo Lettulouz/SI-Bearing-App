@@ -343,9 +343,16 @@ class Admin extends Controller
             INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
             INNER JOIN countries c ON mc.id_country=c.id";
         $result = $db->query($query);
-        $result = $result->fetchAll(PDO::FETCH_ASSOC);
+        $items = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        $query="SELECT c.name AS categname
+        FROM items i 
+        INNER JOIN categoriesofitem coi ON i.id=coi.id_item
+        INNER JOIN categories c ON coi.id_category=c.id";
+        $result = $db->query($query);
+        $categoriesArray = $result->fetchAll(PDO::FETCH_ASSOC);
         
-        $this->view('admin/list_of_products', ['itemsArray'=>$result]);
+        $this->view('admin/list_of_products', ['itemsArray'=>$items, 'categoriesArray' => $categoriesArray]);
     }
 
     public function list_of_attributes()
@@ -902,7 +909,10 @@ public function add_countries_to_manufacturer(){
 
         require_once dirname(__FILE__,2) . '/core/database.php';
 
-        $query="SELECT m.id as m_id, m.name as mnf,COUNT(mc.id_manufacturer) as mnfctsam FROM manufacturers m LEFT JOIN manufacturercountries mc ON m.id=mc.id_manufacturer GROUP BY m.id";
+        $query="SELECT m.id as m_id, m.name as mnf,COUNT(mc.id_manufacturer) as mnfctsam 
+        FROM manufacturers m 
+        LEFT JOIN manufacturercountries mc ON m.id=mc.id_manufacturer 
+        GROUP BY m.id";
         $result = $db->prepare($query);
         $result->execute();
         $manufacturers = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -912,8 +922,9 @@ public function add_countries_to_manufacturer(){
             $query_country="SELECT `manufacturers`.id as m_id, `manufacturers`.name as mname, countries.id as c_id,
             countries.name as cname
             FROM `manufacturers` 
-                LEFT JOIN `manufacturercountries` ON `manufacturercountries`.`id_manufacturer` = `manufacturers`.`id` 
-                LEFT JOIN `countries` ON `manufacturercountries`.`id_country` = `countries`.`id` WHERE `manufacturers`.id=:mnfid";
+            LEFT JOIN `manufacturercountries` ON `manufacturercountries`.`id_manufacturer` = `manufacturers`.`id` 
+            LEFT JOIN `countries` ON `manufacturercountries`.`id_country` = `countries`.`id` 
+            WHERE `manufacturers`.id=:mnfid";
             $result_id = $db->prepare($query_country);
             $result_id->bindParam(':mnfid', $mnf['m_id']);
             $result_id->execute();

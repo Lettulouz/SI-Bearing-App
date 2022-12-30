@@ -25,6 +25,7 @@
         <th>Kraj</th>
         <th>Ilość</th>
         <th>Cena</th>
+        <th></th>
         </tr>
         </thead>
         <tbody>
@@ -37,24 +38,21 @@
             $j++;
             echo 
             "<tr class='tabrow'>
-            <td>".$j."</td>
-            <td>{$item['itemName']}</td>
-            <td>{$item['manufacturerName']}</td>
-            <td>{$item['manufacturerCountry']}</td>
-            <td>{$item['amount']}</td>
-            <td>{$item['price']} zł</td>
-            <td class='px-0 mx-0'>
-            <button type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm mx-1 tabBtn' 
-            data-bs-toggle='collapse' data-bs-target='#row".$j."' aria-expanded='false'>
-            <i class='eye bi bi-eye-fill'></i>
-            </button>
-            <button type='button' class='btn btn-dark d-inline btn-sm mx-1 editBtn' data-bs-toggle='modal' data-bs-target='#editModal' value='{$mnf['m_id']}'>
-            <i class='bi bi-gear-fill'></i>
-            </button>
-            <a href='".$rmPath."/".$mnf['m_id']."' type='button' data-toggle='collapse' class='btn btn-danger d-inline btn-sm mx-1 tabBtn'>
-            <i class='bi bi-trash-fill'></i>
-            </a>
-            </td>
+                <td>".$j."</td>
+                <td>{$item['itemName']}</td>
+                <td>{$item['manufacturerName']}</td>
+                <td>{$item['manufacturerCountry']}</td>
+                <td>{$item['amount']}</td>
+                <td>{$item['price']} zł</td>
+                <td class='px-0 mx-0'>
+                    <button type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm mx-1 tabBtn' 
+                    data-bs-toggle='collapse' data-bs-target='#row".$j."' aria-expanded='false'>
+                        <i class='eye bi bi-eye-fill'></i>
+                    </button>
+                    <button type='button' class='btn btn-dark d-inline btn-sm mx-1 editBtn' data-bs-toggle='modal' data-bs-target='#editModal' value='{$mnf['m_id']}'>
+                        <i class='bi bi-gear-fill'></i>
+                    </button>
+                </td>
             </tr>
             
             <tr>
@@ -67,10 +65,10 @@
                                 </tr>
                                 </thead>	
                                 <tbody>";
-                                     foreach($mnfCts[$mnf['m_id']] as $ctr){
+                                     foreach($data['categoriesArray'] as $ctr){
                                         echo  "<tr>
-                                                <td class='countryName".$mnf['m_id']." ".$ctr['c_id']."'>
-                                                    {$ctr['cname']}
+                                                <td class='catalogName'>
+                                                    {$ctr['categname']}
                                                 </td>
                                             </tr>";
                                     }
@@ -113,6 +111,16 @@
   });
 });
 
+$('.tabBtn').click(function() {
+      if($(this).attr('aria-expanded')=='true'){
+         $(this).find('i').removeClass('bi-eye-fill');
+         $(this).find('i').addClass('bi-eye-slash-fill');
+      }
+      else if($(this).attr('aria-expanded')=='false'){
+         $(this).find('i').removeClass('bi-eye-slash-fill');
+         $(this).find('i').addClass('bi-eye-fill');
+      }   
+     });
 
 $('.clrBtn').click(function(){
         $('#searchBox').val('');
