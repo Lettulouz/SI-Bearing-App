@@ -4,7 +4,7 @@ include 'adm_nav.php';
 ?>
 
 <h1 class="text-muted headers-padding">Lista administratorów</h1>
-    <hr class="divider ">
+    <hr class="divider mt-0">
     <div class="headers-padding" style="padding-right: 15px;">
         <?php if($data['usersArray']) {?>
         <table class="table text-center">

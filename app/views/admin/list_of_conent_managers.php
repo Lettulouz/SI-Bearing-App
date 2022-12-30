@@ -3,8 +3,8 @@ include 'adm_nav.php';
 
 ?>
 
-<h1 class="text-muted headers-padding">Lista użytkowników</h1>
-    <hr class="divider ">
+<h1 class="text-muted headers-padding">Lista menedżerów contentu</h1>
+    <hr class="divider mt-0">
     <div class="headers-padding" style="padding-right: 15px;">
         <?php if($data['usersArray']) {?>
         <table class="table text-center">

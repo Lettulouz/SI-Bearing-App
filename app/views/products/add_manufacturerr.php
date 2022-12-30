@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />
 
 <h1 class="text-muted headers-padding">Dodawanie producenta</h1>
-    <hr class="divider ">
+    <hr class="divider mt-0">
 <div class="container" style="max-width:720px;">
     
     <form method="POST" action ="" >

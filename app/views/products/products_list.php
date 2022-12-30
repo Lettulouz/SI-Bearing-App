@@ -1,6 +1,7 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
+
 <h1 class="text-muted headers-padding">Lista produktów</h1>
-    <hr class="divider ">
+    <hr class="divider mt-0">
 
 
     <div class="headers-padding" style="padding-right: 15px;">
@@ -49,7 +50,7 @@
                     data-bs-toggle='collapse' data-bs-target='#row".$j."' aria-expanded='false'>
                         <i class='eye bi bi-eye-fill'></i>
                     </button>
-                    <button type='button' class='btn btn-dark d-inline btn-sm mx-1 editBtn' data-bs-toggle='modal' data-bs-target='#editModal' value='{$mnf['m_id']}'>
+                    <button type='button' class='btn btn-dark d-inline btn-sm mx-1 editBtn' data-bs-toggle='modal' data-bs-target='#editModal' value=''>
                         <i class='bi bi-gear-fill'></i>
                     </button>
                 </td>

@@ -6,7 +6,7 @@
 
 
 <h1 class="text-muted headers-padding">Przypisywanie kraju do producenta</h1>
-    <hr class="divider ">
+    <hr class="divider mt-0">
 <div class="container" style="max-width:720px;">
     
     <form method="POST" action ="" >

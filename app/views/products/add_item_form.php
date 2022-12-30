@@ -2,17 +2,21 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />
-<div class="container-fluid justify-content-between align-items-center">
-    <div class="row m-2">
+
+<div class="row ">
         <div class="col-6">
-            <h1 class="text-muted headers-padding">Dodawanie produktu</h1>
+            <h1 class="text-muted headers-padding ">Dodawanie produktu</h1>
         </div>
         <div class="col-6 align-self-center">
-            <button type="submit" id="itemSubmitRemote" name="itemSubmit" class="btn btn-primary btn-lg float-end" >Dodaj</button>
+            <button type="submit" id="itemSubmitRemote" name="itemSubmit" class="btn btn-primary btn-lg float-end me-3" >Dodaj</button>
         </div>
     </div>
 </div>
-    <hr class="divider">
+
+<hr class="divider mt-0">
+
+<div class="container-fluid justify-content-between align-items-center">
+
 <div class="container-fluid justify-content-between">
     <form action="" id="addItemForm" method="POST" autocomplete="off"> 
         <div class="row m-2">

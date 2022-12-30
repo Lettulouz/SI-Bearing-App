@@ -5,7 +5,7 @@
 
 
 <h1 class="text-muted headers-padding">Dodawanie katalogu</h1>
-    <hr class="divider ">
+    <hr class="divider mt-0">
 <div class="container" style="max-width:720px;">
     <!-- nie działa dla menedżera contentu jak coś-->
     <form method="post"  action="">

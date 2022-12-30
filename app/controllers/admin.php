@@ -125,6 +125,11 @@ class Admin extends Controller
         'manufacturersCount'=>$manufacturersCount,'categories'=>$categories, 'categoriesCount'=>$categoriesCount]);
     }
 
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////USERS/////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public function list_of_users(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -257,6 +262,11 @@ class Admin extends Controller
         $this->view('admin/add_user', ['name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'pass'=>$password]);
     }
 
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////MANAGERS//////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public function list_of_content_managers(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -288,6 +298,10 @@ class Admin extends Controller
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
         $this->view('admin/list_of_conent_managers', ['usersArray'=>$result]);
     }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////ADMINS////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public function list_of_administrators(){
         if(isset($_SESSION['loggedUser'])){
@@ -321,39 +335,10 @@ class Admin extends Controller
         $this->view('admin/list_of_administrators', ['usersArray'=>$result]);
     }
 
-    public function list_of_products(){
-        if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
-                unset($_SESSION['successOrErrorResponse']);
-            }
-            else{
-                header("Location:" . ROOT . "/home");
-            }
-        }
-        else{
-            header("Location:" . ROOT . "/login");
-        }
-        
-        require_once dirname(__FILE__,2) . '/core/database.php';
-
-        $query="SELECT i.name AS itemName, m.name AS manufacturerName, 
-        c.name AS manufacturerCountry, i.amount AS amount, i.price AS price
-        FROM items i 
-            INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
-            INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-            INNER JOIN countries c ON mc.id_country=c.id";
-        $result = $db->query($query);
-        $items = $result->fetchAll(PDO::FETCH_ASSOC);
-
-        $query="SELECT c.name AS categname
-        FROM items i 
-        INNER JOIN categoriesofitem coi ON i.id=coi.id_item
-        INNER JOIN categories c ON coi.id_category=c.id";
-        $result = $db->query($query);
-        $categoriesArray = $result->fetchAll(PDO::FETCH_ASSOC);
-        
-        $this->view('admin/list_of_products', ['itemsArray'=>$items, 'categoriesArray' => $categoriesArray]);
-    }
+    
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////ATRRIBUTES////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public function list_of_attributes()
     {
@@ -457,6 +442,176 @@ class Admin extends Controller
         header("Location:" . ROOT . "/admin/list_of_attributes");
     }
 
+    
+
+    public function list_of_orders(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
+        $this->view('admin/list_of_orders', []);
+    }
+
+    /** Function that add attributes
+    * @author Ur_mum
+    */
+    public function add_attribute(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
+
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $tekst2 = "";
+        if(isset($_SESSION['successOrErrorResponse'])){
+            if($_SESSION['successOrErrorResponse'] == "add_attribute"){
+                if(isset($_SESSION['attributeName'])) {$tekst2 = $_SESSION['attributeName']; unset($_SESSION['attributeName']);} 
+            }
+            unset($_SESSION['successOrErrorResponse']);
+        }
+
+        if(isset($_POST['attrEditSub'])){
+            if(!empty($_POST['attribute']))
+            {
+            
+            
+                $attribute = $_POST['attribute'];
+                $tekst1 = strtolower($attribute);
+                $tekst2 = ucfirst($tekst1);
+
+                $query="SELECT COUNT(id) as amount
+                FROM attributes WHERE name=:name";
+                $result = $db->prepare($query);
+                $result->bindParam(':name', $tekst2);
+                $result->execute();
+                $result = $result->fetch(PDO::FETCH_ASSOC);
+                if($result['amount']>0){
+                    $_SESSION['error_page'] = "add_attribute";
+                    $_SESSION['attributeName'] = $tekst2;
+                    header("Location:" . ROOT . "/admin/error_page/2");
+                }
+                else{
+                    $query = "INSERT INTO `attributes` (name) VALUES ('$tekst2');";
+                    $result = $db->prepare($query);
+                    $result->execute();
+                    $_SESSION['success_page'] = "add_attribute";
+                    header("Location:" . ROOT . "/admin/success_page/1");
+                }
+            }else{
+                $_SESSION['error_page'] = "add_attribute";
+                header("Location:" . ROOT . "/admin/error_page/1");
+            }
+        }else{
+        $this->view('admin/add_attribute_admin', ['attribute' => $tekst2]);
+        }
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////CATALOGS//////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public function add_catalog(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $catname = "";
+        $itemstocat = "";
+
+        if(isset($_SESSION['successOrErrorResponse'])){
+            if($_SESSION['successOrErrorResponse'] == "add_catalog"){
+                if(isset($_SESSION['catname'])) {$catname = $_SESSION['catname']; unset($_SESSION['catname']);} 
+                if(isset($_SESSION['itemcat'])) {$itemstocat = $_SESSION['itemcat']; unset($_SESSION['itemcat']);} 
+            }
+            unset($_SESSION['successOrErrorResponse']);
+        }
+
+        $return_msg_color="";
+        $return_msg="";
+        if(isset($_POST['catsubmit'])){
+            isset($_POST['itemcat']) ? $itemstocat=$_POST['itemcat'] : $itemstocat="";
+            isset($_POST['catname']) ? $catname=$_POST['catname'] : $catname="";
+            $_SESSION['catname'] = $catname;
+            $_SESSION['itemcat'] = $itemstocat;
+
+
+            if(isset($_POST['itemcat'])&&!empty($_POST['catname'])){
+                //add catalog to database
+                $query="SELECT COUNT(id) FROM catalog WHERE name=:catname";
+                $result = $db->prepare($query);
+                $result->bindParam(':catname', $catname);
+                $result->execute();
+                $cat_id=$result->fetch(PDO::FETCH_ASSOC);
+                $temp = $cat_id['COUNT(id)'];
+                if($temp>0){
+                    $_SESSION['error_page'] = "add_catalog";
+                    header("Location:" . ROOT . "/admin/error_page/2");
+                }else{
+                $query="INSERT INTO catalog (name) VALUES (:cat_name)";
+                $result = $db->prepare($query);
+                $result->bindParam(':cat_name',$catname);
+                $result->execute();
+                //get catalog id
+                $query="SELECT id FROM catalog WHERE name=:catname ORDER BY id DESC LIMIT 1";
+                $result = $db->prepare($query);
+                $result->bindParam(':catname', $catname);
+                $result->execute();
+                $cat_id=$result->fetch(PDO::FETCH_ASSOC);
+                 //connect items with catalog
+                 $query="INSERT INTO itemsincatalog (id_catalog,id_item) VALUES (:cat_id,:item_id)";
+                 foreach ($itemstocat as $item_id){
+                     $result = $db->prepare($query);
+                     $result->bindParam(':cat_id',$cat_id['id']);
+                     $result->bindParam(':item_id',$item_id);
+                     $result->execute();
+                }
+                $_SESSION['success_page'] = "add_catalog";
+                unset($_SESSION['catname']);
+                header("Location:" . ROOT . "/admin/success_page/1");
+                }
+            }
+            else{
+                $_SESSION['error_page'] = "add_catalog";
+                header("Location:" . ROOT . "/admin/error_page/1");
+            }
+
+        }
+
+        $query="SELECT i.name AS item, i.id AS item_id, m.name AS mnf FROM items i 
+        INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
+        INNER JOIN manufacturers m ON mc.id_manufacturer=m.id";
+        $result = $db->prepare($query);
+        $result->execute();
+        $items = $result->fetchAll(PDO::FETCH_ASSOC);
+        
+        $this->view('admin/add_catalog_admin', ['items'=>$items, 'msg_color' => $return_msg_color , 'msg' => $return_msg, 'catname' => $catname, 'itemcat'=> $itemstocat]);
+    }
+
     public function list_of_catalogs(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -543,8 +698,9 @@ class Admin extends Controller
             FROM catalog 
                 INNER JOIN itemsincatalog ON itemsincatalog.id_catalog = catalog.id 
                 INNER JOIN items i ON itemsincatalog.id_item = i.id 
-                INNER JOIN manufacturers m ON i.id_manufacturer=m.id
-                INNER JOIN countries c ON i.id_country=c.id
+                INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
+                INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
+                INNER JOIN countries c ON mc.id_country=c.id
                 WHERE catalog.id =:catid";
                 $result_id = $db->prepare($query_items);
                 $result_id->bindParam(':catid', $res['id']);
@@ -581,170 +737,6 @@ class Admin extends Controller
             $result->execute();
         }
         header("Location:" . ROOT . "/admin/list_of_catalogs");
-    }
-
-    public function list_of_orders(){
-        if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
-                unset($_SESSION['successOrErrorResponse']);
-            }
-            else{
-                header("Location:" . ROOT . "/home");
-            }
-        }
-        else{
-            header("Location:" . ROOT . "/login");
-        }
-        
-        $this->view('admin/list_of_orders', []);
-    }
-
-    /** Function that add attributes
-    * @author Ur_mum
-    */
-    public function add_attribute(){
-        if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
-                unset($_SESSION['successOrErrorResponse']);
-            }
-            else{
-                header("Location:" . ROOT . "/home");
-            }
-        }
-        else{
-            header("Location:" . ROOT . "/login");
-        }
-        
-
-        require_once dirname(__FILE__,2) . '/core/database.php';
-        $tekst2 = "";
-        if(isset($_SESSION['successOrErrorResponse'])){
-            if($_SESSION['successOrErrorResponse'] == "add_attribute"){
-                if(isset($_SESSION['attributeName'])) {$tekst2 = $_SESSION['attributeName']; unset($_SESSION['attributeName']);} 
-            }
-            unset($_SESSION['successOrErrorResponse']);
-        }
-
-        if(isset($_POST['attrEditSub'])){
-            if(!empty($_POST['attribute']))
-            {
-            
-            
-                $attribute = $_POST['attribute'];
-                $tekst1 = strtolower($attribute);
-                $tekst2 = ucfirst($tekst1);
-
-                $query="SELECT COUNT(id) as amount
-                FROM attributes WHERE name=:name";
-                $result = $db->prepare($query);
-                $result->bindParam(':name', $tekst2);
-                $result->execute();
-                $result = $result->fetch(PDO::FETCH_ASSOC);
-                if($result['amount']>0){
-                    $_SESSION['error_page'] = "add_attribute";
-                    $_SESSION['attributeName'] = $tekst2;
-                    header("Location:" . ROOT . "/admin/error_page/2");
-                }
-                else{
-                    $query = "INSERT INTO `attributes` (name) VALUES ('$tekst2');";
-                    $result = $db->prepare($query);
-                    $result->execute();
-                    $_SESSION['success_page'] = "add_attribute";
-                    header("Location:" . ROOT . "/admin/success_page/1");
-                }
-            }else{
-                $_SESSION['error_page'] = "add_attribute";
-                header("Location:" . ROOT . "/admin/error_page/1");
-            }
-        }else{
-        $this->view('admin/add_attribute_admin', ['attribute' => $tekst2]);
-        }
-    }
-/////////////////////////////////////////////////////////////////////////////
-    public function add_catalog(){
-        if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
-                unset($_SESSION['successOrErrorResponse']);
-            }
-            else{
-                header("Location:" . ROOT . "/home");
-            }
-        }
-        else{
-            header("Location:" . ROOT . "/login");
-        }
-        
-        require_once dirname(__FILE__,2) . '/core/database.php';
-        $catname = "";
-        $itemstocat = "";
-
-        if(isset($_SESSION['successOrErrorResponse'])){
-            if($_SESSION['successOrErrorResponse'] == "add_catalog"){
-                if(isset($_SESSION['catname'])) {$catname = $_SESSION['catname']; unset($_SESSION['catname']);} 
-                if(isset($_SESSION['itemcat'])) {$itemstocat = $_SESSION['itemcat']; unset($_SESSION['itemcat']);} 
-            }
-            unset($_SESSION['successOrErrorResponse']);
-        }
-
-        $return_msg_color="";
-        $return_msg="";
-        if(isset($_POST['catsubmit'])){
-            isset($_POST['itemcat']) ? $itemstocat=$_POST['itemcat'] : $itemstocat="";
-            isset($_POST['catname']) ? $catname=$_POST['catname'] : $catname="";
-            $_SESSION['catname'] = $catname;
-            $_SESSION['itemcat'] = $itemstocat;
-
-
-            if(isset($_POST['itemcat'])&&!empty($_POST['catname'])){
-                //add catalog to database
-                $query="SELECT COUNT(id) FROM catalog WHERE name=:catname";
-                $result = $db->prepare($query);
-                $result->bindParam(':catname', $catname);
-                $result->execute();
-                $cat_id=$result->fetch(PDO::FETCH_ASSOC);
-                $temp = $cat_id['COUNT(id)'];
-                if($temp>0){
-                    $_SESSION['error_page'] = "add_catalog";
-                    header("Location:" . ROOT . "/admin/error_page/2");
-                }else{
-                $query="INSERT INTO catalog (name) VALUES (:cat_name)";
-                $result = $db->prepare($query);
-                $result->bindParam(':cat_name',$catname);
-                $result->execute();
-                //get catalog id
-                $query="SELECT id FROM catalog WHERE name=:catname ORDER BY id DESC LIMIT 1";
-                $result = $db->prepare($query);
-                $result->bindParam(':catname', $catname);
-                $result->execute();
-                $cat_id=$result->fetch(PDO::FETCH_ASSOC);
-                 //connect items with catalog
-                 $query="INSERT INTO itemsincatalog (id_catalog,id_item) VALUES (:cat_id,:item_id)";
-                 foreach ($itemstocat as $item_id){
-                     $result = $db->prepare($query);
-                     $result->bindParam(':cat_id',$cat_id['id']);
-                     $result->bindParam(':item_id',$item_id);
-                     $result->execute();
-                }
-                $_SESSION['success_page'] = "add_catalog";
-                unset($_SESSION['catname']);
-                header("Location:" . ROOT . "/admin/success_page/1");
-                }
-            }
-            else{
-                $_SESSION['error_page'] = "add_catalog";
-                header("Location:" . ROOT . "/admin/error_page/1");
-            }
-
-        }
-
-        $query="SELECT i.name AS item, i.id AS item_id, m.name AS mnf FROM items i 
-        INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
-        INNER JOIN manufacturers m ON mc.id_manufacturer=m.id";
-        $result = $db->prepare($query);
-        $result->execute();
-        $items = $result->fetchAll(PDO::FETCH_ASSOC);
-        
-        $this->view('admin/add_catalog_admin', ['items'=>$items, 'msg_color' => $return_msg_color , 'msg' => $return_msg, 'catname' => $catname, 'itemcat'=> $itemstocat]);
     }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////MANUFACTURERS/////////////////////////////////////////////////////////////////////
@@ -1012,6 +1004,33 @@ public function add_countries_to_manufacturer(){
 
     }
 
+
+    public function remove_manufacturer($id_manuf=NULL){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
+
+        if(isset($id_manuf)){
+            require_once dirname(__FILE__,2) . '/core/database.php';
+            $query="DELETE FROM manufacturers WHERE id=:id_manuf";
+            $result = $db->prepare($query);
+            $result->bindParam(':id_manuf', $id_manuf);
+            $result->execute();
+        }
+        
+    
+        header("Location:" . ROOT . "/admin/list_of_manufacturers");
+    }
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////ITEMS/////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1032,7 +1051,7 @@ public function add_countries_to_manufacturer(){
         
         if(isset($_POST['itemSubmit'])){
             if(isset($_POST['name']) && isset($_POST['price']) && isset($_POST['quantity']) && !empty($_POST['manufacturer']) && !empty($_POST['selCategories'])){
-                //add catalog to database
+                //add item to database
 
                                   
                 $itemName = $_POST['name'];
@@ -1122,6 +1141,43 @@ public function add_countries_to_manufacturer(){
         
     }
 
+    public function list_of_products(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
+        require_once dirname(__FILE__,2) . '/core/database.php';
+
+        $query="SELECT i.name AS itemName, m.name AS manufacturerName, 
+        c.name AS manufacturerCountry, i.amount AS amount, i.price AS price
+        FROM items i 
+            INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
+            INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
+            INNER JOIN countries c ON mc.id_country=c.id";
+        $result = $db->query($query);
+        $items = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        $query="SELECT c.name AS categname
+        FROM items i 
+        INNER JOIN categoriesofitem coi ON i.id=coi.id_item
+        INNER JOIN categories c ON coi.id_category=c.id";
+        $result = $db->query($query);
+        $categoriesArray = $result->fetchAll(PDO::FETCH_ASSOC);
+        
+        $this->view('admin/list_of_products', ['itemsArray'=>$items, 'categoriesArray' => $categoriesArray]);
+    }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////CATEGORIES////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ 
     public function add_category(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -1179,6 +1235,7 @@ public function add_countries_to_manufacturer(){
         }
     }
 
+
     public function list_of_categories()
     {
         if(isset($_SESSION['loggedUser'])){
@@ -1204,6 +1261,7 @@ public function add_countries_to_manufacturer(){
         $this->view('admin/list_of_categories', ['categoriesArray'=>$result, 'rmpath'=> $rmCatPath, 'editpath'=> $editCatPath]);
     }
 
+
     public function edit_category($id_categ=NULL){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -1216,7 +1274,6 @@ public function add_countries_to_manufacturer(){
         else{
             header("Location:" . ROOT . "/login");
         }
-        
         
         if(isset($id_categ)){
         isset($_POST['edit_categ']) ? $category=$_POST['edit_categ'] : $category="";
@@ -1280,31 +1337,10 @@ public function add_countries_to_manufacturer(){
         header("Location:" . ROOT . "/admin/list_of_categories");
     }
 
-    public function remove_manufacturer($id_manuf=NULL){
-        if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
-                unset($_SESSION['successOrErrorResponse']);
-            }
-            else{
-                header("Location:" . ROOT . "/home");
-            }
-        }
-        else{
-            header("Location:" . ROOT . "/login");
-        }
-        
 
-        if(isset($id_manuf)){
-            require_once dirname(__FILE__,2) . '/core/database.php';
-            $query="DELETE FROM manufacturers WHERE id=:id_manuf";
-            $result = $db->prepare($query);
-            $result->bindParam(':id_manuf', $id_manuf);
-            $result->execute();
-        }
-        
-    
-        header("Location:" . ROOT . "/admin/list_of_manufacturers");
-    }
+ 
+
+   
 
     public function logout(){
         unset($_SESSION['loggedUser']);

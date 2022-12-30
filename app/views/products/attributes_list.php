@@ -1,6 +1,6 @@
 
 <h1 class="text-muted headers-padding">Lista atrybutów</h1>
-    <hr class="divider ">
+    <hr class="divider mt-0 ">
     <div class="headers-padding" style="padding-right: 15px;">
     <div class="col-12 col-md-6 col-lg-4">
             <div class="input-group">
