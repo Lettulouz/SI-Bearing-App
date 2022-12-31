@@ -29,7 +29,7 @@ class Home extends Controller
         $limit1--;
         $limit2 = $limit1 + 1;
         $limit1 *= 8;
-        $limit2 = 8;
+
 
         $table = array();
 
@@ -68,8 +68,14 @@ class Home extends Controller
             }
         }
 
-       
+        $query="SELECT d.title, d.description, i.name, i.id as itemID
+            FROM items i 
+            LEFT JOIN descriptions d ON d.id_item=i.id
+            WHERE i.name LIKE '%".$search."%' 
+            ORDER BY i.id ASC
+            LIMIT :limit1, 8 ";
 
+        /*
         $query="SELECT d.title, d.description, i.name, m.id, i.id as itemID, m.name as 'name2'
             FROM items i 
             LEFT JOIN descriptions d ON d.id_item=i.id 
@@ -78,6 +84,7 @@ class Home extends Controller
             AND m.id IN (".$id_manufacturer.")
             ORDER BY i.id ASC
             LIMIT :limit1,".$limit2." ";
+        */
         $result = $db->prepare($query);
         $result->bindParam('limit1',$limit1);
         $result -> execute();
@@ -90,6 +97,7 @@ class Home extends Controller
         AND m.id IN (".$id_manufacturer.")
         ORDER BY i.id DESC LIMIT 1";
 
+        /*
         $last = $db->query($query2);
         $last = $last->fetchAll(PDO::FETCH_ASSOC);
         $currentLast=end($result);
@@ -116,7 +124,7 @@ class Home extends Controller
                 $endofitems=1;
             }
         }
-
+        */
         $test = 1;
         $this->view('home/index', ['itemsArray'=>$result, 'search' => $search, 'limit1' => $page, 
             'manufacturerArray' => $manufacturer, 'last'=> $endofitems,
