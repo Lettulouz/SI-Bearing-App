@@ -1272,11 +1272,11 @@ public function add_countries_to_manufacturer(){
         INNER JOIN countries c ON mc.id_country=c.id";
         $result = $db->prepare($query);
         $result->execute();
-        $result = $result->fetchAll(PDO::FETCH_ASSOC);
+        $items = $result->fetchAll(PDO::FETCH_ASSOC);
         $query="SELECT name FROM attributes";
         $result2 = $db->prepare($query);
         $result2->execute();
-        $result2 = $result2->fetchAll(PDO::FETCH_ASSOC);
+        $attributes = $result2->fetchAll(PDO::FETCH_ASSOC);
 
         $query="SELECT id as categoryid, name as categoryname FROM categories";
         $categories = $db->prepare($query);
@@ -1298,7 +1298,7 @@ public function add_countries_to_manufacturer(){
         $result->execute();
         $prevItems = $result->fetch(PDO::FETCH_ASSOC);
 
-        $queryCateg="SELECT c.name AS categname
+        $queryCateg="SELECT c.id AS categid
         FROM items i 
         INNER JOIN categoriesofitem coi ON i.id=coi.id_item
         INNER JOIN categories c ON coi.id_category=c.id
@@ -1306,7 +1306,11 @@ public function add_countries_to_manufacturer(){
         $result = $db->prepare($queryCateg);     
         $result->bindParam(':iid', $editId);
         $result->execute();
-        $prevCtg = $result->fetch(PDO::FETCH_ASSOC);
+        $tempPrevCtg = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        for($i=0;$i<sizeof($tempPrevCtg); $i++){
+            array_push($prevCtg, $tempPrevCtg[$i]['categid']);
+        }
 
         $queryAttr="SELECT a.name AS attrname, ai.value AS aval
         FROM items i 
@@ -1327,8 +1331,8 @@ public function add_countries_to_manufacturer(){
         $result->execute();
         $prevDesc = $result->fetchAll(PDO::FETCH_ASSOC);
         
-        $this->view('admin/edit_item_admin', ['items'=>$result, 'attributes' => $result2, 'categories'=>$categories, 
-        'selCategories'=>$selCategories, 'prevItems'=>$prevItems, 'prevCtg'=>$prevCtg, 'prevAttr'=>$prevAttr, 'prevDesc'=>$prevDesc]);
+        $this->view('admin/edit_item_admin', ['items'=>$items, 'attributes' => $attributes, 'categories'=>$categories, 
+        'selCategories'=>$prevCtg, 'prevItems'=>$prevItems, 'prevCtg'=>$prevCtg, 'prevAttr'=>$prevAttr, 'prevDesc'=>$prevDesc]);
         
     }
 

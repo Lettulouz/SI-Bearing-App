@@ -3,7 +3,7 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />
 
-<div class="row ">
+<div class="row mx-2">
         <div class="col-6">
             <h1 class="text-muted headers-padding ">Dodawanie produktu</h1>
         </div>

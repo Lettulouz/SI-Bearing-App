@@ -98,7 +98,7 @@
                 <div class="modal-body">
                 <input type='hidden' id="mnfid" name="mnfid" class="form-control"> 
                             <div class="form-floating my-2">
-                                <input type="text" class="form-control" id="manufacturerName" name="mnfname" placeholder="Grontex">
+                                <input type="text" class="form-control" id="manufacturerName" name="mnfname">
                                 <label for="manufacturerNameInput">Producent</label>
                             </div>
                             <hr>
@@ -143,10 +143,10 @@
 //     //pass manufacturer data to edit modal
     $('.editBtn').click(function(){
         var mnfName=$(this).parent().parent().children('td').eq(1).text();
-        var mnfcountrys=$('.countryName'+$(this).attr('value')).map(function() {
+        var mnfcountries=$('.countryName'+$(this).attr('value')).map(function() {
             return this.className.split(' ')[1];
             }).get();
-        $('#country').val(mnfcountrys);
+        $('#country').val(mnfcountries);
         $('#country').trigger('change');
         $('#mnfid').val($(this).attr('value'));
         $('#manufacturerName').val(mnfName);

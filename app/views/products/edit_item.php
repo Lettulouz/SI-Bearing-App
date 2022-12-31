@@ -3,7 +3,7 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />
 
-<div class="row ">
+<div class="row mx-2">
         <div class="col-6">
             <h1 class="text-muted headers-padding ">Edycja produktu</h1>
         </div>
@@ -24,7 +24,7 @@
                 <div class="row m-2">
                     <div class="col">
                         <div class="form-floating ">
-                            <input type="text" class="form-control" id="nameInput" name="name" placeholder="Grontomat">
+                            <input type="text" class="form-control" id="nameInput" name="name" value="<?=$data['prevItems']['prevName']?>">
                             <label class="form-control-lg lg-custom" for="nameInput">Nazwa</label>
                         </div>
                     </div>
@@ -32,7 +32,7 @@
                 <div class="row m-2">
                     <div class="col">
                         <div class="form-floating ">
-                            <input type="number" class="form-control" id="quantityInput" min="0" name="price" placeholder="23" step="any">
+                            <input type="number" class="form-control" id="quantityInput" min="0" name="price" value="<?=$data['prevItems']['prevPrice']?>">
                             <label class="form-control-lg lg-custom" for="quantityInput">Cena</label>
                         </div>
                     </div>
@@ -40,14 +40,14 @@
                 <div class="row m-2">
                     <div class="col">
                         <div class="form-floating ">
-                            <input type="number" class="form-control" id="quantityInput" min="0" name="quantity" placeholder="23">
+                            <input type="number" class="form-control" id="quantityInput" min="0" name="quantity" value="<?=$data['prevItems']['prevAmount']?>">
                             <label class="form-control-lg lg-custom" for="quantityInput">Ilość</label>
                         </div>
                     </div>
                 </div>
                 <div class="row m-2">
                     <div class="col-12">
-                        <select class="select2 form-control form-select-lg" id="manufacturer" name="manufacturer" aria-label="example-xl" >
+                        <select class="select2 form-control form-select-lg" id="manufacturer" name="manufacturer" aria-label="example-xl">
                                 <?php
                                     echo "<option></option>";
                                     foreach($data['items'] as $i => $result) {
@@ -55,6 +55,7 @@
                                     }
                                 ?>
                         </select>
+                        <input id="prevMnfCnt" type="hidden" value="<?=$data['prevItems']['prevMnfCnt']?>">
                     </div>
                 </div>
                 <div class="row m-2">
@@ -65,7 +66,7 @@
                                 foreach($data['categories'] as $i => $result) {
                                     $temp = "";
                                     if(!empty($data['selCategories']))
-                                        if(in_array($result['categoryid'], $data['selCategories'])) $temp = "selected=selected";
+                                        if(in_array($result['categoryid'], $data['prevCtg'])) $temp = "selected=selected";
                                     echo 
                                     "<option value=".$result['categoryid']. " " . $temp .">".$result['categoryname']."</option>";
                                 }
@@ -78,6 +79,44 @@
             <div class="col-12 col-sm-6 col-xl-4 border-end border-2 itemField2 px-4">
                 <h4>Edycja atrybutów</h4>
                 <div id="show_attr">
+                    <?php
+                        $attrNum = 1;
+                        foreach($data['prevAttr'] as $i => $result) {
+                            $tempPossibleOptions = $data['attributes'];
+                            $input = '#attribute_name' . $attrNum;
+                            $html = '';
+                            $html .='<div class="row">';
+                            $html .='<div class="col-12 col-md-5 mb-3">';
+                            $html .='<select class="select2 form-control selectattr requiredattr form-select-lg" id="attribute_name' . $attrNum .  '" aria-label="example-xl" onchange="updateAttrList();">';
+                            $html .='<option>';
+                            $html .='</option>';
+                            foreach($tempPossibleOptions as $option){
+                                if($option['name'] == $data['prevAttr'][$attrNum-1]['attrname']){
+                                    $html .='<option value="' . $option['name'] . '" selected="selected">';
+                                }
+                                else
+                                {
+                                    $html .='<option value="' . $option['name'] . '">';
+                                }
+                                $html .=$option['name'];
+                                $html .='</option>';
+                            }
+                            $html .='</select>';
+                            $html .='<input type="hidden" name="attribute_name' . $attrNum .  '">';
+                            $html .='</div>';
+                            $html .='<div class="col-8 col-md-5 mb-3">';
+                            $html .='<div class="form-floating">';
+                            $html .='<input type="text" name="attribute_value' . $attrNum . '" id="attribute_value' . $attrNum . '" class="form-control requiredattr" required onkeyup="enableAttrSubmit()" autocomplete="off" value="' . $data['prevAttr'][$attrNum-1]['aval'] . '">';
+                            $html .='<label class="form-control-lg lg-custom" for="attribute_value' . $attrNum .'">Wartość...</label>';
+                            $html .='</div>';
+                            $html .='</div>';
+                            $html .='<div class="col-4 col-md-2 mb-3 d-grid">';
+                            $html .='<button class="btn btn-danger remove_attr_btn">-</button>';
+                            $html .='</div></div>';
+                            echo $html;
+                            $attrNum++;
+                        }                           
+                    ?>
                 </div>
                 <div>
                     <button class="btn btn-success" id="add_attr_btn">Dodaj atrybut</button>
@@ -87,6 +126,25 @@
             <div class="col-12 col-sm-12 col-xl-4 px-4">
                 <h4>Edycja opisów</h4>
                 <div id="show_desc">
+                    <?php
+                        $descNum = 1;
+                        foreach($data['prevDesc'] as $i) {
+                            $html = '';
+                            $html.='<div class="row mx-2">';
+                            $html.='<label class="fw-bold">Tytuł</label>';
+                            $html.='<textarea class="form-control mt-1 desctitle requireddesc" style="overflow:hidden;"'; 
+                            $html.='id="descriptionTitle' . $descNum . '" name="text" maxlength="100" placeholder="Tytuł..." rows="1" cols="5">' . $data['prevDesc'][$descNum-1]['desctitle'] . '</textarea>';
+                            $html.='<span class="pull-right mt-1 label label-default spanTitle" id="titleCount_message' . $descNum . '"></span>';
+                            $html.='<label class="fw-bold mt-1">Opis</label>';
+                            $html.='<textarea class="form-control mt-1 desc requireddesc" style="overflow:hidden;" id="description' . $descNum . '" name="text" maxlength="1000" placeholder="Opis..." rows="2">' . $data['prevDesc'][$descNum-1]['descval'] . '</textarea>';
+                            $html.='<span class="pull-right mt-1 label label-default spanDesc" id="count_message' . $descNum . '"></span>';
+                            $html.='<button class="btn btn-danger mt-3 remove_desc_btn">-</button>';
+                            $html.='<hr class="divider mt-3">';
+                            $html.='</div>';
+                            $descNum++;
+                            echo $html;
+                        }
+                    ?>
                 </div>
                 <div>
                     <button class="btn btn-success" id="add_description_btn">Dodaj opis</button>
@@ -106,11 +164,28 @@
     });
     possibleOptions.sort();
     var alreadyUsed = [];
-    var attrNum=0;
-    var attrNum2=0;
+    var filled = $(".selectattr");
+    var lengthOfFilled = filled.length;
+    console.log(lengthOfFilled);
+    var attrNum=lengthOfFilled;
+    var attrNum2=lengthOfFilled;
+    enableAttrSubmit();
     var descNum=0;
 	$(document).ready(function(){
+        var mnfcnt=$("#prevMnfCnt").attr('value');
+        $('#manufacturer').val(mnfcnt);
+        $('#manufacturer').trigger('change');
 
+        for(var i=1; i<=lengthOfFilled; i++){  
+            console.log('test');
+            inputName = '#attribute_name' + i;  
+            console.log(inputName);    
+            $(inputName).select2({
+                theme: 'bootstrap-5',
+                placeholder: 'Atrybut...',
+                width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+            });
+        }
 
         // --Attributes-- //
 
@@ -194,7 +269,6 @@
             var html = '';
             html+='<div class="row mx-2">';
             html+='<label class="fw-bold">Tytuł</label>';
-           // html+='<input type="text" class="form-control desctitle requireddesc" style="margin-top: 10px" id="descriptionTitle' + descNum  + '" placeholder="Tytuł..." maxlength="50">';
             html+='<textarea class="form-control mt-1 desctitle requireddesc" style="overflow:hidden;"'; 
             html+='id="descriptionTitle' + descNum + '" name="text" maxlength="100" placeholder="Tytuł..." rows="1" cols="5"></textarea>';
             html+='<span class="pull-right mt-1 label label-default spanTitle" id="titleCount_message' + descNum + '"></span>';
