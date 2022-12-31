@@ -172,6 +172,13 @@
   margin-left: 0px !important;
 }
 
+.select2-selection__choice{
+  font-size: 1rem!important;
+}
+
+
+
+
 .form-select-lg~.select2-container--bootstrap-5 .select2-selection--single {
   padding: 0.5rem 1rem !important;
   
