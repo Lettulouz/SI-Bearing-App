@@ -5,10 +5,10 @@
 
 <div class="row ">
         <div class="col-6">
-            <h1 class="text-muted headers-padding ">Dodawanie produktu</h1>
+            <h1 class="text-muted headers-padding ">Edycja produktu</h1>
         </div>
         <div class="col-6 align-self-center">
-            <button type="submit" id="itemSubmitRemote" name="itemSubmit" class="btn btn-primary btn-lg float-end me-3" >Dodaj</button>
+            <button type="submit" id="itemSubmitRemote" name="itemSubmit" class="btn btn-primary btn-lg float-end me-3">Edytuj</button>
         </div>
     </div>
 </div>
@@ -76,7 +76,7 @@
                 </div>
             </div>   
             <div class="col-12 col-sm-6 col-xl-4 border-end border-2 itemField2 px-4">
-                <h4>Dodawanie atrybutów</h4>
+                <h4>Edycja atrybutów</h4>
                 <div id="show_attr">
                 </div>
                 <div>
@@ -85,7 +85,7 @@
                 <input type="text" style="display:none" id="attributes" name="attributes" data-attr='<?php echo json_encode($data['attributes']); ?>'>
             </div>   
             <div class="col-12 col-sm-12 col-xl-4 px-4">
-                <h4>Dodawanie opisów</h4>
+                <h4>Edycja opisów</h4>
                 <div id="show_desc">
                 </div>
                 <div>
@@ -196,10 +196,10 @@
             html+='<label class="fw-bold">Tytuł</label>';
            // html+='<input type="text" class="form-control desctitle requireddesc" style="margin-top: 10px" id="descriptionTitle' + descNum  + '" placeholder="Tytuł..." maxlength="50">';
             html+='<textarea class="form-control mt-1 desctitle requireddesc" style="overflow:hidden;"'; 
-            html+='id="descriptionTitle' + descNum + '" name="descriptionTitle' + descNum + '" maxlength="100" placeholder="Tytuł..." rows="1" cols="5"></textarea>';
+            html+='id="descriptionTitle' + descNum + '" name="text" maxlength="100" placeholder="Tytuł..." rows="1" cols="5"></textarea>';
             html+='<span class="pull-right mt-1 label label-default spanTitle" id="titleCount_message' + descNum + '"></span>';
             html+='<label class="fw-bold mt-1">Opis</label>';
-            html+='<textarea class="form-control mt-1 desc requireddesc" style="overflow:hidden;" id="description' + descNum + '" name="description' + descNum + '" maxlength="1000" placeholder="Opis..." rows="2" cols="5"></textarea>';
+            html+='<textarea class="form-control mt-1 desc requireddesc" style="overflow:hidden;" id="description' + descNum + '" name="text" maxlength="1000" placeholder="Opis..." rows="2" cols="5"></textarea>';
             html+='<span class="pull-right mt-1 label label-default spanDesc" id="count_message' + descNum + '"></span>';
             html+='<button class="btn btn-danger mt-3 remove_desc_btn">-</button>';
             html+='<hr class="divider mt-3">';

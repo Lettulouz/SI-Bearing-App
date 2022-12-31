@@ -15,7 +15,7 @@
                 <span class="input-group-text"><i class="bi bi-search"></i></span>
             </div>
         </div>
-
+        <input type="hidden" name="editId" id="editId">
         <?php if($data['itemsArray']) {?>
         <table class="table text-center">
         <thead>
@@ -33,6 +33,7 @@
         <?php 
         $j = 0; // dodałwm j, po jak wyświetlało z i to miałem errory. Wojtek
         $items = $data['itemsArray'];
+        $editCatPath = $data['editCatPath'];
         //foreach($items as $i => $item) 
         foreach($items as $j => $item) 
         {
@@ -60,12 +61,13 @@
                         <button type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm  tabBtn' 
                         data-bs-toggle='collapse' data-bs-target='#row".$j."3' aria-expanded='false'>
                             <i class='bi bi-journal-richtext'></i>
-                        </button>
-                    </div>
+                        </a>
 
-                    <button type='button' class='btn btn-dark d-inline btn-sm mx-1 editBtn' data-bs-toggle='modal' data-bs-target='#editModal' value=''>
+
+                    </div>
+                    <a href='".$editCatPath."/".$item['iid']."' type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm mx-1 tabBtn'>
                         <i class='bi bi-gear-fill'></i>
-                    </button>
+                    </a>
                 </td>
             </tr>
             
@@ -134,17 +136,6 @@
 
                 </td>
             </tr>";
-            
-            /*
-            echo 
-            "<tr>
-            <td>".$i+'1'."</td>
-            <td>{$item['itemName']}</td>
-            <td>{$item['manufacturerName']}</td>
-            <td>{$item['amount']}</td>
-            <td>{$item['price']}</td>
-            </tr>";
-            */
         }
         ?>
         </tbody>
@@ -167,6 +158,11 @@
       $('.hidTab').collapse('hide');
     });
   });
+});
+
+$('.editBtn').click(function() {
+    var id = $(this).val();
+    $("#editId").val(id);
 });
 
 $('.tabBtn').click(function() {

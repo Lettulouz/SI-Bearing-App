@@ -1128,6 +1128,25 @@ public function add_countries_to_manufacturer(){
                     $i += 1;
                 }      
                 
+                $i = 1;
+                while(isset($_POST["descriptionTitle" . $i])){
+                    $query="SELECT id FROM descriptions WHERE title=:desc_title";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':desc_title', $_POST["descriptionTitle" . $i]);
+                    $result->execute();
+                    $attr_id=$result->fetch(PDO::FETCH_ASSOC); 
+
+                    $query="INSERT INTO descriptions (id_item, title, description) 
+                    VALUES (:id_item, :title, :desc)";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':id_item',$item_id);
+                    $result->bindParam(':title',$_POST["descriptionTitle" . $i]);
+                    $result->bindParam(':desc',$_POST["description" . $i]);
+                    $result->execute();
+
+                   // var_dump($_POST["attribute_name" . $i] . ", " . $_POST["attribute_value" . $i]);
+                    $i += 1;
+                }      
                 
                 $_SESSION['success_page'] = "list_of_products";
                 header("Location:" . ROOT . "/admin/success_page/1");
@@ -1159,7 +1178,157 @@ public function add_countries_to_manufacturer(){
         $selCategories = "";
 
         
-        $this->view('admin/add_item_admin', ['items'=>$result, 'attributes' => $result2, 'categories'=>$categories, 'selCategories'=>$selCategories]);
+        $this->view('admin/add_item_admin', ['items'=>$result, 'attributes' => $result2, 'categories'=>$categories, 
+        'selCategories'=>$selCategories]);
+        
+    }
+
+    public function edit_item($editId){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+    
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        
+        if(isset($_POST['itemSubmit'])){
+            if(isset($_POST['name']) && isset($_POST['price']) && isset($_POST['quantity']) && !empty($_POST['manufacturer']) && !empty($_POST['selCategories'])){
+                //add item to database
+
+                                  
+                $itemName = $_POST['name'];
+                $itemPrice = $_POST['price'];
+                $itemQuantity = $_POST['quantity'];
+                $itemManufacturer = $_POST['manufacturer'];
+                $selCategories = $_POST['selCategories'];
+
+                $query="UPDATE items SET (id_manufacturercountry, name, amount, price) 
+                VALUES (:id_manufacturercountry, :item_name, :item_quantity, :item_price)";
+
+                $result = $db->prepare($query);
+                $result->bindParam(':id_manufacturercountry',$itemManufacturer);
+                $result->bindParam(':item_name',$itemName);
+                $result->bindParam(':item_price',$itemPrice);
+                $result->bindParam(':item_quantity',$itemQuantity);
+                $result->execute();
+
+                $query="SELECT id FROM items WHERE name=:item_name ORDER BY id DESC LIMIT 1";
+                $result = $db->prepare($query);
+                $result->bindParam(':item_name', $itemName);
+                $result->execute();
+                $item_id=$result->fetch(PDO::FETCH_ASSOC);
+                $item_id=$item_id['id'];
+
+                foreach($selCategories as $i){
+                    $query="INSERT INTO categoriesofitem (id_category, id_item) 
+                    VALUES (:id_categ, :id_item)";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':id_categ',$i);
+                    $result->bindParam(':id_item',$item_id);                                                                      
+                    $result->execute();
+                }
+
+                $i = 1;
+                while(isset($_POST["attribute_name" . $i])){
+                    $query="SELECT id FROM attributes WHERE name=:attr_name";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':attr_name', $_POST["attribute_name" . $i]);
+                    $result->execute();
+                    $attr_id=$result->fetch(PDO::FETCH_ASSOC); 
+
+                    $query="INSERT INTO attributesofitems (id_item, id_attribute, value) 
+                    VALUES (:id_item, :id_attribute, :in_value)";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':id_item',$item_id);
+                    $result->bindParam(':id_attribute',$attr_id['id']);
+                    $result->bindParam(':in_value',$_POST["attribute_value" . $i]);
+                    $result->execute();
+
+                   // var_dump($_POST["attribute_name" . $i] . ", " . $_POST["attribute_value" . $i]);
+                    $i += 1;
+                }      
+                
+                
+                $_SESSION['success_page'] = "list_of_products";
+                header("Location:" . ROOT . "/admin/success_page/1");
+
+            }
+            else{
+                $_SESSION['error_page'] = "list_of_products";
+                header("Location:" . ROOT . "/admin/error_page/1");
+            }
+        }
+
+        $query="SELECT mc.id as id, m.name as mname,c.name as cname
+        FROM manufacturercountries mc 
+        INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
+        INNER JOIN countries c ON mc.id_country=c.id";
+        $result = $db->prepare($query);
+        $result->execute();
+        $result = $result->fetchAll(PDO::FETCH_ASSOC);
+        $query="SELECT name FROM attributes";
+        $result2 = $db->prepare($query);
+        $result2->execute();
+        $result2 = $result2->fetchAll(PDO::FETCH_ASSOC);
+
+        $query="SELECT id as categoryid, name as categoryname FROM categories";
+        $categories = $db->prepare($query);
+        $categories->execute();
+        $categories = $categories->fetchAll(PDO::FETCH_ASSOC);
+
+        
+        
+        $prevCtg = array();
+        $prevAttr = array();
+        $prevDesc = array();
+
+        $query="SELECT name AS prevName, id_manufacturercountry AS prevMnfCnt,
+        amount AS prevAmount, price AS prevPrice, picturepath AS prevPctPth
+        FROM items
+        WHERE id=:editId";
+        $result = $db->prepare($query);     
+        $result->bindParam(':editId', $editId);
+        $result->execute();
+        $prevItems = $result->fetch(PDO::FETCH_ASSOC);
+
+        $queryCateg="SELECT c.name AS categname
+        FROM items i 
+        INNER JOIN categoriesofitem coi ON i.id=coi.id_item
+        INNER JOIN categories c ON coi.id_category=c.id
+        WHERE i.id=:iid";
+        $result = $db->prepare($queryCateg);     
+        $result->bindParam(':iid', $editId);
+        $result->execute();
+        $prevCtg = $result->fetch(PDO::FETCH_ASSOC);
+
+        $queryAttr="SELECT a.name AS attrname, ai.value AS aval
+        FROM items i 
+        INNER JOIN attributesofitems ai ON i.id=ai.id_item
+        INNER JOIN attributes a ON ai.id_attribute=a.id
+        WHERE i.id=:iid";
+        $result = $db->prepare($queryAttr);     
+        $result->bindParam(':iid', $editId);
+        $result->execute();
+        $prevAttr = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        $queryDesc="SELECT d.title AS desctitle, d.description AS descval
+        FROM items i 
+        INNER JOIN descriptions d ON i.id=d.id_item
+        WHERE i.id=:iid";
+        $result = $db->prepare($queryDesc);     
+        $result->bindParam(':iid', $editId);
+        $result->execute();
+        $prevDesc = $result->fetchAll(PDO::FETCH_ASSOC);
+        
+        $this->view('admin/edit_item_admin', ['items'=>$result, 'attributes' => $result2, 'categories'=>$categories, 
+        'selCategories'=>$selCategories, 'prevItems'=>$prevItems, 'prevCtg'=>$prevCtg, 'prevAttr'=>$prevAttr, 'prevDesc'=>$prevDesc]);
         
     }
 
@@ -1229,7 +1398,9 @@ public function add_countries_to_manufacturer(){
             $attrArray[$id['iid']]= $result;
         }
         
-        $this->view('admin/list_of_products', ['itemsArray'=>$items, 'categoriesArray' => $categoriesArray, 'catalogArray'=>$catalogArray, 'attrArray'=>$attrArray]);
+        $editCatPath=ROOT."/admin/edit_item";
+        
+        $this->view('admin/list_of_products', ['itemsArray'=>$items, 'categoriesArray' => $categoriesArray, 'catalogArray'=>$catalogArray, 'attrArray'=>$attrArray, 'editCatPath'=>$editCatPath]);
     }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////CATEGORIES////////////////////////////////////////////////////////////////////////
