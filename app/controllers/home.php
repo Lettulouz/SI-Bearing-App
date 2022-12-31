@@ -95,20 +95,23 @@ class Home extends Controller
         $result -> execute();
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $query2="SELECT i.id as id FROM items i 
-        LEFT JOIN descriptions d ON d.id_item=i.id 
-        INNER JOIN manufacturers m ON i.id_manufacturer = m.id 
-        WHERE i.name LIKE '%".$search."%' 
-        AND m.id IN (".$id_manufacturer.")
-        ORDER BY i.id DESC LIMIT 1";
+        $query2="SELECT d.title, d.description, i.name, i.id as ID, m.name as 'name2'
+            FROM items i 
+            LEFT JOIN descriptions d ON d.id_item=i.id
+            INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
+            INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
+            WHERE i.name LIKE '%".$search."%' 
+            AND m.id IN (".$id_manufacturer.")
+            AND m.id IN (".$id_manufacturer.")
+            ORDER BY i.id DESC LIMIT 1";
 
-        /*
+        
         $last = $db->query($query2);
         $last = $last->fetchAll(PDO::FETCH_ASSOC);
         $currentLast=end($result);
 
         if($currentLast!=false){
-            if($currentLast['itemID']==$last[0]['id']){
+            if($currentLast['itemID']==$last[0]['ID']){
                 $endofitems=1;
             }
         }
@@ -121,7 +124,7 @@ class Home extends Controller
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
             $currentLast=end($result);
             if($currentLast!=false){
-                if($currentLast['itemID']==$last[0]['id']){
+                if($currentLast['itemID']==$last[0]['ID']){
                     $endofitems=1;
                 }
             }
@@ -129,7 +132,7 @@ class Home extends Controller
                 $endofitems=1;
             }
         }
-        */
+        
         $test = 1;
         $this->view('home/index', ['itemsArray'=>$result, 'search' => $search, 'limit1' => $page, 
             'manufacturerArray' => $manufacturer, 'last'=> $endofitems,
