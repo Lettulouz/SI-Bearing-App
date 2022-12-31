@@ -392,7 +392,13 @@
             }
             $("#itemSubmit").click();
         });
+
+
+        countDesc();
+        
 	});
+
+
 
     function updateAttrList(){
         let tempRMV = $("#show_attr").find("select");  
@@ -470,7 +476,7 @@
         btn.prop('disabled', !isValid);
     }
 
-    $(window).resize(function() {
+        function countDesc() {
         let inputs = document.getElementsByClassName('desc');
         console.log(inputs.length);
         var text_max = 1000;
@@ -495,8 +501,9 @@
             var sch = $('#descriptionTitle' + temp).prop('scrollHeight');
             $('#descriptionTitle' + temp).attr('style', `height:${sch}px; resize:none; font-size: 18px; overflow:hidden;`);
         }
-    });
+    };
 
+    $(window).resize(countDesc())
 </script>
 
 
