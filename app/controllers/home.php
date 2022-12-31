@@ -68,14 +68,18 @@ class Home extends Controller
             }
         }
 
-        $query="SELECT d.title, d.description, i.name, i.id as itemID
+        $query="SELECT d.title, d.description, i.name, i.id as itemID, m.name as 'name2'
             FROM items i 
             LEFT JOIN descriptions d ON d.id_item=i.id
+            INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
+            INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
             WHERE i.name LIKE '%".$search."%' 
+            AND m.id IN (".$id_manufacturer.")
             ORDER BY i.id ASC
             LIMIT :limit1, 8 ";
 
-        /*
+        /* 
+        // stare polecenie, jak baza się zmienie może się przydać
         $query="SELECT d.title, d.description, i.name, m.id, i.id as itemID, m.name as 'name2'
             FROM items i 
             LEFT JOIN descriptions d ON d.id_item=i.id 
@@ -85,6 +89,7 @@ class Home extends Controller
             ORDER BY i.id ASC
             LIMIT :limit1,".$limit2." ";
         */
+
         $result = $db->prepare($query);
         $result->bindParam('limit1',$limit1);
         $result -> execute();
