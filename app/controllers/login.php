@@ -79,14 +79,13 @@ class Login extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
         $_SESSION['emailOrLoginInput'] =  $this->emailOrLoginInput;
         $email 
-        ? $userQuery = $db->prepare('SELECT id, password, role FROM users WHERE email = :emailorlogin') 
-        : $userQuery = $db->prepare('SELECT id, password, role FROM users WHERE login = :emailorlogin');
+        ? $userQuery = $db->prepare('SELECT id, password, role, temporary FROM users WHERE email = :emailorlogin') 
+        : $userQuery = $db->prepare('SELECT id, password, role, temporary FROM users WHERE login = :emailorlogin');
         $userQuery->bindValue(':emailorlogin', $this->emailOrLoginInput, PDO::PARAM_STR);
         $userQuery->execute();
 
-        
-
         $this->ifUserExist = $userQuery->fetch(PDO::FETCH_ASSOC);
+        if($this->ifUserExist['temporary'] == 1) $this->errorDuringValidation("*Konto nie zostało aktywowane, sprawdź maila celem jego aktywacji");
         $this->ifUserExist ? ($this->userRole = $this->ifUserExist['role']) : $this->errorDuringValidation("*Podano błędny email lub hasło");
     }
 
@@ -159,6 +158,10 @@ class Login extends Controller
         if(hash('sha256', $this->passwordInput) == $this->ifUserExist['password'])
         return true;
         else return false;
+    }
+
+    private function checkIfAccountIsActivated(){
+
     }
 
     /** Function that moves to after login page

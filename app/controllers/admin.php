@@ -173,12 +173,19 @@ class Admin extends Controller
         $password = '';
         if(isset($_POST['senduser']))
         {
+            $query = "SELECT id FROM users ORDER BY id DESC LIMIT 1";
+            $result = $db->prepare($query);
+            $result->execute();
+            $result = $result->fetch(PDO::FETCH_ASSOC);;
+
             $name = ucfirst(strtolower($_POST['name']));
             $lastName = ucfirst(strtolower($_POST['surname']));
             $email = $_POST['mail'];
             $login = strtolower($_POST['login']);
             $password = $_POST['pass'];
             $role = "user";
+            $temporary = 1;
+            $authhash = hash('sha256',$name . $lastName . $email . $login . $role . $result['id']);
 
             if(empty($password)){
                 $length = 10;
@@ -211,8 +218,17 @@ class Admin extends Controller
                     header("Location:" . ROOT . "/admin/error_page/2");
                 }
                 else{
-                    $query = "INSERT INTO `users` (name, lastName, email, login, password, role) VALUES ('$name', '$lastName', '$email', '$login', '$hashedPassword', '$role');";
+                    $query = "INSERT INTO `users` (name, lastname, email, login, password, role, temporary, authhash) 
+                    VALUES (:name, :lastname, :email, :login, :password, :role, :temporary, :authhash);";
                     $result = $db->prepare($query);
+                    $result->bindParam(':name', $name);
+                    $result->bindParam(':lastname', $lastName);
+                    $result->bindParam(':email', $email);
+                    $result->bindParam(':login', $login);
+                    $result->bindParam(':password', $hashedPassword);
+                    $result->bindParam(':role', $role);
+                    $result->bindParam(':temporary', $temporary);
+                    $result->bindParam(':authhash', $authhash);
                     $result->execute();
                     try{
                     $config = require_once dirname(__FILE__,2) . '/core/mailerconfig.php';
@@ -244,7 +260,7 @@ class Admin extends Controller
                     <p> Na ten email zostało utworzone konto w sklepie Grontsmar. Oto dane: </p>
                     <p> Login: $login </p>
                     <p> Hasło: $password </p>
-                    <a href='https://www.lettulouz.usermd.net'>Link</a>
+                    <a href='https://www.lettulouz.usermd.net/si-project-php/public/userverify/$authhash'>Link</a>
                     </body>
                     </html>";
     
