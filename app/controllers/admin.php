@@ -260,7 +260,10 @@ class Admin extends Controller
                     <p> Na ten email zostało utworzone konto w sklepie Grontsmar. Oto dane: </p>
                     <p> Login: $login </p>
                     <p> Hasło: $password </p>
-                    <a href='https://www.lettulouz.usermd.net/si-project-php/public/userverify/$authhash'>Link</a>
+                    <a href='https://www.lettulouz.usermd.net/si-project-php/public/userverify/$authhash'>Link aktywacyjny</a>
+                    <br>
+                    <br>
+                    <p> Masz 48h na aktywację konta, po tym czasie konto zostanie usunięte. </p>
                     </body>
                     </html>";
     
