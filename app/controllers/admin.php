@@ -1209,14 +1209,15 @@ public function add_countries_to_manufacturer(){
                 $itemManufacturer = $_POST['manufacturer'];
                 $selCategories = $_POST['selCategories'];
 
-                $query="UPDATE items SET (id_manufacturercountry, name, amount, price) 
-                VALUES (:id_manufacturercountry, :item_name, :item_quantity, :item_price)";
+                $query="UPDATE items i SET id_manufacturercountry=:id_manufacturercountry, name=:item_name, amount=:item_quantity, price=:item_price
+                WHERE i.id=:id";
 
                 $result = $db->prepare($query);
                 $result->bindParam(':id_manufacturercountry',$itemManufacturer);
                 $result->bindParam(':item_name',$itemName);
                 $result->bindParam(':item_price',$itemPrice);
                 $result->bindParam(':item_quantity',$itemQuantity);
+                $result->bindParam(':id',$editId);
                 $result->execute();
 
                 $query="SELECT id FROM items WHERE name=:item_name ORDER BY id DESC LIMIT 1";
@@ -1227,14 +1228,14 @@ public function add_countries_to_manufacturer(){
                 $item_id=$item_id['id'];
 
                 foreach($selCategories as $i){
-                    $query="INSERT INTO categoriesofitem (id_category, id_item) 
-                    VALUES (:id_categ, :id_item)";
+                    // tutaj poprawić jak jak w dodawaniu kraju do manufacturera
+                    $query="UPDATE categoriesofitem SET id_category=:id_categ
+                    WHERE id_item=:id";
                     $result = $db->prepare($query);
-                    $result->bindParam(':id_categ',$i);
-                    $result->bindParam(':id_item',$item_id);                                                                      
+                    $result->bindParam(':id_categ',$i);  
+                    $result->bindParam(':id',$editId);                                                                   
                     $result->execute();
                 }
-
                 $i = 1;
                 while(isset($_POST["attribute_name" . $i])){
                     $query="SELECT id FROM attributes WHERE name=:attr_name";
@@ -1243,13 +1244,42 @@ public function add_countries_to_manufacturer(){
                     $result->execute();
                     $attr_id=$result->fetch(PDO::FETCH_ASSOC); 
 
-                    $query="INSERT INTO attributesofitems (id_item, id_attribute, value) 
-                    VALUES (:id_item, :id_attribute, :in_value)";
+                    $query="UPDATE attributesofitems SET id_attribute=:id_attribute, value=:in_value
+                    WHERE id_item=:id";
                     $result = $db->prepare($query);
-                    $result->bindParam(':id_item',$item_id);
                     $result->bindParam(':id_attribute',$attr_id['id']);
                     $result->bindParam(':in_value',$_POST["attribute_value" . $i]);
+                    $result->bindParam(':id',$editId); 
                     $result->execute();
+
+                   // var_dump($_POST["attribute_name" . $i] . ", " . $_POST["attribute_value" . $i]);
+                    $i += 1;
+                }   
+                $i = 1;
+                while(isset($_POST["descriptionTitle" . $i])){
+                    if($_POST["descriptionId" . $i] != 0){
+                        $query="SELECT id FROM descriptions WHERE title=:desc_title";
+                        $result = $db->prepare($query);
+                        $result->bindParam(':desc_title', $_POST["descriptionTitle" . $i]);
+                        $result->execute();
+                        $attr_id=$result->fetch(PDO::FETCH_ASSOC); 
+    
+                        $query="UPDATE descriptions SET title=:title, description=:desc WHERE id=:id";
+                        $result = $db->prepare($query);
+                        $result->bindParam(':title',$_POST["descriptionTitle" . $i]);
+                        $result->bindParam(':desc',$_POST["description" . $i]);
+                        $result->bindParam(':id',$_POST["descriptionId" . $i]);
+                        $result->execute();
+                    }
+                    else{
+                        $query="INSERT INTO descriptions (id_item, title, description) VALUES (:id_item, :title, :description)";
+                        $result = $db->prepare($query);
+                        $result->bindParam(':title',$_POST["descriptionTitle" . $i]);
+                        $result->bindParam(':description',$_POST["description" . $i]);
+                        $result->bindParam(':id_item',$editId);
+                        $result->execute();
+                    }
+                    
 
                    // var_dump($_POST["attribute_name" . $i] . ", " . $_POST["attribute_value" . $i]);
                     $i += 1;
@@ -1322,7 +1352,7 @@ public function add_countries_to_manufacturer(){
         $result->execute();
         $prevAttr = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $queryDesc="SELECT d.title AS desctitle, d.description AS descval
+        $queryDesc="SELECT d.id AS descriptionId, d.title AS desctitle, d.description AS descval
         FROM items i 
         INNER JOIN descriptions d ON i.id=d.id_item
         WHERE i.id=:iid";

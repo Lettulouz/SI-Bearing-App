@@ -131,12 +131,13 @@
                         foreach($data['prevDesc'] as $i) {
                             $html = '';
                             $html.='<div class="row mx-2">';
+                            $html.='<input type="hidden" name="descriptionId' . $descNum . '" value=' . $i['descriptionId'] . '>';
                             $html.='<label class="fw-bold">Tytuł</label>';
                             $html.='<textarea class="form-control mt-1 desctitle requireddesc" style="overflow:hidden;"'; 
-                            $html.='id="descriptionTitle' . $descNum . '" name="text" maxlength="100" placeholder="Tytuł..." rows="1" cols="5">' . $data['prevDesc'][$descNum-1]['desctitle'] . '</textarea>';
+                            $html.='id="descriptionTitle' . $descNum . '" name="descriptionTitle' . $descNum . '" maxlength="100" placeholder="Tytuł..." rows="1" cols="5">' . $data['prevDesc'][$descNum-1]['desctitle'] . '</textarea>';
                             $html.='<span class="pull-right mt-1 label label-default spanTitle" id="titleCount_message' . $descNum . '"></span>';
                             $html.='<label class="fw-bold mt-1">Opis</label>';
-                            $html.='<textarea class="form-control mt-1 desc requireddesc" style="overflow:hidden;" id="description' . $descNum . '" name="text" maxlength="1000" placeholder="Opis..." rows="2">' . $data['prevDesc'][$descNum-1]['descval'] . '</textarea>';
+                            $html.='<textarea class="form-control mt-1 desc requireddesc" style="overflow:hidden;" id="description' . $descNum . '" name="description' . $descNum . '" maxlength="1000" placeholder="Opis..." rows="2">' . $data['prevDesc'][$descNum-1]['descval'] . '</textarea>';
                             $html.='<span class="pull-right mt-1 label label-default spanDesc" id="count_message' . $descNum . '"></span>';
                             $html.='<button class="btn btn-danger mt-3 remove_desc_btn">-</button>';
                             $html.='<hr class="divider mt-3">';
@@ -268,6 +269,7 @@
             descNum++;
             var html = '';
             html+='<div class="row mx-2">';
+            html+='<input type="hidden" name="descriptionId' + $descNum + '" value="0">';
             html+='<label class="fw-bold">Tytuł</label>';
             html+='<textarea class="form-control mt-1 desctitle requireddesc" style="overflow:hidden;"'; 
             html+='id="descriptionTitle' + descNum + '" name="text" maxlength="100" placeholder="Tytuł..." rows="1" cols="5"></textarea>';
