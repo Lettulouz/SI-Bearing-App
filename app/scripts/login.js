@@ -181,7 +181,7 @@ function verifyPassword(password) {
  * @author Dominik
  */
   function moveToRegister(){
-        window.location.href = "http://83.230.14.95/si-project-php/public/register";
+        window.location.href = "http://localhost/si-project-php/public/register";
   }
 
 /** Function that checks if string is build only from some chars

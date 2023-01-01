@@ -1,6 +1,6 @@
 <?php
-error_reporting(-1);
-ini_set('display_errors', 'On');
+
+use PHPMailer\PHPMailer\PHPMailer;
 class Register extends Controller
 {
     private $errorMessage = "";
@@ -50,20 +50,20 @@ class Register extends Controller
         $this->nameInput = "";
         $this->surnameInput = "";
         $this->loginInput = "";
-    
-    if(!isset($_POST['name']) || !isset($_POST['surname']) || !isset($_POST['login']) || !isset($_POST['email']) || !isset($_POST['password'])){
-        $this->view('register/index', ['errorPassword' => $this->errorMessage, 'errorLogin' => $this->errorMessage, 
-        'errorEmail' => $this->errorMessage, 'emailInput' => $this->emailInput, 'nameInput' => $this->nameInput, 
-        'surnameInput' => $this->surnameInput, 'loginInput' => $this->loginInput, 'passwordInput' => $this->passwordInput, 
-        'serverError' => $this->serverError, 'errorName' => '', 'errorSurname' => '']);
-        return;
-    }
 
-    if(isset($_SESSION['nameInput'])) $this->nameInput = $_SESSION['nameInput'];
-    if(isset($_SESSION['surnameInput'])) $this->surnameInput = $_SESSION['surnameInput'];
-    if(isset($_SESSION['loginInput'])) $this->loginInput = $_SESSION['loginInput'];
-    if(isset($_SESSION['emailInput'])) $this->emailInput = $_SESSION['emailInput'];
-    
+        if(!isset($_POST['name']) || !isset($_POST['surname']) || !isset($_POST['login']) || !isset($_POST['email']) || !isset($_POST['password'])){
+            $this->view('register/index', ['errorPassword' => $this->errorMessage, 'errorLogin' => $this->errorMessage, 
+            'errorEmail' => $this->errorMessage, 'emailInput' => $this->emailInput, 'nameInput' => $this->nameInput, 
+            'surnameInput' => $this->surnameInput, 'loginInput' => $this->loginInput, 'passwordInput' => $this->passwordInput, 
+            'serverError' => $this->serverError, 'errorName' => '', 'errorSurname' => '']);
+            return;
+        }
+
+        if(isset($_SESSION['nameInput'])) $this->nameInput = $_SESSION['nameInput'];
+        if(isset($_SESSION['surnameInput'])) $this->surnameInput = $_SESSION['surnameInput'];
+        if(isset($_SESSION['loginInput'])) $this->loginInput = $_SESSION['loginInput'];
+        if(isset($_SESSION['emailInput'])) $this->emailInput = $_SESSION['emailInput'];
+        
         $this->nameInput = $_POST['name'];
         $this->surnameInput = $_POST['surname'];
         $this->loginInput = strtolower($_POST['login']);
@@ -94,7 +94,7 @@ class Register extends Controller
             $this->errorDuringValidation("*Zła długość hasła");
             $this->errorPassword = $this->errorMessage;
         }
-        
+
         require_once dirname(__FILE__,2) . '/core/database.php';
         if($this->check==true)
         {
@@ -202,13 +202,61 @@ class Register extends Controller
     }
 
     private function insertUser($db){
-        $commandString = $db->prepare("INSERT INTO users (name, lastName, login, email, password, role) VALUES (:name, :surname, :login, :email, :password, 'user')");
+        $commandString = $db->prepare("INSERT INTO users (name, lastname, login, email, password, role, temporary) VALUES (:name, :surname, :login, :email, :password, 'user', '1')");
         $commandString->bindValue(":name", $this->nameInput, PDO::PARAM_STR);
         $commandString->bindValue(":surname", $this->surnameInput, PDO::PARAM_STR);
         $commandString->bindValue(":login", $this->loginInput, PDO::PARAM_STR);
         $commandString->bindValue(":email", $this->emailInput, PDO::PARAM_STR);
         $commandString->bindValue(":password", hash('sha256', $this->passwordInput), PDO::PARAM_STR);
         $commandString->execute();
+        $query = "SELECT id FROM users ORDER BY id DESC LIMIT 1";
+        $result = $db->prepare($query);
+        $result->execute();
+        $result = $result->fetch(PDO::FETCH_ASSOC);;
+        try{
+            $authhash = hash('sha256',$this->nameInput . $this->surnameInput . $this->emailInput . $this->loginInput . "user" . $result['id']);
+
+            $config = require_once dirname(__FILE__,2) . '/core/mailerconfig.php';
+            $mail = new PHPMailer();
+
+            $mail->isSMTP();
+
+            $mail->Host = $config['host'];
+            $mail->Port = $config['port'];
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            $mail->SMTPAuth = true;
+
+            $mail->Username = $config['username'];
+            $mail->Password = $config['password'];
+
+            $mail->CharSet = 'UTF-8';
+            $mail->setFrom($config['username'], 'Grontsmar');
+            $mail->addAddress($this->emailInput);
+            $mail->addReplyTo($config['username'], 'Grontsmar');
+
+            $mail->isHTML(true);
+            $mail->Subject = 'Założone konto w sklepie Grontsmar';
+            $mail->Body = "<html>
+            <head>
+            <title> Założone konto w sklepie Grontsmar </title>
+            </head>
+            <body>
+            <h1> Dzień dobry! </h1>
+            <p> Wszystko wskazuje na to, że właśnie utworzyłeś konto w serwisie Grontsmar. Potwierdź je zanim wygaśnie! </p>
+            <br>
+            <a href='https://www.lettulouz.usermd.net/si-project-php/public/userverify/$authhash'>Link aktywacyjny</a>
+            <br>
+            <br>
+            <p> Masz 48h na aktywację konta, po tym czasie konto zostanie usunięte. </p>
+            </body>
+            </html>";
+
+            //$mail->addAttachment('ścieżka');
+
+            $mail->send();
+        } catch(Exception $e){
+            echo "<script>alert('Błąd wysyłania maila!')</script>";
+        }
     } 
 }
 ?>

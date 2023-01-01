@@ -4,6 +4,7 @@
  * @author Dominik
  */
 function registerButton() {
+  console.log('test');
   var error = false;
   var login = document.getElementById('login').value;
   var email = document.getElementById('email').value;
@@ -16,7 +17,7 @@ function registerButton() {
 
   if(!verifySurname(surname))
     error = true;
-  
+
   if(!verifyLogin(login))
     error = true;
 
@@ -25,6 +26,7 @@ function registerButton() {
 
   if(!verifyPassword(password))
     error = true;
+
 
   if(!error){
       document.getElementById('registerFields').style = "display: none;";
@@ -141,7 +143,7 @@ function verifyLogin(login){
         return false;  
     }  
 
-    if(login.length()<8) {  
+    if(login.length<8) {  
         document.getElementById('errorLogin').innerText = "*Podany login jest zbyt krótki";  
         document.getElementById('login').style.border = "2px solid rgb(255, 0, 0)";
         document.getElementById('blinkingLogin').style = "display: default; color:#de1f1f";
