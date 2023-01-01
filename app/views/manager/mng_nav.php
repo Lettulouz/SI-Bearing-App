@@ -68,7 +68,7 @@
          <span class="bi bi-chevron-right right-icon ms-auto"></span>
         </a>
          <div class="collapse" id="content_collapse">
-          <a href="<?php echo ROOT."/manager/list_of_products"?>" id="prd_list" class="nav-link text-muted">
+          <a href="<?php echo ROOT."/manager/list_of_items"?>" id="prd_list" class="nav-link text-muted">
             Lista produktów
           </a>
           <a href="<?php echo ROOT."/manager/add_item"?>" id="additem" class="nav-link text-muted">

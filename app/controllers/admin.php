@@ -1167,12 +1167,12 @@ public function add_countries_to_manufacturer(){
                     $i += 1;
                 }      
                 
-                $_SESSION['success_page'] = "list_of_products";
+                $_SESSION['success_page'] = "list_of_items";
                 header("Location:" . ROOT . "/admin/success_page/1");
 
             }
             else{
-                $_SESSION['error_page'] = "list_of_products";
+                $_SESSION['error_page'] = "list_of_items";
                 header("Location:" . ROOT . "/admin/error_page/1");
             }
         }
@@ -1336,12 +1336,12 @@ public function add_countries_to_manufacturer(){
                 }      
                 
                 
-                $_SESSION['success_page'] = "list_of_products";
+                $_SESSION['success_page'] = "list_of_items";
                 header("Location:" . ROOT . "/admin/success_page/1");
 
             }
             else{
-                $_SESSION['error_page'] = "list_of_products";
+                $_SESSION['error_page'] = "list_of_items";
                 header("Location:" . ROOT . "/admin/error_page/1");
             }
         }
@@ -1416,7 +1416,7 @@ public function add_countries_to_manufacturer(){
         
     }
 
-    public function list_of_products(){
+    public function list_of_items(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
                 unset($_SESSION['successOrErrorResponse']);
@@ -1484,7 +1484,7 @@ public function add_countries_to_manufacturer(){
         
         $editCatPath=ROOT."/admin/edit_item";
         
-        $this->view('admin/list_of_products', ['itemsArray'=>$items, 'categoriesArray' => $categoriesArray, 'catalogArray'=>$catalogArray, 'attrArray'=>$attrArray, 'editCatPath'=>$editCatPath]);
+        $this->view('admin/list_of_items', ['itemsArray'=>$items, 'categoriesArray' => $categoriesArray, 'catalogArray'=>$catalogArray, 'attrArray'=>$attrArray, 'editCatPath'=>$editCatPath]);
     }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////CATEGORIES////////////////////////////////////////////////////////////////////////

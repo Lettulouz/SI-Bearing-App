@@ -78,7 +78,7 @@
     </div>
     </div>
     </form>
-<div class="row products mw-75">          
+<div class="row items mw-75">          
     <?php
     
     $j = 0;
@@ -137,7 +137,7 @@
         }
     });
 
-    //filter products
+    //filter items
     $('.filterSub').click(function(){
         $('#page').val(1);
         $('#nwm').submit();

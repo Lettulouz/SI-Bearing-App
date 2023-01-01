@@ -110,7 +110,7 @@ include 'adm_nav.php';
                             ?>
                             </p>
                         </div>
-                        <a href=<?php echo ROOT."/admin/list_of_products"?> id="orders_lists" class="nav-link text-white p-0">
+                        <a href=<?php echo ROOT."/admin/list_of_items"?> id="orders_lists" class="nav-link text-white p-0">
                     <div class="card-footer p-3">
                         Przeglądaj produkty
                     </div>

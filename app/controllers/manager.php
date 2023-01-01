@@ -536,7 +536,7 @@ class Manager extends Controller
         header("Location:" . ROOT . "/manager/list_of_catalogs");
     }
 
-    public function list_of_products(){
+    public function list_of_items(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
@@ -555,7 +555,7 @@ class Manager extends Controller
         FROM items i INNER JOIN manufacturers m ON i.id_manufacturer=m.id";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
-        $this->view('manager/list_of_products_mng', ['itemsArray'=>$result]);
+        $this->view('manager/list_of_items_mng', ['itemsArray'=>$result]);
     }
 
     public function logout(){
