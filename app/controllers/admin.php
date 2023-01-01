@@ -1246,15 +1246,46 @@ public function add_countries_to_manufacturer(){
                 $item_id=$result->fetch(PDO::FETCH_ASSOC);
                 $item_id=$item_id['id'];
 
+                //////////////////////categories//////////////////////////////////////////
+                $categArray = array();
+                $queryCateg="INSERT INTO categoriesofitem (id_category,id_item) VALUES (:id_categ,:id)";
+
                 foreach($selCategories as $i){
-                    // tutaj poprawić jak jak w dodawaniu kraju do manufacturera
-                    $query="UPDATE categoriesofitem SET id_category=:id_categ
-                    WHERE id_item=:id";
+                    array_push($categArray, $i);
+                    $query="SELECT COUNT(id_category) FROM categoriesofitem WHERE id_category=:id_category AND id_item=:id_item";
                     $result = $db->prepare($query);
-                    $result->bindParam(':id_categ',$i);  
-                    $result->bindParam(':id',$editId);                                                                   
+                    $result->bindParam(':id_category',$i);
+                    $result->bindParam(':id_item',$editId);
+                    $result->execute();
+                    $categ_id=$result->fetch(PDO::FETCH_ASSOC);
+                    if($categ_id['COUNT(id_category)']>0)
+                        continue;
+                    $result = $db->prepare($queryCateg);
+                    $result->bindParam(':id_categ',$i);
+                    $result->bindParam(':id',$editId);
                     $result->execute();
                 }
+
+                $query="SELECT id, id_category FROM categoriesofitem WHERE id_item=:id_item";
+                $result = $db->prepare($query);
+                $result->bindParam(':id_item',$editId);
+                $result->execute();
+                $arr=$result->fetchAll(PDO::FETCH_ASSOC);   
+                $i=0;
+                foreach($arr as $element){
+                    if(in_array(strval($element['id_category']), $categArray)){
+                        print_r('jest');
+                    }else{
+                        $query="DELETE FROM categoriesofitem WHERE id=:id";
+                        $result = $db->prepare($query);
+                        $result->bindParam(':id',$arr[$i]['id']);
+                        $result->execute();
+                    }        
+                    $i++;
+                } 
+
+                /////////////////////////////////////////////////////////////////////////
+
                 $i = 1;
                 while(isset($_POST["attribute_name" . $i])){
                     $query="SELECT id FROM attributes WHERE name=:attr_name";
