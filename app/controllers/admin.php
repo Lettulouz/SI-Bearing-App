@@ -1094,7 +1094,6 @@ public function add_countries_to_manufacturer(){
         if(isset($_POST['itemSubmit'])){
             if(isset($_POST['name']) && isset($_POST['price']) && isset($_POST['quantity']) && !empty($_POST['manufacturer']) && !empty($_POST['selCategories'])){
                 //add item to database
-
                                   
                 $itemName = $_POST['name'];
                 $itemPrice = $_POST['price'];
@@ -1220,9 +1219,10 @@ public function add_countries_to_manufacturer(){
         
         if(isset($_POST['itemSubmit'])){
             if(isset($_POST['name']) && isset($_POST['price']) && isset($_POST['quantity']) && !empty($_POST['manufacturer']) && !empty($_POST['selCategories'])){
-                //add item to database
+                //update item in database
+                print_r($_POST);
+                die();
 
-                                  
                 $itemName = $_POST['name'];
                 $itemPrice = $_POST['price'];
                 $itemQuantity = $_POST['quantity'];
@@ -1285,27 +1285,59 @@ public function add_countries_to_manufacturer(){
                     $i++;
                 } 
 
-                /////////////////////////////////////////////////////////////////////////
+                ///////////////////////////ATTR/////////////////////////////////////
+
+                $remainingAttrID = array();
 
                 $i = 1;
-                while(isset($_POST["attribute_name" . $i])){
-                    $query="SELECT id FROM attributes WHERE name=:attr_name";
-                    $result = $db->prepare($query);
-                    $result->bindParam(':attr_name', $_POST["attribute_name" . $i]);
-                    $result->execute();
-                    $attr_id=$result->fetch(PDO::FETCH_ASSOC); 
 
-                    $query="UPDATE attributesofitems SET id_attribute=:id_attribute, value=:in_value
-                    WHERE id_item=:id";
-                    $result = $db->prepare($query);
-                    $result->bindParam(':id_attribute',$attr_id['id']);
-                    $result->bindParam(':in_value',$_POST["attribute_value" . $i]);
-                    $result->bindParam(':id',$editId); 
-                    $result->execute();
+                for($i=1;$i<=$_POST["idOfLastAttr"];$i++){
+                    if(!isset($_POST["attribute_name" . $i]) &&!isset($_POST["attribute_value" . $i])&&!isset($_POST["attrId" . $i])){
 
-                   // var_dump($_POST["attribute_name" . $i] . ", " . $_POST["attribute_value" . $i]);
-                    $i += 1;
-                }   
+                    }else{
+                        if($_POST["attrId" . $i] != 0){
+                            echo "<script>alert('test')</script>";
+                            $query="UPDATE attributesofitems SET id_attribute=:id_attr, value=:val WHERE id=:id";
+                            $result = $db->prepare($query);
+                            $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
+                            $result->bindParam(':val',$_POST["attribute_value" . $i]);
+                            $result->bindParam(':id',$_POST["attrId" . $i]);
+                            $result->execute();
+                            array_push($remainingAttrID, $_POST["attrId".$i]);
+                        }else{
+                            $query="INSERT INTO attributesofitems (id_item, id_attribute, value) VALUES (:id_item, :id_attr, :val)";
+                            $result = $db->prepare($query);
+                            $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
+                            $result->bindParam(':val',$_POST["attribute_value" . $i]);
+                            $result->bindParam(':id_item',$editId);
+                            $result->execute();
+                            $aId = $db->lastInsertId();
+                            array_push($remainingAttrID, $aId);
+                        }
+                    }
+                }
+
+                $AttrIdsInDatabase = array();
+
+                $query="SELECT id FROM attributesofitems WHERE id_item=:id_item";
+                $result = $db->prepare($query);
+                $result->bindParam(':id_item',$editId);
+                $result->execute();
+                $AttrIdsInDb=$result->fetchAll(PDO::FETCH_ASSOC); 
+
+                foreach($AttrIdsInDb as $AidInDb){
+                    array_push($AttrIdsInDatabase, $AidInDb['id']);
+                }
+                $array4 = array_diff($AttrIdsInDatabase,$remainingAttrID);
+                foreach($array4 as $element){
+                    $query = "DELETE FROM attributesofitems WHERE id=:id";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':id',$element);
+                    $result->execute();
+                }
+
+
+                ///////////////////////////////DESC////////////////////////////////////////////
 
                 $remainingDescIds = array();
                 
@@ -1372,7 +1404,7 @@ public function add_countries_to_manufacturer(){
         $result = $db->prepare($query);
         $result->execute();
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
-        $query="SELECT name FROM attributes";
+        $query="SELECT id, name FROM attributes";
         $result2 = $db->prepare($query);
         $result2->execute();
         $attributes = $result2->fetchAll(PDO::FETCH_ASSOC);
@@ -1411,7 +1443,7 @@ public function add_countries_to_manufacturer(){
             array_push($prevCtg, $tempPrevCtg[$i]['categid']);
         }
 
-        $queryAttr="SELECT a.name AS attrname, ai.value AS aval
+        $queryAttr="SELECT ai.id AS aiId, a.id AS attrId ,a.name AS attrname, ai.value AS aval
         FROM items i 
         INNER JOIN attributesofitems ai ON i.id=ai.id_item
         INNER JOIN attributes a ON ai.id_attribute=a.id
@@ -1429,6 +1461,7 @@ public function add_countries_to_manufacturer(){
         $result->bindParam(':iid', $editId);
         $result->execute();
         $prevDesc = $result->fetchAll(PDO::FETCH_ASSOC);
+
         
         $this->view('admin/edit_item_admin', ['items'=>$items, 'attributes' => $attributes, 'categories'=>$categories, 
         'selCategories'=>$prevCtg, 'prevItems'=>$prevItems, 'prevCtg'=>$prevCtg, 'prevAttr'=>$prevAttr, 

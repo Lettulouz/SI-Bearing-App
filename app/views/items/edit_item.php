@@ -86,17 +86,18 @@
                             $input = '#attribute_name' . $attrNum;
                             $html = '';
                             $html .='<div class="row">';
+                            $html.='<input type="hidden" name="attrId' . $attrNum . '" value="' . $result['aiId'] . '">';
                             $html .='<div class="col-12 col-md-5 mb-3">';
                             $html .='<select class="select2 form-control selectattr requiredattr form-select-lg" id="attribute_name' . $attrNum .  '" aria-label="example-xl" onchange="updateAttrList();">';
                             $html .='<option>';
                             $html .='</option>';
                             foreach($tempPossibleOptions as $option){
                                 if($option['name'] == $data['prevAttr'][$attrNum-1]['attrname']){
-                                    $html .='<option value="' . $option['name'] . '" selected="selected">';
+                                    $html .='<option value="' . $option['id'] . '" selected="selected">';
                                 }
                                 else
                                 {
-                                    $html .='<option value="' . $option['name'] . '">';
+                                    $html .='<option value="' . $option['id'] . '">';
                                 }
                                 $html .=$option['name'];
                                 $html .='</option>';
@@ -151,6 +152,7 @@
                     <button class="btn btn-success" id="add_description_btn">Dodaj opis</button>
                 </div>
                 <input type="hidden" id="idOfLastDesc" name="idOfLastDesc">
+                <input type="hidden" id="idOfLastAttr" name="idOfLastAttr">
                 <input type="text" style="display:none" id="descriptions" name="descriptions" data-attr='<?php echo json_encode($data['descriptions']); ?>'>
             </div>  
         </div>  
@@ -179,6 +181,7 @@
         var mnfcnt=$("#prevMnfCnt").attr('value');
         $('#manufacturer').val(mnfcnt);
         $('#manufacturer').trigger('change');
+        $('#idOfLastAttr').val(attrNum2);
         $('#idOfLastDesc').val(descNum);
 
         for(var i=1; i<=lengthOfFilled; i++){  
@@ -212,7 +215,7 @@
                     html+='</option>';
             });
             html+='</select>';
-            html+='<input type="hidden" name="attribute_name' + attrNum +  '">';
+            $html +='<input type="hidden" name="attribute_name' + attrNum +  '">';
             html+='</div>';
             html+='<div class="col-8 col-md-5 mb-3">';
             html+='<div class="form-floating">';
@@ -240,6 +243,7 @@
                 enableAttrSubmit();
             }
             updateAttrList();
+            $('#idOfLastAttr').val(attrNum2);
         });
 
         $(document).on('click', '.remove_attr_btn', function(e){ 
@@ -260,6 +264,7 @@
             }
             alreadyUsed = alreadyUsed.filter(e => e !== attribute_name);
             updateAttrList()
+            $('#idOfLastAttr').val(attrNum2);
         });
 
 
