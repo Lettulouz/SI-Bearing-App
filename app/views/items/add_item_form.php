@@ -74,6 +74,16 @@
                         </select>
                     </div>
                 </div>
+                <div class="row m-2">
+                    <div class="col-12">
+                        <input class="form-control form-control-lg" style="font-size:18px" id="formFileLg" type="file" />
+                    </div>
+                </div>
+                <div class="row m-2">
+                    <div class="col-12">
+                        <img src="..." class="img-thumbnail" style="font-size:18px" alt="...">
+                    </div>
+                </div>
             </div>   
             <div class="col-12 col-sm-6 col-xl-4 border-end border-2 itemField2 px-4">
                 <h4>Dodawanie atrybutów</h4>
