@@ -230,6 +230,7 @@ class Admin extends Controller
                     $result->bindParam(':temporary', $temporary);
                     $result->bindParam(':authhash', $authhash);
                     $result->execute();
+                    $path = PUBLICPATH;
                     try{
                     $config = require_once dirname(__FILE__,2) . '/core/mailerconfig.php';
                     $mail = new PHPMailer();
@@ -260,7 +261,7 @@ class Admin extends Controller
                     <p> Na ten email zostało utworzone konto w sklepie Grontsmar. Oto dane: </p>
                     <p> Login: $login </p>
                     <p> Hasło: $password </p>
-                    <a href='https://www.lettulouz.usermd.net/si-project-php/public/userverify/$authhash'>Link aktywacyjny</a>
+                    <a href='$path/userverify/$authhash'>Link aktywacyjny</a>
                     <br>
                     <br>
                     <p> Masz 48h na aktywację konta, po tym czasie konto zostanie usunięte. </p>
@@ -1274,7 +1275,7 @@ public function add_countries_to_manufacturer(){
                 $i=0;
                 foreach($arr as $element){
                     if(in_array(strval($element['id_category']), $categArray)){
-                        print_r('jest');
+
                     }else{
                         $query="DELETE FROM categoriesofitem WHERE id=:id";
                         $result = $db->prepare($query);
@@ -1305,36 +1306,54 @@ public function add_countries_to_manufacturer(){
                    // var_dump($_POST["attribute_name" . $i] . ", " . $_POST["attribute_value" . $i]);
                     $i += 1;
                 }   
-                $i = 1;
-                while(isset($_POST["descriptionTitle" . $i])){
-                    if($_POST["descriptionId" . $i] != 0){
-                        $query="SELECT id FROM descriptions WHERE title=:desc_title";
-                        $result = $db->prepare($query);
-                        $result->bindParam(':desc_title', $_POST["descriptionTitle" . $i]);
-                        $result->execute();
-                        $attr_id=$result->fetch(PDO::FETCH_ASSOC); 
-    
-                        $query="UPDATE descriptions SET title=:title, description=:desc WHERE id=:id";
-                        $result = $db->prepare($query);
-                        $result->bindParam(':title',$_POST["descriptionTitle" . $i]);
-                        $result->bindParam(':desc',$_POST["description" . $i]);
-                        $result->bindParam(':id',$_POST["descriptionId" . $i]);
-                        $result->execute();
-                    }
-                    else{
-                        $query="INSERT INTO descriptions (id_item, title, description) VALUES (:id_item, :title, :description)";
-                        $result = $db->prepare($query);
-                        $result->bindParam(':title',$_POST["descriptionTitle" . $i]);
-                        $result->bindParam(':description',$_POST["description" . $i]);
-                        $result->bindParam(':id_item',$editId);
-                        $result->execute();
-                    }
-                    
 
-                   // var_dump($_POST["attribute_name" . $i] . ", " . $_POST["attribute_value" . $i]);
-                    $i += 1;
-                }      
+                $remainingDescIds = array();
                 
+                for($i=1;$i<=$_POST["idOfLastDesc"];$i++){
+                    if(!isset($_POST["descriptionTitle" . $i]) && !isset($_POST["description" . $i])){
+
+                    }else{
+                        if($_POST["descriptionId" . $i] != 0){
+                            echo "<script>alert('test')</script>";
+                            $query="UPDATE descriptions SET title=:title, description=:desc WHERE id=:id";
+                            $result = $db->prepare($query);
+                            $result->bindParam(':title',$_POST["descriptionTitle" . $i]);
+                            $result->bindParam(':desc',$_POST["description" . $i]);
+                            $result->bindParam(':id',$_POST["descriptionId" . $i]);
+                            $result->execute();
+                            array_push($remainingDescIds, $_POST["descriptionId" . $i]);
+                        }
+                        else{
+                            $query="INSERT INTO descriptions (id_item, title, description) VALUES (:id_item, :title, :description)";
+                            $result = $db->prepare($query);
+                            $result->bindParam(':title',$_POST["descriptionTitle" . $i]);
+                            $result->bindParam(':description',$_POST["description" . $i]);
+                            $result->bindParam(':id_item',$editId);
+                            $result->execute();
+                            $lIId = $db->lastInsertId();
+                            array_push($remainingDescIds, $lIId);
+                        }
+                    }
+                }      
+
+                $idsInDatabase = array();
+
+                $query="SELECT id FROM descriptions WHERE id_item=:id_item";
+                $result = $db->prepare($query);
+                $result->bindParam(':id_item',$editId);
+                $result->execute();
+                $idsInDb=$result->fetchAll(PDO::FETCH_ASSOC); 
+
+                foreach($idsInDb as $idInDb){
+                    array_push($idsInDatabase, $idInDb['id']);
+                }
+                $array3 = array_diff($idsInDatabase,$remainingDescIds);
+                foreach($array3 as $element){
+                    $query = "DELETE FROM descriptions WHERE id=:id";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':id',$element);
+                    $result->execute();
+                }
                 
                 $_SESSION['success_page'] = "list_of_items";
                 header("Location:" . ROOT . "/admin/success_page/1");
@@ -1412,7 +1431,8 @@ public function add_countries_to_manufacturer(){
         $prevDesc = $result->fetchAll(PDO::FETCH_ASSOC);
         
         $this->view('admin/edit_item_admin', ['items'=>$items, 'attributes' => $attributes, 'categories'=>$categories, 
-        'selCategories'=>$prevCtg, 'prevItems'=>$prevItems, 'prevCtg'=>$prevCtg, 'prevAttr'=>$prevAttr, 'prevDesc'=>$prevDesc]);
+        'selCategories'=>$prevCtg, 'prevItems'=>$prevItems, 'prevCtg'=>$prevCtg, 'prevAttr'=>$prevAttr, 
+        'prevDesc'=>$prevDesc]);
         
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+use PHPMailer\PHPMailer\PHPMailer;
+
 class Login extends Controller
 {
     private $errorMessage = "";
@@ -9,17 +11,154 @@ class Login extends Controller
     private $ifUserExist = "";
     private $passwordInput = "";
     private $userRole = "";
+    private $authhash = "";
 
 
     public function index(){
         header("Location:" . ROOT . "/login/validate");
     }
 
+    public function set_new_password($hash = 0){
+        $this->errorMessage = "";
+        $this->serverError = false;
+        $this->check = true;
+        $this->emailOrLoginInput = "";
+        $this->ifUserExist = "";
+        $this->passwordInput = "";
+        $this->userRole = "";
+
+        
+        if($hash != 0 ) {
+            $this->authhash=$hash;
+            $_SESSION['authhash'] = $hash;
+        }
+        else{
+            if(isset($_SESSION['authhash'])){
+                $this->authhash = $_SESSION['authhash'];
+            }
+        }
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $query = "SELECT id FROM users WHERE authhash=:authhash";
+        $result = $db->prepare($query);
+        $result->bindParam(':authhash', $this->authhash);
+        $result->execute();
+        $result = $result->fetch(PDO::FETCH_ASSOC);
+
+        if(!isset($result['id'])){
+            $this->view('login/info_page', ['infoPage' => 3]);
+            return;
+        }
+
+        if(!isset($_POST['password']) || !isset($_POST['repeatPassword'])){
+            $this->view('login/set_new_password', ['errorPassword' => $this->errorMessage, 'serverError' => $this->serverError]);
+            return;
+        }
+        
+        $this->passwordInput = $_POST['password'];
+        $repeatPasswordInput = $_POST['repeatPassword'];
+
+        $passwordsFine = $this->verifyPassword();
+
+        if($passwordsFine) $passwordsFine =  $this->comparePasswords($this->passwordInput, $repeatPasswordInput);
+
+        if($passwordsFine)
+        {
+            $query = "SELECT id FROM users WHERE authhash=:authhash";
+            $result = $db->prepare($query);
+            $result->bindParam(':authhash', $this->authhash);
+            $result->execute();
+            $result = $result->fetch(PDO::FETCH_ASSOC);
+            if(isset($result['id'])){
+                $passwordToDB = hash('sha256', $this->passwordInput);
+                $query = "UPDATE users SET password=:password, authhash=NULL WHERE authhash=:authhash";
+                $result = $db->prepare($query);
+                $result->bindParam(':password', $passwordToDB);
+                $result->bindParam(':authhash', $this->authhash);
+                $result->execute();
+                $this->view('login/info_page', ['infoPage' => 2]);
+                return;
+            }else{
+                $this->view('login/info_page', ['infoPage' => 3]);
+                return;
+            }           
+        }
+
+        $_SESSION['errorPassword'] = $this->errorMessage;
+
+        $this->view('login/set_new_password', ['errorPassword' => $this->errorMessage, 'serverError' => $this->serverError]);
+    }
+
+    public function forgotten_password(){
+        if(isset($_POST['forgottenPasswordSubmit'])){
+            $email = $_POST['email'];
+            require_once dirname(__FILE__,2) . '/core/database.php';
+            $query = "SELECT id FROM users WHERE email=:email";
+            $result = $db->prepare($query);
+            $result->bindParam(':email', $email);
+            $result->execute();
+            $result = $result->fetch(PDO::FETCH_ASSOC);
+            $id = $result['id'];
+            if(isset($result['id'])){
+                $authhash=hash('sha256', $this->generateRandomString(10));
+                $query = "UPDATE users SET authhash=:authhash WHERE id=:id";
+                $result = $db->prepare($query);
+                $result->bindParam(':id', $id);
+                $result->bindParam(':authhash', $authhash);
+                $result->execute();
+
+                $path = PUBLICPATH;
+                try{
+                    $config = require_once dirname(__FILE__,2) . '/core/mailerconfig.php';
+                    $mail = new PHPMailer();
+    
+                    $mail->isSMTP();
+    
+                    $mail->Host = $config['host'];
+                    $mail->Port = $config['port'];
+                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+                    $mail->SMTPAuth = true;
+    
+                    $mail->Username = $config['username'];
+                    $mail->Password = $config['password'];
+    
+                    $mail->CharSet = 'UTF-8';
+                    $mail->setFrom($config['username'], 'Grontsmar');
+                    $mail->addAddress($email);
+                    $mail->addReplyTo($config['username'], 'Grontsmar');
+    
+                    $mail->isHTML(true);
+                    $mail->Subject = 'Resetowanie hasła w sklepie Grontsmar';
+                    $mail->Body = "<html>
+                    <head>
+                    <title> Resetowanie hasła w sklepie Grontsmar </title>
+                    </head>
+                    <body>
+                    <h1> Dzień dobry!</h1>
+                    <p> Dostajesz tą wiadomość ponieważ ktoś, najprawdopodobniej Ty użył opcji resetowania hasła w naszym serwisie, 
+                    jeśli jednak to nie byłeś Ty skontaktuj się jak najszybciej z nami!</p>
+                    <a href='$path/login/set_new_password/$authhash'>Link aktywacyjny</a>
+                    <br>
+                    <br>
+                    <p> Powyższy link jest ważny 48 godzin. </p>
+                    </body>
+                    </html>";
+    
+                    //$mail->addAttachment('ścieżka');
+    
+                    $mail->send();
+                } catch(Exception $e){
+                    echo "<script>alert('Błąd wysyłania maila!')</script>";
+                }
+                $this->view('login/info_page', ['infoPage' => 1]);
+                return;
+            }
+        }
+        $this->view('login/forgotten_password', []);
+    }
     
     public function validate(){
         $this->errorMessage = "";
         $this->serverError = false;
-        $this->inputError = false;
         $this->check = true;
         $this->emailOrLoginInput = "";
         $this->ifUserExist = "";
@@ -45,6 +184,30 @@ class Login extends Controller
 
         $this->view('login/index', ['errorPassword' => $this->errorMessage, 'emailOrLoginInput' => $this->emailOrLoginInput, 'serverError' => $this->serverError]);
 
+    }
+
+    private function comparePasswords($password, $repeatPassword) {
+        if($password == $repeatPassword){
+            return true;
+        }else{
+            $this->errorDuringValidation("*Podane hasła nie są identyczne");
+            return false;
+        }
+    }
+
+    /** Function that generates random string
+     * @param {int} length of wanted string
+     * 
+     * @return Returns generated string
+     */
+    private function generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
     }
 
     /** Function that checks if user used email or login
@@ -158,10 +321,6 @@ class Login extends Controller
         if(hash('sha256', $this->passwordInput) == $this->ifUserExist['password'])
         return true;
         else return false;
-    }
-
-    private function checkIfAccountIsActivated(){
-
     }
 
     /** Function that moves to after login page

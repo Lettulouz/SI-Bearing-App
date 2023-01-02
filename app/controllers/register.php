@@ -212,7 +212,8 @@ class Register extends Controller
         $query = "SELECT id FROM users ORDER BY id DESC LIMIT 1";
         $result = $db->prepare($query);
         $result->execute();
-        $result = $result->fetch(PDO::FETCH_ASSOC);;
+        $result = $result->fetch(PDO::FETCH_ASSOC);
+        $path = PUBLICPATH;
         try{
             $authhash = hash('sha256',$this->nameInput . $this->surnameInput . $this->emailInput . $this->loginInput . "user" . $result['id']);
 
@@ -244,7 +245,7 @@ class Register extends Controller
             <h1> Dzień dobry! </h1>
             <p> Wszystko wskazuje na to, że właśnie utworzyłeś konto w serwisie Grontsmar. Potwierdź je zanim wygaśnie! </p>
             <br>
-            <a href='https://www.lettulouz.usermd.net/si-project-php/public/userverify/$authhash'>Link aktywacyjny</a>
+            <a href='$path/userverify/$authhash'>Link aktywacyjny</a>
             <br>
             <br>
             <p> Masz 48h na aktywację konta, po tym czasie konto zostanie usunięte. </p>
