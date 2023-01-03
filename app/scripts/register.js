@@ -297,7 +297,12 @@ function verifyPassword(password) {
  * @author Dominik
  */
 function moveToLogin(){
-    window.location.href = "http://localhost/si-project-php/public/login";
+    var url = window.location.pathname;
+    var to = url.indexOf("/public")+6;
+    to = to == -1 ? url.length : to + 1;
+    var pathName = url.substring(0, to);
+    var path = window.location.protocol + "//" + window.location.hostname + pathName + "/login";
+    window.location.href = path;
 }
 
 /** Function that checks if string is build only from some chars

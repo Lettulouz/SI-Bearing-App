@@ -8,7 +8,11 @@ define('ROOT', $path);
 
 $protocol = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
 
-$path = $protocol . $_SERVER['HTTP_HOST'] . $path . "/css";
+$path = $protocol . $_SERVER['HTTP_HOST'] . $path;
+
+define('PUBLICPATH', $path);
+
+$path .= "/css";
 
 define ('CUSTOMCSS',  $path) ;
 
@@ -24,3 +28,9 @@ $path = str_replace("/public/index.php","",$path);
 $appPath = $appPath . $path . "/app";
 
 define('APPPATH', $appPath);
+
+$rootDir = getcwd();
+$resourcePath = rtrim($rootDir, 'public');
+$resourcePath .= "app/resources";
+
+define('RESOURCEPATH', $resourcePath);

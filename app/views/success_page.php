@@ -13,7 +13,12 @@
     </head>
     <body style="display: flex; justify-content: center; align-items:center;  height:100vh;">   
         <div style="display: default;" id="successLogin">
-            <div class="text-center d-flex flex-column" > <i class='bx bxs-badge-check bx-lg bx-flashing' style="color:green"></i> <span class="text-center fs-1" style="color:green"><?=$data['firstLine']?><br><?=$data['secondLine']?></span> </div>
+            <div class="text-center d-flex flex-column" > 
+                <i class='bx bxs-badge-check bx-lg bx-flashing' style="color:green"></i> 
+                <span class="text-center fs-1" style="color:green"><?=$data['firstLine']?>
+                    <br><?=$data['secondLine']?>
+                </span> 
+            </div>
         </div>
     </body>
 </html>

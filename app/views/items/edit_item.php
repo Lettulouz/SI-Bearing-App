@@ -18,7 +18,7 @@
 <div class="container-fluid justify-content-between align-items-center">
 
 <div class="container-fluid justify-content-between">
-    <form action="" id="addItemForm" method="POST" autocomplete="off"> 
+    <form action="" id="addItemForm" method="POST" autocomplete="off" enctype="multipart/form-data"> 
         <div class="row m-2">
             <div class="col-12 col-sm-6 col-xl-4 itemField1 border-end border-2">
                 <div class="row m-2">
@@ -75,8 +75,25 @@
                         </select>
                     </div>
                 </div>
+                <div class="row m-2">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-12 col-sm-9 me-sm-0">
+                                <input class="form-control" type="file" id="formFile" accept="image/png" onchange="preview()">
+                            </div>
+                            <div class="col-12 col-sm-3 mt-3 mt-sm-0 ms-sm-0">
+                                <button id="deleteImageBtn" onclick="clearImage()" class="btn btn-danger col-12">-</button>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <img id="output" class="img-thumbnail mt-3" src="<?=$data['imagePath']?>" style="object-fit: cover;"/>
+                        </div>
+                        <label style="color:darkgray">*Dodawany obraz musi mieć proporcje 1:1, aby wyświetlał się poprawnie</label>
+                    </div>
+                </div>
             </div>   
-            <div class="col-12 col-sm-6 col-xl-4 border-end border-2 itemField2 px-4">
+            <div class="col-12 col-sm-6 col-xl-4 border-end border-2 itemField2 px-4 mt-5 mt-sm-0">
                 <h4>Edycja atrybutów</h4>
                 <div id="show_attr">
                     <?php
@@ -86,17 +103,18 @@
                             $input = '#attribute_name' . $attrNum;
                             $html = '';
                             $html .='<div class="row">';
+                            $html.='<input type="hidden" name="attrId' . $attrNum . '" value="' . $result['aiId'] . '">';
                             $html .='<div class="col-12 col-md-5 mb-3">';
                             $html .='<select class="select2 form-control selectattr requiredattr form-select-lg" id="attribute_name' . $attrNum .  '" aria-label="example-xl" onchange="updateAttrList();">';
                             $html .='<option>';
                             $html .='</option>';
                             foreach($tempPossibleOptions as $option){
                                 if($option['name'] == $data['prevAttr'][$attrNum-1]['attrname']){
-                                    $html .='<option value="' . $option['name'] . '" selected="selected">';
+                                    $html .='<option value="' . $option['id'] . '" selected="selected">';
                                 }
                                 else
                                 {
-                                    $html .='<option value="' . $option['name'] . '">';
+                                    $html .='<option value="' . $option['id'] . '">';
                                 }
                                 $html .=$option['name'];
                                 $html .='</option>';
@@ -123,7 +141,7 @@
                 </div>
                 <input type="text" style="display:none" id="attributes" name="attributes" data-attr='<?php echo json_encode($data['attributes']); ?>'>
             </div>   
-            <div class="col-12 col-sm-12 col-xl-4 px-4">
+            <div class="col-12 col-sm-12 col-xl-4 px-4 mt-5 mt-sm-0">
                 <h4>Edycja opisów</h4>
                 <div id="show_desc">
                     <?php
@@ -131,7 +149,7 @@
                         foreach($data['prevDesc'] as $i) {
                             $html = '';
                             $html.='<div class="row mx-2">';
-                            $html.='<input type="hidden" name="descriptionId' . $descNum . '" value=' . $i['descriptionId'] . '>';
+                            $html.='<input type="hidden" name="descriptionId' . $descNum . '" value="' . $i['descriptionId'] . '">';
                             $html.='<label class="fw-bold">Tytuł</label>';
                             $html.='<textarea class="form-control mt-1 desctitle requireddesc" style="overflow:hidden;"'; 
                             $html.='id="descriptionTitle' . $descNum . '" name="descriptionTitle' . $descNum . '" maxlength="100" placeholder="Tytuł..." rows="1" cols="5">' . $data['prevDesc'][$descNum-1]['desctitle'] . '</textarea>';
@@ -150,6 +168,8 @@
                 <div>
                     <button class="btn btn-success" id="add_description_btn">Dodaj opis</button>
                 </div>
+                <input type="hidden" id="idOfLastDesc" name="idOfLastDesc">
+                <input type="hidden" id="idOfLastAttr" name="idOfLastAttr">
                 <input type="text" style="display:none" id="descriptions" name="descriptions" data-attr='<?php echo json_encode($data['descriptions']); ?>'>
             </div>  
         </div>  
@@ -167,20 +187,23 @@
     var alreadyUsed = [];
     var filled = $(".selectattr");
     var lengthOfFilled = filled.length;
-    console.log(lengthOfFilled);
     var attrNum=lengthOfFilled;
     var attrNum2=lengthOfFilled;
     enableAttrSubmit();
-    var descNum=0;
+    filled = $(".desctitle");
+    lengthOfFilled = filled.length
+    var descNum=lengthOfFilled;
+    enableDescSubmit();
 	$(document).ready(function(){
         var mnfcnt=$("#prevMnfCnt").attr('value');
         $('#manufacturer').val(mnfcnt);
         $('#manufacturer').trigger('change');
+        $('#idOfLastAttr').val(attrNum2);
+        $('#idOfLastDesc').val(descNum);
+        updateAttrList();
 
         for(var i=1; i<=lengthOfFilled; i++){  
-            console.log('test');
             inputName = '#attribute_name' + i;  
-            console.log(inputName);    
             $(inputName).select2({
                 theme: 'bootstrap-5',
                 placeholder: 'Atrybut...',
@@ -238,6 +261,7 @@
                 enableAttrSubmit();
             }
             updateAttrList();
+            $('#idOfLastAttr').val(attrNum2);
         });
 
         $(document).on('click', '.remove_attr_btn', function(e){ 
@@ -258,6 +282,7 @@
             }
             alreadyUsed = alreadyUsed.filter(e => e !== attribute_name);
             updateAttrList()
+            $('#idOfLastAttr').val(attrNum2);
         });
 
 
@@ -269,13 +294,13 @@
             descNum++;
             var html = '';
             html+='<div class="row mx-2">';
-            html+='<input type="hidden" name="descriptionId' + $descNum + '" value="0">';
+            html+='<input type="hidden" name="descriptionId' + descNum + '" value="0">';
             html+='<label class="fw-bold">Tytuł</label>';
             html+='<textarea class="form-control mt-1 desctitle requireddesc" style="overflow:hidden;"'; 
-            html+='id="descriptionTitle' + descNum + '" name="text" maxlength="100" placeholder="Tytuł..." rows="1" cols="5"></textarea>';
+            html+='id="descriptionTitle' + descNum + '" name="descriptionTitle' + descNum + '" maxlength="100" placeholder="Tytuł..." rows="1" cols="5"></textarea>';
             html+='<span class="pull-right mt-1 label label-default spanTitle" id="titleCount_message' + descNum + '"></span>';
             html+='<label class="fw-bold mt-1">Opis</label>';
-            html+='<textarea class="form-control mt-1 desc requireddesc" style="overflow:hidden;" id="description' + descNum + '" name="text" maxlength="1000" placeholder="Opis..." rows="2" cols="5"></textarea>';
+            html+='<textarea class="form-control mt-1 desc requireddesc" style="overflow:hidden;" id="description' + descNum + '" name="description' + descNum + '" maxlength="1000" placeholder="Opis..." rows="2" cols="5"></textarea>';
             html+='<span class="pull-right mt-1 label label-default spanDesc" id="count_message' + descNum + '"></span>';
             html+='<button class="btn btn-danger mt-3 remove_desc_btn">-</button>';
             html+='<hr class="divider mt-3">';
@@ -301,6 +326,8 @@
             var schtitle = $(inputdesctitle).prop('scrollHeight');
             //schtitle = schtitle+10;
             $(inputdesctitle).attr('style', `resize:none; font-size: 18px; height:${schtitle}px; overflow:hidden;`);
+
+            $('#idOfLastDesc').val(descNum);
             enableDescSubmit();
         });
 
@@ -419,7 +446,6 @@
             if(selection && !alreadyUsed.includes(selection)) {
                 alreadyUsed[i-1] = selection;
             }
-            //console.log(alreadyUsed);
         }
   
         for(var i=1;i<=tempRMV.length;i++){
@@ -478,32 +504,32 @@
         btn.prop('disabled', !isValid);
     }
 
-        function countDesc() {
-        let inputs = document.getElementsByClassName('desc');
-        console.log(inputs.length);
-        var text_max = 1000;
-        var textTitle_max = 100;
-        for(var i=0;i<inputs.length;i++){
-            var temp = i+1;
-            var text_length = $('#description' + temp).val().length;
-            var text_remaining = text_max - text_length;
+    function countDesc() {
+    let inputs = document.getElementsByClassName('desc');
+    var text_max = 1000;
+    var textTitle_max = 100;
+    for(var i=0;i<inputs.length;i++){
+        var temp = i+1;
+        var text_length = $('#description' + temp).val().length;
 
-            $('#count_message' + temp).html(text_length + ' / ' + text_max);
+        var text_remaining = text_max - text_length;
 
-            $('#description' + temp).attr('style', 'height:auto; resize:none; font-size: 18px; overflow:hidden;');
-            var sch = $('#description' + temp).prop('scrollHeight');
-            $('#description' + temp).attr('style', `height:${sch}px; resize:none; font-size: 18px; overflow:hidden;`);
+        $('#count_message' + temp).html(text_length + ' / ' + text_max);
 
-            text_length = $('#descriptionTitle' + temp).val().length;
-            text_remaining = textTitle_max - text_length;
+        $('#description' + temp).attr('style', 'height:auto; resize:none; font-size: 18px; overflow:hidden;');
+        var sch = $('#description' + temp).prop('scrollHeight');
+        $('#description' + temp).attr('style', `height:${sch}px; resize:none; font-size: 18px; overflow:hidden;`);
 
-            $('#titleCount_message' + temp).html(text_length + ' / ' + textTitle_max);
+        text_length = $('#descriptionTitle' + temp).val().length;
+        text_remaining = textTitle_max - text_length;
 
-            $('#descriptionTitle' + temp).attr('style', 'height:auto; resize:none; font-size: 18px; overflow:hidden;');
-            var sch = $('#descriptionTitle' + temp).prop('scrollHeight');
-            $('#descriptionTitle' + temp).attr('style', `height:${sch}px; resize:none; font-size: 18px; overflow:hidden;`);
-        }
-    };
+        $('#titleCount_message' + temp).html(text_length + ' / ' + textTitle_max);
+
+        $('#descriptionTitle' + temp).attr('style', 'height:auto; resize:none; font-size: 18px; overflow:hidden;');
+        var sch = $('#descriptionTitle' + temp).prop('scrollHeight');
+        $('#descriptionTitle' + temp).attr('style', `height:${sch}px; resize:none; font-size: 18px; overflow:hidden;`);
+    }
+    }
 
     $(window).resize(countDesc())
 </script>
@@ -513,7 +539,6 @@
 document.getElementById('content_collapse').classList.add('show');
 document.getElementById('content_collapse_btn').setAttribute('aria-expanded', 'true');
 document.getElementById('content_collapse_btn').setAttribute('style', 'color:white !important');
-document.getElementById('additem').setAttribute('style', 'color:white !important');
 $('#manufacturer').select2({
     theme: 'bootstrap-5',
     placeholder: 'Wybierz producenta',

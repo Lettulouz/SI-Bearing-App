@@ -140,7 +140,10 @@ class Home extends Controller
             
     }
 
+    public function basket(){
 
+        $this->view('home/basket', []);
+    }
 
 }
 

@@ -1,3 +1,18 @@
+function setNewPassword(){
+    var password = document.getElementById('password').value;
+    var repeatPassword = document.getElementById('repeatPassword').value;
+    var error = false;
+
+    if(!verifyPassword(password)){
+        error = true;
+    }
+
+    if(!error) error = comparePasswords(password, repeatPassword);
+    console.log(error);
+    
+    if(!error) document.getElementById("newPasswordForm").submit();
+}
+
 /** Function that is being called by button
  * @brief This functions checks if email/login and password are proper
  *
@@ -28,17 +43,31 @@ function loginButton() {
     }
 
     if(!error){
-        document.getElementById('loginFields').style = "display: none;";
-        document.getElementById('form1').style.border = "none";
         document.getElementById("loginForm").submit();
     }
     
 }
 
-function runScript(){
-    event.preventDefault();
-    document.getElementById('successLogin').style.display = "default";
-    document.getElementById('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
+function comparePasswords(password, repeatPassword){
+    if(password==repeatPassword){
+        document.getElementById('errorPassword').innerText = ""; 
+        document.getElementById('password').style.border = "2px solid rgb(238, 238, 238)";
+        document.getElementById('blinkingPassword').style = "display: none";
+        document.getElementById('passwordSpan').style.color = "rgb(0, 0, 0)";
+        document.getElementById('repeatPassword').style.border = "2px solid rgb(238, 238, 238)";
+        document.getElementById('blinkingRepeatPassword').style = "display: none";
+        document.getElementById('repeatPasswordSpan').style.color = "rgb(0, 0, 0)";
+        return false;
+    }else{
+        document.getElementById('errorPassword').innerText = "*Hasła nie są identyczne";  
+        document.getElementById('password').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingPassword').style = "display: default; color:#de1f1f";
+        document.getElementById('passwordSpan').style.color = "rgb(255, 0, 0)";
+        document.getElementById('repeatPassword').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingRepeatPassword').style = "display: default; color:#de1f1f";
+        document.getElementById('repeatPasswordSpan').style.color = "rgb(255, 0, 0)";
+        return true;
+    }
 }
 
 function setLoginError(){
@@ -180,9 +209,38 @@ function verifyPassword(password) {
 /** Function that moves to register page
  * @author Dominik
  */
-  function moveToRegister(){
-        window.location.href = "http://localhost/si-project-php/public/register";
-  }
+function moveToRegister(){
+    var url = window.location.pathname;
+    var to = url.indexOf("/public")+6;
+    to = to == -1 ? url.length : to + 1;
+    var pathName = url.substring(0, to);
+    var path = window.location.protocol + "//" + window.location.hostname + pathName + "/register";
+    window.location.href = path;
+}
+
+/** Function that moves to login page
+ * @author Dominik
+ */
+function moveToLogin(){
+    var url = window.location.pathname;
+    var to = url.indexOf("/public")+6;
+    to = to == -1 ? url.length : to + 1;
+    var pathName = url.substring(0, to);
+    var path = window.location.protocol + "//" + window.location.hostname + pathName + "/login";
+    window.location.href = path;
+}
+
+/** Function that moves to forgotten password page
+ * @author Dominik
+ */
+function moveToForgottenPassword(){
+    var url = window.location.pathname;
+    var to = url.indexOf("/public")+6;
+    to = to == -1 ? url.length : to + 1;
+    var pathName = url.substring(0, to);
+    var path = window.location.protocol + "//" + window.location.hostname + pathName + "/login/forgotten_password";
+    window.location.href = path;
+}
 
 /** Function that checks if string is build only from some chars
  * @param {String} string String to check
