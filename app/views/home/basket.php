@@ -1,5 +1,5 @@
 <?php include "header.php"; ?>
-
+<?php include "navbar_top.php"; ?>
 
 <div class="container-fluid">
     <div class="row">
