@@ -152,6 +152,99 @@ class Admin extends Controller
 
     }
 
+    public function edit_user($id){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $query="SELECT id, name, lastName, email, login, password, role FROM users WHERE id=:id";
+        $result = $db->prepare($query);
+        $result->bindParam(':id', $id);
+        $result->execute();
+        $result = $result->fetch(PDO::FETCH_ASSOC);
+        $name = $result["name"];
+        $lastName = $result["lastName"];
+        $email = $result["email"];
+        $login = $result["login"];
+        $password = '';
+        $role = $result["role"];
+        if(isset($_POST['senduser']))
+        {
+            $query = "SELECT id FROM users ORDER BY id DESC LIMIT 1";
+            $result = $db->prepare($query);
+            $result->execute();
+            $result = $result->fetch(PDO::FETCH_ASSOC);;
+
+            $name = ucfirst(strtolower($_POST['name']));
+            $lastName = ucfirst(strtolower($_POST['surname']));
+            $email = $_POST['mail'];
+            $login = strtolower($_POST['login']);
+            $password = $_POST['pass'];
+            $role = "user";
+            $temporary = 1;
+            $authhash = hash('sha256',$name . $lastName . $email . $login . $role . $result['id']);
+
+            if(empty($password)){
+                $length = 10;
+                $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                $charactersLength = strlen($characters);
+                for ($i = 0; $i < $length; $i++) {
+                    $password.= $characters[rand(0, $charactersLength - 1)];
+                }
+            }
+            if(empty($name) || empty($lastName) || empty($email) || empty($login)){
+                $_SESSION['error_page'] = "edit_user";
+                header("Location:" . ROOT . "/admin/error_page/1");
+            }else{
+                $hashedPassword = hash('sha256', $password);
+
+                $query = "SELECT COUNT(id) AS amount FROM users WHERE login=:login";
+                $result = $db->prepare($query);
+                $result->bindParam(':login', $login);
+                $result->execute();
+                $result = $result->fetch(PDO::FETCH_ASSOC);
+                
+                $query = "SELECT COUNT(id) AS amount FROM users WHERE email=:email";
+                $result2 = $db->prepare($query);
+                $result2->bindParam(':email', $email);
+                $result2->execute();
+                $result2 = $result2->fetch(PDO::FETCH_ASSOC);
+                
+                if($result['amount']>0 || $result2['amount']>0){
+                    $_SESSION['error_page'] = "edit_user";
+                    header("Location:" . ROOT . "/admin/error_page/2");
+                }
+                else{
+                    $query = "INSERT INTO `users` (name, lastname, email, login, password, role, temporary, authhash) 
+                    VALUES (:name, :lastname, :email, :login, :password, :role, :temporary, :authhash);";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':name', $name);
+                    $result->bindParam(':lastname', $lastName);
+                    $result->bindParam(':email', $email);
+                    $result->bindParam(':login', $login);
+                    $result->bindParam(':password', $hashedPassword);
+                    $result->bindParam(':role', $role);
+                    $result->bindParam(':temporary', $temporary);
+                    $result->bindParam(':authhash', $authhash);
+                    $result->execute();
+                     
+                    $_SESSION['success_page'] = "edit_user";
+                    header("Location:" . ROOT . "/admin/success_page/1");
+                }            
+            }
+        }
+        $this->view('admin/edit_user', ['name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'pass'=>$password, 'role'=>$role]);
+    }
+
     public function add_user(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
