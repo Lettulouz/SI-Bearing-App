@@ -85,7 +85,10 @@
                             </div>
                         </div>
                         
-                        <img id="output" class="img-thumbnail mt-3" style="display:none; object-fit: cover;"/>
+                        <div class="text-center">
+                            <img id="output" class="img-thumbnail mt-3" style="display:none; object-fit:cover"/>
+                        </div>
+                        <label style="color:darkgray">*Dodawany obraz musi mieć proporcje 1:1, aby wyświetlał się poprawnie</label>
                     </div>
                 </div>
             </div>   
