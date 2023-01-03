@@ -1333,8 +1333,6 @@ public function add_countries_to_manufacturer(){
         if(isset($_POST['itemSubmit'])){
             if(isset($_POST['name']) && isset($_POST['price']) && isset($_POST['quantity']) && !empty($_POST['manufacturer']) && !empty($_POST['selCategories'])){
                 //update item in database
-                print_r($_POST);
-                die();
 
                 $itemName = $_POST['name'];
                 $itemPrice = $_POST['price'];
@@ -1492,7 +1490,9 @@ public function add_countries_to_manufacturer(){
                 foreach($idsInDb as $idInDb){
                     array_push($idsInDatabase, $idInDb['id']);
                 }
+
                 $array3 = array_diff($idsInDatabase,$remainingDescIds);
+
                 foreach($array3 as $element){
                     $query = "DELETE FROM descriptions WHERE id=:id";
                     $result = $db->prepare($query);
@@ -1527,8 +1527,6 @@ public function add_countries_to_manufacturer(){
         $categories->execute();
         $categories = $categories->fetchAll(PDO::FETCH_ASSOC);
 
-        
-        
         $prevCtg = array();
         $prevAttr = array();
         $prevDesc = array();
