@@ -244,3 +244,11 @@ a{
 .btn-apply{
   font-size: 11px
 }
+
+.btn-basket{
+  margin-right: 20px;
+}
+
+.card-basket{
+  height: 34px;
+}
