@@ -97,8 +97,8 @@ class Login extends Controller
             $result->bindParam(':email', $email);
             $result->execute();
             $result = $result->fetch(PDO::FETCH_ASSOC);
-            $id = $result['id'];
             if(isset($result['id'])){
+                $id = $result['id'];
                 $authhash=hash('sha256', $this->generateRandomString(10));
                 $query = "UPDATE users SET authhash=:authhash WHERE id=:id";
                 $result = $db->prepare($query);
@@ -149,9 +149,9 @@ class Login extends Controller
                 } catch(Exception $e){
                     echo "<script>alert('Błąd wysyłania maila!')</script>";
                 }
-                $this->view('login/info_page', ['infoPage' => 1]);
-                return;
             }
+            $this->view('login/info_page', ['infoPage' => 1]);
+            return;
         }
         $this->view('login/forgotten_password', []);
     }
