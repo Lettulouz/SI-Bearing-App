@@ -18,7 +18,7 @@
 <div class="container-fluid justify-content-between align-items-center">
 
 <div class="container-fluid justify-content-between">
-    <form action="" id="addItemForm" method="POST" autocomplete="off"> 
+    <form action="" id="addItemForm" method="POST" autocomplete="off" enctype="multipart/form-data"> 
         <div class="row m-2">
             <div class="col-12 col-sm-6 col-xl-4 itemField1 border-end border-2">
                 <div class="row m-2">
@@ -75,8 +75,25 @@
                         </select>
                     </div>
                 </div>
+                <div class="row m-2">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-12 col-sm-9 me-sm-0">
+                                <input class="form-control" type="file" id="formFile" accept="image/png" onchange="preview()">
+                            </div>
+                            <div class="col-12 col-sm-3 mt-3 mt-sm-0 ms-sm-0">
+                                <button id="deleteImageBtn" onclick="clearImage()" class="btn btn-danger col-12">-</button>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <img id="output" class="img-thumbnail mt-3" src="<?=$data['imagePath']?>" style="object-fit: cover;"/>
+                        </div>
+                        <label style="color:darkgray">*Dodawany obraz musi mieć proporcje 1:1, aby wyświetlał się poprawnie</label>
+                    </div>
+                </div>
             </div>   
-            <div class="col-12 col-sm-6 col-xl-4 border-end border-2 itemField2 px-4">
+            <div class="col-12 col-sm-6 col-xl-4 border-end border-2 itemField2 px-4 mt-5 mt-sm-0">
                 <h4>Edycja atrybutów</h4>
                 <div id="show_attr">
                     <?php
@@ -124,7 +141,7 @@
                 </div>
                 <input type="text" style="display:none" id="attributes" name="attributes" data-attr='<?php echo json_encode($data['attributes']); ?>'>
             </div>   
-            <div class="col-12 col-sm-12 col-xl-4 px-4">
+            <div class="col-12 col-sm-12 col-xl-4 px-4 mt-5 mt-sm-0">
                 <h4>Edycja opisów</h4>
                 <div id="show_desc">
                     <?php
@@ -183,6 +200,7 @@
         $('#manufacturer').trigger('change');
         $('#idOfLastAttr').val(attrNum2);
         $('#idOfLastDesc').val(descNum);
+        updateAttrList();
 
         for(var i=1; i<=lengthOfFilled; i++){  
             inputName = '#attribute_name' + i;  
@@ -215,7 +233,7 @@
                     html+='</option>';
             });
             html+='</select>';
-            $html +='<input type="hidden" name="attribute_name' + attrNum +  '">';
+            html+='<input type="hidden" name="attribute_name' + attrNum +  '">';
             html+='</div>';
             html+='<div class="col-8 col-md-5 mb-3">';
             html+='<div class="form-floating">';
@@ -503,7 +521,6 @@
         $('#description' + temp).attr('style', `height:${sch}px; resize:none; font-size: 18px; overflow:hidden;`);
 
         text_length = $('#descriptionTitle' + temp).val().length;
-        console.log(text_length);
         text_remaining = textTitle_max - text_length;
 
         $('#titleCount_message' + temp).html(text_length + ' / ' + textTitle_max);
@@ -522,7 +539,6 @@
 document.getElementById('content_collapse').classList.add('show');
 document.getElementById('content_collapse_btn').setAttribute('aria-expanded', 'true');
 document.getElementById('content_collapse_btn').setAttribute('style', 'color:white !important');
-document.getElementById('additem').setAttribute('style', 'color:white !important');
 $('#manufacturer').select2({
     theme: 'bootstrap-5',
     placeholder: 'Wybierz producenta',

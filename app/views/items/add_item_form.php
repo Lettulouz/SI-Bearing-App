@@ -18,7 +18,7 @@
 <div class="container-fluid justify-content-between align-items-center">
 
 <div class="container-fluid justify-content-between">
-    <form action="" id="addItemForm" method="POST" autocomplete="off"> 
+    <form action="" id="addItemForm" method="POST" autocomplete="off"  enctype="multipart/form-data"> 
         <div class="row m-2">
             <div class="col-12 col-sm-6 col-xl-4 itemField1 border-end border-2">
                 <div class="row m-2">
@@ -76,12 +76,19 @@
                 </div>
                 <div class="row m-2">
                     <div class="col-12">
-                        <input class="form-control form-control-lg" style="font-size:18px" id="formFileLg" type="file" />
-                    </div>
-                </div>
-                <div class="row m-2">
-                    <div class="col-12">
-                        <img src="..." class="img-thumbnail" style="font-size:18px" alt="...">
+                        <div class="row">
+                            <div class="col-12 col-sm-9 me-sm-0">
+                                <input class="form-control" type="file" name="formFile" id="formFile" accept="image/png" onchange="preview()">
+                            </div>
+                            <div class="col-12 col-sm-3 mt-3 mt-sm-0 ms-sm-0">
+                                <button id="deleteImageBtn" onclick="clearImage()" class="btn btn-danger col-12">-</button>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <img id="output" class="img-thumbnail mt-3" style="display:none; object-fit:cover"/>
+                        </div>
+                        <label style="color:darkgray">*Dodawany obraz musi mieć proporcje 1:1, aby wyświetlał się poprawnie</label>
                     </div>
                 </div>
             </div>   
@@ -435,6 +442,21 @@
 
 </script>
 
+
+<script>
+    function preview() {
+        var frame = document.getElementById('output');
+        document.getElementById('output').setAttribute('style', 'display:default');
+        document.getElementById('deleteImageBtn').setAttribute('style', 'display:default');
+        frame.src = URL.createObjectURL(event.target.files[0]);
+    }
+    function clearImage() {
+        document.getElementById('formFile').value = null;
+        document.getElementById('output').setAttribute('style', 'display:none');
+        document.getElementById('deleteImageBtn').setAttribute('style', 'display:none');
+        frame.src = "";
+    }
+</script>
 
 <script>
 document.getElementById('content_collapse').classList.add('show');
