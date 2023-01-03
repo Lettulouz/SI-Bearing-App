@@ -13,6 +13,14 @@ class Admin extends Controller
                 $firstLine = "Dodano rekord";
                 $secondLine = "pomyślnie!";
             }
+            else if($sid==2){
+                $firstLine = "Edytowano rekord";
+                $secondLine = "pomyślnie!";
+            }
+            else if($sid==3){
+                $firstLine = "Usunięto rekord";
+                $secondLine = "pomyślnie!";
+            }
             $this->view('success_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
             header("Refresh: 2; url=" . ROOT . "/admin/" . $path);
         }
@@ -27,8 +35,12 @@ class Admin extends Controller
                 $firstLine = "Nie podano wszystkich wymaganych wartości";
                 $secondLine = "";
             }
-            if($sid==2){
+            else if($sid==2){
                 $firstLine = "Taki rekord już istnieje";
+                $secondLine = "";
+            }
+            else if($sid==3){
+                $firstLine = "Błąd dodawania zdjęcia";
                 $secondLine = "";
             }
             $this->view('error_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
@@ -1110,13 +1122,22 @@ public function add_countries_to_manufacturer(){
                 $result->bindParam(':item_price',$itemPrice);
                 $result->bindParam(':item_quantity',$itemQuantity);
                 $result->execute();
-
+                
                 $query="SELECT id FROM items WHERE name=:item_name ORDER BY id DESC LIMIT 1";
                 $result = $db->prepare($query);
                 $result->bindParam(':item_name', $itemName);
                 $result->execute();
                 $item_id=$result->fetch(PDO::FETCH_ASSOC);
                 $item_id=$item_id['id'];
+
+                $path = $_FILES['formFile']['name'];
+                $ext = pathinfo($path, PATHINFO_EXTENSION);
+                $imagename = "[" . $item_id . "]." . $ext;    
+                $tmpname = $_FILES['formFile']['tmp_name'];
+                if (!move_uploaded_file($tmpname, RESOURCEPATH . "/" . $imagename)) {
+                    $_SESSION['error_page'] = "list_of_items";
+                    header("Location:" . ROOT . "/admin/error_page/3");
+                } 
 
                 foreach($selCategories as $i){
                     $query="INSERT INTO categoriesofitem (id_category, id_item) 
@@ -1163,10 +1184,9 @@ public function add_countries_to_manufacturer(){
                     $result->bindParam(':desc',$_POST["description" . $i]);
                     $result->execute();
 
-                   // var_dump($_POST["attribute_name" . $i] . ", " . $_POST["attribute_value" . $i]);
                     $i += 1;
-                }      
-                
+                }  
+
                 $_SESSION['success_page'] = "list_of_items";
                 header("Location:" . ROOT . "/admin/success_page/1");
 
@@ -1462,10 +1482,16 @@ public function add_countries_to_manufacturer(){
         $result->execute();
         $prevDesc = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        
+        $imagePath = APPPATH . "/resources/[" . $editId . "].png";
+        $imagePathCheck = RESOURCEPATH . "/[" . $editId . "].png";
+
+        if(!file_exists($imagePathCheck)){
+            $imagePath = APPPATH . "/resources/brak_zdjecia.png";
+        }
+
         $this->view('admin/edit_item_admin', ['items'=>$items, 'attributes' => $attributes, 'categories'=>$categories, 
         'selCategories'=>$prevCtg, 'prevItems'=>$prevItems, 'prevCtg'=>$prevCtg, 'prevAttr'=>$prevAttr, 
-        'prevDesc'=>$prevDesc]);
+        'prevDesc'=>$prevDesc, 'imagePath'=>$imagePath]);
         
     }
 

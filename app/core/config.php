@@ -28,3 +28,9 @@ $path = str_replace("/public/index.php","",$path);
 $appPath = $appPath . $path . "/app";
 
 define('APPPATH', $appPath);
+
+$rootDir = getcwd();
+$resourcePath = rtrim($rootDir, 'public');
+$resourcePath .= "app/resources";
+
+define('RESOURCEPATH', $resourcePath);

@@ -86,9 +86,15 @@
     $items = $data['itemsArray'];
     foreach($items as $j => $item) 
     {
+        $imagePath = APPPATH . "/resources/[" . $item['itemID'] . "].png";
+        $imagePathCheck = RESOURCEPATH . "/[" . $item['itemID'] . "].png";
+
+        if(!file_exists($imagePathCheck)){
+            $imagePath = APPPATH . "/resources/brak_zdjecia.png";
+        }
             echo "<div class='col-12 col-md-6 col-lg-4 col-xl-3 mb-4'>
                     <div class='card h-100'>
-                        <img src='https://i.imgur.com/uqTzNBt.jpg'  alt='zdjęcie łożyska' class='card-img-top'>
+                        <img src='" . $imagePath . "'  alt='zdjęcie łożyska' class='card-img-top img-thumbnail'>
                         <div class='card-body'>
                             <h4  class='card-title'><b>  {$item['name']} </b></h5>
                             <div class='card-text'> 
