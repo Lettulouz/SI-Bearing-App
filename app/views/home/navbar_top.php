@@ -13,7 +13,7 @@
         </ul>
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0"> 
         <li class="nav-item d">
-          <a class="nav-link mt-1" href="#">
+          <a class="nav-link mt-1" href="<?=PUBLICPATH?>/home/basket">
              <i class="bi bi-basket2 "></i>
           </a>
         </li>
