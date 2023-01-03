@@ -9,10 +9,10 @@
                         <table class="table table-borderless table-shopping-cart">
                             <thead class="text-muted">
                                 <tr class="small text-uppercase">
-                                    <th scope="col" width="300">Product</th>
-                                    <th scope="col" width="120">Quantity</th>
-                                    <th scope="col" width="120">Price</th>
-                                    <th scope="col" class="text-right d-none d-md-block" width="120"></th>
+                                    <th scope="col" >Product</th>
+                                    <th scope="col" >Quantity</th>
+                                    <th scope="col" >Price</th>
+                                    <th scope="col" class="text-right d-none d-md-block" ></th>
                                 </tr>
                             </thead>
                             <tbody>
