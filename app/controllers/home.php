@@ -8,9 +8,12 @@ class Home extends Controller
     }
     */
 
-    public function index($limit1=1){
+    public function index(){
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteFooter = $this->getFooter($db);
+
+
+        $limit1=1;
 
         $search = '';
         $endofitems=0;
@@ -27,7 +30,6 @@ class Home extends Controller
 
         $page = $limit1;
         $limit1--;
-        $limit2 = $limit1 + 1;
         $limit1 *= 8;
 
 
@@ -162,6 +164,15 @@ class Home extends Controller
             empty($_POST['itemID']);
             die();
         }
+    }
+
+
+    public function item()
+    {
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteFooter = $this->getFooter($db);
+
+        $this->view('home/item', ['siteFooter' => $siteFooter]);
     }
 
 }
