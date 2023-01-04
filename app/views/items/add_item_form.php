@@ -24,7 +24,7 @@
                 <div class="row m-2">
                     <div class="col">
                         <div class="form-floating ">
-                            <input type="text" class="form-control" id="nameInput" name="name" placeholder="Grontomat">
+                            <input type="text" class="form-control" id="nameInput" name="name">
                             <label class="form-control-lg lg-custom" for="nameInput">Nazwa</label>
                         </div>
                     </div>
@@ -32,7 +32,7 @@
                 <div class="row m-2">
                     <div class="col">
                         <div class="form-floating ">
-                            <input type="number" class="form-control" id="quantityInput" min="0" name="price" placeholder="23" step="any">
+                            <input type="number" class="form-control" id="quantityInput" min="0" name="price" step="any">
                             <label class="form-control-lg lg-custom" for="quantityInput">Cena</label>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                 <div class="row m-2">
                     <div class="col">
                         <div class="form-floating ">
-                            <input type="number" class="form-control" id="quantityInput" min="0" name="quantity" placeholder="23">
+                            <input type="number" class="form-control" id="quantityInput" min="0" name="quantity">
                             <label class="form-control-lg lg-custom" for="quantityInput">Ilość</label>
                         </div>
                     </div>
