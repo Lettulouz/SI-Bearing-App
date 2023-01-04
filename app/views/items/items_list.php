@@ -33,7 +33,8 @@
         <?php 
         $j = 0; // dodałwm j, po jak wyświetlało z i to miałem errory. Wojtek
         $items = $data['itemsArray'];
-        $editCatPath = $data['editCatPath'];
+        $editItemPath = $data['editItemPath'];
+        $removeItemPath = $data['removeItemPath'];
         //foreach($items as $i => $item) 
         foreach($items as $j => $item) 
         {
@@ -65,8 +66,13 @@
 
 
                     </div>
-                    <a href='".$editCatPath."/".$item['iid']."' type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm mx-1 tabBtn'>
+                    
+                    <a href='".$editItemPath."/".$item['iid']."' type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm mx-1 tabBtn'>
                         <i class='bi bi-gear-fill'></i>
+                    </a>
+
+                    <a href='".$removeItemPath."/".$item['iid']."' type='button' data-toggle='collapse' class='btn btn-danger d-inline btn-sm mx-1 tabBtn'>
+                        <i class='bi bi-trash-fill'></i>
                     </a>
                 </td>
             </tr>
