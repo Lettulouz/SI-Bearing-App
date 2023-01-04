@@ -1820,7 +1820,48 @@ public function add_countries_to_manufacturer(){
     }
 
 
- 
+    public function edit_footer(){
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        if(isset($_POST['footerEditSubmit'])){
+            $query="UPDATE footer SET name=:name, brief=:brief, 
+            c1name=:c1name, 
+            c1r1=:c1r1, c1r2=:c1r2, c1r3=:c1r3, c1r4=:c1r4, 
+            c2name=:c2name,
+            c2r1=:c2r1, c2r2=:c2r2, c2r3=:c2r3, c2r4=:c2r4, 
+            c3name=:c3name,
+            c3r1=:c3r1, c3r2=:c3r2, c3r3=:c3r3, c3r4=:c3r4, 
+            bottomtext=:bottomtext";
+            $result = $db->prepare($query);
+            $result->bindParam(':name', $_POST['companyName']);
+            $result->bindParam(':brief', $_POST['brief']);
+            $result->bindParam(':c1name', $_POST['c1name']);
+            $result->bindParam(':c1r1', $_POST['c1r1']);
+            $result->bindParam(':c1r2', $_POST['c1r2']);
+            $result->bindParam(':c1r3', $_POST['c1r3']);
+            $result->bindParam(':c1r4', $_POST['c1r4']);
+            $result->bindParam(':c2name', $_POST['c2name']);
+            $result->bindParam(':c2r1', $_POST['c2r1']);
+            $result->bindParam(':c2r2', $_POST['c2r2']);
+            $result->bindParam(':c2r3', $_POST['c2r3']);
+            $result->bindParam(':c2r4', $_POST['c2r4']);
+            $result->bindParam(':c3name', $_POST['c3name']);
+            $result->bindParam(':c3r1', $_POST['c3r1']);
+            $result->bindParam(':c3r2', $_POST['c3r2']);
+            $result->bindParam(':c3r3', $_POST['c3r3']);
+            $result->bindParam(':c3r4', $_POST['c3r4']);
+            $result->bindParam(':bottomtext', $_POST['bottomtext']);
+            $result->execute();
+            $_SESSION['success_page'] = "edit_footer";
+            header("Location:" . ROOT . "/admin/success_page/2");
+        }
+
+        $query="SELECT * FROM footer LIMIT 1";
+        $result = $db->prepare($query);
+        $result->execute();
+        $result=$result->fetch(PDO::FETCH_ASSOC);
+
+        $this->view('admin/edit_footer', ['result' => $result]);
+    }
 
    
 

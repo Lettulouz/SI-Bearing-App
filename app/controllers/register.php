@@ -40,6 +40,8 @@ class Register extends Controller
     }
     
     public function validate(){
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteFooter = $this->getFooter($db);
 
         $this->serverError = false;
         $this->inputError = false;
@@ -55,7 +57,7 @@ class Register extends Controller
             $this->view('register/index', ['errorPassword' => $this->errorMessage, 'errorLogin' => $this->errorMessage, 
             'errorEmail' => $this->errorMessage, 'emailInput' => $this->emailInput, 'nameInput' => $this->nameInput, 
             'surnameInput' => $this->surnameInput, 'loginInput' => $this->loginInput, 'passwordInput' => $this->passwordInput, 
-            'serverError' => $this->serverError, 'errorName' => '', 'errorSurname' => '']);
+            'serverError' => $this->serverError, 'errorName' => '', 'errorSurname' => '', 'siteFooter' => $siteFooter]);
             return;
         }
 
@@ -116,7 +118,7 @@ class Register extends Controller
         $this->view('register/index', ['errorPassword' => $this->errorPassword, 'errorLogin' => $this->errorLogin, 
         'errorEmail' => $this->errorEmail, 'emailInput' => $this->emailInput, 'nameInput' => $this->nameInput, 
         'surnameInput' => $this->surnameInput, 'loginInput' => $this->loginInput, 'passwordInput' => $this->passwordInput, 
-        'serverError' => $this->serverError, 'errorName' => $this->errorName, 'errorSurname' => $this->errorSurname]);
+        'serverError' => $this->serverError, 'errorName' => $this->errorName, 'errorSurname' => $this->errorSurname, 'siteFooter' => $siteFooter]);
     }
 
     private function checkIfUserExists($db){
@@ -259,5 +261,17 @@ class Register extends Controller
             echo "<script>alert('Błąd wysyłania maila!')</script>";
         }
     } 
+
+    private function getFooter($db){
+        if(isset($_SESSION['siteFooter'])){
+            $result = $_SESSION['siteFooter'];
+        }else{
+            $query = "SELECT * FROM footer";
+            $result = $db->query($query);
+            $result = $result->fetch(PDO::FETCH_ASSOC);
+            $_SESSION['siteFooter'] = $result;
+        }
+        return $result;
+    }
 }
 ?>

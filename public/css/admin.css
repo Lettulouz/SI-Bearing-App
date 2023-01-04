@@ -70,8 +70,6 @@
   text-decoration-color: white;
 }
 
-
-
 .headers-padding {
   padding-left: 15px;
   padding-top: 10px;
@@ -189,6 +187,14 @@
 }
 
 .form-floating>.form-control, .form-floating>.form-select {
+  min-height: 55px;
+}
+
+.form-group>.form-control{
+  min-height: 55px;
+}
+
+.input-group>.form-control{
   min-height: 55px;
 }
 

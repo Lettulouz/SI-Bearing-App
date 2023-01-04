@@ -10,7 +10,7 @@ class Home extends Controller
 
     public function index($limit1=1){
         require_once dirname(__FILE__,2) . '/core/database.php';
-
+        $siteFooter = $this->getFooter($db);
 
         $search = '';
         $endofitems=0;
@@ -133,16 +133,27 @@ class Home extends Controller
             }
         }
         
-        $test = 1;
         $this->view('home/index', ['itemsArray'=>$result, 'search' => $search, 'limit1' => $page, 
             'manufacturerArray' => $manufacturer, 'last'=> $endofitems,
-            'test' => $id_manufacturer]); // ten 'test' to do wywalenia na koniec
+            'test' => $id_manufacturer, 'siteFooter' => $siteFooter]); // ten 'test' to do wywalenia na koniec
             
     }
 
     public function basket(){
 
         $this->view('home/basket', []);
+    }
+
+    private function getFooter($db){
+        if(isset($_SESSION['siteFooter'])){
+            $result = $_SESSION['siteFooter'];
+        }else{
+            $query = "SELECT * FROM footer";
+            $result = $db->query($query);
+            $result = $result->fetch(PDO::FETCH_ASSOC);
+            $_SESSION['siteFooter'] = $result;
+        }
+        return $result;
     }
 
 }

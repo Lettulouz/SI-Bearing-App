@@ -19,6 +19,9 @@ class Login extends Controller
     }
 
     public function set_new_password($hash = 0){
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteFooter = $this->getFooter($db);
+
         $this->errorMessage = "";
         $this->serverError = false;
         $this->check = true;
@@ -26,7 +29,6 @@ class Login extends Controller
         $this->ifUserExist = "";
         $this->passwordInput = "";
         $this->userRole = "";
-
         
         if($hash != 0 ) {
             $this->authhash=$hash;
@@ -37,7 +39,7 @@ class Login extends Controller
                 $this->authhash = $_SESSION['authhash'];
             }
         }
-        require_once dirname(__FILE__,2) . '/core/database.php';
+        
         $query = "SELECT id FROM users WHERE authhash=:authhash";
         $result = $db->prepare($query);
         $result->bindParam(':authhash', $this->authhash);
@@ -50,7 +52,7 @@ class Login extends Controller
         }
 
         if(!isset($_POST['password']) || !isset($_POST['repeatPassword'])){
-            $this->view('login/set_new_password', ['errorPassword' => $this->errorMessage, 'serverError' => $this->serverError]);
+            $this->view('login/set_new_password', ['errorPassword' => $this->errorMessage, 'serverError' => $this->serverError, 'siteFooter' => $siteFooter]);
             return;
         }
         
@@ -85,13 +87,15 @@ class Login extends Controller
 
         $_SESSION['errorPassword'] = $this->errorMessage;
 
-        $this->view('login/set_new_password', ['errorPassword' => $this->errorMessage, 'serverError' => $this->serverError]);
+        $this->view('login/set_new_password', ['errorPassword' => $this->errorMessage, 'serverError' => $this->serverError, 'siteFooter'=> $siteFooter]);
     }
 
     public function forgotten_password(){
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteFooter = $this->getFooter($db);
+
         if(isset($_POST['forgottenPasswordSubmit'])){
             $email = $_POST['email'];
-            require_once dirname(__FILE__,2) . '/core/database.php';
             $query = "SELECT id FROM users WHERE email=:email";
             $result = $db->prepare($query);
             $result->bindParam(':email', $email);
@@ -143,8 +147,6 @@ class Login extends Controller
                     </body>
                     </html>";
     
-                    //$mail->addAttachment('ścieżka');
-    
                     $mail->send();
                 } catch(Exception $e){
                     echo "<script>alert('Błąd wysyłania maila!')</script>";
@@ -153,10 +155,13 @@ class Login extends Controller
             $this->view('login/info_page', ['infoPage' => 1]);
             return;
         }
-        $this->view('login/forgotten_password', []);
+        $this->view('login/forgotten_password', ['siteFooter' => $siteFooter]);
     }
     
     public function validate(){
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteFooter = $this->getFooter($db);
+
         $this->errorMessage = "";
         $this->serverError = false;
         $this->check = true;
@@ -167,7 +172,8 @@ class Login extends Controller
 
 
         if(!isset($_POST['emailOrLogin']) || !isset($_POST['password'])){
-            $this->view('login/index', ['errorPassword' => $this->errorMessage, 'emailOrLoginInput' => $this->emailOrLoginInput, 'serverError' => $this->serverError]);
+            $this->view('login/index', ['errorPassword' => $this->errorMessage, 'emailOrLoginInput' => $this->emailOrLoginInput, 'serverError' => $this->serverError,
+            'siteFooter' => $siteFooter]);
             return;
         }
         
@@ -177,12 +183,13 @@ class Login extends Controller
         $this->emailOrLoginInput = strtolower($_POST['emailOrLogin']);
         $this->passwordInput = $_POST['password'];
 
-        $this->checkIfEmailAsLoginOption() ? $this->emailVerificationFunction() : $this->loginVerificationFunction();
+        $this->checkIfEmailAsLoginOption() ? $this->emailVerificationFunction($db) : $this->loginVerificationFunction($db);
         if($this->check == true) $this->checkPassword();
 
         $_SESSION['errorPassword'] = $this->errorMessage;
 
-        $this->view('login/index', ['errorPassword' => $this->errorMessage, 'emailOrLoginInput' => $this->emailOrLoginInput, 'serverError' => $this->serverError]);
+        $this->view('login/index', ['errorPassword' => $this->errorMessage, 'emailOrLoginInput' => $this->emailOrLoginInput, 
+        'serverError' => $this->serverError, 'siteFooter' => $siteFooter]);
 
     }
 
@@ -220,26 +227,25 @@ class Login extends Controller
     /** Grouping function to check if email is valid
      * 
      */
-    private function emailVerificationFunction(){
+    private function emailVerificationFunction($db){
         $this->verifyEmail($this->emailOrLoginInput)
-        ? $this->checkIfUserExists(true) 
+        ? $this->checkIfUserExists(true, $db) 
         : $this->errorDuringValidation("*Dane dostarczone do serwera nie zgadzają się z danymi klienta");
     }
 
     /** Grouping function to check if login is valid
      * 
      */
-    private function loginVerificationFunction(){
+    private function loginVerificationFunction($db){
         $this->verifyLogin($this->emailOrLoginInput)
-        ? $this->checkIfUserExists(false) 
+        ? $this->checkIfUserExists(false, $db) 
         : $this->errorDuringValidation("*Dane dostarczone do serwera nie zgadzają się z danymi klienta");
     }
 
     /** Function that checks if given user exists in DB
      * 
      */
-    private function checkIfUserExists($email){
-        require_once dirname(__FILE__,2) . '/core/database.php';
+    private function checkIfUserExists($email, $db){
         $_SESSION['emailOrLoginInput'] =  $this->emailOrLoginInput;
         $email 
         ? $userQuery = $db->prepare('SELECT id, password, role, temporary FROM users WHERE email = :emailorlogin') 
@@ -335,6 +341,18 @@ class Login extends Controller
             header("Location:" . ROOT . "/manager");
         else if($this->userRole == "user")
             header("Location:" . ROOT . "/home");
+    }
+
+    private function getFooter($db){
+        if(isset($_SESSION['siteFooter'])){
+            $result = $_SESSION['siteFooter'];
+        }else{
+            $query = "SELECT * FROM footer";
+            $result = $db->query($query);
+            $result = $result->fetch(PDO::FETCH_ASSOC);
+            $_SESSION['siteFooter'] = $result;
+        }
+        return $result;
     }
 }
 ?>

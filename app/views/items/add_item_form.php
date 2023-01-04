@@ -18,7 +18,7 @@
 <div class="container-fluid justify-content-between align-items-center">
 
 <div class="container-fluid justify-content-between">
-    <form action="" id="addItemForm" method="POST" autocomplete="off"  enctype="multipart/form-data"> 
+    <form action="" id="addItemForm" method="POST" autocomplete="off" enctype="multipart/form-data"> 
         <div class="row m-2">
             <div class="col-12 col-sm-6 col-xl-4 itemField1 border-end border-2">
                 <div class="row m-2">
