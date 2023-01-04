@@ -156,6 +156,14 @@ class Home extends Controller
         return $result;
     }
 
+    public function addItem($itemID){
+        if(isset($_POST['itemID'])){
+            echo "Arka noego";
+            empty($_POST['itemID']);
+            die();
+        }
+    }
+
 }
 
 ?>
