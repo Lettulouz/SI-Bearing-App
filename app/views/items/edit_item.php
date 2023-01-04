@@ -205,7 +205,7 @@
         $('#idOfLastDesc').val(descNum);
         updateAttrList();
 
-        for(var i=1; i<=lengthOfFilled; i++){  
+        for(var i=1; i<=attrNum2; i++){  
             inputName = '#attribute_name' + i;  
             $(inputName).select2({
                 theme: 'bootstrap-5',
