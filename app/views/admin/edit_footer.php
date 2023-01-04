@@ -4,7 +4,7 @@ include 'adm_nav.php';
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
 
-<div class="modal" id="exampleModal" tabindex="-1">
+<div class="modal fade" id="exampleModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -12,14 +12,15 @@ include 'adm_nav.php';
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <input type="hidden" id="target">
                 <div class="form-floating">
-                    <input type="text" class="form-control" id="linkInModal" name="linkInModal" maxlength="500">
+                    <input type="text" class="form-control" id="linkInModal" name="linkInModal" maxlength="500" placeholder="a">
                     <label class="form-control-lg lg-custom" for="linkInModal">Link</label>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                <button type="button" class="btn btn-primary saveLink" data-bs-dismiss="modal">Zapisz</button>
             </div>
         </div>
     </div>
@@ -79,9 +80,10 @@ include 'adm_nav.php';
                     <div class="input-group">
                         <input type="text" class="form-control" id="c1r1" name="c1r1" value="<?=$data['result']['c1r1']?>" maxlength="40">
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal">Link</button>
+                            <button class="btn btn-outline-secondary linkBtn" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            target="c1r1path">Link</button>
+                            <input type="hidden" id="c1r1path" name="c1r1path" value="<?=$data['result']['c1r1path']?>">
                         </div>
-                        <input type="hidden" id="c1r1path" name="c1r1path">
                     </div>
                 </div>
             </div>
@@ -91,9 +93,10 @@ include 'adm_nav.php';
                     <div class="input-group">
                         <input type="text" class="form-control" id="c1r2" name="c1r2" value="<?=$data['result']['c1r2']?>" maxlength="40">
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal">Link</button>
+                            <button class="btn btn-outline-secondary linkBtn" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            target="c1r2path">Link</button>
+                            <input type="hidden" id="c1r2path" name="c1r2path" value="<?=$data['result']['c1r2path']?>">
                         </div>
-                        <input type="hidden" id="c1r2path" name="c1r2path">
                     </div>
                 </div>
             </div>
@@ -103,9 +106,10 @@ include 'adm_nav.php';
                     <div class="input-group">
                         <input type="text" class="form-control" id="c1r3" name="c1r3" value="<?=$data['result']['c1r3']?>" maxlength="40">
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal">Link</button>
+                            <button class="btn btn-outline-secondary linkBtn" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            target="c1r3path">Link</button>
+                            <input type="hidden" id="c1r3path" name="c1r3path" value="<?=$data['result']['c1r3path']?>">
                         </div>
-                        <input type="hidden" id="c1r3path" name="c1r3path">
                     </div>
                 </div>
             </div>
@@ -115,9 +119,10 @@ include 'adm_nav.php';
                     <div class="input-group">
                         <input type="text" class="form-control" id="c1r4" name="c1r4" value="<?=$data['result']['c1r4']?>" maxlength="40">
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal">Link</button>
+                            <button class="btn btn-outline-secondary linkBtn" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            target="c1r4path">Link</button>
+                            <input type="hidden" id="c1r4path" name="c1r4path" value="<?=$data['result']['c1r4path']?>">
                         </div>
-                        <input type="hidden" id="c1r4path" name="c1r4path">
                     </div>
                 </div>
             </div>
@@ -140,9 +145,12 @@ include 'adm_nav.php';
                     <div class="input-group">
                         <input type="text" class="form-control" id="c2r1" name="c2r1" value="<?=$data['result']['c2r1']?>" maxlength="40">
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal">Link</button>
+                            <button class="btn btn-outline-secondary linkBtn" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                             target="c2r1path">
+                            Link</button>
+                            <input type="hidden" id="c2r1path" name="c2r1path" value="<?=$data['result']['c2r1path']?>">
                         </div>
-                        <input type="hidden" id="c2r1path" name="c2r1path">
+                        
                     </div>
                 </div>
             </div>
@@ -152,9 +160,11 @@ include 'adm_nav.php';
                     <div class="input-group">
                         <input type="text" class="form-control" id="c2r2" name="c2r2" value="<?=$data['result']['c2r2']?>" maxlength="40">
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal">Link</button>
+                            <button class="btn btn-outline-secondary linkBtn" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            target="c2r2path">Link</button>
+                            <input type="hidden" id="c2r2path" name="c2r2path" value="<?=$data['result']['c2r2path']?>">
                         </div>
-                        <input type="hidden" id="c2r2path" name="c2r2path">
+                        
                     </div>
                 </div>
             </div>
@@ -164,9 +174,10 @@ include 'adm_nav.php';
                     <div class="input-group">
                         <input type="text" class="form-control" id="c2r3" name="c2r3" value="<?=$data['result']['c2r3']?>" maxlength="40">
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal">Link</button>
+                            <button class="btn btn-outline-secondary linkBtn" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            target="c2r3path">Link</button>
+                            <input type="hidden" id="c2r3path" name="c2r3path" value="<?=$data['result']['c2r3path']?>">
                         </div>
-                        <input type="hidden" id="c2r3path" name="c2r3path">
                     </div>
                 </div>
             </div>
@@ -176,9 +187,10 @@ include 'adm_nav.php';
                     <div class="input-group">
                         <input type="text" class="form-control" id="c2r4" name="c2r4" value="<?=$data['result']['c2r4']?>" maxlength="40">
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal">Link</button>
+                            <button class="btn btn-outline-secondary linkBtn" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            target="c2r4path">Link</button>
+                            <input type="hidden" id="c2r4path" name="c2r4path" value="<?=$data['result']['c2r4path']?>">
                         </div>
-                        <input type="hidden" id="c2r4path" name="c2r4path">
                     </div>
                 </div>
             </div>
@@ -256,7 +268,20 @@ include 'adm_nav.php';
     $("#footerSubmitRemote").click(function(e){ 
         $("#footerEditSubmit").click();
     });
-    $('#exampleModal').modal(show);
+
+    $(".linkBtn").click(function(){
+        var link=$(this).parent().children("input[type=hidden]").eq(0).val()
+        var target=$(this).attr('target');
+        $('#target').val(target);
+        $('#linkInModal').val(link);
+
+    })
+
+    $(".saveLink").click(function(){
+       var targetId="#"+$('#target').val();
+       $(targetId).val($('#linkInModal').val())
+    })
+
 </script>
 
 <?php
