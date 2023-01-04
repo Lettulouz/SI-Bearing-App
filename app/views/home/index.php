@@ -94,7 +94,7 @@
         }
             echo "<div class='col-12 col-md-6 col-lg-4 col-xl-3 mb-4'>
                     <div class='card h-100'>
-                        <img src='" . $imagePath . "'  alt='zdjęcie łożyska' class='card-img-top img-thumbnail' style='object-fit:cover;
+                        <img src='" . $imagePath . "'  alt='zdjęcie łożyska' class='card-img-top img-thumbnail' style='object-fit:contain;
                         height:286px;'>
                         <div class='card-body'>
                             <h4  class='card-title'><b>  {$item['name']} </b></h5>
