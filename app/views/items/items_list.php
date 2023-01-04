@@ -4,7 +4,7 @@
     <hr class="divider mt-0">
 
 
-    <div class="headers-padding" style="padding-right: 15px;">
+    <div class="headers-padding itemTable mx-0" style="padding-right: 15px;">
 
     <div class="col-12 col-md-6 col-lg-4">
             <div class="input-group">
@@ -48,7 +48,16 @@
                 <td>{$item['amount']}</td>
                 <td>{$item['price']} zł</td>
                 <td class='px-0 mx-0'>
-                    <div class='btn-group' role='group' aria-label='Basic example'>
+
+                <div class='listBtn mb-1'>
+                    <button type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm' 
+                    data-bs-toggle='collapse' data-bs-target='#btnGrp".$j."' aria-expanded='false'>
+                        <i class='bi bi-list'></i>
+                    </button>
+                </div>
+
+                <div class='dyn' id='btnGrp".$j."'>
+                    <div class='btn-group bGroup' role='group' aria-label='Basic example'>
                         <button type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm tabBtn' 
                         data-bs-toggle='collapse' data-bs-target='#row".$j."' aria-expanded='false'>
                             <i class='bi bi-bar-chart-steps'></i>
@@ -62,7 +71,7 @@
                         <button type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm  tabBtn' 
                         data-bs-toggle='collapse' data-bs-target='#row".$j."3' aria-expanded='false'>
                             <i class='bi bi-journal-richtext'></i>
-                        </a>
+                        </button>
 
 
                     </div>
@@ -74,6 +83,7 @@
                     <a href='".$removeItemPath."/".$item['iid']."' type='button' data-toggle='collapse' class='btn btn-danger d-inline btn-sm mx-1 tabBtn'>
                         <i class='bi bi-trash-fill'></i>
                     </a>
+                </div>    
                 </td>
             </tr>
             
@@ -164,6 +174,8 @@
       $('.hidTab').collapse('hide');
     });
   });
+
+  hideButtons();
 });
 
 $('.editBtn').click(function() {
@@ -186,4 +198,27 @@ $('.clrBtn').click(function(){
       $('.hidTab').collapse('hide');
     });
     })
+
+
+    function hideButtons(){
+        if($('main').width()<946){
+            $(".dyn").addClass("collapse");
+            $(".bGroup").addClass("btn-group-vertical");
+            $(".bGroup").removeClass("btn-group");
+            $(".tabBtn").addClass("d-block ");
+           $(".listBtn").show();
+        }else{
+            $(".dyn").removeClass("collapse")
+            $(".bGroup").removeClass("btn-group-vertical");
+            $(".bGroup").addClass("btn-group");
+            $(".tabBtn").removeClass("d-block");
+            $(".listBtn").hide();
+        }
+    }
+
+    $(window).resize(function(){
+        hideButtons();
+    })
+
+    
 </script>
