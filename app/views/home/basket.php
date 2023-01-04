@@ -16,65 +16,38 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <figure class="itemside align-items-center">
-                                            <div class="aside"><img src="https://i.imgur.com/1eq5kmC.png" class="img-sm"></div>
-                                            <figcaption class="info"> <a href="#" class="title text-dark" data-abc="true">Tshirt with round nect</a>
-                                                <p class="text-muted small">SIZE: L <br> Brand: MAXTRA</p>
-                                            </figcaption>
-                                        </figure>
-                                    </td>
-                                    <td> <select class="form-control">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                        </select> </td>
-                                    <td>
-                                        <div class="price-wrap"> <var class="price">$10.00</var> <small class="text-muted"> $9.20 each </small> </div>
-                                    </td>
-                                    <td class="text-right d-none d-md-block"><a href="" class="btn btn-light btn-round" data-abc="true"> Remove</a> </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <figure class="itemside align-items-center">
-                                            <div class="aside"><img src="https://i.imgur.com/hqiAldf.jpg" class="img-sm"></div>
-                                            <figcaption class="info"> <a href="#" class="title text-dark" data-abc="true">Flower Formal T-shirt</a>
-                                                <p class="text-muted small">SIZE: L <br> Brand: ADDA </p>
-                                            </figcaption>
-                                        </figure>
-                                    </td>
-                                    <td> <select class="form-control">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                        </select> </td>
-                                    <td>
-                                        <div class="price-wrap"> <var class="price">$15</var> <small class="text-muted"> $12 each </small> </div>
-                                    </td>
-                                    <td class="text-right d-none d-md-block"><a href="" class="btn btn-light btn-round" data-abc="true"> Remove</a> </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <figure class="itemside align-items-center">
-                                            <div class="aside"><img src="https://i.imgur.com/UwvU0cT.jpg" class="img-sm"></div>
-                                            <figcaption class="info"> <a href="#" class="title text-dark" data-abc="true">Printed White Tshirt</a>
-                                                <p class="small text-muted">SIZE:M <br> Brand: Cantabil</p>
-                                            </figcaption>
-                                        </figure>
-                                    </td>
-                                    <td> <select class="form-control">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                        </select> </td>
-                                    <td>
-                                        <div class="price-wrap"> <var class="price">$9</var> <small class="text-muted"> $6 each</small> </div>
-                                    </td>
-                                    <td class="text-right d-none d-md-block"><a href="" class="btn btn-light btn-round" data-abc="true"> Remove</a> </td>
-                                </tr>
+                                <?php
+                                    $items = $data['itemsArray'];
+                                    foreach($items as $j => $item) 
+                                    {
+                                        $imagePath = APPPATH . "/resources/[" . $item['itemID'] . "].png";
+                                        $imagePathCheck = RESOURCEPATH . "/[" . $item['itemID'] . "].png";
+                                        if(!file_exists($imagePathCheck)){
+                                            $imagePath = APPPATH . "/resources/brak_zdjecia.png";
+                                        }
+                                        echo "
+                                        <tr>
+                                            <td>
+                                                <figure class='itemside align-items-center'>
+                                                    <div class='aside'><img src='$imagePath' class='img-sm'></div>
+                                                    <figcaption class='info'> <a href='#' class='title text-dark' data-abc='true'>{$item['name']}</a>
+                                                        <p class='text-muted small'> Firma: {$item['name2']} </p>
+                                                    </figcaption>
+                                                </figure>
+                                            </td>
+                                            <td> <select class='form-control'>
+                                                    <option>1</option>
+                                                    <option>2</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                </select> </td>
+                                            <td>
+                                                <div class='price-wrap'> <var class='price'>$10.00</var> <small class='text-muted'> {$item['itemPrice']}zł każdy </small> </div>
+                                            </td>
+                                            <td class='text-right d-none d-md-block'><a href='' class='btn btn-light btn-round' data-abc='true'> Remove</a> </td>
+                                        </tr>";
+                                    }
+                                ?>
                             </tbody>
                         </table>
                     </div>
