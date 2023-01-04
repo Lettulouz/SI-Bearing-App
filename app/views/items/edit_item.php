@@ -24,7 +24,7 @@
                 <div class="row m-2">
                     <div class="col">
                         <div class="form-floating ">
-                            <input type="text" class="form-control" id="nameInput" name="name" value="<?=$data['prevItems']['prevName']?>">
+                            <input type="text" class="form-control" id="nameInput" name="name" value="<?=$data['prevItems']['prevName']?>" placeholder="Nazwa">
                             <label class="form-control-lg lg-custom" for="nameInput">Nazwa</label>
                         </div>
                     </div>
@@ -32,7 +32,7 @@
                 <div class="row m-2">
                     <div class="col">
                         <div class="form-floating ">
-                            <input type="number" class="form-control" id="quantityInput" min="0" name="price" value="<?=$data['prevItems']['prevPrice']?>">
+                            <input type="number" class="form-control" id="quantityInput" min="0" name="price" value="<?=$data['prevItems']['prevPrice']?>" placeholder="1">
                             <label class="form-control-lg lg-custom" for="quantityInput">Cena</label>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                 <div class="row m-2">
                     <div class="col">
                         <div class="form-floating ">
-                            <input type="number" class="form-control" id="quantityInput" min="0" name="quantity" value="<?=$data['prevItems']['prevAmount']?>">
+                            <input type="number" class="form-control" id="quantityInput" min="0" name="quantity" value="<?=$data['prevItems']['prevAmount']?>" placeholder="1">
                             <label class="form-control-lg lg-custom" for="quantityInput">Ilość</label>
                         </div>
                     </div>
