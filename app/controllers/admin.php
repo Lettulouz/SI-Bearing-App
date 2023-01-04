@@ -1304,7 +1304,7 @@ class Admin extends Controller
         if(isset($_POST['itemSubmit'])){
             if(isset($_POST['name']) && isset($_POST['price']) && isset($_POST['quantity']) && !empty($_POST['manufacturer']) && !empty($_POST['selCategories'])){
                 //update item in database
-
+              
                 $itemName = $_POST['name'];
                 $itemPrice = $_POST['price'];
                 $itemQuantity = $_POST['quantity'];

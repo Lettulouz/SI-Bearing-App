@@ -180,10 +180,13 @@
 <script>
     var jsArr = JSON.parse($('#attributes').attr('data-attr'));
     var possibleOptions = [];
+    var possibleIds = [];
     jsArr.forEach((id) => {
         possibleOptions.push(id.name);
+        possibleIds.push(id.id);
     });
     possibleOptions.sort();
+    possibleIds.sort();
     var alreadyUsed = [];
     var filled = $(".selectattr");
     var lengthOfFilled = filled.length;
@@ -218,18 +221,21 @@
             e.preventDefault();
             alreadyUsed.push("");
             tempPossibleOptions = possibleOptions;
+            tempPossibleIds = possibleIds;
             attrNum++;
             attrNum2++;
             var input = '#attribute_name' + attrNum;
             var html = '';
             html+='<div class="row">';
+            html+='<input type="hidden" name="attrId'+attrNum+'" value="0">';
             html+='<div class="col-12 col-md-5 mb-3">';
             html+='<select class="select2 form-control selectattr requiredattr form-select-lg" id="attribute_name' + attrNum +  '" aria-label="example-xl" onchange="updateAttrList();">';
             html+='<option>';
             html+='</option>';
-            tempPossibleOptions.forEach((id) => {
+            tempPossibleOptions.forEach((name,index) => {
+                    const id=tempPossibleIds[index];
                     html+='<option value="' + id + '">';
-                    html+=id;
+                    html+=name;
                     html+='</option>';
             });
             html+='</select>';
