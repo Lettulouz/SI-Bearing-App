@@ -79,7 +79,7 @@
                     <div class="col-12">
                         <div class="row">
                             <div class="col-12 col-sm-9 me-sm-0">
-                                <input class="form-control" type="file" id="formFile" accept="image/png" onchange="preview()">
+                                <input class="form-control" type="file" name="formFile" id="formFile" accept="image/png" onchange="preview()">
                             </div>
                             <div class="col-12 col-sm-3 mt-3 mt-sm-0 ms-sm-0">
                                 <button id="deleteImageBtn" onclick="clearImage()" class="btn btn-danger col-12">-</button>
@@ -534,6 +534,21 @@
     $(window).resize(countDesc())
 </script>
 
+
+<script>
+    function preview() {
+        var frame = document.getElementById('output');
+        document.getElementById('output').setAttribute('style', 'display:default');
+        document.getElementById('deleteImageBtn').setAttribute('style', 'display:default');
+        frame.src = URL.createObjectURL(event.target.files[0]);
+    }
+    function clearImage() {
+        document.getElementById('formFile').value = null;
+        document.getElementById('output').setAttribute('style', 'display:none');
+        document.getElementById('deleteImageBtn').setAttribute('style', 'display:none');
+        frame.src = "";
+    }
+</script>
 
 <script>
 document.getElementById('content_collapse').classList.add('show');

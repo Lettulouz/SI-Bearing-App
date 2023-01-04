@@ -567,7 +567,34 @@ class Admin extends Controller
         header("Location:" . ROOT . "/admin/list_of_attributes");
     }
 
+
+    public function remove_item($id_a=NULL){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+
+        if(isset($id_a)){
+            require_once dirname(__FILE__,2) . '/core/database.php';
+            $query="DELETE FROM items WHERE id=:id_a";
+            $result = $db->prepare($query);
+            $result->bindParam(':id_a', $id_a);
+            $result->execute();
+
+            $imagePathCheck = RESOURCEPATH . "/[" . $id_a. "].png";
+
+            if(file_exists($imagePathCheck)) unlink($imagePathCheck);
+        }
     
+        header("Location:" . ROOT . "/admin/list_of_items");
+    }
 
     public function list_of_orders(){
         if(isset($_SESSION['loggedUser'])){
@@ -1358,6 +1385,18 @@ public function add_countries_to_manufacturer(){
                 $item_id=$result->fetch(PDO::FETCH_ASSOC);
                 $item_id=$item_id['id'];
 
+                $imagePathCheck = RESOURCEPATH . "/[" . $item_id. "].png";
+
+                if(file_exists($imagePathCheck)) unlink($imagePathCheck);
+                $path = $_FILES['formFile']['name'];
+                $ext = pathinfo($path, PATHINFO_EXTENSION);
+                $imagename = "[" . $item_id . "]." . $ext;    
+                $tmpname = $_FILES['formFile']['tmp_name'];
+                if (!move_uploaded_file($tmpname, RESOURCEPATH . "/" . $imagename)) {
+                    $_SESSION['error_page'] = "list_of_items";
+                    header("Location:" . ROOT . "/admin/error_page/3");
+                }
+
                 //////////////////////categories//////////////////////////////////////////
                 $categArray = array();
                 $queryCateg="INSERT INTO categoriesofitem (id_category,id_item) VALUES (:id_categ,:id)";
@@ -1501,12 +1540,12 @@ public function add_countries_to_manufacturer(){
                 }
                 
                 $_SESSION['success_page'] = "list_of_items";
-                header("Location:" . ROOT . "/admin/success_page/1");
+                header("Location:" . ROOT . "/admin/success_page/2");
 
             }
             else{
                 $_SESSION['error_page'] = "list_of_items";
-                header("Location:" . ROOT . "/admin/error_page/1");
+                header("Location:" . ROOT . "/admin/error_page/2");
             }
         }
 
@@ -1652,9 +1691,11 @@ public function add_countries_to_manufacturer(){
             $attrArray[$id['iid']]= $result;
         }
         
-        $editCatPath=ROOT."/admin/edit_item";
+        $editItemPath=ROOT."/admin/edit_item";
+        $removeItemPath=ROOT."/admin/remove_item";
         
-        $this->view('admin/list_of_items', ['itemsArray'=>$items, 'categoriesArray' => $categoriesArray, 'catalogArray'=>$catalogArray, 'attrArray'=>$attrArray, 'editCatPath'=>$editCatPath]);
+        $this->view('admin/list_of_items', ['itemsArray' => $items, 'categoriesArray' => $categoriesArray, 
+        'catalogArray' => $catalogArray, 'attrArray' => $attrArray, 'editItemPath' => $editItemPath, 'removeItemPath' => $removeItemPath]);
     }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////CATEGORIES////////////////////////////////////////////////////////////////////////
