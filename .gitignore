@@ -1,3 +1,5 @@
 /app/core/dbconfig.php
 /app/core/mailerconfig.php
-/app/resources
+/app/resources/*
+
+!/app/resources/brak_zdjecia.png
