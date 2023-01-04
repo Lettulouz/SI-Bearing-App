@@ -9,6 +9,13 @@ class Home extends Controller
     */
 
     public function index($limit1=1){
+        if(isset($_POST['itemID'])){
+            if(!isset($_SESSION['basketItems']))
+                $_SESSION['basketItems']=array();
+            array_push($_SESSION['basketItems'], $_POST['itemID']);
+            empty($_POST['itemID']);
+        }
+
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteFooter = $this->getFooter($db);
 
@@ -170,14 +177,6 @@ class Home extends Controller
             $_SESSION['siteFooter'] = $result;
         }
         return $result;
-    }
-
-    public function addItem($itemID){
-        if(isset($_POST['itemID'])){
-            echo "Arka noego";
-            empty($_POST['itemID']);
-            die();
-        }
     }
 
 }
