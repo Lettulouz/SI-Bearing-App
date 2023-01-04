@@ -105,8 +105,12 @@
                             </div>
                             <div class='card-basket position-absolute bottom-0 w-100'>
                                 <b> Cena: 1500zł </b>
-                                
-                                <button type='button' class='btn btn-danger btn-basket end-0 position-absolute'><i class='bi bi-basket2'></i></button>
+                                <form method='post' action='addItem'>
+                                    <input type='hidden' value=".$item['itemID']." name='itemID'>
+                                    <button type='submit' class='btn btn-danger btn-basket end-0 position-absolute'>
+                                        <i class='bi bi-basket2'></i>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
