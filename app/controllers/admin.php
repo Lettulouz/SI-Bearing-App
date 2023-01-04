@@ -1798,7 +1798,7 @@ class Admin extends Controller
             c2r1path=:c2r1path, c2r2path=:c2r2path, c2r3path=:c2r3path, c2r4path=:c2r4path, 
             c3name=:c3name,
             c3r1=:c3r1, c3r2=:c3r2, c3r3=:c3r3, c3r4=:c3r4, 
-            bottomtext=:bottomtext";
+            bottomtext=:bottomtext, bottomtextpath=:bottomtextpath";
             $result = $db->prepare($query);
             $result->bindParam(':name', $_POST['companyName']);
             $result->bindParam(':brief', $_POST['brief']);
@@ -1826,6 +1826,7 @@ class Admin extends Controller
             $result->bindParam(':c3r3', $_POST['c3r3']);
             $result->bindParam(':c3r4', $_POST['c3r4']);
             $result->bindParam(':bottomtext', $_POST['bottomtext']);
+            $result->bindParam(':bottomtextpath', $_POST['bottomtextpath']);
             $result->execute();
             $_SESSION['success_page'] = "edit_footer";
             header("Location:" . ROOT . "/admin/success_page/2");

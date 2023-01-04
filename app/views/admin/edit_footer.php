@@ -246,9 +246,16 @@ include 'adm_nav.php';
     
     <div class="row m-4">
         <div class="col-12">
-            <div class="form-floating">
-                <input type="text" class="form-control" id="bottomtext" name="bottomtext" style="font-weight:bold" value="<?=$data['result']['bottomtext']?>" maxlength="50">
-                <label class="form-control-lg lg-custom" for="bottomtext"><b>Dolny tekst</b></label>
+            <div class="input-group">
+                <div class="form-floating col">
+                    <input type="text" class="form-control" id="bottomtext" name="bottomtext" style="font-weight:bold; height:55px" value="<?=$data['result']['bottomtext']?>" maxlength="50">
+                    <label class="form-control-lg lg-custom" for="bottomtext"><b>Dolny tekst</b></label>
+                </div>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary linkBtn" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                    target="bottomtextpath">Link</button>
+                    <input type="hidden" id="bottomtextpath" name="bottomtextpath" value="<?=$data['result']['bottomtextpath']?>">
+                </div>
             </div>
         </div>
     </div>
