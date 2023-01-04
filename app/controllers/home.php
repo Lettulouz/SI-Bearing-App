@@ -9,6 +9,12 @@ class Home extends Controller
     */
 
     public function index($limit1=1){
+        if(isset($_POST['itemID'])){
+            if(!isset($_SESSION['basketItems']))
+                $_SESSION['basketItems'] = array();
+            array_push($_SESSION['basketItems'],$_POST['itemID']);
+            empty($_POST['itemID']);
+        }
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteFooter = $this->getFooter($db);
 
@@ -140,8 +146,22 @@ class Home extends Controller
     }
 
     public function basket(){
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteFooter = $this->getFooter($db);
 
-        $this->view('home/basket', []);
+        $query="SELECT d.title, d.description, i.name, i.id as itemID, m.name as 'name2', i.price as itemPrice
+            FROM items i 
+            LEFT JOIN descriptions d ON d.id_item=i.id
+            INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
+            INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
+            WHERE i.id IN (".implode(', ',$_SESSION['basketItems']).")";
+
+        
+        
+        $itemsInBacket = $db->query($query);
+        $itemsInBacket = $itemsInBacket->fetchAll(PDO::FETCH_ASSOC);
+        
+        $this->view('home/basket', ['siteFooter' => $siteFooter, 'itemsArray'=>$itemsInBacket]);
     }
 
     private function getFooter($db){
@@ -154,14 +174,6 @@ class Home extends Controller
             $_SESSION['siteFooter'] = $result;
         }
         return $result;
-    }
-
-    public function addItem($itemID){
-        if(isset($_POST['itemID'])){
-            echo "Arka noego";
-            empty($_POST['itemID']);
-            die();
-        }
     }
 
 }
