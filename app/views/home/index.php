@@ -93,19 +93,34 @@
             $imagePath = APPPATH . "/resources/brak_zdjecia.png";
         }
             echo "<div class='col-12 col-md-6 col-lg-4 col-xl-3 mb-4'>
-                    <div class='card h-100'>
-                        <img src='" . $imagePath . "'  alt='zdjęcie łożyska' class='card-img-top img-thumbnail' style='object-fit:contain;
-                        height:286px;'>
-                        <div class='card-body'>
-                            <h4  class='card-title'><b>  {$item['name']} </b></h5>
-                            <div class='card-text'> 
+                    <div class='card h-100'>"; 
+
+                        // zdjecie jako link do itemku
+                        echo "<a href=";
+                        echo ROOT.'/public/item'; 
+                        echo " >";
+                        echo "<img src='" . $imagePath . "'  alt='zdjęcie łożyska' class='card-img-top img-thumbnail' 
+                        style='object-fit:contain; height:286px;'>";
+                        echo "</a>";
+
+                        echo "<div class='card-body'>
+                            <h4  class='card-title'>";
+
+                            // nazwa jako link do itemku
+                            echo " <a href= ";
+                            echo ROOT.'/public/item';
+                            echo " >";
+                            echo "<b>  {$item['name']} </b>";
+                            echo "</a>";
+
+                            echo "</h4> <div class='card-text'> 
                             <h5>firma: {$item['name2']} </h5>
                             <p> <b> {$item['title']} </b> <br/>
                             {$item['description']}</p>
                             </div>
                             <div class='card-basket position-absolute bottom-0 w-100'>
                                 <b> Cena: 1500zł </b>
-                                <form method='post' action='addItem'>
+                                <form method='post' action='#'>
                                     <input type='hidden' value=".$item['itemID']." name='itemID'>
                                     <button type='submit' class='btn btn-danger btn-basket end-0 position-absolute'>
                                         <i class='bi bi-basket2'></i>
