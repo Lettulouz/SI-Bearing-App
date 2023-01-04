@@ -179,6 +179,13 @@ class Home extends Controller
         return $result;
     }
 
+    public function item(){
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteFooter = $this->getFooter($db);
+        
+        $this->view('home/item', ['siteFooter' => $siteFooter]);
+    }
+
 }
 
 ?>
