@@ -81,7 +81,7 @@ include 'adm_nav.php';
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal">Link</button>
                         </div>
-                        <input type="hidden" id="c1r1path" name="c1r1path">
+                        <input type="hidden" id="c1r1path" name="c1r1path" value="<?=$data['result']['c1r1path']?>">
                     </div>
                 </div>
             </div>
@@ -93,7 +93,7 @@ include 'adm_nav.php';
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal">Link</button>
                         </div>
-                        <input type="hidden" id="c1r2path" name="c1r2path">
+                        <input type="hidden" id="c1r2path" name="c1r2path" value="<?=$data['result']['c1r2path']?>">
                     </div>
                 </div>
             </div>
@@ -105,7 +105,7 @@ include 'adm_nav.php';
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal">Link</button>
                         </div>
-                        <input type="hidden" id="c1r3path" name="c1r3path">
+                        <input type="hidden" id="c1r3path" name="c1r3path" value="<?=$data['result']['c1r3path']?>">
                     </div>
                 </div>
             </div>
@@ -117,7 +117,7 @@ include 'adm_nav.php';
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal">Link</button>
                         </div>
-                        <input type="hidden" id="c1r4path" name="c1r4path">
+                        <input type="hidden" id="c1r4path" name="c1r4path" value="<?=$data['result']['c1r4path']?>">
                     </div>
                 </div>
             </div>
@@ -142,7 +142,7 @@ include 'adm_nav.php';
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal">Link</button>
                         </div>
-                        <input type="hidden" id="c2r1path" name="c2r1path">
+                        <input type="hidden" id="c2r1path" name="c2r1path" value="<?=$data['result']['c2r1path']?>">
                     </div>
                 </div>
             </div>
@@ -154,7 +154,7 @@ include 'adm_nav.php';
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal">Link</button>
                         </div>
-                        <input type="hidden" id="c2r2path" name="c2r2path">
+                        <input type="hidden" id="c2r2path" name="c2r2path" value="<?=$data['result']['c2r2path']?>">
                     </div>
                 </div>
             </div>
@@ -166,7 +166,7 @@ include 'adm_nav.php';
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal">Link</button>
                         </div>
-                        <input type="hidden" id="c2r3path" name="c2r3path">
+                        <input type="hidden" id="c2r3path" name="c2r3path" value="<?=$data['result']['c2r3path']?>">
                     </div>
                 </div>
             </div>
@@ -178,7 +178,7 @@ include 'adm_nav.php';
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal">Link</button>
                         </div>
-                        <input type="hidden" id="c2r4path" name="c2r4path">
+                        <input type="hidden" id="c2r4path" name="c2r4path" value="<?=$data['result']['c2r4path']?>">
                     </div>
                 </div>
             </div>
