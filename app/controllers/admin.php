@@ -81,7 +81,7 @@ class Admin extends Controller
         $pageContent = $result->fetch(PDO::FETCH_ASSOC);
         !empty($pageContent) ? $pageContent = $pageContent['content'] : $pageContent = "";    
 
-        $this->view('admin/edit_page', ['editingId' => $id,'storedValue' => $pageContent]);
+        $this->view('admin/edit_page', ['editingId' => $id,'storedValue' => $pageContent, 'page'=>$id]);
     }
 
     public function index(){

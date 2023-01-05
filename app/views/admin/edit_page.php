@@ -18,7 +18,7 @@ include 'adm_nav.php';
         </div>
     </div>
 </form>
-
+<input type="hidden" id="page" value="<?=$data['page']?>">
 <script>
 tinymce.init({
   selector: 'textarea#editor',
@@ -40,6 +40,11 @@ tinymce.init({
      },
   });
 
+    var pageNum=document.getElementById('page').value;
+    document.getElementById('pages_collapse').classList.add('show');
+    document.getElementById('pages_collapse_btn').setAttribute( 'aria-expanded', 'true' );
+    document.getElementById('pages_collapse_btn').setAttribute( 'style', 'color:white !important' );
+    document.getElementById('editpage'+pageNum).setAttribute( 'style', 'color:white !important' );
 </script>
 
 <?php 
