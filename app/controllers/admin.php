@@ -50,6 +50,40 @@ class Admin extends Controller
         else header("Location:" . ROOT . "");
     }
 
+    public function edit_page($id=0){ 
+        if($id<1 || $id>9){
+            header("Location:" . ROOT . "/admin");
+        }
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        if(isset($_POST['submitButton'])){
+            $query="SELECT EXISTS(SELECT * FROM pages WHERE id=$id) as ex";
+            $result = $db->query($query);
+            $checkIfExistsInDB = $result->fetch(PDO::FETCH_ASSOC);
+            $checkIfExistsInDB = $checkIfExistsInDB['ex'];
+            $submittedContent = $_POST['editor'];
+
+            if($checkIfExistsInDB == 1){
+                $query="UPDATE pages SET content=:content WHERE id=$id";
+                $result = $db->prepare($query);
+                $result->bindParam(':content', $submittedContent);
+                $result->execute();
+            }else{
+                $query="INSERT INTO pages (id, content) VALUES ($id,:content)";
+                $result = $db->prepare($query);
+                $result->bindParam(':content', $submittedContent);
+                $result->execute();
+            }
+        }
+
+        $query="SELECT content FROM pages WHERE id=$id";
+        $result = $db->prepare($query);
+        $result->execute();
+        $pageContent = $result->fetch(PDO::FETCH_ASSOC);
+        !empty($pageContent) ? $pageContent = $pageContent['content'] : $pageContent = "";    
+
+        $this->view('admin/edit_page', ['editingId' => $id,'storedValue' => $pageContent]);
+    }
+
     public function index(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){

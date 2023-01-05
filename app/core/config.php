@@ -6,6 +6,11 @@ $path = str_replace("/index.php","",$path);
 
 define('ROOT', $path);
 
+$path2 = $path;
+$path2 = str_replace("/public","",$path2);
+
+define('MAINPATH', $path2);
+
 $protocol = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
 
 $path = $protocol . $_SERVER['HTTP_HOST'] . $path;

@@ -1,4 +1,5 @@
 <?php include "loginHeader.php"; ?>
+<?php include dirname(__FILE__,2) . "/navbar_top.php"; ?>
 
 <div class="container mt-5 mb-5">
     <div class="row justify-content-center">

@@ -1,8 +1,5 @@
 <?php include "header.php"; ?>
 <?php include "navbar_top.php"; ?>
-
-
-
 <?php include "sidebar_top.php"; ?>
 <form method="POST" id="nwm" action ="">
     <a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link"

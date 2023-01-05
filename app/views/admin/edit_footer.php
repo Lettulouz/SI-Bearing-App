@@ -13,9 +13,18 @@ include 'adm_nav.php';
             </div>
             <div class="modal-body">
                 <input type="hidden" id="target">
-                <div class="form-floating">
-                    <input type="text" class="form-control" id="linkInModal" name="linkInModal" maxlength="500" placeholder="a">
-                    <label class="form-control-lg lg-custom" for="linkInModal">Link</label>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="linkInModal" name="linkInModal" maxlength="500">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="defaultValue" style="height:55px">
+                                    <i class="bi bi-database-down"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -83,6 +92,7 @@ include 'adm_nav.php';
                             <button class="btn btn-outline-secondary linkBtn" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal"
                             target="c1r1path">Link</button>
                             <input type="hidden" id="c1r1path" name="c1r1path" value="<?=$data['result']['c1r1path']?>">
+                            <input type="hidden" id="defaultc1r1path" name="defaultc1r1path" value="<?=PUBLICPATH?>/specialpage/1">
                         </div>
                     </div>
                 </div>
@@ -96,6 +106,7 @@ include 'adm_nav.php';
                             <button class="btn btn-outline-secondary linkBtn" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal"
                             target="c1r2path">Link</button>
                             <input type="hidden" id="c1r2path" name="c1r2path" value="<?=$data['result']['c1r2path']?>">
+                            <input type="hidden" id="defaultc1r2path" name="defaultc1r2path" value="<?=PUBLICPATH?>/specialpage/2">
                         </div>
                     </div>
                 </div>
@@ -109,6 +120,7 @@ include 'adm_nav.php';
                             <button class="btn btn-outline-secondary linkBtn" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal"
                             target="c1r3path">Link</button>
                             <input type="hidden" id="c1r3path" name="c1r3path" value="<?=$data['result']['c1r3path']?>">
+                            <input type="hidden" id="defaultc1r3path" name="defaultc1r3path" value="<?=PUBLICPATH?>/specialpage/3">
                         </div>
                     </div>
                 </div>
@@ -122,6 +134,7 @@ include 'adm_nav.php';
                             <button class="btn btn-outline-secondary linkBtn" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal"
                             target="c1r4path">Link</button>
                             <input type="hidden" id="c1r4path" name="c1r4path" value="<?=$data['result']['c1r4path']?>">
+                            <input type="hidden" id="defaultc1r4path" name="defaultc1r4path" value="<?=PUBLICPATH?>/specialpage/4">
                         </div>
                     </div>
                 </div>
@@ -149,6 +162,7 @@ include 'adm_nav.php';
                              target="c2r1path">
                             Link</button>
                             <input type="hidden" id="c2r1path" name="c2r1path" value="<?=$data['result']['c2r1path']?>">
+                            <input type="hidden" id="defaultc2r1path" name="defaultc2r1path" value="<?=PUBLICPATH?>/specialpage/5">
                         </div>
                         
                     </div>
@@ -163,6 +177,7 @@ include 'adm_nav.php';
                             <button class="btn btn-outline-secondary linkBtn" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal"
                             target="c2r2path">Link</button>
                             <input type="hidden" id="c2r2path" name="c2r2path" value="<?=$data['result']['c2r2path']?>">
+                            <input type="hidden" id="defaultc2r2path" name="defaultc2r2path" value="<?=PUBLICPATH?>/specialpage/6">
                         </div>
                         
                     </div>
@@ -177,6 +192,7 @@ include 'adm_nav.php';
                             <button class="btn btn-outline-secondary linkBtn" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal"
                             target="c2r3path">Link</button>
                             <input type="hidden" id="c2r3path" name="c2r3path" value="<?=$data['result']['c2r3path']?>">
+                            <input type="hidden" id="defaultc2r3path" name="defaultc2r3path" value="<?=PUBLICPATH?>/specialpage/7">
                         </div>
                     </div>
                 </div>
@@ -190,6 +206,7 @@ include 'adm_nav.php';
                             <button class="btn btn-outline-secondary linkBtn" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal"
                             target="c2r4path">Link</button>
                             <input type="hidden" id="c2r4path" name="c2r4path" value="<?=$data['result']['c2r4path']?>">
+                            <input type="hidden" id="defaultc2r4path" name="defaultc2r4path" value="<?=PUBLICPATH?>/specialpage/8">
                         </div>
                     </div>
                 </div>
@@ -255,6 +272,7 @@ include 'adm_nav.php';
                     <button class="btn btn-outline-secondary linkBtn" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal"
                     target="bottomtextpath">Link</button>
                     <input type="hidden" id="bottomtextpath" name="bottomtextpath" value="<?=$data['result']['bottomtextpath']?>">
+                    <input type="hidden" id="defaulttextpath" name="defaulttextpath" value="<?=ROOT?>/specialpage/9">
                 </div>
             </div>
         </div>
@@ -287,6 +305,11 @@ include 'adm_nav.php';
     $(".saveLink").click(function(){
        var targetId="#"+$('#target').val();
        $(targetId).val($('#linkInModal').val())
+    })
+
+    $("#defaultValue").click(function(){
+       var targetId="#default"+$(this).parent().parent().parent().parent().parent().find("input#target").val();
+       $('#linkInModal').val($(targetId).val());
     })
 
 </script>
