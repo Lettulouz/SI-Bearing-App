@@ -23,9 +23,9 @@
         <th>Lp.</th>
         <th>Nazwa produktu</th>
         <th>Nazwa firmy</th>
-        <th>Kraj</th>
+        <th class='d-none d-lg-table-cell'>Kraj</th>
         <th>Ilość</th>
-        <th>Cena</th>
+        <th class='d-none d-md-table-cell'>Cena</th>
         <th></th>
         </tr>
         </thead>
@@ -44,9 +44,9 @@
                 <td>".$j."</td>
                 <td>{$item['itemName']}</td>
                 <td>{$item['manufacturerName']}</td>
-                <td>{$item['manufacturerCountry']}</td>
+                <td class='d-none d-lg-table-cell'>{$item['manufacturerCountry']}</td>
                 <td>{$item['amount']}</td>
-                <td>{$item['price']} zł</td>
+                <td class='d-none d-md-table-cell'>{$item['price']} zł</td>
                 <td class='px-0 mx-0'>
 
                 <div class='listBtn mb-1'>
@@ -56,34 +56,35 @@
                     </button>
                 </div>
 
-                <div class='dyn' id='btnGrp".$j."'>
-                    <div class='btn-group bGroup' role='group' aria-label='Basic example'>
-                        <button type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm tabBtn' 
-                        data-bs-toggle='collapse' data-bs-target='#row".$j."' aria-expanded='false'>
-                            <i class='bi bi-bar-chart-steps'></i>
-                        </button>
+                <div class='dyn' id='btnGrp".$j."' align='center'>
+                        <div class='btn-group btn-group-sm bGroup' role='group' aria-label='Basic example'>
+                            <a type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm tabBtn' 
+                            data-bs-toggle='collapse' data-bs-target='#row".$j."' aria-expanded='false'>
+                                <i class='bi bi-bar-chart-steps'></i>
+                            </a>
 
-                        <button type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm  tabBtn' 
-                        data-bs-toggle='collapse' data-bs-target='#row".$j."2' aria-expanded='false'>
-                            <i class='bi bi-journals'></i>
-                        </button>
+                            <a type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm  tabBtn' 
+                            data-bs-toggle='collapse' data-bs-target='#row".$j."2' aria-expanded='false'>
+                                <i class='bi bi-journals'></i>
+                            </a>
 
-                        <button type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm  tabBtn' 
-                        data-bs-toggle='collapse' data-bs-target='#row".$j."3' aria-expanded='false'>
-                            <i class='bi bi-journal-richtext'></i>
-                        </button>
-
+                            <a type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm  tabBtn' 
+                            data-bs-toggle='collapse' data-bs-target='#row".$j."3' aria-expanded='false'>
+                                <i class='bi bi-journal-richtext'></i>
+                            </a>
+                        
 
                     </div>
-                    
-                    <a href='".$editItemPath."/".$item['iid']."' type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm mx-1 tabBtn'>
-                        <i class='bi bi-gear-fill'></i>
-                    </a>
+                        
+                        <a href='".$editItemPath."/".$item['iid']."' style='width:32px' type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm mx-1 tabBtn tabLink'>
+                            <i class='bi bi-gear-fill'></i>
+                        </a>
 
-                    <a href='".$removeItemPath."/".$item['iid']."' type='button' data-toggle='collapse' class='btn btn-danger d-inline btn-sm mx-1 tabBtn'>
-                        <i class='bi bi-trash-fill'></i>
-                    </a>
-                </div>    
+                        <a href='".$removeItemPath."/".$item['iid']."'  style='width:32px' type='button' data-toggle='collapse' class='btn btn-danger d-inline btn-sm mx-1 tabBtn tabLink'>
+                            <i class='bi bi-trash-fill'></i>
+                        </a>
+ 
+                </div>  
                 </td>
             </tr>
             
@@ -201,17 +202,19 @@ $('.clrBtn').click(function(){
 
 
     function hideButtons(){
-        if($('main').width()<946){
+        if($('main').width()<970){
             $(".dyn").addClass("collapse");
             $(".bGroup").addClass("btn-group-vertical");
             $(".bGroup").removeClass("btn-group");
-            $(".tabBtn").addClass("d-block ");
+            $(".tabBtn").addClass("d-block");
+            $(".tabLink").addClass("mt-1");
            $(".listBtn").show();
         }else{
             $(".dyn").removeClass("collapse")
-            $(".bGroup").removeClass("btn-group-vertical");
+            $(".bGroup").removeClass("btn-group-vertical ");
             $(".bGroup").addClass("btn-group");
             $(".tabBtn").removeClass("d-block");
+            $(".tabLink").removeClass("mt-1");
             $(".listBtn").hide();
         }
     }
