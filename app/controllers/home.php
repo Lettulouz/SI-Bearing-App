@@ -16,6 +16,9 @@ class Home extends Controller
             empty($_POST['itemID']);
         }
 
+        isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false;   
+        isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
+
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteFooter = $this->getFooter($db);
 
@@ -144,11 +147,13 @@ class Home extends Controller
         
         $this->view('home/index', ['itemsArray'=>$result, 'search' => $search, 'limit1' => $page, 
             'manufacturerArray' => $manufacturer, 'last'=> $endofitems,
-            'test' => $id_manufacturer, 'siteFooter' => $siteFooter]); // ten 'test' to do wywalenia na koniec
+            'test' => $id_manufacturer, 'siteFooter' => $siteFooter, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]); // ten 'test' to do wywalenia na koniec
             
     }
 
     public function basket(){
+        isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
+        isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteFooter = $this->getFooter($db);
 
@@ -164,7 +169,7 @@ class Home extends Controller
         $itemsInBacket = $db->query($query);
         $itemsInBacket = $itemsInBacket->fetchAll(PDO::FETCH_ASSOC);
         
-        $this->view('home/basket', ['siteFooter' => $siteFooter, 'itemsArray'=>$itemsInBacket]);
+        $this->view('home/basket', ['siteFooter' => $siteFooter, 'itemsArray'=>$itemsInBacket, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
     }
 
     private function getFooter($db){
@@ -180,10 +185,12 @@ class Home extends Controller
     }
 
     public function item(){
+        isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
+        isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteFooter = $this->getFooter($db);
         
-        $this->view('home/item', ['siteFooter' => $siteFooter]);
+        $this->view('home/item', ['siteFooter' => $siteFooter, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
     }
 
 }

@@ -273,6 +273,8 @@ class Admin extends Controller
         $password = '';
         if(isset($_POST['senduser']))
         {
+            $adminPass = false;
+
             $query = "SELECT id FROM users ORDER BY id DESC LIMIT 1";
             $result = $db->prepare($query);
             $result->execute();
@@ -284,9 +286,15 @@ class Admin extends Controller
             $login = strtolower($_POST['login']);
             $password = $_POST['pass'];
             $role = "user";
-            $temporary = 1;
-            $authhash = hash('sha256',$name . $lastName . $email . $login . $role . $result['id']);
-
+            if(isset($_POST['userActivated'])){
+                $temporary = 0;
+                $authhash = NULL;
+                $adminPass = true;
+            }else{
+                $temporary = 1;
+                $authhash = hash('sha256',$name . $lastName . $email . $login . $role . $result['id']);
+            }
+            
             if(empty($password)){
                 $length = 10;
                 $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -295,7 +303,7 @@ class Admin extends Controller
                     $password.= $characters[rand(0, $charactersLength - 1)];
                 }
             }
-            if(empty($name) || empty($lastName) || empty($email) || empty($login)){
+            if(empty($name) || empty($lastName) || empty($login) || ($adminPass==false) && empty($email)){
                 $_SESSION['error_page'] = "add_user";
                 header("Location:" . ROOT . "/admin/error_page/1");
             }else{
@@ -330,49 +338,49 @@ class Admin extends Controller
                     $result->bindParam(':temporary', $temporary);
                     $result->bindParam(':authhash', $authhash);
                     $result->execute();
-                    $path = PUBLICPATH;
-                    try{
-                    $config = require_once dirname(__FILE__,2) . '/core/mailerconfig.php';
-                    $mail = new PHPMailer();
-    
-                    $mail->isSMTP();
-    
-                    $mail->Host = $config['host'];
-                    $mail->Port = $config['port'];
-                    $mail->SMTPSecure =   PHPMailer::ENCRYPTION_SMTPS;
-                    $mail->SMTPAuth = true;
-    
-                    $mail->Username = $config['username'];
-                    $mail->Password = $config['password'];
-    
-                    $mail->CharSet = 'UTF-8';
-                    $mail->setFrom($config['username'], 'Grontsmar');
-                    $mail->addAddress($email);
-                    $mail->addReplyTo($config['username'], 'Grontsmar');
-    
-                    $mail->isHTML(true);
-                    $mail->Subject = 'Założone konto w sklepie Grontsmar';
-                    $mail->Body = "<html>
-                    <head>
-                    <title> Założone konto w sklepie Grontsmar </title>
-                    </head>
-                    <body>
-                    <h1> Dzień dobry! </h1>
-                    <p> Na ten email zostało utworzone konto w sklepie Grontsmar. Oto dane: </p>
-                    <p> Login: $login </p>
-                    <p> Hasło: $password </p>
-                    <a href='$path/userverify/$authhash'>Link aktywacyjny</a>
-                    <br>
-                    <br>
-                    <p> Masz 48h na aktywację konta, po tym czasie konto zostanie usunięte. </p>
-                    </body>
-                    </html>";
-    
-                    //$mail->addAttachment('ścieżka');
-    
-                    $mail->send();
-                } catch(Exception $e){
-                    echo "<script>alert('Błąd wysyłania maila!')</script>";
+                    if($adminPass == false){
+                        $path = PUBLICPATH;
+                        try{
+                        $config = require_once dirname(__FILE__,2) . '/core/mailerconfig.php';
+                        $mail = new PHPMailer();
+        
+                        $mail->isSMTP();
+        
+                        $mail->Host = $config['host'];
+                        $mail->Port = $config['port'];
+                        $mail->SMTPSecure =   PHPMailer::ENCRYPTION_SMTPS;
+                        $mail->SMTPAuth = true;
+        
+                        $mail->Username = $config['username'];
+                        $mail->Password = $config['password'];
+        
+                        $mail->CharSet = 'UTF-8';
+                        $mail->setFrom($config['username'], 'Grontsmar');
+                        $mail->addAddress($email);
+                        $mail->addReplyTo($config['username'], 'Grontsmar');
+        
+                        $mail->isHTML(true);
+                        $mail->Subject = 'Założone konto w sklepie Grontsmar';
+                        $mail->Body = "<html>
+                        <head>
+                        <title> Założone konto w sklepie Grontsmar </title>
+                        </head>
+                        <body>
+                        <h1> Dzień dobry! </h1>
+                        <p> Na ten email zostało utworzone konto w sklepie Grontsmar. Oto dane: </p>
+                        <p> Login: $login </p>
+                        <p> Hasło: $password </p>
+                        <a href='$path/userverify/$authhash'>Link aktywacyjny</a>
+                        <br>
+                        <br>
+                        <p> Masz 48h na aktywację konta, po tym czasie konto zostanie usunięte. </p>
+                        </body>
+                        </html>";
+        
+                        $mail->send();
+                    } catch(Exception $e){
+                        echo "<script>alert('Błąd wysyłania maila!')</script>";
+                    }
                 }
                     $_SESSION['success_page'] = "add_user";
                     header("Location:" . ROOT . "/admin/success_page/1");

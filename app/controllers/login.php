@@ -19,6 +19,7 @@ class Login extends Controller
     }
 
     public function set_new_password($hash = 0){
+        unset($_SESSION['loggedUser']);
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteFooter = $this->getFooter($db);
 
@@ -91,6 +92,7 @@ class Login extends Controller
     }
 
     public function forgotten_password(){
+        unset($_SESSION['loggedUser']);
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteFooter = $this->getFooter($db);
 
@@ -159,6 +161,7 @@ class Login extends Controller
     }
     
     public function validate(){
+        unset($_SESSION['loggedUser']);
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteFooter = $this->getFooter($db);
 
@@ -248,13 +251,14 @@ class Login extends Controller
     private function checkIfUserExists($email, $db){
         $_SESSION['emailOrLoginInput'] =  $this->emailOrLoginInput;
         $email 
-        ? $userQuery = $db->prepare('SELECT id, password, role, temporary FROM users WHERE email = :emailorlogin') 
-        : $userQuery = $db->prepare('SELECT id, password, role, temporary FROM users WHERE login = :emailorlogin');
+        ? $userQuery = $db->prepare('SELECT id, name, password, role, temporary FROM users WHERE email = :emailorlogin') 
+        : $userQuery = $db->prepare('SELECT id, name, password, role, temporary FROM users WHERE login = :emailorlogin');
         $userQuery->bindValue(':emailorlogin', $this->emailOrLoginInput, PDO::PARAM_STR);
         $userQuery->execute();
 
         $this->ifUserExist = $userQuery->fetch(PDO::FETCH_ASSOC);
         if($this->ifUserExist['temporary'] == 1) $this->errorDuringValidation("*Konto nie zostało aktywowane, sprawdź maila celem jego aktywacji");
+        if($this->ifUserExist) $_SESSION['loggedUser_name'] = $this->ifUserExist['name'];
         $this->ifUserExist ? ($this->userRole = $this->ifUserExist['role']) : $this->errorDuringValidation("*Podano błędny email lub hasło");
     }
 

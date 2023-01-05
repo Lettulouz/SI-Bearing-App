@@ -47,11 +47,21 @@ include 'adm_nav.php';
                     </div>
                 </div>
                 <div class="row m-2">
+                    <div class="col-12">
+                        <div class="form-check form-switch">
+                            <label class="form-check-label" 
+                            style="margin-top: 5px; margin-left: 10px; font-weight: bold; font-size:18px" 
+                            for="userActivated">Aktywowany?</label>
+                            <input class="form-check-input" style="height:30px; width:60px;" type="checkbox" 
+                            id="userActivated" name="userActivated">
+                        </div>
+                    </div>
+                </div>
+                <div class="row m-2">
                     <div class="float-end">
                         <button type="submit" class="btn btn-primary btn-lg float-end" name="senduser">Dodaj</button>
                     </div>
-
-            </div>
+                </div>
             </div>
           
     </form>

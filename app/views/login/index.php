@@ -1,7 +1,10 @@
 <?php include "loginHeader.php"; ?>
 
+<?php include dirname(__FILE__,2) . "/navbar_top.php"; ?>
+
+
 <div class="container mt-5 mb-5">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center mt-5">
         <div class="col-12 col-md-6">
             <div class="card p-4" style="height:385px">
                 <div class="card-body">

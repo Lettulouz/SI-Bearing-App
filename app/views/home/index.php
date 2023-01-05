@@ -5,138 +5,131 @@
 
 <?php include "sidebar_top.php"; ?>
 <form method="POST" id="nwm" action ="">
-<a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link"
-         data-bs-toggle="collapse" role="button" data-bs-target="#manufacturersGroup"  aria-controls="#manufacturersGroup" 
-         aria-expanded="<?=!empty($_POST['checkboxvar']) ? 'true' : 'false' ?>">Producenci
-         <span class="bi bi-chevron-right right-icon ms-auto"></span>
-        </a>
+    <a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link"
+    data-bs-toggle="collapse" role="button" data-bs-target="#manufacturersGroup" aria-controls="#manufacturersGroup" 
+    aria-expanded="<?=!empty($_POST['checkboxvar']) ? 'true' : 'false' ?>">Producenci
+        <span class="bi bi-chevron-right right-icon ms-auto"></span>
+    </a>
 
-<div class='collapse <?=!empty($_POST['checkboxvar']) ? 'show' : '' ?>' id="manufacturersGroup">
-    <?php
-        $k = 0;
-        $manufacturer = $data['manufacturerArray'];
-        foreach($manufacturer as $manufacturer) 
-        {
-            echo "<div class='form-check'>
-                <input class='form-check-input checkboxvar' id='manufacturer".$k."' type='checkbox' name='checkboxvar[]' value='".$manufacturer['id']."' ";
-                if ((!empty($_POST["checkboxvar"]) && in_array($manufacturer['id'], $_POST["checkboxvar"])))
-                {
-                    echo "checked";
-                }
-                 echo ">";
-                echo "<label class='form-check-label' for='manufacturer".$k."''>".$manufacturer['name']."</label>
-            </div>";
-            $k++;
-        }
-        
-
-
-    ?>
-
-</div>
-<div class="mt-2">
-    <button type="button" class="btn btn-outline-primary filterSub">Prześlij</button>
-    <button type="button" class="btn btn-outline-danger resetSub">Resetuj</button>
+    <div class='collapse <?=!empty($_POST['checkboxvar']) ? 'show' : '' ?>' id="manufacturersGroup">
+        <?php
+            $k = 0;
+            $manufacturer = $data['manufacturerArray'];
+            foreach($manufacturer as $manufacturer) 
+            {
+                echo "<div class='form-check'>s
+                    <input class='form-check-input checkboxvar' id='manufacturer".$k."' type='checkbox' name='checkboxvar[]' value='".$manufacturer['id']."' ";
+                    if ((!empty($_POST["checkboxvar"]) && in_array($manufacturer['id'], $_POST["checkboxvar"])))
+                    {
+                        echo "checked";
+                    }
+                    echo ">";
+                    echo "<label class='form-check-label' for='manufacturer".$k."''>".$manufacturer['name']."</label>
+                </div>";
+                $k++;
+            }
+        ?>
     </div>
-<?php include "sidebar_bottom.php"; ?>
-<div class="row mb-3 panelBtn"> 
-    <div class="d-flex ">
-        <div>
-            <button class="btn btn-light btn-lg ms-3 me-2" type="button" data-bs-toggle="offcanvas" href=".sidebar" role="button" aria-controls="sidebar">
-                <i class="bi bi-list"></i>
-                    </button>
+    <div class="mt-2">
+        <button type="button" class="btn btn-outline-primary filterSub">Prześlij</button>
+        <button type="button" class="btn btn-outline-danger resetSub">Resetuj</button>
+    </div>
+    <?php include "sidebar_bottom.php"; ?>
+    <div class="row mb-3 panelBtn"> 
+        <div class="d-flex mt-2">
+            <div>
+                <button class="btn btn-light btn-lg ms-3 me-2" type="button" data-bs-toggle="offcanvas" href=".sidebar" role="button" aria-controls="sidebar">
+                    <i class="bi bi-list"></i>
+                </button>
+            </div>                                        
         </div>
-                    
-                   
     </div>
-    </div>
-<div class='homeMain container mb-1 mt-5W px-5'>
-<div class="row mb-3 searchBar"> 
-    <div class="d-flex">
-
-                    <div class='col-7 '>
+    <div class='homeMain container mb-1 mt-5W px-5'>
+        <div class="row mb-3 mt-2 searchBar"> 
+            <div class="d-flex">
+                <div class='col-7 '>
                     <div class="input-group">
                         <input type='text' class='form-control form-sm' id='searchBox' 
-                            value='<?=isset($data['search']) ? $data['search'] : '' ?>' name='search' placeholder="szukaj">
-                            <button type="button" class="btn bg-transparent clrBtn" style="margin-left: -40px; z-index: 100;">
+                        value='<?=isset($data['search']) ? $data['search'] : '' ?>' name='search' placeholder="szukaj">
+                        <button type="button" class="btn bg-transparent clrBtn" style="margin-left: -40px; z-index: 100;">
                             <i class="bi bi-x"></i>
-                            </button>
-                            <button class="btn btn-outline-primary sub" type="submit">szukaj</button>
+                        </button>
+                        <button class="btn btn-outline-primary sub" type="submit">szukaj</button>
                     </div>
+                </div>
+                <div class="ms-2 me-1 input-group d-flex">
+                    <button type='button' id='lft' class='btn btn-outline-primary btn-sm'>
+                        <i class='bi bi-arrow-left'></i>
+                    </button>
+                    <div class='col-3 col-md-2'>
+                        <input type='number' style='text-align:center;' id='page' class='form-control px-0' 
+                        value='<?=isset($data['limit1']) ? $data['limit1'] : 1 ?>' name='limit1'/>
                     </div>
-                    
-                        <div class="ms-2 me-1 input-group d-flex">
-                            <button type='button' id='lft' class='btn btn-outline-primary btn-sm'><i class='bi bi-arrow-left'></i></button>
-                                <div class='col-3 col-md-2'>
-                                    <input type='number' style='text-align:center;'  id='page' class='form-control px-0' 
-                                    value='<?=isset($data['limit1']) ? $data['limit1'] : 1 ?>' name='limit1'/>
+                    <button type='button' id='rgt' 
+                    class='<?=$data['last']==1 ? 'btn btn-outline-secondary disabled' : 'btn btn-outline-primary'?> btn-sm'>
+                        <i class='bi bi-arrow-right'></i>
+                    </button>
+                </div>      
+            </div>
+        </div>
+        <div class="row items mw-75">          
+            <?php        
+            $j = 0;
+            $three = 3;
+            $items = $data['itemsArray'];
+            foreach($items as $j => $item) 
+            {
+                $imagePath = APPPATH . "/resources/[" . $item['itemID'] . "].png";
+                $imagePathCheck = RESOURCEPATH . "/[" . $item['itemID'] . "].png";
+
+                if(!file_exists($imagePathCheck)){
+                    $imagePath = APPPATH . "/resources/brak_zdjecia.png";
+                }
+                    echo "<div class='col-12 col-md-6 col-lg-4 col-xl-3 mb-4'>
+                            <div class='card h-100'>"; 
+
+                                // zdjecie jako link do itemku
+                                echo "<a href=";
+                                echo ROOT.'/public/item'; 
+                                echo " >";
+                                echo "<img src='" . $imagePath . "'  alt='zdjęcie łożyska' class='card-img-top img-thumbnail' 
+                                style='object-fit:contain; height:286px;'>";
+                                echo "</a>";
+
+                                echo "<div class='card-body'>
+                                    <h4  class='card-title'>";
+
+                                    // nazwa jako link do itemku
+                                    echo " <a href= ";
+                                    echo ROOT.'/item';
+                                    echo " >";
+                                    echo "<b>  {$item['name']} </b>";
+                                    echo "</a>";
+
+                                    echo "</h4> <div class='card-text'> 
+                                    <h5>firma: {$item['name2']} </h5>
+                                    <p> <b> {$item['title']} </b> <br/>
+                                    {$item['description']}</p>
+                                    </div>
+                                    <div class='card-basket position-absolute bottom-0 w-100'>
+                                        <b> Cena: 1500zł </b>
+                                        <form method='post' action='#'>
+                                            <input type='hidden' value=".$item['itemID']." name='itemID'>
+                                            <button type='submit' class='btn btn-danger btn-basket end-0 position-absolute'>
+                                                <i class='bi bi-basket2'></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
-                            <button type='button' id='rgt' class='<?=$data['last']==1 ? 'btn btn-outline-secondary disabled' : 'btn btn-outline-primary'?> btn-sm'>
-                            <i class='bi bi-arrow-right'></i></button>
-                        </div>
-                   
-    </div>
-    </div>
-    </form>
-<div class="row items mw-75">          
-    <?php
-    
-    $j = 0;
-    $three = 3;
-    $items = $data['itemsArray'];
-    foreach($items as $j => $item) 
-    {
-        $imagePath = APPPATH . "/resources/[" . $item['itemID'] . "].png";
-        $imagePathCheck = RESOURCEPATH . "/[" . $item['itemID'] . "].png";
-
-        if(!file_exists($imagePathCheck)){
-            $imagePath = APPPATH . "/resources/brak_zdjecia.png";
-        }
-            echo "<div class='col-12 col-md-6 col-lg-4 col-xl-3 mb-4'>
-                    <div class='card h-100'>"; 
-
-                        // zdjecie jako link do itemku
-                        echo "<a href=";
-                        echo ROOT.'/public/item'; 
-                        echo " >";
-                        echo "<img src='" . $imagePath . "'  alt='zdjęcie łożyska' class='card-img-top img-thumbnail' 
-                        style='object-fit:contain; height:286px;'>";
-                        echo "</a>";
-
-                        echo "<div class='card-body'>
-                            <h4  class='card-title'>";
-
-                            // nazwa jako link do itemku
-                            echo " <a href= ";
-                            echo ROOT.'/public/item';
-                            echo " >";
-                            echo "<b>  {$item['name']} </b>";
-                            echo "</a>";
-
-                            echo "</h4> <div class='card-text'> 
-                            <h5>firma: {$item['name2']} </h5>
-                            <p> <b> {$item['title']} </b> <br/>
-                            {$item['description']}</p>
                             </div>
-                            <div class='card-basket position-absolute bottom-0 w-100'>
-                                <b> Cena: 1500zł </b>
-                                <form method='post' action='#'>
-                                    <input type='hidden' value=".$item['itemID']." name='itemID'>
-                                    <button type='submit' class='btn btn-danger btn-basket end-0 position-absolute'>
-                                        <i class='bi bi-basket2'></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div> ";
-        
-        $j++;
-    }
-    ?>
+                        </div> ";
+                
+                $j++;
+            }
+            ?>
+        </div>
     </div>
-
-</div>
+</form>
 
 
 <script>

@@ -40,6 +40,7 @@ class Register extends Controller
     }
     
     public function validate(){
+        unset($_SESSION['loggedUser']);
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteFooter = $this->getFooter($db);
 
