@@ -32,7 +32,7 @@
                 <div class="row m-2">
                     <div class="col">
                         <div class="form-floating ">
-                            <input type="number" class="form-control" id="quantityInput" min="0" name="price" value="<?=$data['prevItems']['prevPrice']?>" placeholder="1">
+                            <input type="number" class="form-control" id="quantityInput" min="0.01 " step="0.01" name="price" value="<?=$data['prevItems']['prevPrice']?>" placeholder="1">
                             <label class="form-control-lg lg-custom" for="quantityInput">Cena</label>
                         </div>
                     </div>

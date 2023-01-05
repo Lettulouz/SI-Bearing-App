@@ -2,31 +2,95 @@
 <?php include "navbar_top.php"; ?>
 <?php include "sidebar_top.php"; ?>
 <form method="POST" id="nwm" action ="">
-    <a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link"
-    data-bs-toggle="collapse" role="button" data-bs-target="#manufacturersGroup" aria-controls="#manufacturersGroup" 
-    aria-expanded="<?=!empty($_POST['checkboxvar']) ? 'true' : 'false' ?>">Producenci
-        <span class="bi bi-chevron-right right-icon ms-auto"></span>
-    </a>
+    <li>
+        <a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link"
+        data-bs-toggle="collapse" role="button" data-bs-target="#manufacturersGroup" aria-controls="#manufacturersGroup" 
+        aria-expanded="<?=!empty($_POST['checkboxvar']) ? 'true' : 'false' ?>">Producenci
+            <span class="bi bi-chevron-right right-icon ms-auto"></span>
+        </a>
 
-    <div class='collapse <?=!empty($_POST['checkboxvar']) ? 'show' : '' ?>' id="manufacturersGroup">
-        <?php
-            $k = 0;
-            $manufacturer = $data['manufacturerArray'];
-            foreach($manufacturer as $manufacturer) 
-            {
-                echo "<div class='form-check'>s
-                    <input class='form-check-input checkboxvar' id='manufacturer".$k."' type='checkbox' name='checkboxvar[]' value='".$manufacturer['id']."' ";
-                    if ((!empty($_POST["checkboxvar"]) && in_array($manufacturer['id'], $_POST["checkboxvar"])))
+        <div class='collapse <?=!empty($_POST['checkboxvar']) ? 'show' : '' ?>' id="manufacturersGroup">
+            <?php
+                $k = 0;
+                $manufacturer = $data['manufacturerArray'];
+                foreach($manufacturer as $manufacturer) 
+                {
+                    echo "<div class='form-check'>
+                        <input class='form-check-input checkboxvar' id='manufacturer".$k."' type='checkbox' name='checkboxvar[]' value='".$manufacturer['id']."' ";
+                        if ((!empty($_POST["checkboxvar"]) && in_array($manufacturer['id'], $_POST["checkboxvar"])))
+                        {
+                            echo "checked";
+                        }
+                        echo ">
+                        <label class='form-check-label' for='manufacturer".$k."''>".$manufacturer['name']."</label>
+                    </div>";
+                    $k++;
+                }
+            ?>
+        </div>
+        </li>
+        <li class="my-1">
+            <hr class="dropdown divider">
+        </li>
+        <li>
+            <a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link"
+            data-bs-toggle="collapse" role="button" data-bs-target="#categGroup" aria-controls="#categGroup" 
+            aria-expanded="<?=!empty($_POST['checkboxvar']) ? 'true' : 'false' ?>">Kategorie
+                <span class="bi bi-chevron-right right-icon ms-auto"></span>
+            </a>
+
+            <div class='collapse <?=!empty($_POST['checkboxvar']) ? 'show' : '' ?>' id="categGroup">
+                <?php
+                    $k = 0;
+                    $categories = $data['categArray'];
+                    foreach($categories as $category) 
                     {
-                        echo "checked";
+                        echo "<div class='form-check'>
+                            <input class='form-check-input checkboxvar' id='category".$k."' type='checkbox' name='checkboxvar[]' value='".$category['id']."' ";
+                            if ((!empty($_POST["checkboxvar"]) && in_array($category['id'], $_POST["checkboxvar"])))
+                            {
+                                echo "checked";
+                            }
+                            echo ">
+                          <label class='form-check-label' for='category".$k."''>".$category['name']."</label>
+                        </div>";
+                        $k++;
                     }
-                    echo ">";
-                    echo "<label class='form-check-label' for='manufacturer".$k."''>".$manufacturer['name']."</label>
-                </div>";
-                $k++;
-            }
-        ?>
-    </div>
+                ?>
+            </div>
+        </li>
+        
+        <li class="my-1">
+            <hr class="dropdown divider">
+        </li>
+        <li>
+            <a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link"
+            data-bs-toggle="collapse" role="button" data-bs-target="#catGroup" aria-controls="#catGroup" 
+            aria-expanded="<?=!empty($_POST['checkboxvar']) ? 'true' : 'false' ?>">Katalogi
+                <span class="bi bi-chevron-right right-icon ms-auto"></span>
+            </a>
+
+            <div class='collapse <?=!empty($_POST['checkboxvar']) ? 'show' : '' ?>' id="catGroup">
+                <?php
+                    $k = 0;
+                    $catalogs = $data['catalogsArray'];
+                    foreach($catalogs as $catalog) 
+                    {
+                        echo "<div class='form-check'>
+                            <input class='form-check-input checkboxvar' id='category".$k."' type='checkbox' name='checkboxvar[]' value='".$category['id']."' ";
+                            if ((!empty($_POST["checkboxvar"]) && in_array($catalog['id'], $_POST["checkboxvar"])))
+                            {
+                                echo "checked";
+                            }
+                            echo ">
+                          <label class='form-check-label' for='category".$k."''>".$catalog['name']."</label>
+                        </div>";
+                        $k++;
+                    }
+                ?>
+            </div>
+        </li>   
+
     <div class="mt-2">
         <button type="button" class="btn btn-outline-primary filterSub">Prześlij</button>
         <button type="button" class="btn btn-outline-danger resetSub">Resetuj</button>
@@ -105,19 +169,17 @@
 
                                     echo "</h4> <div class='card-text'> 
                                     <h5>firma: {$item['name2']} </h5>
-                                    <p> <b> {$item['title']} </b> <br/>
-                                    {$item['description']}</p>
-                                    </div>
-                                    <div class='card-basket position-absolute bottom-0 w-100'>
-                                        <b> Cena: 1500zł </b>
-                                        <form method='post' action='#'>
+                                </div>
+                                </div>
+                                    <div class='card-footer'>
+                                        <form method='post' class='m-0 p-0' action='#'>
+                                        <b> Cena: {$item['price']} zł </b>
                                             <input type='hidden' value=".$item['itemID']." name='itemID'>
-                                            <button type='submit' class='btn btn-danger btn-basket end-0 position-absolute'>
+                                            <button type='submit' class='btn btn-danger float-end '>
                                                 <i class='bi bi-basket2'></i>
                                             </button>
                                         </form>
                                     </div>
-                                </div>
                             </div>
                         </div> ";
                 
@@ -136,6 +198,12 @@
             $('#lft').addClass('btn btn-outline-secondary disabled');
         }
         temp=$('#searchBox').val();
+
+        //show sidebar at load page if at least one of checkboxes is checked
+        //and window is wide enough
+        if($(window).width()>1536 && $('.sidebar').find(':checkbox:checked').length > 0){
+            $('.sidebar').offcanvas('show')
+        }
     })
 
     $('#rgt').click(function(){
@@ -150,14 +218,8 @@
         $('#nwm').submit();
     })
 
-    //show sidebar at load page if at least one of checkboxes is checked
-    //and window is wide enough
-    $( document ).ready(function() {
-        if($(window).width()>1536 && $(".sidebar").find(':checkbox:checked').length > 0){
-            $(".sidebar").addClass('show');
-        }
-    });
-
+    
+   
     //filter items
     $('.filterSub').click(function(){
         $('#page').val(1);

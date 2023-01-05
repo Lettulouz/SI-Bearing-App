@@ -49,6 +49,14 @@ class Home extends Controller
         $manufacturer = $db->query($query_m);
         $manufacturer = $manufacturer->fetchAll(PDO::FETCH_ASSOC);
 
+        $query_categ="SELECT id, name FROM categories;";
+        $categories = $db->query($query_categ);
+        $categories = $categories->fetchAll(PDO::FETCH_ASSOC);
+
+        $query_catalog="SELECT id, name FROM catalog;";
+        $catalogs = $db->query($query_catalog);
+        $catalogs = $catalogs->fetchAll(PDO::FETCH_ASSOC);
+
 
 
         // pobiera do tablicy id producetnów
@@ -80,9 +88,8 @@ class Home extends Controller
             }
         }
 
-        $query="SELECT d.title, d.description, i.name, i.id as itemID, m.name as 'name2'
+        $query="SELECT i.name, i.id as itemID, price, m.name as 'name2'
             FROM items i 
-            LEFT JOIN descriptions d ON d.id_item=i.id
             INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
             INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
             WHERE i.name LIKE '%".$search."%' 
@@ -147,7 +154,8 @@ class Home extends Controller
         
         $this->view('home/index', ['itemsArray'=>$result, 'search' => $search, 'limit1' => $page, 
             'manufacturerArray' => $manufacturer, 'last'=> $endofitems,
-            'test' => $id_manufacturer, 'siteFooter' => $siteFooter, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]); // ten 'test' to do wywalenia na koniec
+            'test' => $id_manufacturer, 'siteFooter' => $siteFooter, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name,
+        'categArray'=>$categories, 'catalogsArray'=>$catalogs]); // ten 'test' to do wywalenia na koniec
             
     }
 
