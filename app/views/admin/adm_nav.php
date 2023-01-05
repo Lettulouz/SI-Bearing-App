@@ -86,6 +86,13 @@
                                 <a href="#" class="nav-link text-muted">
                                     Dodawanie administratorów
                                 </a>
+                                <hr class="divider ">
+                                <a href="<?php echo ROOT."/admin/list_of_content_managers"?>" id="mn_list" class="nav-link text-muted">
+                                    Lista obsługi sklepu
+                                </a>
+                                <a href="#" class="nav-link text-muted">
+                                    Dodawanie obsługi sklepu
+                                </a>
                                 <hr class="divider">
                                 <a href="<?php echo ROOT."/admin/list_of_orders"?>" id="ord_list" class="nav-link text-muted">
                                     Zamówienia

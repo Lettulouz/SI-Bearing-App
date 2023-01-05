@@ -257,7 +257,7 @@ class Login extends Controller
         $userQuery->execute();
 
         $this->ifUserExist = $userQuery->fetch(PDO::FETCH_ASSOC);
-        if($this->ifUserExist['temporary'] == 1) $this->errorDuringValidation("*Konto nie zostało aktywowane, sprawdź maila celem jego aktywacji");
+        if($this->ifUserExist['temporary'] == true) $this->errorDuringValidation("*Konto nie zostało aktywowane, sprawdź maila celem jego aktywacji");
         if($this->ifUserExist) $_SESSION['loggedUser_name'] = $this->ifUserExist['name'];
         $this->ifUserExist ? ($this->userRole = $this->ifUserExist['role']) : $this->errorDuringValidation("*Podano błędny email lub hasło");
     }

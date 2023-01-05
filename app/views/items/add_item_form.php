@@ -32,7 +32,7 @@
                 <div class="row m-2">
                     <div class="col">
                         <div class="form-floating">
-                            <input type="number" class="form-control" id="quantityInput" min="0" name="price" step="any" placeholder="1">
+                            <input type="number" class="form-control" id="quantityInput" min="0.01" name="price" step="0.01" placeholder="1">
                             <label class="form-control-lg lg-custom" for="quantityInput">Cena</label>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                 <div class="row m-2">
                     <div class="col">
                         <div class="form-floating ">
-                            <input type="number" class="form-control" id="quantityInput" min="0" name="quantity" placeholder="1">
+                            <input type="number" class="form-control" id="quantityInput" min="0" step="0.01" name="quantity" placeholder="1">
                             <label class="form-control-lg lg-custom" for="quantityInput">Ilość</label>
                         </div>
                     </div>

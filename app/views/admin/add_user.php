@@ -45,6 +45,7 @@ include 'adm_nav.php';
                             <label for="passInput" >Hasło</label> 
                         </div>
                     </div>
+                    <label style="color:darkgray; margin-top:3px">*W przypadku pozostawienia pola hasła pustego użytkownik dostanie losowe hasło na maila</label>
                 </div>
                 <div class="row m-2">
                     <div class="col-12">

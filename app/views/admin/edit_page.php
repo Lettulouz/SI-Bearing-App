@@ -7,11 +7,11 @@ include 'adm_nav.php';
 <form method="post">
     <div class="container mt-4 mb-4">
         <!--Bootstrap classes arrange web page components into columns and rows in a grid -->
-        <div class="row justify-content-md-center">
-            <div class="col-md-12 col-lg-8">
+        <div class="row justify-content-center">
+            <div class="col-11">
                 <h1 class="h2 mb-4">Treść strony <?=$data['editingId']?></h1>
                 <div class="form-group">
-                    <textarea id="editor" name="editor"><?=$data['storedValue']?></textarea>
+                    <textarea style="height:75vh" id="editor" name="editor"><?=$data['storedValue']?></textarea>
                 </div>
                 <button type="submit" name="submitButton" class="btn btn-primary">Edytuj</button>
             </div>
@@ -23,7 +23,7 @@ include 'adm_nav.php';
 tinymce.init({
   selector: 'textarea#editor',
   plugins: 'lists, link, image, media',
-  toolbar: 'h1 h2 bold italic strikethrough blockquote bullist numlist backcolor | alignleft aligncenter alignright alignjustify | link image media | removeformat help',
+  toolbar: 'h1 h2 bold italic strikethrough blockquote bullist numlist backcolor | alignleft aligncenter alignright alignjustify | link image media | removeformat',
   menubar: false,
   setup: (editor) => {
       // Apply the focus effect
