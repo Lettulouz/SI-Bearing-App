@@ -284,7 +284,7 @@ include 'adm_nav.php';
                     <div class="card text-white bg-custom-6 h-100">
                         <a href=<?php echo ROOT."/admin/edit_page/1"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
-                            Edytuj stronę 1
+                            <?=!empty($data['siteLinks']['c1r1']) ? $data['siteLinks']['c1r1'] : 'Strona 1' ?>
                             </div>
                         </a>
                     </div>
@@ -293,7 +293,7 @@ include 'adm_nav.php';
                     <div class="card text-white bg-custom-7 h-100">
                         <a href="<?php echo ROOT."/admin/edit_page/2"?>" id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
-                                Edytuj stronę 2
+                            <?=!empty($data['siteLinks']['c1r2']) ? $data['siteLinks']['c1r2'] : 'Strona 2' ?>
                             </div>
                         </a>
                     </div>    
@@ -302,7 +302,7 @@ include 'adm_nav.php';
                     <div class="card text-white bg-custom-8 h-100">
                         <a href=<?php echo ROOT."/admin/edit_page/3"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
-                                Edytuj stronę 3
+                            <?=!empty($data['siteLinks']['c1r3']) ? $data['siteLinks']['c1r3'] : 'Strona 3' ?>
                             </div>
                         </a>
                     </div>    
@@ -311,7 +311,7 @@ include 'adm_nav.php';
                     <div class="card text-white bg-custom-9 h-100" >
                         <a href=<?php echo ROOT."/admin/edit_page/4"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
-                                Edytuj stronę 4
+                            <?=!empty($data['siteLinks']['c1r4']) ? $data['siteLinks']['c1r4'] : 'Strona 4' ?>
                             </div>
                         </a>
                     </div>    
@@ -320,7 +320,7 @@ include 'adm_nav.php';
                     <div class="card text-white bg-custom-10 h-100" >
                         <a href=<?php echo ROOT."/admin/edit_page/5"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
-                                Edytuj stronę 5
+                            <?=!empty($data['siteLinks']['c2r1']) ? $data['siteLinks']['c2r1'] : 'Strona 5' ?>
                             </div>
                         </a>
                     </div>    
@@ -329,7 +329,7 @@ include 'adm_nav.php';
                     <div class="card text-white bg-custom-11 h-100" >
                         <a href=<?php echo ROOT."/admin/edit_page/6"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
-                                Edytuj stronę 6
+                            <?=!empty($data['siteLinks']['c2r2']) ? $data['siteLinks']['c2r2'] : 'Strona 6' ?>
                             </div>
                         </a>
                     </div>    
@@ -338,7 +338,7 @@ include 'adm_nav.php';
                     <div class="card text-white bg-custom-12 h-100" >
                         <a href=<?php echo ROOT."/admin/edit_page/7"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
-                                Edytuj stronę 7
+                            <?=!empty($data['siteLinks']['c2r3']) ? $data['siteLinks']['c2r3'] : 'Strona 7' ?>
                             </div>
                         </a>
                     </div>    
@@ -347,7 +347,7 @@ include 'adm_nav.php';
                     <div class="card text-white bg-custom-13 h-100" >
                         <a href=<?php echo ROOT."/admin/edit_page/8"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
-                                Edytuj stronę 8
+                            <?=!empty($data['siteLinks']['c2r4']) ? $data['siteLinks']['c2r4'] : 'Strona 8' ?>
                             </div>
                         </a>
                     </div>    

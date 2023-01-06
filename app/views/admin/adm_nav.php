@@ -168,28 +168,28 @@
                             </a>
                             <div class="collapse" id="pages_collapse">
                                 <a href="<?php echo ROOT."/admin/edit_page/1"?>" id="editpage1" class="nav-link text-muted">
-                                    Strona 1
+                                    <?=!empty($data['siteLinks']['c1r1']) ? $data['siteLinks']['c1r1'] : 'Strona 1' ?>
                                 </a>
                                 <a href="<?php echo ROOT."/admin/edit_page/2"?>" id="editpage2" class="nav-link text-muted">
-                                    Strona 2
+                                    <?=!empty($data['siteLinks']['c1r2']) ? $data['siteLinks']['c1r2'] : 'Strona 2' ?>
                                 </a>          
                                 <a href="<?php echo ROOT."/admin/edit_page/3"?>" id="editpage3" class="nav-link text-muted">
-                                    Strona 3
+                                    <?=!empty($data['siteLinks']['c1r3']) ? $data['siteLinks']['c1r3'] : 'Strona 3' ?>
                                 </a>
                                 <a href="<?php echo ROOT."/admin/edit_page/4"?>" id="editpage4" class="nav-link text-muted">
-                                    Strona 4
+                                    <?=!empty($data['siteLinks']['c1r4']) ? $data['siteLinks']['c1r4'] : 'Strona 4' ?>
                                 </a>   
                                 <a href="<?php echo ROOT."/admin/edit_page/5"?>" id="editpage5" class="nav-link text-muted">
-                                    Strona 5
+                                    <?=!empty($data['siteLinks']['c2r1']) ? $data['siteLinks']['c2r1'] : 'Strona 5' ?>
                                 </a>
                                 <a href="<?php echo ROOT."/admin/edit_page/6"?>" id="editpage6" class="nav-link text-muted">
-                                    Strona 6
+                                    <?=!empty($data['siteLinks']['c2r2']) ? $data['siteLinks']['c2r2'] : 'Strona 6' ?>
                                 </a>          
                                 <a href="<?php echo ROOT."/admin/edit_page/7"?>" id="editpage7" class="nav-link text-muted">
-                                    Strona 7
+                                    <?=!empty($data['siteLinks']['c2r3']) ? $data['siteLinks']['c2r3'] : 'Strona 7' ?>
                                 </a>
                                 <a href="<?php echo ROOT."/admin/edit_page/8"?>" id="editpage8" class="nav-link text-muted">
-                                    Strona 8
+                                    <?=!empty($data['siteLinks']['c2r4']) ? $data['siteLinks']['c2r4'] : 'Strona 8' ?>
                                 </a>   
                                 <a href="<?php echo ROOT."/admin/edit_page/9"?>" id="editpage9" class="nav-link text-muted">
                                     Dolny tekst

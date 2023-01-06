@@ -9,7 +9,8 @@ include 'adm_nav.php';
         <!--Bootstrap classes arrange web page components into columns and rows in a grid -->
         <div class="row justify-content-center">
             <div class="col-11">
-                <h1 class="h2 mb-4">Treść strony <?=$data['editingId']?></h1>
+                <h1 class="h2 mb-4"><?=!empty($data['pageNames'][$data['editingId']]) ?
+                $data['pageNames'][$data['editingId']]:'Strona '.$data['editingId']?></h1>
                 <div class="form-group">
                     <textarea style="height:75vh" id="editor" name="editor"><?=$data['storedValue']?></textarea>
                 </div>
@@ -18,7 +19,7 @@ include 'adm_nav.php';
         </div>
     </div>
 </form>
-<input type="hidden" id="page" value="<?=$data['page']?>">
+<input type="hidden" id="page" value="<?=$data['editingId']?>">
 <script>
 tinymce.init({
   selector: 'textarea#editor',

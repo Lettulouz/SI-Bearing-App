@@ -55,6 +55,18 @@ class Admin extends Controller
             header("Location:" . ROOT . "/admin");
         }
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
+        $pageNames=array();
+        $pageNames[1]=$siteLink['c1r1'];
+        $pageNames[2]=$siteLink['c1r2'];
+        $pageNames[3]=$siteLink['c1r3'];
+        $pageNames[4]=$siteLink['c1r4'];
+        $pageNames[5]=$siteLink['c2r1'];
+        $pageNames[6]=$siteLink['c2r2'];
+        $pageNames[7]=$siteLink['c2r3'];
+        $pageNames[8]=$siteLink['c2r4'];
+        $pageNames[9]="Dolny tekst";
+
         if(isset($_POST['submitButton'])){
             $query="SELECT EXISTS(SELECT * FROM pages WHERE id=$id) as ex";
             $result = $db->query($query);
@@ -81,7 +93,7 @@ class Admin extends Controller
         $pageContent = $result->fetch(PDO::FETCH_ASSOC);
         !empty($pageContent) ? $pageContent = $pageContent['content'] : $pageContent = "";    
 
-        $this->view('admin/edit_page', ['editingId' => $id,'storedValue' => $pageContent, 'page'=>$id]);
+        $this->view('admin/edit_page', ['pageNames'=>$pageNames,'siteLinks'=>$siteLink,'editingId' => $id,'storedValue' => $pageContent]);
     }
 
     public function index(){
@@ -97,6 +109,7 @@ class Admin extends Controller
         }
 
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
 
         $query="SELECT i.name AS item, m.name AS manufacturer
         FROM items i 
@@ -161,7 +174,7 @@ class Admin extends Controller
         $categoriesCount = $result->fetchAll(PDO::FETCH_ASSOC);
         $categoriesCount = $categoriesCount[0]['Count(name)'];
 
-        $this->view('admin/index', ['items'=>$items, 'itemsCount'=>$itemsCount, 'catalogs'=>$catalogs, 'catalogsCount'=>$catalogsCount,
+        $this->view('admin/index', ['siteLinks'=>$siteLink ,'items'=>$items, 'itemsCount'=>$itemsCount, 'catalogs'=>$catalogs, 'catalogsCount'=>$catalogsCount,
         'attributes'=>$attributes, 'attributesCount'=>$attributesCount, 'manufacturers'=>$manufacturers, 
         'manufacturersCount'=>$manufacturersCount,'categories'=>$categories, 'categoriesCount'=>$categoriesCount]);
     }
@@ -185,11 +198,13 @@ class Admin extends Controller
         }
 
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
+
         $query="SELECT id, name, lastName, email, login, password FROM users WHERE role='user' ORDER BY id";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $this->view('admin/list_of_users', ['usersArray'=>$result]);
+        $this->view('admin/list_of_users', ['siteLinks'=>$siteLink ,'usersArray'=>$result]);
 
     }
 
@@ -207,6 +222,8 @@ class Admin extends Controller
         }
         
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
+
         $query="SELECT id, name, lastName, email, login, password, role FROM users WHERE id=:id";
         $result = $db->prepare($query);
         $result->bindParam(':id', $id);
@@ -283,7 +300,7 @@ class Admin extends Controller
                 }            
             }
         }
-        $this->view('admin/edit_user', ['name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'pass'=>$password, 'role'=>$role]);
+        $this->view('admin/edit_user', ['siteLinks'=>$siteLink,'name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'pass'=>$password, 'role'=>$role]);
     }
 
     public function add_user(){
@@ -300,6 +317,8 @@ class Admin extends Controller
         }
         
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
+
         $name = '';
         $lastName = '';
         $email = '';
@@ -421,7 +440,7 @@ class Admin extends Controller
                 }            
             }
         }
-        $this->view('admin/add_user', ['name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'pass'=>$password]);
+        $this->view('admin/add_user', ['siteLinks'=>$siteLink  ,'name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'pass'=>$password]);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -429,17 +448,7 @@ class Admin extends Controller
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public function list_of_content_managers(){
-        if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
-                unset($_SESSION['successOrErrorResponse']);
-            }
-            else{
-                header("Location:" . ROOT . "/home");
-            }
-        }
-        else{
-            header("Location:" . ROOT . "/login");
-        }
+
         
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -454,10 +463,12 @@ class Admin extends Controller
         }
         
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
+
         $query="SELECT id, name, lastName, email, login, password FROM users WHERE role='contentmanager' ORDER BY id";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
-        $this->view('admin/list_of_conent_managers', ['usersArray'=>$result]);
+        $this->view('admin/list_of_conent_managers', ['siteLinks'=>$siteLink,'usersArray'=>$result]);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -488,10 +499,12 @@ class Admin extends Controller
         }
         
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
+
         $query="SELECT id, name, lastName, email, login, password FROM users WHERE role='admin' ORDER BY id";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
-        $this->view('admin/list_of_administrators', ['usersArray'=>$result]);
+        $this->view('admin/list_of_administrators', ['siteLinks'=>$siteLink,'usersArray'=>$result]);
     }
     
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -511,13 +524,15 @@ class Admin extends Controller
         }
         
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
+
         $query="SELECT * FROM `attributes` ORDER BY id";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);    
 
         $rmCatPath=ROOT."/admin/remove_attribute";
         $editCatPath=ROOT."/admin/edit_attribute";
-        $this->view('admin/list_of_attributes', ['attributesArray'=>$result, 'rmpath'=> $rmCatPath, 'editpath'=> $editCatPath]);
+        $this->view('admin/list_of_attributes', ['siteLinks'=>$siteLink,'attributesArray'=>$result, 'rmpath'=> $rmCatPath, 'editpath'=> $editCatPath]);
     }
 
     public function edit_attribute($id_a=NULL){
@@ -624,8 +639,9 @@ class Admin extends Controller
         }else{
             header("Location:" . ROOT . "/login");
         }
-        
-        $this->view('admin/list_of_orders', []);
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
+        $this->view('admin/list_of_orders', ['siteLinks'=>$siteLink]);
     }
 
     /** Function that add attributes
@@ -643,6 +659,8 @@ class Admin extends Controller
         } 
 
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
+
         $tekst2 = "";
         if(isset($_SESSION['successOrErrorResponse'])){
             if($_SESSION['successOrErrorResponse'] == "add_attribute"){
@@ -680,7 +698,7 @@ class Admin extends Controller
                 header("Location:" . ROOT . "/admin/error_page/1");
             }
         }else{
-        $this->view('admin/add_attribute_admin', ['attribute' => $tekst2]);
+        $this->view('admin/add_attribute_admin', ['siteLinks'=>$siteLink,'attribute' => $tekst2]);
         }
     }
 
@@ -700,6 +718,8 @@ class Admin extends Controller
         }
         
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
+
         $catname = "";
         $itemstocat = "";
 
@@ -769,7 +789,7 @@ class Admin extends Controller
         $result->execute();
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
         
-        $this->view('admin/add_catalog_admin', ['items'=>$items, 'msg_color' => $return_msg_color , 'msg' => $return_msg, 'catname' => $catname, 'itemcat'=> $itemstocat]);
+        $this->view('admin/add_catalog_admin', ['siteLinks'=>$siteLink,'items'=>$items, 'msg_color' => $return_msg_color , 'msg' => $return_msg, 'catname' => $catname, 'itemcat'=> $itemstocat]);
     }
 
     public function list_of_catalogs(){
@@ -784,6 +804,7 @@ class Admin extends Controller
         }
         
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
         
         if(isset($_POST['catEditSub'])){
             isset($_POST['itemcat']) ? $itemstocat=$_POST['itemcat'] : $itemstocat="";
@@ -869,7 +890,7 @@ class Admin extends Controller
  
         $rmCatPath=ROOT."/admin/";
 
-        $this->view('admin/list_of_catalogs', ['catalogsArray'=>$result, 'catalogsItems'=>$itemsInCat,'items'=>$items ,'rmpath'=> $rmCatPath]);
+        $this->view('admin/list_of_catalogs', ['siteLinks'=>$siteLink,'catalogsArray'=>$result, 'catalogsItems'=>$itemsInCat,'items'=>$items ,'rmpath'=> $rmCatPath]);
     }
 
     public function remove_catalog($cid=NULL){
@@ -909,6 +930,7 @@ class Admin extends Controller
         }
         
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
         $manufacturerName = "";
         if(isset($_SESSION['successOrErrorResponse'])){
             if($_SESSION['successOrErrorResponse'] == "add_manufacturer"){
@@ -943,7 +965,7 @@ class Admin extends Controller
                 header("Location:" . ROOT . "/admin/error_page/1");
             }
         }else{
-            $this->view('admin/add_manufacturer_admin', ['manufacturer' => $manufacturerName]);
+            $this->view('admin/add_manufacturer_admin', ['siteLinks'=>$siteLink,'manufacturer' => $manufacturerName]);
         }
     }
 
@@ -961,6 +983,7 @@ class Admin extends Controller
         }
         
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
         $manufacturername = "";
         $selCountries = "";
         $selManufacturer = "";
@@ -1050,7 +1073,7 @@ class Admin extends Controller
  
         }
 
-        $this->view('admin/add_countries_to_manufacturer_admin', ['countries'=>$countries, 'manufacturers'=>$manufacturers, 'msg_color' => $return_msg_color ,
+        $this->view('admin/add_countries_to_manufacturer_admin', ['siteLinks'=>$siteLink,'countries'=>$countries, 'manufacturers'=>$manufacturers, 'msg_color' => $return_msg_color ,
         'msg' => $return_msg, 'manufacturername' => $manufacturername, 'selCountries'=> $selCountries, 'mnf_countries'=>$mnfCountries]);
     }
 
@@ -1068,6 +1091,7 @@ class Admin extends Controller
         }
 
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
 
         $query="SELECT m.id as m_id, m.name as mnf,COUNT(mc.id_manufacturer) as mnfctsam 
         FROM manufacturers m 
@@ -1166,7 +1190,7 @@ class Admin extends Controller
         $rmPath=ROOT."/admin/remove_manufacturer";
         //$editPath=ROOT."/admin/edit_category";
 
-        $this->view('admin/list_of_manufacturers',['mnfArray'=> $manufacturers, 'mnfCts'=> $mnfCountries,
+        $this->view('admin/list_of_manufacturers',['siteLinks'=>$siteLink,'mnfArray'=> $manufacturers, 'mnfCts'=> $mnfCountries,
          'rmpath'=> $rmPath, 'countries'=>$resultCnt]);
 
     }
@@ -1211,6 +1235,7 @@ class Admin extends Controller
         }
         
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
         
         if(isset($_POST['itemSubmit'])){
             if(isset($_POST['name']) && isset($_POST['price']) && isset($_POST['quantity']) && !empty($_POST['manufacturer']) && !empty($_POST['selCategories'])){
@@ -1325,7 +1350,7 @@ class Admin extends Controller
         $selCategories = "";
 
         
-        $this->view('admin/add_item_admin', ['items'=>$result, 'attributes' => $result2, 'categories'=>$categories, 
+        $this->view('admin/add_item_admin', ['siteLinks'=>$siteLink,'items'=>$result, 'attributes' => $result2, 'categories'=>$categories, 
         'selCategories'=>$selCategories]);
         
     }
@@ -1342,6 +1367,7 @@ class Admin extends Controller
         }
     
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
         
         if(isset($_POST['itemSubmit'])){
             if(isset($_POST['name']) && isset($_POST['price']) && isset($_POST['quantity']) && !empty($_POST['manufacturer']) && !empty($_POST['selCategories'])){
@@ -1604,7 +1630,7 @@ class Admin extends Controller
             $imagePath = APPPATH . "/resources/brak_zdjecia.png";
         }
 
-        $this->view('admin/edit_item_admin', ['items'=>$items, 'attributes' => $attributes, 'categories'=>$categories, 
+        $this->view('admin/edit_item_admin', ['siteLinks'=>$siteLink,'items'=>$items, 'attributes' => $attributes, 'categories'=>$categories, 
         'selCategories'=>$prevCtg, 'prevItems'=>$prevItems, 'prevCtg'=>$prevCtg, 'prevAttr'=>$prevAttr, 
         'prevDesc'=>$prevDesc, 'imagePath'=>$imagePath]);
         
@@ -1622,6 +1648,7 @@ class Admin extends Controller
         }
         
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
 
         $query="SELECT i.id AS iid, i.name AS itemName, m.name AS manufacturerName, 
         c.name AS manufacturerCountry, i.amount AS amount, i.price AS price
@@ -1677,7 +1704,7 @@ class Admin extends Controller
         $editItemPath=ROOT."/admin/edit_item";
         $removeItemPath=ROOT."/admin/remove_item";
         
-        $this->view('admin/list_of_items', ['itemsArray' => $items, 'categoriesArray' => $categoriesArray, 
+        $this->view('admin/list_of_items', ['siteLinks'=>$siteLink,'itemsArray' => $items, 'categoriesArray' => $categoriesArray, 
         'catalogArray' => $catalogArray, 'attrArray' => $attrArray, 'editItemPath' => $editItemPath, 'removeItemPath' => $removeItemPath]);
     }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1696,6 +1723,7 @@ class Admin extends Controller
         }
         
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
         $tekst2 = "";
         if(isset($_SESSION['successOrErrorResponse'])){
             if($_SESSION['successOrErrorResponse'] == "add_category"){
@@ -1732,7 +1760,7 @@ class Admin extends Controller
                 header("Location:" . ROOT . "/admin/error_page/1");
             }
         }else{
-            $this->view('admin/add_category_admin', ['category' => $tekst2]);
+            $this->view('admin/add_category_admin', ['siteLinks'=>$siteLink,'category' => $tekst2]);
         }
     }
 
@@ -1750,13 +1778,14 @@ class Admin extends Controller
         }
         
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
         $query="SELECT * FROM `categories` ORDER BY id";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC); 
 
         $rmCatPath=ROOT."/admin/remove_category";
         $editCatPath=ROOT."/admin/edit_category";
-        $this->view('admin/list_of_categories', ['categoriesArray'=>$result, 'rmpath'=> $rmCatPath, 'editpath'=> $editCatPath]);
+        $this->view('admin/list_of_categories', ['siteLinks'=>$siteLink,'categoriesArray'=>$result, 'rmpath'=> $rmCatPath, 'editpath'=> $editCatPath]);
     }
 
 
@@ -1829,7 +1858,20 @@ class Admin extends Controller
 
 
     public function edit_footer(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
         if(isset($_POST['footerEditSubmit'])){
             $query="UPDATE footer SET name=:name, brief=:brief, 
             c1name=:c1name, 
@@ -1879,7 +1921,19 @@ class Admin extends Controller
         $result->execute();
         $result=$result->fetch(PDO::FETCH_ASSOC);
 
-        $this->view('admin/edit_footer', ['result' => $result]);
+        $this->view('admin/edit_footer', ['result' => $result, 'siteLinks'=>$siteLink]);
+    }
+
+    private function getFooter($db){
+        if(isset($_SESSION['siteLink'])){
+            $result = $_SESSION['siteLink'];
+        }else{
+            $query = "SELECT * FROM footer";
+            $result = $db->query($query);
+            $result = $result->fetch(PDO::FETCH_ASSOC);
+            $_SESSION['siteLink'] = $result;
+        }
+        return $result;
     }
 
     public function logout(){
