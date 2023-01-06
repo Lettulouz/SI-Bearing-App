@@ -23,13 +23,23 @@ class Home extends Controller
         $siteFooter = $this->getFooter($db);
 
 
+        if(isset($_POST['searchFormSubmit'])){
+            printf('test');
+            die();
+        }
+
         $limit1=1;
 
         $search = '';
         $endofitems=0;
-        if(isset($_POST['search']))
-            $search = $_POST['search'];
-
+        if(isset($_POST['search1']))
+            $search = $_POST['search1'];
+        else if(isset($_POST['search2']))
+            $search = $_POST['search2'];
+        if(!empty($search)){
+            print_r($search);
+            die();
+        }
         if(isset($_POST['limit1'])){
             $limit1 = $_POST['limit1'];
         }
@@ -40,10 +50,17 @@ class Home extends Controller
 
         $page = $limit1;
         $limit1--;
-        $limit1 *= 8;
+        $limit1 *= 32;
 
 
         $table = array();
+
+        $query="SELECT COUNT(*) as c FROM items";
+        $numberOfItems = $db->query($query);
+        $numberOfItems = $numberOfItems->fetch(PDO::FETCH_ASSOC);
+        $numberOfItems = $numberOfItems['c'];
+
+        $numberOfPages = intdiv($numberOfItems, 32) + 1;
 
         $query_m="SELECT id, name FROM manufacturers;";
         $manufacturer = $db->query($query_m);
@@ -95,7 +112,7 @@ class Home extends Controller
             WHERE i.name LIKE '%".$search."%' 
             AND m.id IN (".$id_manufacturer.")
             ORDER BY i.id ASC
-            LIMIT :limit1, 8 ";
+            LIMIT :limit1, 32 ";
 
         /* 
         // stare polecenie, jak baza się zmienie może się przydać
@@ -155,7 +172,7 @@ class Home extends Controller
         $this->view('home/index', ['itemsArray'=>$result, 'search' => $search, 'limit1' => $page, 
             'manufacturerArray' => $manufacturer, 'last'=> $endofitems,
             'test' => $id_manufacturer, 'siteFooter' => $siteFooter, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name,
-        'categArray'=>$categories, 'catalogsArray'=>$catalogs]); // ten 'test' to do wywalenia na koniec
+        'categArray'=>$categories, 'catalogsArray'=>$catalogs, 'numberOfPages' => $numberOfPages]); // ten 'test' to do wywalenia na koniec
             
     }
 

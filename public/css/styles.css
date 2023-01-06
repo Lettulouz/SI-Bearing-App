@@ -122,14 +122,8 @@ input.form-check-input{
   height : 20px;
 }
 
-#lft, .sub,#rgt,#lft.disabled,#rgt.disabled{
-  opacity: 1 !important;
-  background-color: #fff!important;
-}
 
-#lft:hover, .sub:hover,#rgt:hover{
-  background-color: #0D6EFD!important;
-}
+
 
 
 

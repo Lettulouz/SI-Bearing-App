@@ -105,24 +105,27 @@
             </div>                                        
         </div>
     </div>
-    <div class='homeMain container mb-1 mt-5W px-5'>
-        <div class="row mb-3 mt-2 searchBar"> 
-            <div class="d-flex">
-                <div class="ms-2 me-1 input-group d-flex">
-                    <button type='button' id='lft' class='btn btn-outline-primary btn-sm'>
-                        <i class='bi bi-arrow-left'></i>
-                    </button>
-                    <div class='col-3 col-md-2'>
-                        <input type='number' style='text-align:center;' id='page' class='form-control px-0' 
-                        value='<?=isset($data['limit1']) ? $data['limit1'] : 1 ?>' name='limit1'/>
-                    </div>
-                    <button type='button' id='rgt' 
-                    class='<?=$data['last']==1 ? 'btn btn-outline-secondary disabled' : 'btn btn-outline-primary'?> btn-sm'>
-                        <i class='bi bi-arrow-right'></i>
-                    </button>
-                </div>      
+    
+    <div class='homeMain container mb-1 mt-5W px-3'>
+
+        <div class="container d-flex justify-content-end">
+            <div class="mb-3" style="margin-right:-20px; margin-left:-20px;">
+                <button type='button' name='lft' class='btn d-inline shadow-none' style="margin-right:3px; margin-top:-2px; border:0px">
+                    <i class="bi bi-arrow-left-circle" style="font-size:33px"></i>
+                </button>
+                <input type='number' style='text-align:center; box-shadow:none; font-size:15px;max-width:75px;' id='page' class='d-inline form-control px-0' 
+                value='<?=isset($data['limit1']) ? $data['limit1'] : 1 ?>' name='limit1'/>
+
+                <label class="form-control d-inline" style="border:0px;">z <?=$data['numberOfPages']?></label>
+                <button type='button' name='rgt' 
+                class='<?=$data['last']==1 ? 'btn disabled;' : 'btn '?> d-inline shadow-none justify-content-end' 
+                style="margin-left:-12px; margin-top:-2px; border:0px ">
+                    <i class="bi bi-arrow-right-circle" style="font-size:33px"></i>
+                </button>
             </div>
-        </div>
+        </div>   
+        <input type="hidden" id="numberOfPages" value="<?=$data['numberOfPages']?>"/>
+
         <div class="row items mw-75">          
             <?php        
             $j = 0;
@@ -136,7 +139,7 @@
                 if(!file_exists($imagePathCheck)){
                     $imagePath = APPPATH . "/resources/brak_zdjecia.png";
                 }
-                    echo "<div class='col-12 col-md-6 col-lg-4 col-xl-3 mb-4'>
+                    echo "<div class='col-12 col-md-6 col-xl-3 mb-4'>
                             <div class='card h-100'>"; 
 
                                 // zdjecie jako link do itemku
@@ -165,7 +168,7 @@
                                         <form method='post' class='m-0 p-0' action='#'>
                                         <b> Cena: {$item['price']} zł </b>
                                             <input type='hidden' value=".$item['itemID']." name='itemID'>
-                                            <button type='submit' class='btn btn-danger float-end '>
+                                            <button type='button' class='btn btn-danger float-end '>
                                                 <i class='bi bi-basket2'></i>
                                             </button>
                                         </form>
@@ -177,7 +180,24 @@
             }
             ?>
         </div>
+        <div class="container d-flex justify-content-end">
+            <div class="mb-3" style="margin-right:-20px; margin-left:-20px;">
+                <button type='button' name='lft' class='btn d-inline shadow-none' style="margin-right:3px; margin-top:-2px; border:0px">
+                    <i class="bi bi-arrow-left-circle" style="font-size:33px"></i>
+                </button>
+                <input type='number' style='text-align:center; box-shadow:none; font-size:15px;max-width:75px;' id='page' class='d-inline form-control px-0' 
+                value='<?=isset($data['limit1']) ? $data['limit1'] : 1 ?>' name='limit1'/>
+
+                <label class="form-control d-inline" style="border:0px;">z 10</label>
+                <button type='button' name='rgt' 
+                class='<?=$data['last']==1 ? 'btn disabled;' : 'btn '?> d-inline shadow-none justify-content-end' 
+                style="margin-left:-12px; margin-top:-2px; border:0px ">
+                    <i class="bi bi-arrow-right-circle" style="font-size:33px"></i>
+                </button>
+            </div>
+        </div> 
     </div>
+    <input type="submit" style="display:none;" id="searchFormSubmit" name="searchFormSubmit">
 </form>
 
 
@@ -185,7 +205,10 @@
     var temp;
     $(document).ready(function(){
         if($('#page').val()<=1){
-            $('#lft').addClass('btn btn-outline-secondary disabled');
+            $('[name="lft"]').addClass('btn btn-outline-secondary disabled');
+        }
+        if($('#page').val()>=$('#numberOfPages').val()){
+            $('[name="rgt"]').addClass('btn btn-outline-secondary disabled');
         }
         temp=$('#searchBox').val();
 
@@ -196,18 +219,24 @@
         }
     })
 
-    $('#rgt').click(function(){
+    $('[name="rgt"]').click(function(){
         a=$('#page').val();
         $('#page').val(++a);
         $('#nwm').submit();
     })
 
-    $('#lft').click(function(){
+    $('[name="lft"]').click(function(){
         a=$('#page').val();
         $('#page').val(--a);
         $('#nwm').submit();
     })
 
+
+    $('#remoteSearchFormSubmit').click(function(){
+        alert('test');
+        $('#searchFormSubmit').click();
+       //$('#nwm').submit();
+    })
     
    
     //filter items
