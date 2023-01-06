@@ -1,5 +1,5 @@
 <div class="offcanvas offcanvas-start bg-light sidebar" data-bs-scroll="true" data-bs-backdrop="false" id="sidebar" aria-labelledby="offcanvasDarkLabel">
-    <div class="offcanvas-body pt-1">
+    <div class="offcanvas-body pt-1 mt-7 mt-lg-6">
         <nav class="navbar-light">
             <ul class="navbar-nav">
                 <li>

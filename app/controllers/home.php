@@ -22,26 +22,15 @@ class Home extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteFooter = $this->getFooter($db);
 
-
-        if(isset($_POST['searchFormSubmit'])){
-            printf('test');
-            die();
-        }
-
         $limit1=1;
 
         $search = '';
         $endofitems=0;
-        if(isset($_POST['search1']))
-            $search = $_POST['search1'];
-        else if(isset($_POST['search2']))
-            $search = $_POST['search2'];
-        if(!empty($search)){
-            print_r($search);
-            die();
-        }
-        if(isset($_POST['limit1'])){
-            $limit1 = $_POST['limit1'];
+        if(isset($_POST['search']))
+            $search = $_POST['search'];
+
+        if(isset($_POST['page'])){
+            $limit1 = $_POST['page'];
         }
 
         
@@ -131,6 +120,21 @@ class Home extends Controller
         $result -> execute();
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
 
+        $query="SELECT COUNT(i.id) AS c
+        FROM items i 
+        INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
+        INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
+        WHERE i.name LIKE '%".$search."%' 
+        AND m.id IN (".$id_manufacturer.")
+        ORDER BY i.id ASC";
+        $numberOfItems = $db->prepare($query);
+        $numberOfItems -> execute();
+        $numberOfItems = $numberOfItems->fetch(PDO::FETCH_ASSOC);
+        if(!empty($numberOfItems))
+            $numberOfItems = $numberOfItems['c'];
+        if(!empty($numberOfItems))
+            $numberOfPages = intdiv($numberOfItems, 32) + 1;
+
         $query2="SELECT d.title, d.description, i.name, i.id as ID, m.name as 'name2'
             FROM items i 
             LEFT JOIN descriptions d ON d.id_item=i.id
@@ -146,33 +150,11 @@ class Home extends Controller
         $last = $last->fetchAll(PDO::FETCH_ASSOC);
         $currentLast=end($result);
 
-        if($currentLast!=false){
-            if($currentLast['itemID']==$last[0]['ID']){
-                $endofitems=1;
-            }
-        }
-        if($currentLast==false){
-            $limit1=0;
-            $page=1;
-            $result = $db->prepare($query);
-            $result->bindParam('limit1',$limit1);
-            $result -> execute();
-            $result = $result->fetchAll(PDO::FETCH_ASSOC);
-            $currentLast=end($result);
-            if($currentLast!=false){
-                if($currentLast['itemID']==$last[0]['ID']){
-                    $endofitems=1;
-                }
-            }
-            else{
-                $endofitems=1;
-            }
-        }
         
         $this->view('home/index', ['itemsArray'=>$result, 'search' => $search, 'limit1' => $page, 
             'manufacturerArray' => $manufacturer, 'last'=> $endofitems,
             'test' => $id_manufacturer, 'siteFooter' => $siteFooter, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name,
-        'categArray'=>$categories, 'catalogsArray'=>$catalogs, 'numberOfPages' => $numberOfPages]); // ten 'test' to do wywalenia na koniec
+        'categArray'=>$categories, 'catalogsArray'=>$catalogs, 'numberOfPages' => $numberOfPages, 'numberOfItems' => $numberOfItems]); // ten 'test' to do wywalenia na koniec
             
     }
 

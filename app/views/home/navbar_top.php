@@ -21,12 +21,12 @@
 
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0 d-none d-lg-flex flex-grow-1" id="searchBoxUl"> 
                 <div class="input-group">
-                    <input type='text' class='form-control form-sm' id='searchBox' 
-                    value='<?=isset($data['search']) ? $data['search'] : '' ?>' name='search1' placeholder="szukaj" autocomplete="off">
+                    <input type='text' class='form-control form-sm' id='searchRemote1' 
+                    value='<?=isset($data['search']) ? $data['search'] : '' ?>' name='searchRemote1' placeholder="szukaj" autocomplete="off">
                     <button type="button" class="btn bg-transparent clrBtn" style="margin-left: -40px; z-index: 100;">
                         <i class="bi bi-x"></i>
                     </button>
-                    <button class="btn btn-outline-primary sub" id="remoteSearchFormSubmit" type="submit">
+                    <button class="btn btn-outline-primary sub" name="remoteSearchFormSubmit" type="submit">
                         <i class="bi bi-search"></i>
                     </button>
                 </div>
@@ -61,12 +61,12 @@
         <div class="container-fluid d-block d-lg-none">
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0 mt-3" id="searchBoxUl"> 
                 <div class="input-group">
-                    <input type='text' class='form-control form-sm' id='searchBox' 
-                    value='<?=isset($data['search']) ? $data['search'] : '' ?>' name='search2' placeholder="szukaj" autocomplete="off">
+                    <input type='text' class='form-control form-sm' id='searchRemote2' 
+                    value='<?=isset($data['search']) ? $data['search'] : '' ?>' name='searchRemote2' placeholder="szukaj" autocomplete="off">
                     <button type="button" class="btn bg-transparent clrBtn" style="margin-left: -40px; z-index: 100;">
                         <i class="bi bi-x"></i>
                     </button>
-                    <button class="btn btn-outline-primary sub" id="remoteSearchFormSubmit" type="submit">
+                    <button class="btn btn-outline-primary sub" name="remoteSearchFormSubmit" type="submit">
                         <i class="bi bi-search"></i>
                     </button>
                 </div>
