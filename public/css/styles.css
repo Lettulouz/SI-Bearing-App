@@ -16,7 +16,6 @@
 .sideBtn{
 position: fixed;
  z-index:2;
- margin-top:60px!important;
 }
 
 @media (min-width:1050px){
@@ -61,7 +60,6 @@ position: fixed;
 }
 
 .panelBtn{
-  margin-top:60px;
   position:fixed;
    z-index:3;
    
@@ -104,14 +102,6 @@ position: fixed;
 
 ul.navbar-nav a:hover { color: #000 !important; }
 
-
-.homeMain{
-  margin-top: 60px!important;
-}
-
-.items{
-  margin-top: 60px!important;
-}
 
     /* usuwa strzałeczki przy inputah number */
 input::-webkit-outer-spin-button,

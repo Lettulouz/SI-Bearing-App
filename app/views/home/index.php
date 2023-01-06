@@ -108,16 +108,6 @@
     <div class='homeMain container mb-1 mt-5W px-5'>
         <div class="row mb-3 mt-2 searchBar"> 
             <div class="d-flex">
-                <div class='col-7 '>
-                    <div class="input-group">
-                        <input type='text' class='form-control form-sm' id='searchBox' 
-                        value='<?=isset($data['search']) ? $data['search'] : '' ?>' name='search' placeholder="szukaj">
-                        <button type="button" class="btn bg-transparent clrBtn" style="margin-left: -40px; z-index: 100;">
-                            <i class="bi bi-x"></i>
-                        </button>
-                        <button class="btn btn-outline-primary sub" type="submit">szukaj</button>
-                    </div>
-                </div>
                 <div class="ms-2 me-1 input-group d-flex">
                     <button type='button' id='lft' class='btn btn-outline-primary btn-sm'>
                         <i class='bi bi-arrow-left'></i>
