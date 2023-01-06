@@ -6,7 +6,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button> 
 
-            <a class="navbar-brand" href=<?php echo ROOT."/index"?> style="margin-top:-4px"> Grontsmar</a>                 
+            <a class="navbar-brand" href=<?php echo ROOT."home/index"?> style="margin-top:-4px"> Grontsmar</a>                 
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
