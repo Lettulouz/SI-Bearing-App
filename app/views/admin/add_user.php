@@ -1,49 +1,73 @@
 <?php
 include 'adm_nav.php';
 ?>
-<h1 class="text-muted headers-padding">Dodawanie użytkownika</h1>
+<script type="text/javascript" src="<?=APPPATH?>/scripts/usersAdm.js"></script>
+<h1 class="text-muted headers-padding">Dodawanie użytkownika</h1> 
     <hr class="divider mt-0">
 <div class="container" style="max-width:720px;">
     
-    <form autocomplete="off" action="" method="POST">
+    <form autocomplete="off" action="" method="POST" id="registerForm" onsubmit="event.preventDefault(); registerButton();">
         <div class="row m-2">
             <div class="col-12 ">
                 <div class="row m-2">
                     <div class="col-6">
-                        <div class="form-floating ">
-                            <input type="text" class="form-control" id="nameInput" name="name" value="<?=$data['name'] ?>">
-                            <label for="nameInput">Imię</label>
+                        <div class="forms-inputs"> 
+                            <div class="form-floating "> 
+                                <input type="text" class="form-control" id="name" name="name" placeholder="a"
+                                style="border:<?php if($data['errorName']) echo "2px solid rgb(255, 0, 0)"; else echo ""?>"
+                                 value="<?=$data['name']?>">
+                                <label for="name" id="nameSpan" 
+                                style="color:<?php if($data['errorName']) echo "rgb(255, 0, 0)"; else echo""?>"
+                                >Imię</label>
+                            </div>
+                            <label id="errorName"  class='errorLabel'><?=$data['errorName']?></label>
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="form-floating ">
-                            <input type="text" class="form-control" id="surnameInput" name="surname" value="<?=$data['surname'] ?>">
-                            <label for="surnameInput">Nazwisko</label>
+                        <div class="forms-inputs"> 
+                            <div class="form-floating ">
+                                <input type="text" class="form-control" id="surname" name="surname" placeholder="a" value="<?=$data['surname'] ?>"
+                                style="color:<?php if($data['errorSurname']) echo "grb(255, 0, 0)"; else echo""?>"
+                                >
+                                <label for="surname" id="surnameSpan"
+                                style="color:<?php if($data['errorSurname']) echo "grb(255, 0, 0)"; else echo""?>"
+                                >Nazwisko</label>
+                            </div>
+                            <label id="errorSurname"  class='errorLabel'><?=$data['errorSurname']?></label>
                         </div>
                     </div>
                 </div>
                 <div class="row m-2">
                     <div class="col-12">
-                        <div class="form-floating">
-                            <input type="email" class="form-control" id="mailInput" name="mail" value="<?=$data['mail'] ?>">
-                            <label for="mailInput" >Adres e-mail</label>
+                        <div class="forms-inputs"> 
+                            <div class="form-floating">
+                                <input type="email" class="form-control" id="email" placeholder="a" name="mail" value="<?=$data['mail'] ?>">
+                                <label for="email" id="emailSpan" >Adres e-mail</label>
+                            </div>
+                            <label id="errorEmail"  class='errorLabel'><?=$data['errorEmail']?></label>
                         </div>
                     </div>
                 </div>
                 <div class="row m-2">
                     <div class="col-12">
-                        <div class="form-floating">
-                            <input type="text" class="form-control" id="loginInput" name="login" value="<?=$data['login'] ?>">
-                            <label for="loginInput" >Login</label>
-                        </div>
+                        <div class="forms-inputs"> 
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="login" placeholder="a" name="login" value="<?=$data['login'] ?>">
+                                <label for="login" id="loginSpan">Login</label>
+                            </div>
+                            <label id="errorLogin"  class='errorLabel'><?=$data['errorLogin']?></label>
+                        </div>    
                     </div>
                 </div>
                 <div class="row m-2">
                     <div class="col-12">
-                        <div class="form-floating ">
-                            <input type="text" class="form-control" id="passInput" name="pass" value="<?=$data['pass'] ?>">
-                            <label for="passInput" >Hasło</label> 
-                        </div>
+                        <div class="forms-inputs"> 
+                            <div class="form-floating ">
+                                <input type="password" class="form-control" id="password" placeholder="a" name="pass" >
+                                <label for="password" id="passwordSpan">Hasło</label> 
+                            </div>
+                            <label id="errorPassword"  class='errorLabel'><?=$data['errorPassword']?></label>
+                        </div>    
                     </div>
                     <label style="color:darkgray; margin-top:3px">*W przypadku pozostawienia pola hasła pustego użytkownik dostanie losowe hasło na maila</label>
                 </div>
@@ -52,7 +76,7 @@ include 'adm_nav.php';
                         <div class="form-check form-switch">
                             <label class="form-check-label" 
                             style="margin-top: 5px; margin-left: 10px; font-weight: bold; font-size:18px" 
-                            for="userActivated">Aktywowany?</label>
+                            for="userActivated">Aktywowany</label>
                             <input class="form-check-input" style="height:30px; width:60px;" type="checkbox" 
                             id="userActivated" name="userActivated">
                         </div>
