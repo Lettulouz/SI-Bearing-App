@@ -353,7 +353,7 @@ class Admin extends Controller
         $this->loginInput = "";
 
 
-            $adminPass = false;
+            $adminPass = 0;
 
             $query = "SELECT id FROM users ORDER BY id DESC LIMIT 1";
             $result = $db->prepare($query);
@@ -371,6 +371,7 @@ class Admin extends Controller
             }
 
 
+
             $this->nameInput = ucfirst(strtolower($_POST['name']));
             $this->surnameInput = ucfirst(strtolower($_POST['surname']));
             $this->emailInput = $_POST['mail'];
@@ -382,12 +383,13 @@ class Admin extends Controller
             if(isset($_POST['userActivated'])){
                 $temporary = 0;
                 $authhash = NULL;
-                $adminPass = true;
+                $adminPass = 1;
             }else{
+                $adminPass = 0;
                 $temporary = 1;
                 $authhash = hash('sha256',$this->nameInput . $this->surnameInput . $this->emailInput . $this->loginInput . $role . $result['id']);
             }
-            
+
             if(empty($password)){
                 $length = 10;
                 $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -396,12 +398,33 @@ class Admin extends Controller
                     $password.= $characters[rand(0, $charactersLength - 1)];
                 }
             }else{
-                if(($this->check = $this->verifyPassword()) == false){
+                if(($this->check = $this->verifyPassword($password)) == false){
                     $this->errorDuringValidation("*Zła długość hasła");
                     $this->errorPassword = $this->errorMessage;
                 }
             }
 
+            if(($this->check = $this->verifyName($this->nameInput)) == false){
+                $this->errorDuringValidation("*Nieprawidłowe imie");
+                $this->errorName = $this->errorMessage;
+            }
+
+            if(($this->check = $this->verifyName($this->surnameInput)) == false){
+                $this->errorDuringValidation("*Nieprawidłowe nazwisko");
+                $this->errorSurname = $this->errorMessage;
+            }
+
+            if(($this->check = $this->verifyLogin($this->loginInput)) == false){
+                $this->errorDuringValidation("*Nieprawidłowy login");
+                $this->errorLogin = $this->errorMessage;
+            }
+
+            if(($this->verifyEmail($this->emailInput) == false)&&!isset($_POST['userActivated'])){
+                $this->errorDuringValidation("*Nieprawidłowy Email");
+                $this->errorEmail = $this->errorMessage;
+                $this->check=false;
+            }
+    
                 $hashedPassword = hash('sha256', $password);
 
                 $query = "SELECT COUNT(id) AS amount FROM users WHERE login=:login";
@@ -441,11 +464,11 @@ class Admin extends Controller
                     $result->bindParam(':temporary', $temporary);
                     $result->bindParam(':authhash', $authhash);
                     $result->execute();
-                    if($adminPass == false){
+                    if($adminPass == 0){
                         $path = PUBLICPATH;
                         try{
                         $config = require_once dirname(__FILE__,2) . '/core/mailerconfig.php';
-                        $mail = new PHPMailer();
+                        $mail = new PHPMailer(true);
         
                         $mail->isSMTP();
         
@@ -479,12 +502,16 @@ class Admin extends Controller
                         <p> Masz 48h na aktywację konta, po tym czasie konto zostanie usunięte. </p>
                         </body>
                         </html>";
-        
+                            
                         $mail->send();
+
+
                     } catch(Exception $e){
                         echo "<script>alert('Błąd wysyłania maila!')</script>";
                     }
+
                 }
+
                     $_SESSION['success_page'] = "add_user";
                     header("Location:" . ROOT . "/admin/success_page/1");
                 }            
@@ -501,12 +528,12 @@ class Admin extends Controller
      * @return Returns boolean, password meets the conditions - true, else - false
      * 
      */
-    private function verifyPassword(){
-        $this->passwordInput = trim($this->passwordInput, " ");
-        if(strlen($this->passwordInput) < 8){
+    private function verifyPassword($password){
+        $password = trim($password, " ");
+        if(strlen($password) < 8){
             return false;
         }
-        if(strlen($this->passwordInput) > 25){
+        if(strlen($password) > 25){
             return false;
         }
         return true;

@@ -10,7 +10,7 @@ include 'adm_nav.php';
         <div class="row m-2">
             <div class="col-12 ">
                 <div class="row m-2">
-                    
+
                     <div class="col-6">
                         <div class="forms-inputs"> 
                             <div class="form-floating "> 
@@ -28,10 +28,10 @@ include 'adm_nav.php';
                         <div class="forms-inputs"> 
                             <div class="form-floating ">
                                 <input type="text" class="form-control" id="surname" name="surname" placeholder="a" value="<?=$data['surname'] ?>"
-                                style="color:<?php if($data['errorSurname']) echo "grb(255, 0, 0)"; else echo""?>"
+                                style="border:<?php if($data['errorSurname']) echo "2px solid rgb(255, 0, 0)"; else echo ""?>"
                                 >
                                 <label for="surname" id="surnameSpan"
-                                style="color:<?php if($data['errorSurname']) echo "grb(255, 0, 0)"; else echo""?>"
+                                style="color:<?php if($data['errorSurname']) echo "rgb(255, 0, 0)"; else echo""?>"
                                 >Nazwisko</label>
                             </div>
                             <label id="errorSurname"  class='errorLabel'><?=$data['errorSurname']?></label>
@@ -42,8 +42,12 @@ include 'adm_nav.php';
                     <div class="col-12">
                         <div class="forms-inputs"> 
                             <div class="form-floating">
-                                <input type="email" class="form-control" id="email" placeholder="a" name="mail" value="<?=$data['mail'] ?>">
-                                <label for="email" id="emailSpan" >Adres e-mail</label>
+                                <input type="email" class="form-control" id="email" placeholder="a" name="mail" value="<?=$data['mail'] ?>"
+                                style="border:<?php if($data['errorEmail']) echo "2px solid rgb(255, 0, 0)"; else echo ""?>"
+                                >
+                                <label for="email" id="emailSpan"
+                                style="color:<?php if($data['errorEmail']) echo "rgb(255, 0, 0)"; else echo""?>"
+                                >Adres e-mail</label>
                             </div>
                             <label id="errorEmail"  class='errorLabel'><?=$data['errorEmail']?></label>
                         </div>
@@ -53,8 +57,12 @@ include 'adm_nav.php';
                     <div class="col-12">
                         <div class="forms-inputs"> 
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="login" placeholder="a" name="login" value="<?=$data['login'] ?>">
-                                <label for="login" id="loginSpan">Login</label>
+                                <input type="text" class="form-control" id="login" placeholder="a" name="login" value="<?=$data['login'] ?>"
+                                style="border:<?php if($data['errorLogin']) echo "2px solid rgb(255, 0, 0)"; else echo ""?>" 
+                                >
+                                <label for="login" id="loginSpan"
+                                style="color:<?php if($data['errorLogin']) echo "rgb(255, 0, 0)"; else echo""?>"
+                                >Login</label>
                             </div>
                             <label id="errorLogin"  class='errorLabel'><?=$data['errorLogin']?></label>
                         </div>    
@@ -64,8 +72,12 @@ include 'adm_nav.php';
                     <div class="col-12">
                         <div class="forms-inputs"> 
                             <div class="form-floating ">
-                                <input type="password" class="form-control" id="password" placeholder="a" name="pass" >
-                                <label for="password" id="passwordSpan">Hasło</label> 
+                                <input type="password" class="form-control" id="password" placeholder="a" name="pass" 
+                                style="border:<?php if($data['errorPassword']) echo "2px solid rgb(255, 0, 0)"; else echo ""?>"
+                                >
+                                <label for="password" id="passwordSpan"
+                                style="color:<?php if($data['errorPassword']) echo "grb(255, 0, 0)"; else echo""?>"
+                                >Hasło</label> 
                             </div>
                             <label id="errorPassword"  class='errorLabel'><?=$data['errorPassword']?></label>
                         </div>    
