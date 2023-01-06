@@ -50,6 +50,9 @@ class Admin extends Controller
         else header("Location:" . ROOT . "");
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////SPECIAL PAGES//////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
     public function edit_page($id=0){ 
         if($id<1 || $id>9){
             header("Location:" . ROOT . "/admin");
@@ -96,6 +99,9 @@ class Admin extends Controller
         $this->view('admin/edit_page', ['pageNames'=>$pageNames,'siteLinks'=>$siteLink,'editingId' => $id,'storedValue' => $pageContent]);
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////MAIN///////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
     public function index(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -183,6 +189,23 @@ class Admin extends Controller
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////USERS/////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private $errorMessage = "";
+    private $inputError = false;
+    private $serverError = false;
+    private $check = true;
+    private $emailInput = "";
+    private $ifUserExist = "";
+    private $ifEmailExist = "";
+    private $ifLoginExist = "";
+    private $passwordInput = "";
+    private $nameInput = "";
+    private $surnameInput = "";
+    private $loginInput = "";
+    private $errorName = "";
+    private $errorSurname = "";
+    private $errorLogin = "";
+    private $errorEmail = "";
+    private $errorPassword = "";
 
     public function list_of_users(){
         if(isset($_SESSION['loggedUser'])){
@@ -300,7 +323,7 @@ class Admin extends Controller
                 }            
             }
         }
-        $this->view('admin/edit_user', ['siteLinks'=>$siteLink,'name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'pass'=>$password, 'role'=>$role]);
+        $this->view('admin/edit_user', ['siteLinks'=>$siteLink,'name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'role'=>$role]);
     }
 
     public function add_user(){
@@ -319,33 +342,50 @@ class Admin extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
 
-        $name = '';
-        $lastName = '';
-        $email = '';
-        $login = '';
-        $password = '';
-        if(isset($_POST['senduser']))
-        {
+        $this->serverError = false;
+        $this->inputError = false;
+        $this->check = true;
+        $this->emailInput = "";
+        $this->ifUserExist = "";
+        $this->passwordInput = "";
+        $this->nameInput = "";
+        $this->surnameInput = "";
+        $this->loginInput = "";
+
+
             $adminPass = false;
 
             $query = "SELECT id FROM users ORDER BY id DESC LIMIT 1";
             $result = $db->prepare($query);
             $result->execute();
-            $result = $result->fetch(PDO::FETCH_ASSOC);;
+            $result = $result->fetch(PDO::FETCH_ASSOC);
+            
+            
+            if(empty($_POST['name']) || empty($_POST['surname']) || empty($_POST['login']) || (empty($_POST['mail']) && !isset($_POST['userActivated'])) ){
+                $this->view('admin/add_user', ['errorPassword' => $this->errorMessage,'errorLogin' => $this->errorMessage, 
+                'errorEmail' => $this->errorMessage, 'emailInput' => $this->emailInput, 'nameInput' => $this->nameInput, 
+                'surnameInput' => $this->surnameInput, 'loginInput' => $this->loginInput, 'passwordInput' => $this->passwordInput, 
+                'serverError' => $this->serverError, 'errorName' => '', 'errorSurname' => '', 'siteLinks'=>$siteLink 
+                ,'name'=>$this->nameInput, 'surname'=>$this->surnameInput, 'mail'=>$this->emailInput, 'login'=>$this->loginInput]);
+                return;
+            }
 
-            $name = ucfirst(strtolower($_POST['name']));
-            $lastName = ucfirst(strtolower($_POST['surname']));
-            $email = $_POST['mail'];
-            $login = strtolower($_POST['login']);
+
+            $this->nameInput = ucfirst(strtolower($_POST['name']));
+            $this->surnameInput = ucfirst(strtolower($_POST['surname']));
+            $this->emailInput = $_POST['mail'];
+            $this->loginInput = strtolower($_POST['login']);
             $password = $_POST['pass'];
+            
             $role = "user";
+         
             if(isset($_POST['userActivated'])){
                 $temporary = 0;
                 $authhash = NULL;
                 $adminPass = true;
             }else{
                 $temporary = 1;
-                $authhash = hash('sha256',$name . $lastName . $email . $login . $role . $result['id']);
+                $authhash = hash('sha256',$this->nameInput . $this->surnameInput . $this->emailInput . $this->loginInput . $role . $result['id']);
             }
             
             if(empty($password)){
@@ -355,37 +395,47 @@ class Admin extends Controller
                 for ($i = 0; $i < $length; $i++) {
                     $password.= $characters[rand(0, $charactersLength - 1)];
                 }
-            }
-            if(empty($name) || empty($lastName) || empty($login) || ($adminPass==false) && empty($email)){
-                $_SESSION['error_page'] = "add_user";
-                header("Location:" . ROOT . "/admin/error_page/1");
             }else{
+                if(($this->check = $this->verifyPassword()) == false){
+                    $this->errorDuringValidation("*Zła długość hasła");
+                    $this->errorPassword = $this->errorMessage;
+                }
+            }
+
                 $hashedPassword = hash('sha256', $password);
 
                 $query = "SELECT COUNT(id) AS amount FROM users WHERE login=:login";
                 $result = $db->prepare($query);
-                $result->bindParam(':login', $login);
+                $result->bindParam(':login', $this->loginInput);
                 $result->execute();
                 $result = $result->fetch(PDO::FETCH_ASSOC);
                 
                 $query = "SELECT COUNT(id) AS amount FROM users WHERE email=:email";
                 $result2 = $db->prepare($query);
-                $result2->bindParam(':email', $email);
+                $result2->bindParam(':email', $this->emailInput);
                 $result2->execute();
                 $result2 = $result2->fetch(PDO::FETCH_ASSOC);
                 
-                if($result['amount']>0 || $result2['amount']>0){
-                    $_SESSION['error_page'] = "add_user";
-                    header("Location:" . ROOT . "/admin/error_page/2");
+                if($result['amount']>0){
+                    $this->errorDuringValidation("*Użytkownik o takim loginie już istnieje");
+                    $this->errorLogin = $this->errorMessage;
+                    $this->check=false;
                 }
-                else{
+
+                if($result2['amount']>0 && $this->emailInput!=""){
+                    $this->errorDuringValidation("*Użytkownik o takim emailu już istnieje");
+                     $this->errorEmail = $this->errorMessage;
+                    $this->check=false;
+                }
+
+                    if($this->check==true){
                     $query = "INSERT INTO `users` (name, lastname, email, login, password, role, temporary, authhash) 
                     VALUES (:name, :lastname, :email, :login, :password, :role, :temporary, :authhash);";
                     $result = $db->prepare($query);
-                    $result->bindParam(':name', $name);
-                    $result->bindParam(':lastname', $lastName);
-                    $result->bindParam(':email', $email);
-                    $result->bindParam(':login', $login);
+                    $result->bindParam(':name', $this->nameInput);
+                    $result->bindParam(':lastname', $this->surnameInput);
+                    $result->bindParam(':email', $this->emailInput);
+                    $result->bindParam(':login', $this->loginInput);
                     $result->bindParam(':password', $hashedPassword);
                     $result->bindParam(':role', $role);
                     $result->bindParam(':temporary', $temporary);
@@ -409,7 +459,7 @@ class Admin extends Controller
         
                         $mail->CharSet = 'UTF-8';
                         $mail->setFrom($config['username'], 'Grontsmar');
-                        $mail->addAddress($email);
+                        $mail->addAddress($this->emailInput);
                         $mail->addReplyTo($config['username'], 'Grontsmar');
         
                         $mail->isHTML(true);
@@ -421,7 +471,7 @@ class Admin extends Controller
                         <body>
                         <h1> Dzień dobry! </h1>
                         <p> Na ten email zostało utworzone konto w sklepie Grontsmar. Oto dane: </p>
-                        <p> Login: $login </p>
+                        <p> Login: $this->loginInput </p>
                         <p> Hasło: $password </p>
                         <a href='$path/userverify/$authhash'>Link aktywacyjny</a>
                         <br>
@@ -438,9 +488,62 @@ class Admin extends Controller
                     $_SESSION['success_page'] = "add_user";
                     header("Location:" . ROOT . "/admin/success_page/1");
                 }            
-            }
+
+        $this->view('admin/add_user', ['errorPassword' => $this->errorPassword,'errorLogin' => $this->errorLogin, 
+        'errorEmail' => $this->errorEmail, 'emailInput' => $this->emailInput, 'nameInput' => $this->nameInput, 
+        'surnameInput' => $this->surnameInput, 'loginInput' => $this->loginInput, 'passwordInput' => $this->passwordInput, 
+        'serverError' => $this->serverError, 'errorName' => '', 'errorSurname' => '', 'siteLinks'=>$siteLink 
+        ,'name'=>$this->nameInput, 'surname'=>$this->surnameInput, 'mail'=>$this->emailInput, 'login'=>$this->loginInput]);
+    }
+
+
+    /** Function that checks if given password meets the conditions
+     * @return Returns boolean, password meets the conditions - true, else - false
+     * 
+     */
+    private function verifyPassword(){
+        $this->passwordInput = trim($this->passwordInput, " ");
+        if(strlen($this->passwordInput) < 8){
+            return false;
         }
-        $this->view('admin/add_user', ['siteLinks'=>$siteLink  ,'name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'pass'=>$password]);
+        if(strlen($this->passwordInput) > 25){
+            return false;
+        }
+        return true;
+    }
+
+    private function errorDuringValidation($errorMessage){
+        $this->errorMessage = $errorMessage;
+        //$this->serverError = true;
+        $this->check = false;
+    }
+
+    private function verifyEmail($email){
+        $regex = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/';
+
+        if(preg_match($regex, $email)){
+            return true;
+        }
+        else return false;
+    }
+
+    private function verifyName($name){
+        $regex  = '/^[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+$/';
+        if(preg_match($regex, $name)){
+            return true;
+        }
+        else return false;
+    }
+
+    /** Function that checks if given login meets the conditions
+     * 
+     */
+    private function verifyLogin($login){
+        $regex  = '/^[a-z0-9]+$/';
+        if(preg_match($regex, $login) && strlen($login)>=8){
+            return true;
+        }
+        else return false;
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
