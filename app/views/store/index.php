@@ -174,7 +174,7 @@
                                     </div>
                                     </div>
                                         <div class='card-footer'>
-                                            <form method='post' class='m-0 p-0' action='#'>
+                                            <form method='post' class='m-0 p-0' action=''>
                                             <b> Cena: {$item['price']} zł </b>
                                                 <input type='hidden' value=".$item['itemID']." name='itemID'>
                                                 <button type='submit' class='btn btn-danger float-end '>
