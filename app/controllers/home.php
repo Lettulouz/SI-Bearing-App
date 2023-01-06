@@ -164,19 +164,22 @@ class Home extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteFooter = $this->getFooter($db);
 
-        $query="SELECT d.title, d.description, i.name, i.id as itemID, m.name as 'name2', i.price as itemPrice
-            FROM items i 
-            LEFT JOIN descriptions d ON d.id_item=i.id
-            INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
-            INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
-            WHERE i.id IN (".implode(', ',$_SESSION['basketItems']).")";
+        $itemsInCart = NULL;
+        if(isset($_SESSION['basketItems'])){
+            $query="SELECT d.title, d.description, i.name, i.id as itemID, m.name as 'name2', i.price as itemPrice
+                FROM items i 
+                LEFT JOIN descriptions d ON d.id_item=i.id
+                INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
+                INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
+                WHERE i.id IN (".implode(', ',$_SESSION['basketItems']).")";
 
+            
+            
+            $itemsInCart = $db->query($query);
+            $itemsInCart = $itemsInCart->fetchAll(PDO::FETCH_ASSOC);
+        }
         
-        
-        $itemsInBacket = $db->query($query);
-        $itemsInBacket = $itemsInBacket->fetchAll(PDO::FETCH_ASSOC);
-        
-        $this->view('home/basket', ['siteFooter' => $siteFooter, 'itemsArray'=>$itemsInBacket, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
+        $this->view('home/basket', ['siteFooter' => $siteFooter, 'itemsArray'=>$itemsInCart, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
     }
 
     private function getFooter($db){
