@@ -18,6 +18,31 @@ position: fixed;
  z-index:2;
 }
 
+.dominik-test {
+  background-image: url(../../app/resources/upload/domqq.png);
+  background-size: cover;
+  background-position: left;
+  background-repeat: no-repeat;
+}
+
+@media only screen and (max-width: 1200px)
+{
+.dominik-test{
+  background-image: url(../../app/resources/upload/domqq1.png);
+}
+}
+@media only screen and (max-width: 600px)
+{
+.dominik-test{
+  background-image: url(../../app/resources/upload/domqq6.png);
+}
+}
+
+.icon-size-dom {
+font-size: 4rem;
+}
+
+
 @media (min-width:1050px){
   body{
     overflow: auto !important;

@@ -621,7 +621,7 @@ class Admin extends Controller
             $result->bindParam(':id_a', $id_a);
             $result->execute();
 
-            $imagePathCheck = RESOURCEPATH . "/[" . $id_a. "].png";
+            $imagePathCheck = PHOTOSPATH . "/[" . $id_a. "].png";
 
             if(file_exists($imagePathCheck)) unlink($imagePathCheck);
         }
@@ -1268,7 +1268,7 @@ class Admin extends Controller
                 $ext = pathinfo($path, PATHINFO_EXTENSION);
                 $imagename = "[" . $item_id . "]." . $ext;    
                 $tmpname = $_FILES['formFile']['tmp_name'];
-                if (!move_uploaded_file($tmpname, RESOURCEPATH . "/" . $imagename)) {
+                if (!move_uploaded_file($tmpname, PHOTOSPATH . "/" . $imagename)) {
                     $_SESSION['error_page'] = "list_of_items";
                     header("Location:" . ROOT . "/admin/error_page/3");
                 } 
@@ -1397,14 +1397,14 @@ class Admin extends Controller
                 $item_id=$result->fetch(PDO::FETCH_ASSOC);
                 $item_id=$item_id['id'];
 
-                $imagePathCheck = RESOURCEPATH . "/[" . $item_id. "].png";
+                $imagePathCheck = PHOTOSPATH . "/[" . $item_id. "].png";
 
                 if(file_exists($imagePathCheck)) unlink($imagePathCheck);
                 $path = $_FILES['formFile']['name'];
                 $ext = pathinfo($path, PATHINFO_EXTENSION);
                 $imagename = "[" . $item_id . "]." . $ext;    
                 $tmpname = $_FILES['formFile']['tmp_name'];
-                if (!move_uploaded_file($tmpname, RESOURCEPATH . "/" . $imagename)) {
+                if (!move_uploaded_file($tmpname, PHOTOSPATH . "/" . $imagename)) {
                     $_SESSION['error_page'] = "list_of_items";
                     header("Location:" . ROOT . "/admin/error_page/3");
                 }
@@ -1624,7 +1624,7 @@ class Admin extends Controller
         $prevDesc = $result->fetchAll(PDO::FETCH_ASSOC);
 
         $imagePath = APPPATH . "/resources/[" . $editId . "].png";
-        $imagePathCheck = RESOURCEPATH . "/[" . $editId . "].png";
+        $imagePathCheck = PHOTOSPATH . "/[" . $editId . "].png";
 
         if(!file_exists($imagePathCheck)){
             $imagePath = APPPATH . "/resources/brak_zdjecia.png";
