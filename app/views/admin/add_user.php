@@ -10,6 +10,7 @@ include 'adm_nav.php';
         <div class="row m-2">
             <div class="col-12 ">
                 <div class="row m-2">
+                    
                     <div class="col-6">
                         <div class="forms-inputs"> 
                             <div class="form-floating "> 
