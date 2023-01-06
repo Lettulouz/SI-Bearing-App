@@ -3,7 +3,13 @@
 
 
 <div class="homeMain">
-    test
+
+<?php
+echo "<h1> it itemku: ";
+echo  $data['id'];
+echo "</h1>";
+?>
+
 </div>
 <?php //include "sidebar_top.php"; ?>
 <?php //include "sidebar_bottom.php"; ?> 

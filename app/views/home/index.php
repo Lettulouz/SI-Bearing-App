@@ -153,7 +153,7 @@
 
                                     // zdjecie jako link do itemku
                                     echo "<a href=";
-                                    echo ROOT.'/public/item'; 
+                                    echo ROOT."/public/item/{$item['itemID']}";
                                     echo " >";
                                     echo "<img src='" . $imagePath . "'  alt='zdjęcie łożyska' class='card-img-top img-thumbnail' 
                                     style='object-fit:contain; height:286px;'>";
@@ -164,7 +164,7 @@
 
                                         // nazwa jako link do itemku
                                         echo " <a href= ";
-                                        echo ROOT.'/item';
+                                        echo ROOT."/public/item/{$item['itemID']}";
                                         echo " >";
                                         echo "<b>  {$item['name']} </b>";
                                         echo "</a>";

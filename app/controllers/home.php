@@ -194,13 +194,13 @@ class Home extends Controller
         return $result;
     }
 
-    public function item(){
+    public function item($public, $id){
         isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteFooter = $this->getFooter($db);
         
-        $this->view('home/item', ['siteFooter' => $siteFooter, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
+        $this->view('home/item', ['id' => $id, 'siteFooter' => $siteFooter, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
     }
 
 }
