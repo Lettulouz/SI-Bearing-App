@@ -10,9 +10,9 @@ class Store extends Controller
 
     public function index($limit1=1){
         if(isset($_POST['itemID'])){
-            if(!isset($_SESSION['basketItems']))
-                $_SESSION['basketItems']=array();
-            array_push($_SESSION['basketItems'], $_POST['itemID']);
+            if(!isset($_SESSION['cartItems']))
+                $_SESSION['cartItems']=array();
+            array_push($_SESSION['cartItems'], $_POST['itemID']);
             empty($_POST['itemID']);
         }
 
@@ -158,20 +158,20 @@ class Store extends Controller
             
     }
 
-    public function basket(){
+    public function cart(){
         isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteFooter = $this->getFooter($db);
 
         $itemsInCart = NULL;
-        if(isset($_SESSION['basketItems'])){
+        if(isset($_SESSION['cartItems'])){
             $query="SELECT d.title, d.description, i.name, i.id as itemID, m.name as 'name2', i.price as itemPrice
                 FROM items i 
                 LEFT JOIN descriptions d ON d.id_item=i.id
                 INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
                 INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
-                WHERE i.id IN (".implode(', ',$_SESSION['basketItems']).")";
+                WHERE i.id IN (".implode(', ',$_SESSION['cartItems']).")";
 
             
             
@@ -179,7 +179,7 @@ class Store extends Controller
             $itemsInCart = $itemsInCart->fetchAll(PDO::FETCH_ASSOC);
         }
         
-        $this->view('store/basket', ['siteFooter' => $siteFooter, 'itemsArray'=>$itemsInCart, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
+        $this->view('store/cart', ['siteFooter' => $siteFooter, 'itemsArray'=>$itemsInCart, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
     }
 
     private function getFooter($db){
@@ -194,7 +194,7 @@ class Store extends Controller
         return $result;
     }
 
-    public function item($public, $id){
+    public function item($id){
         isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
         require_once dirname(__FILE__,2) . '/core/database.php';

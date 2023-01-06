@@ -6,15 +6,15 @@
                 <span class="navbar-toggler-icon"></span>
             </button> 
 
-            <a class="navbar-brand" href=<?php echo ROOT."home/index"?> style="margin-top:-4px"> Grontsmar</a>                 
+            <a class="navbar-brand" href=<?php echo ROOT."/home"?> style="margin-top:-4px"> Grontsmar</a>                 
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href=<?php echo ROOT."/index"?> >Home</a>
+                        <a class="nav-link active" aria-current="page" href=<?php echo ROOT."/home"?> >Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href=<?php echo ROOT."/index"?> >Sklep</a>
+                        <a class="nav-link active" aria-current="page" href=<?php echo ROOT."/store"?> >Sklep</a>
                     </li>
                 </ul>
             </div>
@@ -34,7 +34,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0"> 
                     <li class="nav-item d">
-                        <a class="nav-link mt-1" href="<?=PUBLICPATH?>/home/basket">
+                        <a class="nav-link mt-1" href="<?=PUBLICPATH?>/store/cart">
                             <i class="bi bi-basket2 "></i>
                         </a>
                     </li>

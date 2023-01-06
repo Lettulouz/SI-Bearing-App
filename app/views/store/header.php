@@ -1,7 +1,7 @@
 <html>
     <head> 
 
-        <title>PHP</title>
+        <title>Sklep</title>
 
     <!-- Required meta tags -->
     <meta charset="UTF-8">
