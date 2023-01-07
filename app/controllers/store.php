@@ -203,6 +203,15 @@ class Store extends Controller
         $this->view('store/item', ['id' => $id, 'siteFooter' => $siteFooter, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
     }
 
+    public function order_history(){
+        isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
+        isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteFooter = $this->getFooter($db);
+        
+        $this->view('store/order_history', ['siteFooter' => $siteFooter, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
+    }
+
 }
 
 ?>
