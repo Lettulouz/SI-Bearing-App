@@ -74,9 +74,9 @@ class Store extends Controller
         }
         
 
-        if (isset($_POST['checkboxvar'])) 
+        if (isset($_POST['checkBoxVarManufacturers'])) 
         {
-            $table = $_POST['checkboxvar']; 
+            $table = $_POST['checkBoxVarManufacturers']; 
         }
 
         $id_manufacturer = '';

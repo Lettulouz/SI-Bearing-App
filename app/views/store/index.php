@@ -1,7 +1,7 @@
 <?php include "header.php"; ?>
 <?php include "navbar_top.php"; ?>
 <?php include "sidebar_top.php"; ?>
-<form method="POST" id="nwm" action ="">
+<form method="POST" id="submitFilterSearchSort" action ="">
     <input type="submit" style="display:none;" id="searchFormSubmit" name="searchFormSubmit"/>
     <input type="hidden" name="search" id="searchField"/>
     <input type="hidden" name="page" id="page"/>
@@ -9,19 +9,19 @@
     <li>
         <a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link"
         data-bs-toggle="collapse" role="button" data-bs-target="#manufacturersGroup" aria-controls="#manufacturersGroup" 
-        aria-expanded="<?=!empty($_POST['checkboxvar']) ? 'true' : 'false' ?>">Producenci
+        aria-expanded="<?=!empty($_POST['checkBoxVarManufacturers']) ? 'true' : 'false' ?>">Producenci
             <span class="bi bi-chevron-right right-icon ms-auto"></span>
         </a>
 
-        <div class='collapse <?=!empty($_POST['checkboxvar']) ? 'show' : '' ?>' id="manufacturersGroup">
+        <div class='collapse <?=!empty( $data['manufacturerArray']) ? 'show' : '' ?>' id="manufacturersGroup">
             <?php
                 $k = 0;
                 $manufacturer = $data['manufacturerArray'];
                 foreach($manufacturer as $manufacturer) 
                 {
                     echo "<div class='form-check'>
-                        <input class='form-check-input checkboxvar' id='manufacturer".$k."' type='checkbox' name='checkboxvar[]' value='".$manufacturer['id']."' ";
-                        if ((!empty($_POST["checkboxvar"]) && in_array($manufacturer['id'], $_POST["checkboxvar"])))
+                        <input class='form-check-input checkboxvar' id='manufacturer".$k."' type='checkbox' name='checkBoxVarManufacturers[]' form='submitFilterSearchSort' value='".$manufacturer['id']."' ";
+                        if ((!empty($_POST["checkBoxVarManufacturers"]) && in_array($manufacturer['id'], $_POST["checkBoxVarManufacturers"])))
                         {
                             echo "checked";
                         }
@@ -103,7 +103,7 @@
     <div class="row mb-3 panelBtn"> 
         <div class="d-flex mt-2">
             <div>
-                <button class="btn btn-light btn-lg ms-3 me-2 mt-7 mt-lg-6 " type="button" data-bs-toggle="offcanvas" href=".sidebar" role="button" aria-controls="sidebar">
+                <button class="btn btn-light bg-custom-4 btn-lg ms-3 me-2 mt-7 mt-lg-6 " type="button" data-bs-toggle="offcanvas" href=".sidebar" role="button" aria-controls="sidebar">
                     <i class="bi bi-list"></i>
                 </button>
             </div>                                        
@@ -142,11 +142,11 @@
                 $items = $data['itemsArray'];
                 foreach($items as $j => $item) 
                 {
-                    $imagePath = APPPATH . "/resources/[" . $item['itemID'] . "].png";
-                    $imagePathCheck = RESOURCEPATH . "/[" . $item['itemID'] . "].png";
+                    $imagePath = APPPATH . "/resources/itemsPhotos/[" . $item['itemID'] . "].png";
+                    $imagePathCheck = PHOTOSPATH . "/[" . $item['itemID'] . "].png";
 
                     if(!file_exists($imagePathCheck)){
-                        $imagePath = APPPATH . "/resources/brak_zdjecia.png";
+                        $imagePath = APPPATH . "/resources/itemsPhotos/brak_zdjecia.png";
                     }
                         echo "<div class='col-12 col-md-6 col-xl-3 mb-4'>
                                 <div class='card h-100'>"; 
@@ -235,14 +235,14 @@
         a=$('#pageInside').val();
         $('#pageInside').val(++a);
         $('#page').val($('#pageInside').val());
-        $('#nwm').submit();
+        $('#submitFilterSearchSort').submit();
     })
 
     $('[name="lft"]').click(function(){
         a=$('#pageInside').val();
         $('#pageInside').val(--a);
         $('#page').val($('#pageInside').val());
-        $('#nwm').submit();
+        $('#submitFilterSearchSort').submit();
     })
 
 
@@ -252,7 +252,7 @@
         }else if($('#searchRemote2').val()!=''){
             $('#searchField').val($('#searchRemote2').val());
         }
-       $('#nwm').submit();
+       $('#submitFilterSearchSort').submit();
     })
     
    
@@ -260,7 +260,7 @@
     $('.filterSub').click(function(){
         $('#page').val(1);
         $('#pageInside').val(1);
-        $('#nwm').submit();
+        $('#submitFilterSearchSort').submit();
     })
 
     //reset filters
@@ -268,14 +268,14 @@
         $('.checkboxvar').removeAttr('checked');
         $('#page').val(1);
         $('#pageInside').val(1);
-        $('#nwm').submit();
+        $('#submitFilterSearchSort').submit();
     })
     
     //clear searchBox
     $('.clrBtn').click(function(){
         $('#searchRemote1').val('');
         $('#searchRemote2').val('');
-        $('#nwm').submit();
+        $('#submitFilterSearchSort').submit();
     })
 
     $('.sub').click(function(){
@@ -290,7 +290,7 @@
 
     $('#pageInside').change(function(){
         $('#page').val($('#pageInside').val());
-        $('#nwm').submit();
+        $('#submitFilterSearchSort').submit();
     });
 
     $('#searchRemote1').change(function() {
@@ -305,10 +305,10 @@
         if(e.which == 13) {
             if($('#searchRemote1').val()!=''){
                 $('#searchField').val($('#searchRemote1').val());
-                $('#nwm').submit();
+                $('#submitFilterSearchSort').submit();
             }else if($('#searchRemote2').val()!=''){
                 $('#searchField').val($('#searchRemote2').val());
-                $('#nwm').submit();
+                $('#submitFilterSearchSort').submit();
             }
              
         }

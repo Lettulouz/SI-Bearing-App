@@ -24,7 +24,7 @@ include 'adm_nav.php';
 tinymce.init({
   selector: 'textarea#editor',
   plugins: 'lists, link, image, media',
-  toolbar: 'h1 h2 bold italic strikethrough blockquote bullist numlist backcolor | alignleft aligncenter alignright alignjustify | link image media | removeformat',
+  toolbar: 'h1 h2 bold underline italic strikethrough blockquote bullist numlist backcolor | alignleft aligncenter alignright alignjustify | link image media | removeformat',
   menubar: false,
   setup: (editor) => {
       // Apply the focus effect

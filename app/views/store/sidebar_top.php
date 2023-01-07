@@ -8,10 +8,10 @@
                     </a> 
                 </li>
                 <li class="my-2 small fw-bold text-uppercase text-decoration-none">Filtry</li>
-                <li class="my-3">
+                <li>
                     <hr class="dropdown divider">
                 </li>
-                <li>
+
 
  
 

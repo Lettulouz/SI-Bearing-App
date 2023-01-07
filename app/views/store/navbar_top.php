@@ -1,20 +1,20 @@
 <div class="mb-7 mb-lg-6">
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-light mb-5" style="z-index:100000;">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-custom-4 mb-5" style="z-index:100000;">
         <div class="container-fluid">
             <button class="navbar-toggler position-absolute top-0 end-0 me-2 mt-2 d-default d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button> 
 
-            <a class="navbar-brand" href=<?php echo ROOT."/home"?> style="margin-top:-4px"> Grontsmar</a>                 
+            <a class="navbar-brand" href=<?php echo ROOT."/home"?> style="margin-top:-4px">Grontsmar</a>                 
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href=<?php echo ROOT."/home"?> >Home</a>
+                        <a class="nav-link active" aria-current="page" href=<?php echo ROOT."/home"?>>Strona główna</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href=<?php echo ROOT."/store"?> >Sklep</a>
+                        <a class="nav-link active" aria-current="page" href=<?php echo ROOT."/store"?>>Sklep</a>
                     </li>
                 </ul>
             </div>
@@ -42,7 +42,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" 
                             data-bs-toggle="dropdown" aria-expanded="false">
-                                Witaj <?=$data['loggedUser_name']?> !
+                                Witaj <?=$data['loggedUser_name']?>!
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li>
