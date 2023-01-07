@@ -94,7 +94,7 @@ class Store extends Controller
             }
         }
 
-        $query="SELECT i.name, i.id as itemID, price, m.name as 'name2', i.amount
+        $query="SELECT i.name, i.id as itemID, price, m.name as 'name2', i.amount, i.price as itemPrice
             FROM items i 
             INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
             INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
@@ -165,16 +165,16 @@ class Store extends Controller
         $siteFooter = $this->getFooter($db);
 
         $itemsInCart = NULL;
-        if(isset($_SESSION['cartItems'])){
+
+        if(isset($_COOKIE['itemsInCart']) && $_COOKIE['itemsInCart'] != ''){
             $query="SELECT d.title, d.description, i.name, i.id as itemID, m.name as 'name2', i.price as itemPrice
                 FROM items i 
                 LEFT JOIN descriptions d ON d.id_item=i.id
                 INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
                 INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
-                WHERE i.id IN (".implode(', ',$_SESSION['cartItems']).")";
+                WHERE i.id IN (".rtrim($_COOKIE['itemsInCart'],',').")";
 
-            
-            
+
             $itemsInCart = $db->query($query);
             $itemsInCart = $itemsInCart->fetchAll(PDO::FETCH_ASSOC);
         }

@@ -177,8 +177,7 @@
 
                                             <b> Cena: {$item['price']} zł </b>
                                                 <input type='hidden' value=".$item['itemID']." name='itemID'>
-                                                <input type='hidden' value=".$item['itemID']."-".$item['amount']." name='itemAmount'>
-                                                <button type='submit' class='btn btn-danger float-end ' name='addToCart'>
+                                                <button type='submit' class='btn btn-danger float-end ' id='".$item['itemID']."-".$item['itemPrice']."-".$item['amount']."' name='addToCart'>
                                                     <i class='bi bi-basket2'></i>
                                                 </button>
 
@@ -315,13 +314,25 @@
     });
 
     $('[name="addToCart"]').click(function(){
-        let idAndAmount = $(this).val().split("-");
- 
-        if(Number.isNaN(localStorage.getItem(idAndAmount[0])))
-            localStorage.setItem(idAndAmount[0], 1); 
-        else
-            localStorage.setItem(idAndAmount[0], parseFloat(localStorage.getItem(idAndAmount[0]))+1); 
+        let idValueAmount = jQuery(this).attr("id").split("-");
+        
 
+        if(!localStorage.getItem(idValueAmount[0]))
+            localStorage.setItem(idValueAmount[0], '1'+'-'+idValueAmount[1]+'-'+idValueAmount[2]); 
+        else{
+            let valueAndAmount = localStorage.getItem(idValueAmount[0]).split("-");
+            if(valueAndAmount[2]>valueAndAmount[0]){
+                var newValue = parseFloat(valueAndAmount[0])+1;
+                localStorage.setItem(idValueAmount[0], newValue+'-'+idValueAmount[1]+'-'+idValueAmount[2]); 
+            }
+        }
+        var newCookie = "";
+        Object.keys(localStorage).forEach(function(key, value){
+            newCookie += key + ', ';
+        });
+        console.log(newCookie);
+        document.cookie = 'itemsInCart ='+newCookie+';3600, expires=Thu, 18 Dec 2023 12:00:00 UTC; path=/';
     })
+
     </script>
 <?php include dirname(__FILE__,2) . "/footer.php"; ?>
