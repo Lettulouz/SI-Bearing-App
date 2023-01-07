@@ -84,6 +84,10 @@ font-size: 4rem;
     background-color: rgb(55, 142, 218);
 }
 
+.bg-custom-4 {
+  background-color: rgb(240, 240, 240);
+}
+
 .panelBtn{
   position:fixed;
    z-index:3;

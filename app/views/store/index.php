@@ -103,7 +103,7 @@
     <div class="row mb-3 panelBtn"> 
         <div class="d-flex mt-2">
             <div>
-                <button class="btn btn-light btn-lg ms-3 me-2 mt-7 mt-lg-6 " type="button" data-bs-toggle="offcanvas" href=".sidebar" role="button" aria-controls="sidebar">
+                <button class="btn btn-light bg-custom-4 btn-lg ms-3 me-2 mt-7 mt-lg-6 " type="button" data-bs-toggle="offcanvas" href=".sidebar" role="button" aria-controls="sidebar">
                     <i class="bi bi-list"></i>
                 </button>
             </div>                                        
@@ -142,11 +142,11 @@
                 $items = $data['itemsArray'];
                 foreach($items as $j => $item) 
                 {
-                    $imagePath = APPPATH . "/resources/[" . $item['itemID'] . "].png";
+                    $imagePath = APPPATH . "/resources/itemsPhotos/[" . $item['itemID'] . "].png";
                     $imagePathCheck = PHOTOSPATH . "/[" . $item['itemID'] . "].png";
 
                     if(!file_exists($imagePathCheck)){
-                        $imagePath = APPPATH . "/resources/brak_zdjecia.png";
+                        $imagePath = APPPATH . "/resources/itemsPhotos/brak_zdjecia.png";
                     }
                         echo "<div class='col-12 col-md-6 col-xl-3 mb-4'>
                                 <div class='card h-100'>"; 

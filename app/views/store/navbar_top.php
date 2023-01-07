@@ -1,5 +1,5 @@
 <div class="mb-7 mb-lg-6">
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-light mb-5" style="z-index:100000;">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-custom-4 mb-5" style="z-index:100000;">
         <div class="container-fluid">
             <button class="navbar-toggler position-absolute top-0 end-0 me-2 mt-2 d-default d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
