@@ -94,7 +94,7 @@ class Store extends Controller
             }
         }
 
-        $query="SELECT i.name, i.id as itemID, price, m.name as 'name2'
+        $query="SELECT i.name, i.id as itemID, price, m.name as 'name2', i.amount
             FROM items i 
             INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
             INNER JOIN manufacturers m ON m.id=ms.id_manufacturer

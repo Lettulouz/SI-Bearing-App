@@ -36,14 +36,10 @@
                                                         </figcaption>
                                                     </figure>
                                                 </td>
-                                                <td> <select class='form-control'>
-                                                        <option>1</option>
-                                                        <option>2</option>
-                                                        <option>3</option>
-                                                        <option>4</option>
-                                                    </select> </td>
+                                                <td> 
+                                                    <input class='form-control' id='{$item['itemID']}-{$item['itemPrice']}' type='number' value=1>
                                                 <td>
-                                                    <div class='price-wrap'> <var class='price'>$10.00</var> <small class='text-muted'> {$item['itemPrice']}zł każdy </small> </div>
+                                                    <div class='price-wrap'> <var class='price' id='{$item['itemID']}'></var> <small class='text-muted'> {$item['itemPrice']}zł każdy </small> </div>
                                                 </td>
                                                 <td class='text-right d-none d-md-block'><a href='' class='btn btn-light btn-round' data-abc='true'> Remove</a> </td>
                                             </tr>";
@@ -63,7 +59,7 @@
                     <div class="card-body">
                         <dl class="dlist-align">
                             <dt>Total:</dt>
-                            <dd class="text-right text-dark b ml-3"><strong>$59.97</strong></dd>
+                            <dd class="text-right text-dark b ml-3"><strong id='totalCost'>$59.97</strong></dd>
                         </dl>
                         <hr> <a href="#" class="btn btn-out btn-primary btn-square btn-main" data-abc="true"> Make Purchase </a> <a href="#" class="btn btn-out btn-success btn-square btn-main mt-2" data-abc="true">Continue Shopping</a>
                     </div>
@@ -73,3 +69,46 @@
     </div>
 </div>
 <?php include dirname(__FILE__,2) . "/footer.php"; ?>
+
+<script>
+    $(".form-control").on("change paste keyup", function() {
+        var number = parseInt($(this).val());
+        localStorage.setItem(jQuery(this).attr("id"), number); 
+
+        calculateTotalPrice();
+    })
+
+    $( document ).ready(function(){
+        calculateTotalPrice();
+    })
+
+    $(".form-control").on("focusout", function() {
+        var number = parseInt($(this).val());
+        if(number >= 1)
+            localStorage.setItem(jQuery(this).attr("id"), number); 
+        else
+            localStorage.setItem(jQuery(this).attr("id"), 1); 
+
+        calculateTotalPrice();
+    })
+
+    $( document ).ready(function(){
+        calculateTotalPrice();
+    })
+
+    function calculateTotalPrice(){
+        var totalPrice = 0;
+        Object.keys(localStorage).forEach(function(key, value){
+            let idAndValue = key.split("-");
+            var itemPrice = 0;
+            if(localStorage.getItem(key) >= 1){
+                var itemPrice = parseFloat(idAndValue[1])*parseInt(localStorage.getItem(key))
+                $('#'+key).val(localStorage.getItem(key));
+            }
+            document.getElementById(idAndValue[0]).innerHTML = itemPrice + ' zł';
+            totalPrice += itemPrice;
+        });
+        document.getElementById('totalCost').innerHTML = '&nbsp' + totalPrice + ' zł';
+    }
+    
+</script>

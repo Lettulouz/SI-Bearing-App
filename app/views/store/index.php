@@ -174,13 +174,14 @@
                                     </div>
                                     </div>
                                         <div class='card-footer'>
-                                            <form method='post' class='m-0 p-0' action=''>
+
                                             <b> Cena: {$item['price']} zł </b>
                                                 <input type='hidden' value=".$item['itemID']." name='itemID'>
-                                                <button type='submit' class='btn btn-danger float-end '>
+                                                <input type='hidden' value=".$item['itemID']."-".$item['amount']." name='itemAmount'>
+                                                <button type='submit' class='btn btn-danger float-end ' name='addToCart'>
                                                     <i class='bi bi-basket2'></i>
                                                 </button>
-                                            </form>
+
                                         </div>
                                 </div>
                             </div> ";
@@ -312,5 +313,15 @@
              
         }
     });
+
+    $('[name="addToCart"]').click(function(){
+        let idAndAmount = $(this).val().split("-");
+ 
+        if(Number.isNaN(localStorage.getItem(idAndAmount[0])))
+            localStorage.setItem(idAndAmount[0], 1); 
+        else
+            localStorage.setItem(idAndAmount[0], parseFloat(localStorage.getItem(idAndAmount[0]))+1); 
+
+    })
     </script>
 <?php include dirname(__FILE__,2) . "/footer.php"; ?>
