@@ -128,7 +128,61 @@ class Store extends Controller
             }
         }
 
-        $query="SELECT i.name, i.id as itemID, price, m.name as 'name2'
+        //
+        //   Katalogi
+        //
+        $tableCatal = array();
+        $i = 0;
+        foreach($catalogs as $catalog)
+        {
+            $tableCatal[$i] = $catalog['id'];
+            $i++;
+        }
+
+        if (isset($_POST['checkBoxVarCatalogs'])) 
+        {
+            $tableCatal = $_POST['checkBoxVarCatalogs']; 
+        }
+
+        $query="SELECT COUNT(*) as amount FROM catalog";
+        $catalogsAmount = $db->query($query);
+        $catalogsAmount = $catalogsAmount->fetch(PDO::FETCH_ASSOC);
+        $catalogsAmount = $catalogsAmount['amount'];
+
+        $catalogsAmount == sizeof($tableCatal) ? $querySwitch = true : $querySwitch = false;
+
+        $id_catalog = '';
+        // zamienia tablice w jednego stringa
+        // wystarczy dostarczyć tablice wypełnioną id producenta i polecenie sql działa
+        for($j = 0; $j < count($tableCatal); $j++)
+        {
+            if($j != 0)
+            {
+                $id_catalog = $id_catalog.', '.$tableCatal[$j];
+            }
+            else
+            {
+                $id_catalog = $id_catalog = $id_catalog.$tableCatal[$j];
+            }
+        }
+
+        if($querySwitch){
+            $query="SELECT i.name, i.id as itemID, price, m.name as 'name2', i.amount, i.price as itemPrice
+            FROM items i 
+            INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
+            INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
+            INNER JOIN categoriesofitem coi ON i.id = coi.id_item
+            INNER JOIN categories categ ON coi.id_category = categ.id
+            LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
+            LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
+            WHERE i.name LIKE '%".$search."%' 
+            AND m.id IN ($id_manufacturer)
+            AND categ.id IN ($id_category)
+            GROUP BY i.id
+            ORDER BY i.id ASC
+            LIMIT :limit1, 32 ";
+        }else{
+            $query="SELECT i.name, i.id as itemID, price, m.name as 'name2', i.amount, i.price as itemPrice
             FROM items i 
             INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
             INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
@@ -144,18 +198,7 @@ class Store extends Controller
             ORDER BY i.id ASC
             LIMIT :limit1, 32 ";
         }
-
-        /* 
-        // stare polecenie, jak baza się zmienie może się przydać
-        $query="SELECT d.title, d.description, i.name, m.id, i.id as itemID, m.name as 'name2'
-            FROM items i 
-            LEFT JOIN descriptions d ON d.id_item=i.id 
-            INNER JOIN manufacturers m ON i.id_manufacturer = m.id 
-            WHERE i.name LIKE '%".$search."%' 
-            AND m.id IN (".$id_manufacturer.")
-            ORDER BY i.id ASC
-            LIMIT :limit1,".$limit2." ";
-        */
+        
         $result = $db->prepare($query);
         $result->bindParam('limit1',$limit1);
         $result -> execute();
@@ -197,7 +240,6 @@ class Store extends Controller
         $siteFooter = $this->getFooter($db);
 
         $itemsInCart = NULL;
-
         if(isset($_COOKIE['itemsInCart']) && $_COOKIE['itemsInCart'] != ''){
             $query="SELECT d.title, d.description, i.name, i.id as itemID, m.name as 'name2', i.price as itemPrice
                 FROM items i 
@@ -210,7 +252,7 @@ class Store extends Controller
             $itemsInCart = $db->query($query);
             $itemsInCart = $itemsInCart->fetchAll(PDO::FETCH_ASSOC);
         }
-        
+     
         $this->view('store/cart', ['siteFooter' => $siteFooter, 'itemsArray'=>$itemsInCart, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
     }
 
