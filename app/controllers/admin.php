@@ -791,33 +791,44 @@ class Admin extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
 
-        $tekst2 = "";
+        $attributeName = "";
+        $attributeUnit = "";
+        $attributeRange = "";
         if(isset($_SESSION['successOrErrorResponse'])){
             if($_SESSION['successOrErrorResponse'] == "add_attribute"){
-                if(isset($_SESSION['attributeName'])) {$tekst2 = $_SESSION['attributeName']; unset($_SESSION['attributeName']);} 
+                if(isset($_SESSION['attributeName'])) {$attributeName = $_SESSION['attributeName']; unset($_SESSION['attributeName']);} 
+                if(isset($_SESSION['attributeUnit'])) {$attributeUnit = $_SESSION['attributeUnit']; unset($_SESSION['attributeUnit']);} 
+                if(isset($_SESSION['attributeRange'])) {$attributeRange = $_SESSION['attributeRange']; unset($_SESSION['attributeRange']);} 
             }
             unset($_SESSION['successOrErrorResponse']);
         }
 
         if(isset($_POST['attrEditSub'])){
-            if(!empty($_POST['attribute'])){
+            if(isset($_POST['attributeName'])) $_SESSION['attributeName'] = $_POST['attributeName'];
+            if(isset($_POST['attributeUnit'])) $_SESSION['attributeUnit'] = $_POST['attributeUnit'];
+            if(isset($_POST['attributeRange'])) $_SESSION['attributeRange'] = $_POST['attributeRange'];
+
+            if(!empty($_POST['attributeName'])){
             
-                $attribute = $_POST['attribute'];
-                $tekst1 = strtolower($attribute);
-                $tekst2 = ucfirst($tekst1);
+                $attributeName = $_POST['attributeName'];
+                isset($_POST['attributeUnit']) ? $attributeUnit = $_POST['attributeUnit'] : $attributeUnit="";
+                isset($_POST['attributeRange']) ? $attributeRange = 1 : $attributeRange = 0;
+                
+                $attributeName = strtolower($attributeName);
+                $attributeName = ucfirst($attributeName);
 
                 $query="SELECT COUNT(id) as amount
                 FROM attributes WHERE name=:name";
                 $result = $db->prepare($query);
-                $result->bindParam(':name', $tekst2);
-                $result->execute();
+                $result->bindParam(':name', $attributeName);
+                $result->execute(); 
                 $result = $result->fetch(PDO::FETCH_ASSOC);
                 if($result['amount']>0){
                     $_SESSION['error_page'] = "add_attribute";
-                    $_SESSION['attributeName'] = $tekst2;
+                    $_SESSION['attributeName'] = $attributeName;
                     header("Location:" . ROOT . "/admin/error_page/2");
                 }else{
-                    $query = "INSERT INTO `attributes` (name) VALUES ('$tekst2');";
+                    $query = "INSERT INTO attributes (name, unit, isrange) VALUES ('$attributeName', '$attributeUnit', '$attributeRange');";
                     $result = $db->prepare($query);
                     $result->execute();
                     $_SESSION['success_page'] = "add_attribute";
@@ -828,7 +839,8 @@ class Admin extends Controller
                 header("Location:" . ROOT . "/admin/error_page/1");
             }
         }else{
-        $this->view('admin/add_attribute_admin', ['siteLinks'=>$siteLink,'attribute' => $tekst2]);
+        $this->view('admin/add_attribute_admin', ['siteLinks'=>$siteLink,'attributeName' => $attributeName, 
+        'attributeUnit' => $attributeUnit, 'attributeRange' => $attributeRange]);
         }
     }
 
