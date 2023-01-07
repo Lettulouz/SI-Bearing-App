@@ -50,13 +50,26 @@
                             <div class='hidTab collapse container' id='row".$i."'>
                             <form  method='POST' class='form-inline row p-1' action ='".$editPath."/".$id."'>
                             <div class='d-flex justify-content-end'>
-                                <input type='submit' class='btn btn-primary  p-1' value='Edytuj' />
-                            <div class='col-sm-2 col-5 mx-2'>
-                                <input type='text' name='edit_atr' class='form-control ' value='{$attribute['name']}'/>
+                            
+                            <div class='form-check form-switch'>
+                              <input class='form-check-input attributeRange' style='height:30px; width:60px;' type='checkbox' 
+                              id='attributeRange' name='attributeRange' ";
+                              if($attribute['isrange']==1){
+                                echo 'checked';
+                              }
+                              echo">
+                              </div>
+
+                            <div class='col-md-2 col-sm-3 col-3 mx-2'>
+                                <input type='text' name='edit_atr' class='form-control ' value='{$attribute['name']}' placeholder='atrybut'/>
+                            </div>
+                            <div class='col-lg-1 col-sm-2 col-3 mx-2'>
+                                <input type='text' name='attributeUnit' class='form-control ' value='{$attribute['unit']}' placeholder='jednostka'/>   
+                            </div>
+                        <input type='submit' class='btn btn-primary  p-1' value='Edytuj' />
                             </div>
                             </div>
-                            </form >
-                            </div>
+                            </form>
                     </td>
                     </tr>";
 
@@ -83,6 +96,9 @@
       $('.hidTab').collapse('hide');
     });
   });
+
+
+
 });
 
 

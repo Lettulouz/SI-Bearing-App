@@ -682,6 +682,9 @@ class Admin extends Controller
                 require_once dirname(__FILE__,2) . '/core/database.php';
                 $tekst1 = strtolower($attribute);
                 $tekst2 = ucfirst($tekst1);
+                isset($_POST['attributeUnit']) ? $attributeUnit = $_POST['attributeUnit'] : $attributeUnit="";
+                isset($_POST['attributeRange']) ? $attributeRange = 1 : $attributeRange = 0;
+                
 
                 $query="SELECT id, COUNT(id) FROM attributes WHERE name=:attr";
                 $result = $db->prepare($query);
@@ -694,7 +697,9 @@ class Admin extends Controller
                     header("Location:" . ROOT . "/admin/error_page/2");
                 }else{
                     $query = "UPDATE `attributes` 
-                        SET name = '$tekst2' 
+                        SET name = '$tekst2',
+                        unit='$attributeUnit',
+                        isrange='$attributeRange'
                         WHERE id = '$id_a';";
                     $result = $db->prepare($query);
                     $result->execute();
