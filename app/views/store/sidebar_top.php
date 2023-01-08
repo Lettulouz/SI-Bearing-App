@@ -8,7 +8,7 @@
                     </a> 
                 </li>
                 <li class="my-2 small fw-bold text-uppercase text-decoration-none">Sortowanie</li>
-                <li>
+                <li> 
                     <div class="form-check">
                         <select class="form-control" name="sortValue" form='submitFilterSearchSort' style="height:35px">
                             <option value="1">Sortuj: cena rosnąco</option>

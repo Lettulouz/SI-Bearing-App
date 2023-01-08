@@ -128,7 +128,7 @@
             aria-expanded="<?=!empty($_POST['checkBoxVarAttributes']) ? 'true' : 'false' ?>">Atrybuty
                 <span class="bi bi-chevron-right right-icon ms-auto"></span>
             </a>
-
+ 
             <div class='collapse <?=!empty($_POST['checkBoxVarAttributes']) ? 'show' : '' ?>' id="attrGroup">
                 <?php
                     $k = 0;
