@@ -37,8 +37,7 @@
                                 <i class="bi bi-person"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">troche tego</a></li>
-                                <li><a class="dropdown-item" href="#">troche tamtego</a></li>
+
                                 <li><a class="dropdown-item" href="<?=ROOT?>/admin/logout"> Wyloguj</a></li>
                             </ul>
                         </li>
