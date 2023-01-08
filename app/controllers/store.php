@@ -8,7 +8,7 @@ class Store extends Controller
     }
     */
 
-    public function index($limit1=1){
+    public function index(){
         if(isset($_POST['itemID'])){
             if(!isset($_SESSION['cartItems']))
                 $_SESSION['cartItems']=array();
@@ -22,7 +22,7 @@ class Store extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteFooter = $this->getFooter($db);
 
-        $limit1=1;
+        isset($_POST['limit1']) ? $limit1 = $_POST['limit1'] : $limit1=1;
 
         $search = '';
         $endofitems=0;
@@ -179,41 +179,49 @@ class Store extends Controller
             $i++;
         }
         
-        $attrQuery = '';
+        $attrQuery = ' ';
         $attrParamQuery = '';
         if (isset($_POST['checkBoxVarAttributes']) && isset($_POST['arrayOfAttrVal'])) 
         {
             $tableAttr = $_POST['checkBoxVarAttributes']; 
             $tableAttrValues = $_POST['arrayOfAttrVal'];
-           
+            $isItRange = $_POST['isItRange'];
             // zamienia tablice w jednego stringa
             // wystarczy dostarczyć tablice wypełnioną id producenta i polecenie sql działa
-            for($j = 0; $j < count($tableAttr); $j++)
+
+            $k = 0;
+            for($j = 0; $j < count($attributes); $j++)
             {
-                $first = $tableAttrValues[$j];
-                $second = $tableAttrValues[$j];
-                $first = substr($first .'-', 0, strpos($first , '-'));
-                $second = substr($second, (strpos($second, '-') ?: -1) + 1);
-                $attrIdLoc = $tableAttr[$j];
-                if(empty($first)){
-                    $attrQuery .= "AND(aoi.id_attribute=:id_attribute$attrIdLoc && aoi.value<=:secondParam$attrIdLoc)";
-                }else if(empty($second)){
-                    $attrQuery .= "AND(aoi.id_attribute=:id_attribute$attrIdLoc && aoi.value>=:firstParam$attrIdLoc)";
-                }else if(!empty($first) && !empty($second)){
-                    $attrQuery .= "AND(aoi.id_attribute=:id_attribute$attrIdLoc && aoi.value>=:firstParam$attrIdLoc && aoi.value<=:secondParam$attrIdLoc)";
+                if(!isset($tableAttr[$k]))
+                    break;
+                if($tableAttr[$k]==$attributes[$j]['id']){
+                    if($isItRange[$j] == 1){
+                        $first = $tableAttrValues[$k];
+                        $second = $tableAttrValues[$k];
+                        $first = substr($first .'-', 0, strpos($first , '-'));
+                        $second = substr($second, (strpos($second, '-') ?: -1) + 1);
+                        $attrIdLoc = $tableAttr[$k];
+                        if(empty($first)){
+                            $attrQuery .= "AND i.id IN (SELECT id_item FROM attributesofitems 
+                            WHERE id_attribute=$attrIdLoc AND value<=$second) ";
+                        }else if(empty($second)){
+                            $attrQuery .= "AND i.id IN (SELECT id_item FROM attributesofitems 
+                            WHERE id_attribute=$attrIdLoc AND value>=$first) ";
+                        }else if(!empty($first) && !empty($second)){
+                            $attrQuery .= "AND i.id IN (SELECT id_item FROM attributesofitems 
+                            WHERE id_attribute=$attrIdLoc AND value>=$first AND value<=$second) ";
+                        }
+                    }else{
+                        $attrIdLoc = $tableAttr[$k];
+                        $attrQuery .= " AND i.id IN (SELECT id_item FROM attributesofitems 
+                        WHERE id_attribute=$attrIdLoc AND value LIKE CONCAT('%', :tblAttrValue$attrIdLoc, '%')) ";
+                    }
+                    $k++; 
                 }
+
+      
             }
         }
-
-
-        if (isset($_POST['checkBoxVarAttributes'])) 
-        {
-           //print_r($id_attribute);
-           // die();
-        }
-
-
-        $searchEx = '%' . $search . '%';        
         if($querySwitch){
             $query="SELECT i.name, i.id as itemID, price, m.name as 'name2', i.amount, i.price as itemPrice
             FROM items i 
@@ -225,9 +233,9 @@ class Store extends Controller
             INNER JOIN attributes attr ON aoi.id_attribute = attr.id 
             LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
             LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
-            WHERE i.name LIKE :search 
-            AND m.id IN (:id_manufacturer)
-            AND categ.id IN (:id_category) " 
+            WHERE i.name LIKE CONCAT('%', :search, '%')
+            AND m.id IN ($id_manufacturer)
+            AND categ.id IN ($id_category) " 
             . $attrQuery .
             " GROUP BY i.id
             ORDER BY i.id ASC
@@ -243,10 +251,10 @@ class Store extends Controller
             INNER JOIN attributes attr ON aoi.id_attribute = attr.id 
             LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
             LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
-            WHERE i.name LIKE :search 
-            AND m.id IN (:id_manufacturer)
-            AND categ.id IN (:id_category)
-            AND catal.id IN (:id_catalog) "
+            WHERE i.name LIKE CONCAT('%', :search, '%')
+            AND m.id IN ($id_manufacturer)
+            AND categ.id IN ($id_category)
+            AND catal.id IN ($id_catalog) "
             . $attrQuery .
             " GROUP BY i.id
             ORDER BY i.id ASC
@@ -254,37 +262,30 @@ class Store extends Controller
         }
 
         $result = $db->prepare($query);
+        
         if (isset($_POST['checkBoxVarAttributes']) && isset($_POST['arrayOfAttrVal'])) 
         {
-            for($j = 0; $j < count($tableAttr); $j++)
+            $k=0;
+            for($j = 0; $j < count($attributes); $j++)
             {
-                $first = $tableAttrValues[$j];
-                $second = $tableAttrValues[$j];            
-                $first = substr($first .'-', 0, strpos($first , '-'));
-                $second = substr($second, (strpos($second, '-') ?: -1) + 1);
-                $attrIdLoc = $tableAttr[$j];
-
-                if(empty($first)){
-                    $result->bindParam(":id_attribute$attrIdLoc", $attrIdLoc);
-                    $result->bindParam(":secondParam$attrIdLoc", $second);
-                }else if(empty($second)){
-                    $result->bindParam(":id_attribute$attrIdLoc", $attrIdLoc);
-                    $result->bindParam(":firstParam$attrIdLoc",$first);
-                }else if(!empty($first) && !empty($second)){
-                    $result->bindParam(":id_attribute$attrIdLoc", $attrIdLoc);
-                    $result->bindParam(":firstParam$attrIdLoc",$first);
-                    $result->bindParam(":secondParam$attrIdLoc",$second);
+                if(!isset($tableAttr[$k]))
+                    break;
+                if($tableAttr[$k]==$attributes[$j]['id']){
+                    if($isItRange[$j] == 0){
+                        $attrIdLoc = $tableAttr[$k];
+                        $tblAttrValue = $tableAttrValues[$k];
+                        $result->bindParam(':tblAttrValue' . $attrIdLoc,$tblAttrValue);
+                    }
+                    $k++; 
                 }
             }
         }
 
+       
         $result->bindParam(':limit1',$limit1);
-        $result->bindParam(':search',$searchEx);
-        $result->bindParam(':id_manufacturer',$id_manufacturer);
-        $result->bindParam(':id_category',$id_category);
-        if(!$querySwitch) $result->bindParam(':id_catalog',$id_catalog);
+        $result->bindParam(':search',$search);
+        
         $result -> execute();
-        print_r($result);
   
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
    

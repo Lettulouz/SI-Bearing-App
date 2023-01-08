@@ -108,11 +108,12 @@
             <div class='collapse <?=!empty($data['attributesArray']) ? 'show' : '' ?>' id="attrGroup">
                 <?php
                     $k = 0;
+                    $jk = 0;
                     $attributes = $data['attributesArray'];
                     foreach($attributes as $attribute) 
                     {
                         echo "<div class='form-check'>
-                            <input type='hidden' id='isrange' value='" . $attribute['isrange']  . "'/>
+                            <input type='hidden' id='isrange' value='" . $attribute['isrange']  . "' name='isItRange[]' form='submitFilterSearchSort'/>
                             <input class='form-check-input checkboxvar checkboxvarattr me-2' id='attribute".$k."' type='checkbox' name='checkBoxVarAttributes[]' form='submitFilterSearchSort' value='".$attribute['id']."' ";
                             if ((!empty($_POST["checkBoxVarAttributes"]) && in_array($attribute['id'], $_POST["checkBoxVarAttributes"])))
                             {
@@ -121,48 +122,53 @@
                             echo ">
                           <label style='margin-top:1px' for='attribute".$k."''>".$attribute['name']." " .$attribute['unit'] ."</label>";
 
-                          if ((!empty($_POST["arrayOfAttrVal"])) && !empty($_POST["checkBoxVarAttributes"] && in_array($attribute['id'], $_POST["checkBoxVarAttributes"])))
+                          if ((!empty($_POST["arrayOfAttrVal"])) && !empty($_POST["checkBoxVarAttributes"]))
                             {
-                                if($_POST['arrayOfAttrVal'][$k] != ""){
-                                    if($attribute['isrange'] == 1){                                
-                                        $first = $_POST['arrayOfAttrVal'][$k];
-                                        $second =  $_POST['arrayOfAttrVal'][$k];
-                                        $first = substr($first .'-', 0, strpos($first , '-'));
-                                        $second = substr($second, (strpos($second, '-') ?: -1) + 1);
-                                        $html = '';    
-                                        $html.='<div class="container mt-2 mb-2 d-flex justify-content-between" id="attributeVal">';
-                                        $html.='<div class="row">';
-                                        $html.='<div class="col-5">';
-                                        $html.='<input type="number" class="form-control attrpart" style="margin-left:-10px" id="attrpart1" value="';
-                                        $html.=$first;
-                                        $html.='"/>';
-                                        $html.='</div>';
-                                        $html.='<div class="col-2">';
-                                        $html.='<label class="form-control" style="margin-left:-9px; background:transparent; border:0px">-</label>';
-                                        $html.='</div>';
-                                        $html.='<div class="col-5">';
-                                        $html.='<input type="number" class="form-control attrpart" style="margin-left:-10px" id="attrpart2" value="';
-                                        $html.=$second;
-                                        $html.='"/>';
-                                        $html.='</div>';
-                                        $html.='</div>';
-                                        $html.='<input type="hidden" name="arrayOfAttrVal[]" id="partsoutput" form="submitFilterSearchSort" value="';
-                                        $html.=$_POST['arrayOfAttrVal'][$k];
-                                        $html.='"/>';
-                                        $html.='</div>';      
-                                    }else{
-                                        $html = '';    
-                                        $html.='<div class="container mt-2 mb-2" id="attributeVal" >';
-                                        $html.='<div class="row">';
-                                        $html.='<div class="col">';
-                                        $html.='<input type="text" autocomplete="off" class="form-control" style="margin-left:-10px" name="arrayOfAttrVal[]" form="submitFilterSearchSort" value="';
-                                        $html.=$_POST['arrayOfAttrVal'][$k];
-                                        $html.='"/>';
-                                        $html.='</div>';
-                                        $html.='</div>';
-                                        $html.='</div>';
+                                if(isset($_POST["checkBoxVarAttributes"][$jk])) {
+                                    if($attribute['id'] == $_POST["checkBoxVarAttributes"][$jk]){
+                                        if($_POST['arrayOfAttrVal'][0] != ""){
+                                            if($attribute['isrange'] == 1){                                
+                                                $first = $_POST['arrayOfAttrVal'][$jk];
+                                                $second =  $_POST['arrayOfAttrVal'][$jk];
+                                                $first = substr($first .'-', 0, strpos($first , '-'));
+                                                $second = substr($second, (strpos($second, '-') ?: -1) + 1);
+                                                $html = '';    
+                                                $html.='<div class="container mt-2 mb-2 d-flex justify-content-between" id="attributeVal">';
+                                                $html.='<div class="row">';
+                                                $html.='<div class="col-5">';
+                                                $html.='<input type="number" class="form-control attrpart" style="margin-left:-10px" id="attrpart1" value="';
+                                                $html.=$first;
+                                                $html.='"/>';
+                                                $html.='</div>';
+                                                $html.='<div class="col-2">';
+                                                $html.='<label class="form-control" style="margin-left:-9px; background:transparent; border:0px">-</label>';
+                                                $html.='</div>';
+                                                $html.='<div class="col-5">';
+                                                $html.='<input type="number" class="form-control attrpart" style="margin-left:-10px" id="attrpart2" value="';
+                                                $html.=$second;
+                                                $html.='"/>';
+                                                $html.='</div>';
+                                                $html.='</div>';
+                                                $html.='<input type="hidden" name="arrayOfAttrVal[]" id="partsoutput" form="submitFilterSearchSort" value="';
+                                                $html.=$_POST['arrayOfAttrVal'][$jk];
+                                                $html.='"/>';
+                                                $html.='</div>';      
+                                            }else{
+                                                $html = '';    
+                                                $html.='<div class="container mt-2 mb-2" id="attributeVal" >';
+                                                $html.='<div class="row">';
+                                                $html.='<div class="col">';
+                                                $html.='<input type="text" autocomplete="off" class="form-control attrnotrange" style="margin-left:-10px" name="arrayOfAttrVal[]" form="submitFilterSearchSort" value="';
+                                                $html.=$_POST['arrayOfAttrVal'][$jk];
+                                                $html.='"/>';
+                                                $html.='</div>';
+                                                $html.='</div>';
+                                                $html.='</div>';
+                                            }
+                                            echo $html;
+                                            $jk++;
+                                        }
                                     }
-                                    echo $html;
                                 }
                             }
                         echo" </div>";
@@ -201,7 +207,7 @@
                         <i class="bi bi-arrow-left-circle" style="font-size:33px"></i>
                     </button>
                     <input type='number' style='text-align:center; box-shadow:none; font-size:15px;max-width:75px;' id='pageInside' class='d-inline form-control px-0' 
-                    value='<?=isset($data['limit1']) ? $data['limit1'] : 1 ?>' name='limit1'/>
+                    value='<?=isset($data['limit1']) ? $data['limit1'] : 1 ?>' name='limit1' form='submitFilterSearchSort'/>
 
                     <label class="form-control d-inline" style="border:0px;">z <?=$data['numberOfPages']?></label>
                     <button type='button' name='rgt' 
@@ -448,7 +454,6 @@
             var toDelete = parent.find('div#attributeVal');
             $(toDelete).remove();
         }
-
         $(".attrpart").on('input', function(){
             var part1;
             var part2;
@@ -486,14 +491,15 @@
             $(this).parent().parent().find("input#attrpart1").val($(this).parent().parent().find("input#attrpart2").val());
         }
     });
-});
+
     
-
-
-
-
-
+});
 
 
     </script>
+    <script>
+   
+ 
+</script>
+
 <?php include dirname(__FILE__,2) . "/footer.php"; ?>
