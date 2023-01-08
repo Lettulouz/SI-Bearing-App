@@ -1475,19 +1475,43 @@ class Admin extends Controller
 
                 $i = 1;
                 while(isset($_POST["attribute_name" . $i])){
-                    $query="SELECT id FROM attributes WHERE name=:attr_name";
+                    $query="SELECT id, isrange FROM attributes WHERE name=:attr_name";
                     $result = $db->prepare($query);
                     $result->bindParam(':attr_name', $_POST["attribute_name" . $i]);
                     $result->execute();
-                    $attr_id=$result->fetch(PDO::FETCH_ASSOC); 
+                    $result=$result->fetch(PDO::FETCH_ASSOC); 
+                    $attr_id=$result['id'];
+                    $attr_isrange=$result['isrange'];
+                    
+                    if($attr_isrange == 0){
+                        $query="INSERT INTO attributesofitems (id_item, id_attribute, value) 
+                        VALUES (:id_item, :id_attribute, :in_value)";
+                        $result = $db->prepare($query);
+                        $result->bindParam(':id_item',$item_id);
+                        $result->bindParam(':id_attribute',$attr_id);
+                        $result->bindParam(':in_value',$_POST["attribute_value" . $i]);
+                        $result->execute();
+                    }else if($attr_isrange == 1){
+                        $attrValuePost = $_POST["attribute_value" . $i];
+                        $floatVal = floatval($attrValuePost);
 
-                    $query="INSERT INTO attributesofitems (id_item, id_attribute, value) 
-                    VALUES (:id_item, :id_attribute, :in_value)";
-                    $result = $db->prepare($query);
-                    $result->bindParam(':id_item',$item_id);
-                    $result->bindParam(':id_attribute',$attr_id['id']);
-                    $result->bindParam(':in_value',$_POST["attribute_value" . $i]);
-                    $result->execute();
+                        $query="INSERT INTO attributesofitems (id_item, id_attribute, value, valuedecimal) 
+                        VALUES (:id_item, :id_attribute, :in_value, :in_valuedecimal)";
+                        $result = $db->prepare($query);
+                        $result->bindParam(':id_item',$item_id);
+                        $result->bindParam(':id_attribute',$attr_id);
+                        if($floatVal)
+                        {
+                            $result->bindParam(':in_valuedecimal',$attrValuePost);
+                            $result->bindParam(':in_value',$attrValuePost);
+                        }else{
+                            $attrValuePost = 0;
+                            $result->bindParam(':in_valuedecimal',$attrValuePost);
+                            $result->bindParam(':in_value',$attrValuePost);
+                        }
+                        $result->execute();
+                    }
+
 
                    // var_dump($_POST["attribute_name" . $i] . ", " . $_POST["attribute_value" . $i]);
                     $i += 1;
@@ -1648,24 +1672,72 @@ class Admin extends Controller
                     if(!isset($_POST["attribute_name" . $i]) &&!isset($_POST["attribute_value" . $i])&&!isset($_POST["attrId" . $i])){
 
                     }else{
-                        if($_POST["attrId" . $i] != 0){
-                            echo "<script>alert('test')</script>";
-                            $query="UPDATE attributesofitems SET id_attribute=:id_attr, value=:val WHERE id=:id";
-                            $result = $db->prepare($query);
-                            $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
-                            $result->bindParam(':val',$_POST["attribute_value" . $i]);
-                            $result->bindParam(':id',$_POST["attrId" . $i]);
-                            $result->execute();
+                        $query="SELECT isrange FROM attributes WHERE id=:attr_id";
+                        $result = $db->prepare($query);
+                        $result->bindParam(':attr_id', $_POST["attribute_name" . $i]);
+                        $result->execute();
+                        $result=$result->fetch(PDO::FETCH_ASSOC); 
+                        $attr_isrange=$result['isrange'];
+                        if($_POST["attrId" . $i] != 0){       
+                            if($attr_isrange == 0){               
+                                $query="UPDATE attributesofitems SET id_attribute=:id_attr, value=:val WHERE id=:id";
+                                $result = $db->prepare($query);
+                                $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
+                                $result->bindParam(':val',$_POST["attribute_value" . $i]);
+                                $result->bindParam(':id',$_POST["attrId" . $i]);
+                                $result->execute();
+                            }else{
+                                $attrValuePost = $_POST["attribute_value" . $i];
+                                $floatVal = floatval($attrValuePost);
+                            
+                                $query="UPDATE attributesofitems SET id_attribute=:id_attr, value=:val, valuedecimal=:valuedecimal WHERE id=:id";
+                                $result = $db->prepare($query);
+                                $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
+                                if($floatVal){
+                                    $result->bindParam(':val',$attrValuePost);
+                                    $result->bindParam(':valuedecimal',$attrValuePost);
+                                }else{
+                                    $attrValuePost = 0;
+                                    $result->bindParam(':val',$attrValuePost);
+                                    $result->bindParam(':valuedecimal',$attrValuePost);
+                                }
+                                $result->bindParam(':id',$_POST["attrId" . $i]);
+                                $result->execute();
+
+                            }
                             array_push($remainingAttrID, $_POST["attrId".$i]);
                         }else{
-                            $query="INSERT INTO attributesofitems (id_item, id_attribute, value) VALUES (:id_item, :id_attr, :val)";
-                            $result = $db->prepare($query);
-                            $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
-                            $result->bindParam(':val',$_POST["attribute_value" . $i]);
-                            $result->bindParam(':id_item',$editId);
-                            $result->execute();
-                            $aId = $db->lastInsertId();
-                            array_push($remainingAttrID, $aId);
+                            if($attr_isrange == 0){               
+                                $query="INSERT INTO attributesofitems (id_item, id_attribute, value) VALUES (:id_item, :id_attr, :val)";
+                                $result = $db->prepare($query);
+                                $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
+                                $result->bindParam(':val',$_POST["attribute_value" . $i]);
+                                $result->bindParam(':id_item',$editId);
+                                $result->execute();
+                                $aId = $db->lastInsertId();
+                                array_push($remainingAttrID, $aId);
+                            }else if($attr_isrange == 1){
+                                $attrValuePost = $_POST["attribute_value" . $i];
+                                $floatVal = floatval($attrValuePost);
+
+                                $query="INSERT INTO attributesofitems (id_item, id_attribute, value, valuedecimal) VALUES (:id_item, :id_attr, :val, :valuedecimal)";
+                                $result = $db->prepare($query);
+                                $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
+
+                                if($floatVal)
+                                {
+                                    $result->bindParam(':val',$attrValuePost);
+                                    $result->bindParam(':valuedecimal',$attrValuePost);
+                                }else{
+                                    $attrValuePost = 0;
+                                    $result->bindParam(':val',$attrValuePost);
+                                    $result->bindParam(':valuedecimal',$attrValuePost);
+                                }
+                                $result->bindParam(':id_item',$editId);
+                                $result->execute();
+                                $aId = $db->lastInsertId();
+                                array_push($remainingAttrID, $aId);
+                            }
                         }
                     }
                 }
@@ -1698,7 +1770,6 @@ class Admin extends Controller
 
                     }else{
                         if($_POST["descriptionId" . $i] != 0){
-                            echo "<script>alert('test')</script>";
                             $query="UPDATE descriptions SET title=:title, description=:desc WHERE id=:id";
                             $result = $db->prepare($query);
                             $result->bindParam(':title',$_POST["descriptionTitle" . $i]);

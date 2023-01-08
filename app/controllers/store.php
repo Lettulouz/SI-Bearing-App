@@ -64,6 +64,16 @@ class Store extends Controller
         $attributes = $db->query($query_attributes);
         $attributes = $attributes->fetchAll(PDO::FETCH_ASSOC);
 
+
+        isset($_POST['pricepartstart']) ? $pricepartstart=$_POST['pricepartstart'] : $pricepartstart = "";
+        isset($_POST['pricepartend']) ? $pricepartend=$_POST['pricepartend'] : $pricepartend = "";
+        $querypricestartend = " ";
+        if($pricepartstart != ""){
+            $querypricestartend .= " AND i.price>=$pricepartstart ";
+        }
+        if($pricepartend != ""){
+            $querypricestartend .= " AND i.price<=$pricepartend ";
+        }
         //
         //   Producenci
         //
@@ -166,7 +176,6 @@ class Store extends Controller
             }
         }
 
-       
         //
         //   Atrybuty
         //
@@ -180,7 +189,7 @@ class Store extends Controller
         }
         
         $attrQuery = ' ';
-        $attrParamQuery = '';
+
         if (isset($_POST['checkBoxVarAttributes']) && isset($_POST['arrayOfAttrVal'])) 
         {
             $tableAttr = $_POST['checkBoxVarAttributes']; 
@@ -203,13 +212,13 @@ class Store extends Controller
                         $attrIdLoc = $tableAttr[$k];
                         if(empty($first)){
                             $attrQuery .= "AND i.id IN (SELECT id_item FROM attributesofitems 
-                            WHERE id_attribute=$attrIdLoc AND value<=$second) ";
+                            WHERE id_attribute=$attrIdLoc AND valuedecimal<=$second) ";
                         }else if(empty($second)){
                             $attrQuery .= "AND i.id IN (SELECT id_item FROM attributesofitems 
-                            WHERE id_attribute=$attrIdLoc AND value>=$first) ";
+                            WHERE id_attribute=$attrIdLoc AND valuedecimal>=$first) ";
                         }else if(!empty($first) && !empty($second)){
                             $attrQuery .= "AND i.id IN (SELECT id_item FROM attributesofitems 
-                            WHERE id_attribute=$attrIdLoc AND value>=$first AND value<=$second) ";
+                            WHERE id_attribute=$attrIdLoc AND valuedecimal>=$first AND valuedecimal<=$second) ";
                         }
                     }else{
                         $attrIdLoc = $tableAttr[$k];
@@ -218,8 +227,6 @@ class Store extends Controller
                     }
                     $k++; 
                 }
-
-      
             }
         }
         if($querySwitch){
@@ -235,7 +242,8 @@ class Store extends Controller
             LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
             WHERE i.name LIKE CONCAT('%', :search, '%')
             AND m.id IN ($id_manufacturer)
-            AND categ.id IN ($id_category) " 
+            AND categ.id IN ($id_category) "
+            . $querypricestartend  
             . $attrQuery .
             " GROUP BY i.id
             ORDER BY i.id ASC
@@ -255,13 +263,14 @@ class Store extends Controller
             AND m.id IN ($id_manufacturer)
             AND categ.id IN ($id_category)
             AND catal.id IN ($id_catalog) "
+            . $querypricestartend 
             . $attrQuery .
             " GROUP BY i.id
             ORDER BY i.id ASC
             LIMIT :limit1, 32 ";
         }
 
-        $result = $db->prepare($query);
+        $itemsArr = $db->prepare($query);
         
         if (isset($_POST['checkBoxVarAttributes']) && isset($_POST['arrayOfAttrVal'])) 
         {
@@ -274,25 +283,22 @@ class Store extends Controller
                     if($isItRange[$j] == 0){
                         $attrIdLoc = $tableAttr[$k];
                         $tblAttrValue = $tableAttrValues[$k];
-                        $result->bindParam(':tblAttrValue' . $attrIdLoc,$tblAttrValue);
+                        $itemsArr->bindParam(':tblAttrValue' . $attrIdLoc,$tblAttrValue);
                     }
                     $k++; 
                 }
             }
         }
 
-       
-        $result->bindParam(':limit1',$limit1);
-        $result->bindParam(':search',$search);
+        $itemsArr->bindParam(':limit1',$limit1);
+        $itemsArr->bindParam(':search',$search);
         
-        $result -> execute();
+        $itemsArr -> execute();
   
-        $result = $result->fetchAll(PDO::FETCH_ASSOC);
+        $itemsArr = $itemsArr->fetchAll(PDO::FETCH_ASSOC);
    
-
-
         if($querySwitch){
-            $query="SELECT COUNT(i.id)
+            $query="SELECT COUNT(i.id) as c
             FROM items i 
             INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
             INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
@@ -305,11 +311,12 @@ class Store extends Controller
             WHERE i.name LIKE CONCAT('%', :search, '%')
             AND m.id IN ($id_manufacturer)
             AND categ.id IN ($id_category) " 
+            . $querypricestartend 
             . $attrQuery .
             " GROUP BY i.id
             ORDER BY i.id ASC";
         }else{
-            $query="SELECT COUNT(i.id)
+            $query="SELECT COUNT(i.id) as c
             FROM items i 
             INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
             INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
@@ -348,6 +355,8 @@ class Store extends Controller
             }
         }
 
+        $numberOfItems->bindParam(':search',$search);
+
         $numberOfItems -> execute();
         $numberOfItems = $numberOfItems->fetch(PDO::FETCH_ASSOC);
         if(!empty($numberOfItems))
@@ -355,10 +364,11 @@ class Store extends Controller
         if(!empty($numberOfItems))
             $numberOfPages = intdiv($numberOfItems, 32) + 1;
         
-        $this->view('store/index', ['itemsArray'=>$result, 'search' => $search, 'limit1' => $page, 
+        $this->view('store/index', ['itemsArray'=>$itemsArr, 'search' => $search, 'limit1' => $page, 
             'manufacturersArray' => $manufacturers, 'last'=> $endofitems,
             'test' => $id_manufacturer, 'siteFooter' => $siteFooter, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name,
-        'categoriesArray'=>$categories, 'catalogsArray'=>$catalogs, 'attributesArray'=>$attributes, 'numberOfPages' => $numberOfPages, 'numberOfItems' => $numberOfItems]); // ten 'test' to do wywalenia na koniec
+        'categoriesArray'=>$categories, 'catalogsArray'=>$catalogs, 'attributesArray'=>$attributes, 'numberOfPages' => $numberOfPages, 
+        'numberOfItems' => $numberOfItems, 'pricepartstart' => $pricepartstart, 'pricepartend' => $pricepartend]); // ten 'test' to do wywalenia na koniec
             
     }
 

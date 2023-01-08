@@ -7,6 +7,30 @@
     <input type="hidden" name="page" id="page"/>
 </form>
     <li>
+        <label class="text-muted small fw-bold text-uppercase text-decoration-none">Cena</label>
+        <div class="form-check">     
+            <div class="container mt-2 mb-2 d-flex justify-content-between" id="priceVal">
+                <div class="row">
+                    <div class="col-5">
+                        <input type="number" min="0" step="0.01" class="form-control pricepart" style="margin-left:-10px" 
+                        id="pricepartstart" name="pricepartstart" value="<?=$data['pricepartstart']?>"
+                        form='submitFilterSearchSort'/>
+                    </div>
+                    <div class="col-2">
+                        <label class="form-control" style="margin-left:-9px; background:transparent; border:0px">-</label>
+                    </div>
+                    <div class="col-5">
+                        <input type="number" min="0" step="0.01" class="form-control pricepart" style="margin-left:-10px" 
+                        id="pricepartend" name="pricepartend" value='<?=$data['pricepartend']?>'
+                        form='submitFilterSearchSort'/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <li class="my-1">
+            <hr class="dropdown divider">
+        </li>
+
         <a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link"
         data-bs-toggle="collapse" role="button" data-bs-target="#manufacturersGroup" aria-controls="#manufacturersGroup" 
         aria-expanded="<?=!empty($_POST['checkBoxVarManufacturers']) ? 'true' : 'false' ?>">Producenci
@@ -136,7 +160,7 @@
                                                 $html.='<div class="container mt-2 mb-2 d-flex justify-content-between" id="attributeVal">';
                                                 $html.='<div class="row">';
                                                 $html.='<div class="col-5">';
-                                                $html.='<input type="number" class="form-control attrpart" style="margin-left:-10px" id="attrpart1" value="';
+                                                $html.='<input type="number" min="0" step="0.01" class="form-control attrpart" style="margin-left:-10px" id="attrpart1" value="';
                                                 $html.=$first;
                                                 $html.='"/>';
                                                 $html.='</div>';
@@ -144,7 +168,7 @@
                                                 $html.='<label class="form-control" style="margin-left:-9px; background:transparent; border:0px">-</label>';
                                                 $html.='</div>';
                                                 $html.='<div class="col-5">';
-                                                $html.='<input type="number" class="form-control attrpart" style="margin-left:-10px" id="attrpart2" value="';
+                                                $html.='<input type="number" min="0" step="0.01" class="form-control attrpart" style="margin-left:-10px" id="attrpart2" value="';
                                                 $html.=$second;
                                                 $html.='"/>';
                                                 $html.='</div>';
@@ -313,6 +337,84 @@
         if($(window).width()>1536 && $('.sidebar').find(':checkbox:checked').length > 0){
             $('.sidebar').offcanvas('show')
         }
+
+        document.querySelector(".attrpart").addEventListener("keypress", function (evt) {
+    if (evt.which != 8 && evt.which != 0 && evt.which != 46 && evt.which != 44 && evt.which < 48 || evt.which > 57)
+    {
+        evt.preventDefault();
+    }
+});
+
+        $(".attrpart").on('input', function(){
+            var part1;
+            var part2;
+            if(typeof $(this).parent().parent().find("input#attrpart1").val() === undefined){
+                part1="";
+            }else{
+                part1 = $(this).parent().parent().find("input#attrpart1").val();
+            }
+            if(typeof $(this).parent().parent().find("input#attrpart2").val() === undefined){
+                part2="";
+            }else{
+                part2 = $(this).parent().parent().find("input#attrpart2").val();
+            }
+        var output = part1+"-"+part2;
+
+        $(this).parent().parent().parent().find("input#partsoutput").val(output);
+    });
+
+    $(".attrpart").on('change', function(){
+        console.log('test123');
+        var part1;
+        var part2;
+        var part1AsFl;
+        var part2AsFl;
+        var part1AsStr;
+        var part2AsStr;
+        if(typeof $(this).parent().parent().find("input#attrpart1").val() === undefined){
+            part1="";
+        }else{
+            part1 = $(this).parent().parent().find("input#attrpart1").val();
+        }
+        if(typeof $(this).parent().parent().find("input#attrpart2").val() === undefined){
+            part2="";
+        }else{
+            part2 = $(this).parent().parent().find("input#attrpart2").val();
+        }
+        
+        if(part1 != ""){
+            part1AsFl = (Math.round(parseFloat(part1)*100)/100);
+            part1AsStr = parseFloat(part1).toFixed(2);
+        }
+
+        if(part2 != ""){
+            part2AsFl = (Math.round(parseFloat(part2)*100)/100);
+            part2AsStr = parseFloat(part2).toFixed(2);
+        }
+        
+        if(part1AsStr != ""){
+            if(part1AsFl == 0){
+                $(this).parent().parent().find("input#attrpart1").val('');
+                $(this).parent().parent().find("input#attrpart2").val(part2AsStr);
+            }else{
+                $(this).parent().parent().find("input#attrpart1").val(part1AsStr);
+            }
+        }
+
+        if(part2AsStr != ""){
+            if(part2AsFl == 0){
+                $(this).parent().parent().find("input#attrpart2").val('');
+                $(this).parent().parent().find("input#attrpart1").val(part1AsStr);
+            }else{
+                $(this).parent().parent().find("input#attrpart2").val(part2AsStr);
+            }
+        }
+        if(part1AsStr != "" && part2AsStr !=""){
+            if(part2AsFl<part1AsFl && part2AsFl != 0){
+                $(this).parent().parent().find("input#attrpart1").val($(this).parent().parent().find("input#attrpart2").val());
+            }
+        }
+    });
     });
 
     $('[name="rgt"]').click(function(){
@@ -342,6 +444,9 @@
    
     //filter items
     $('.filterSub').click(function(){
+        $('.pricepart').trigger('change');
+        $('.attrpart').trigger('input');
+        $('.attrpart').trigger('change');
         $('#page').val(1);
         $('#pageInside').val(1);
         $('#submitFilterSearchSort').submit();
@@ -349,6 +454,8 @@
 
     //reset filters
     $('.resetSub').click(function(){
+        $('#pricepartstart').val('');
+        $('#pricepartend').val('');
         $('.checkboxvar').removeAttr('checked');
         $('#page').val(1);
         $('#pageInside').val(1);
@@ -437,13 +544,13 @@
                 html+='<div class="container mt-2 mb-2 d-flex justify-content-between" id="attributeVal">';
                 html+='<div class="row">';
                 html+='<div class="col-5">';
-                html+='<input type="number" class="form-control attrpart" style="margin-left:-10px" id="attrpart1">';
+                html+='<input type="number" min="0" step="0.01" class="form-control attrpart" style="margin-left:-10px" id="attrpart1">';
                 html+='</div>';
                 html+='<div class="col-2">';
                 html+='<label class="form-control" style="margin-left:-9px; background:transparent; border:0px">-</label>';
                 html+='</div>';
                 html+='<div class="col-5">';
-                html+='<input type="number" class="form-control attrpart" style="margin-left:-10px" id="attrpart2"/>';
+                html+='<input type="number" min="0" step="0.01" class="form-control attrpart" style="margin-left:-10px" id="attrpart2"/>';
                 html+='</div>';
                 html+='</div>';
                 html+='<input type="hidden" name="arrayOfAttrVal[]" id="partsoutput" form="submitFilterSearchSort">';
@@ -454,6 +561,14 @@
             var toDelete = parent.find('div#attributeVal');
             $(toDelete).remove();
         }
+
+        document.querySelector(".attrpart").addEventListener("keypress", function (evt) {
+    if (evt.which != 8 && evt.which != 0 && evt.which != 46 && evt.which != 44 && evt.which < 48 || evt.which > 57)
+    {
+        evt.preventDefault();
+    }
+});
+
         $(".attrpart").on('input', function(){
             var part1;
             var part2;
@@ -475,6 +590,10 @@
     $(".attrpart").on('change', function(){
         var part1;
         var part2;
+        var part1AsFl;
+        var part2AsFl;
+        var part1AsStr;
+        var part2AsStr;
         if(typeof $(this).parent().parent().find("input#attrpart1").val() === undefined){
             part1="";
         }else{
@@ -485,10 +604,38 @@
         }else{
             part2 = $(this).parent().parent().find("input#attrpart2").val();
         }
+        
+        if(part1 != ""){
+            part1AsFl = (Math.round(parseFloat(part1)*100)/100);
+            part1AsStr = parseFloat(part1).toFixed(2);
+        }
 
-        if(part1 != "" && part2 !=""){
-            if(part2<part1)
-            $(this).parent().parent().find("input#attrpart1").val($(this).parent().parent().find("input#attrpart2").val());
+        if(part2 != ""){
+            part2AsFl = (Math.round(parseFloat(part2)*100)/100);
+            part2AsStr = parseFloat(part2).toFixed(2);
+        }
+        
+        if(part1AsStr != ""){
+            if(part1AsFl == 0){
+                $(this).parent().parent().find("input#attrpart1").val('');
+                $(this).parent().parent().find("input#attrpart2").val(part2AsStr);
+            }else{
+                $(this).parent().parent().find("input#attrpart1").val(part1AsStr);
+            }
+        }
+
+        if(part2AsStr != ""){
+            if(part2AsFl == 0){
+                $(this).parent().parent().find("input#attrpart2").val('');
+                $(this).parent().parent().find("input#attrpart1").val(part1AsStr);
+            }else{
+                $(this).parent().parent().find("input#attrpart2").val(part2AsStr);
+            }
+        }
+        if(part1AsStr != "" && part2AsStr !=""){
+            if(part2AsFl<part1AsFl && part2AsFl != 0){
+                $(this).parent().parent().find("input#attrpart1").val($(this).parent().parent().find("input#attrpart2").val());
+            }
         }
     });
 
@@ -498,7 +645,65 @@
 
     </script>
     <script>
-   
+
+document.querySelector(".pricepart").addEventListener("keypress", function (evt) {
+    if (evt.which != 8 && evt.which != 0 && evt.which != 46 && evt.which != 44 && evt.which < 48 || evt.which > 57)
+    {
+        evt.preventDefault();
+    }
+});
+
+   $(".pricepart").on('change', function(){
+        var part1;
+        var part2;
+        var part1AsFl;
+        var part2AsFl;
+        var part1AsStr;
+        var part2AsStr;
+        if(typeof $(this).parent().parent().find("input#pricepartstart").val() === undefined){
+            part1="";
+        }else{
+            part1 = $(this).parent().parent().find("input#pricepartstart").val();
+        }
+        if(typeof $(this).parent().parent().find("input#pricepartend").val() === undefined){
+            part2="";
+        }else{
+            part2 = $(this).parent().parent().find("input#pricepartend").val();
+        }
+
+        if(part1 != ""){
+            part1AsFl = (Math.round(parseFloat(part1)*100)/100);
+            part1AsStr = parseFloat(part1).toFixed(2);
+        }
+
+        if(part2 != ""){
+            part2AsFl = (Math.round(parseFloat(part2)*100)/100);
+            part2AsStr = parseFloat(part2).toFixed(2);
+        }
+        
+        if(part1AsStr != ""){
+            if(part1AsFl == 0){
+                $(this).parent().parent().find("input#pricepartstart").val('');
+                $(this).parent().parent().find("input#pricepartend").val(part2AsStr);
+            }else{;
+                $(this).parent().parent().find("input#pricepartstart").val(part1AsStr);
+            }
+        }
+
+        if(part2AsStr != ""){
+            if(part2AsFl == 0){
+                $(this).parent().parent().find("input#pricepartend").val('');
+                $(this).parent().parent().find("input#pricepartstart").val(part1AsStr);
+            }else{
+                $(this).parent().parent().find("input#pricepartend").val(part2AsStr);
+            }
+        }
+        if(part1AsStr != "" && part2AsStr !=""){
+            if(part2AsFl<part1AsFl && part2AsFl != 0){
+                $(this).parent().parent().find("input#pricepartstart").val($(this).parent().parent().find("input#pricepartend").val());
+            }
+        }
+    });
  
 </script>
 
