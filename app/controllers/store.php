@@ -287,8 +287,6 @@ class Store extends Controller
   
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
    
-        print_r($result);
-        die();
 
         $query="SELECT COUNT(i.id) AS c
         FROM items i 
