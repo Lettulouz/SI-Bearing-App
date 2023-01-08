@@ -290,21 +290,64 @@ class Store extends Controller
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
    
 
-        $query="SELECT COUNT(i.id) AS c
-        FROM items i 
-        INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
-        INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
-        INNER JOIN categoriesofitem coi ON i.id = coi.id_item
-        INNER JOIN categories categ ON coi.id_category = categ.id
-        LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
-        LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
-        WHERE i.name LIKE '%".$search."%' 
-        AND m.id IN (".$id_manufacturer.")
-        AND categ.id IN (".$id_category.")
-        AND catal.id IS NULL
-        GROUP BY i.id
-        ORDER BY i.id ASC";
+
+        if($querySwitch){
+            $query="SELECT COUNT(i.id)
+            FROM items i 
+            INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
+            INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
+            INNER JOIN categoriesofitem coi ON i.id = coi.id_item
+            INNER JOIN categories categ ON coi.id_category = categ.id
+            INNER JOIN attributesofitems aoi ON i.id = aoi.id_item 
+            INNER JOIN attributes attr ON aoi.id_attribute = attr.id 
+            LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
+            LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
+            WHERE i.name LIKE CONCAT('%', :search, '%')
+            AND m.id IN ($id_manufacturer)
+            AND categ.id IN ($id_category) " 
+            . $attrQuery .
+            " GROUP BY i.id
+            ORDER BY i.id ASC";
+        }else{
+            $query="SELECT COUNT(i.id)
+            FROM items i 
+            INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
+            INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
+            INNER JOIN categoriesofitem coi ON i.id = coi.id_item
+            INNER JOIN categories categ ON coi.id_category = categ.id
+            INNER JOIN attributesofitems aoi ON i.id = aoi.id_item 
+            INNER JOIN attributes attr ON aoi.id_attribute = attr.id 
+            LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
+            LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
+            WHERE i.name LIKE CONCAT('%', :search, '%')
+            AND m.id IN ($id_manufacturer)
+            AND categ.id IN ($id_category)
+            AND catal.id IN ($id_catalog) "
+            . $attrQuery .
+            " GROUP BY i.id
+            ORDER BY i.id ASC";
+        }
+
         $numberOfItems = $db->prepare($query);
+
+        if (isset($_POST['checkBoxVarAttributes']) && isset($_POST['arrayOfAttrVal'])) 
+        {
+            $k=0;
+            for($j = 0; $j < count($attributes); $j++)
+            {
+                if(!isset($tableAttr[$k]))
+                    break;
+                if($tableAttr[$k]==$attributes[$j]['id']){
+                    if($isItRange[$j] == 0){
+                        $attrIdLoc = $tableAttr[$k];
+                        $tblAttrValue = $tableAttrValues[$k];
+                        $numberOfItems->bindParam(':tblAttrValue' . $attrIdLoc,$tblAttrValue);
+                    }
+                    $k++; 
+                }
+            }
+        }
+
         $numberOfItems -> execute();
         $numberOfItems = $numberOfItems->fetch(PDO::FETCH_ASSOC);
         if(!empty($numberOfItems))
