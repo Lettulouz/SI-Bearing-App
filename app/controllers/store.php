@@ -439,8 +439,31 @@ class Store extends Controller
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteFooter = $this->getFooter($db);
+
+        $query="SELECT i.price as price, i.name as name, i.amount as amount, m.name as manname FROM items i
+        INNER JOIN manufacturercountries mc on i.id_manufacturercountry-mc.id_manufacturer
+        INNER JOIN manufacturers m on mc.id_manufacturer=m.id
+        WHERE i.id=:id";
+
+
+        $itemParams = $db->prepare($query);
+        $itemParams -> bindParam(':id',$id);
+        $itemParams -> execute();
+        $itemParams = $itemParams->fetch(PDO::FETCH_ASSOC);
+
+        $query="SELECT d.title, d.description FROM items i
+        INNER JOIN descriptions d ON i.id=d.id_item
+        WHERE i.id=:id";
+
+
+        $itemDescrs = $db->prepare($query);
+        $itemDescrs -> bindParam(':id',$id);
+        $itemDescrs -> execute();
+        $itemDescrs = $itemDescrs->fetchAll(PDO::FETCH_ASSOC);
         
-        $this->view('store/item', ['id' => $id, 'siteFooter' => $siteFooter, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
+        $this->view('store/item', ['id' => $id, 'siteFooter' => $siteFooter, 
+        'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name, 'itemParams' => $itemParams, 
+        'itemDescrs' => $itemDescrs]);
     }
 
     public function order_history(){
