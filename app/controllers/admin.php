@@ -163,10 +163,6 @@ class Admin extends Controller
         $result = $db->query($query);
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
-
-
-
-
         $query="SELECT Count(name)
         FROM `items`";
         $result = $db->query($query);
@@ -250,129 +246,10 @@ class Admin extends Controller
     private $errorLogin = "";
     private $errorEmail = "";
     private $errorPassword = "";
+    private $a = "";
 
-    public function list_of_users(){
-        if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
-                unset($_SESSION['successOrErrorResponse']);
-            }
-            else{
-                header("Location:" . ROOT . "/home");
-            }
-        }
-        else{
-            header("Location:" . ROOT . "/login");
-        }
-
-        require_once dirname(__FILE__,2) . '/core/database.php';
-        $siteLink = $this->getFooter($db);
-
-        $query="SELECT id, name, lastName, email, login, password FROM users WHERE role='user' ORDER BY id";
-        $result = $db->query($query);
-        $result = $result->fetchAll(PDO::FETCH_ASSOC);
-
-        $rmUserPath=ROOT."/admin/remove_user";
-        $editUserPath=ROOT."/admin/edit_user";
-        $this->view('admin/list_of_users', ['siteLinks'=>$siteLink ,'usersArray'=>$result, 'rmpath'=>$rmUserPath, 'editpath'=>$editUserPath]);
-
-    }
-
-    public function edit_user($id){
-        if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
-                unset($_SESSION['successOrErrorResponse']);
-            }
-            else{
-                header("Location:" . ROOT . "/home");
-            }
-        }
-        else{
-            header("Location:" . ROOT . "/login");
-        }
-        
-        require_once dirname(__FILE__,2) . '/core/database.php';
-        $siteLink = $this->getFooter($db);
-
-        $query="SELECT id, name, lastName, email, login, password, role FROM users WHERE id=:id";
-        $result = $db->prepare($query);
-        $result->bindParam(':id', $id);
-        $result->execute();
-        $result = $result->fetch(PDO::FETCH_ASSOC);
-        $name = $result["name"];
-        $lastName = $result["lastName"];
-        $email = $result["email"];
-        $login = $result["login"];
-        $password = '';
-        $role = $result["role"];
-        if(isset($_POST['senduser']))
-        {
-            $query = "SELECT id FROM users ORDER BY id DESC LIMIT 1";
-            $result = $db->prepare($query);
-            $result->execute();
-            $result = $result->fetch(PDO::FETCH_ASSOC);;
-
-            $name = ucfirst(strtolower($_POST['name']));
-            $lastName = ucfirst(strtolower($_POST['surname']));
-            $email = $_POST['mail'];
-            $login = strtolower($_POST['login']);
-            $password = $_POST['pass'];
-            $role = "user";
-            $temporary = 1;
-            $authhash = hash('sha256',$name . $lastName . $email . $login . $role . $result['id']);
-
-            if(empty($password)){
-                $length = 10;
-                $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                $charactersLength = strlen($characters);
-                for ($i = 0; $i < $length; $i++) {
-                    $password.= $characters[rand(0, $charactersLength - 1)];
-                }
-            }
-            if(empty($name) || empty($lastName) || empty($email) || empty($login)){
-                $_SESSION['error_page'] = "edit_user";
-                header("Location:" . ROOT . "/admin/error_page/1");
-            }else{
-                $hashedPassword = hash('sha256', $password);
-
-                $query = "SELECT COUNT(id) AS amount FROM users WHERE login=:login";
-                $result = $db->prepare($query);
-                $result->bindParam(':login', $login);
-                $result->execute();
-                $result = $result->fetch(PDO::FETCH_ASSOC);
-                
-                $query = "SELECT COUNT(id) AS amount FROM users WHERE email=:email";
-                $result2 = $db->prepare($query);
-                $result2->bindParam(':email', $email);
-                $result2->execute();
-                $result2 = $result2->fetch(PDO::FETCH_ASSOC);
-                
-                if($result['amount']>0 || $result2['amount']>0){
-                    $_SESSION['error_page'] = "edit_user";
-                    header("Location:" . ROOT . "/admin/error_page/2");
-                }
-                else{
-                    $query = "INSERT INTO `users` (name, lastname, email, login, password, role, temporary, authhash) 
-                    VALUES (:name, :lastname, :email, :login, :password, :role, :temporary, :authhash);";
-                    $result = $db->prepare($query);
-                    $result->bindParam(':name', $name);
-                    $result->bindParam(':lastname', $lastName);
-                    $result->bindParam(':email', $email);
-                    $result->bindParam(':login', $login);
-                    $result->bindParam(':password', $hashedPassword);
-                    $result->bindParam(':role', $role);
-                    $result->bindParam(':temporary', $temporary);
-                    $result->bindParam(':authhash', $authhash);
-                    $result->execute();
-                     
-                    $_SESSION['success_page'] = "edit_user";
-                    header("Location:" . ROOT . "/admin/success_page/1");
-                }            
-            }
-        }
-        $this->view('admin/edit_user', ['siteLinks'=>$siteLink,'name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'role'=>$role]);
-    }
-
-    public function add_user(){
+    private function add($a, $b)
+    {
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
                 unset($_SESSION['successOrErrorResponse']);
@@ -398,7 +275,6 @@ class Admin extends Controller
         $this->surnameInput = "";
         $this->loginInput = "";
 
-
             $adminPass = 0;
 
             $query = "SELECT id FROM users ORDER BY id DESC LIMIT 1";
@@ -408,7 +284,7 @@ class Admin extends Controller
             
             
             if(empty($_POST['name']) || empty($_POST['surname']) || empty($_POST['login']) || (empty($_POST['mail']) && !isset($_POST['userActivated'])) ){
-                $this->view('admin/add_user', ['errorPassword' => $this->errorMessage,'errorLogin' => $this->errorMessage, 
+                $this->view('admin/'.$a.'', ['errorPassword' => $this->errorMessage,'errorLogin' => $this->errorMessage, 
                 'errorEmail' => $this->errorMessage, 'emailInput' => $this->emailInput, 'nameInput' => $this->nameInput, 
                 'surnameInput' => $this->surnameInput, 'loginInput' => $this->loginInput, 'passwordInput' => $this->passwordInput, 
                 'serverError' => $this->serverError, 'errorName' => '', 'errorSurname' => '', 'siteLinks'=>$siteLink 
@@ -416,15 +292,13 @@ class Admin extends Controller
                 return;
             }
 
-
-
             $this->nameInput = ucfirst(strtolower($_POST['name']));
             $this->surnameInput = ucfirst(strtolower($_POST['surname']));
             $this->emailInput = $_POST['mail'];
             $this->loginInput = strtolower($_POST['login']);
             $password = $_POST['pass'];
             
-            $role = "user";
+            $role = "$b";
          
             if(isset($_POST['userActivated'])){
                 $temporary = 0;
@@ -558,15 +432,163 @@ class Admin extends Controller
 
                 }
 
-                    $_SESSION['success_page'] = "add_user";
+                    $_SESSION['success_page'] = "'$a'";
                     header("Location:" . ROOT . "/admin/success_page/1");
                 }            
 
-        $this->view('admin/add_user', ['errorPassword' => $this->errorPassword,'errorLogin' => $this->errorLogin, 
+        $this->view('admin/'.$a.'', ['errorPassword' => $this->errorPassword,'errorLogin' => $this->errorLogin, 
         'errorEmail' => $this->errorEmail, 'emailInput' => $this->emailInput, 'nameInput' => $this->nameInput, 
         'surnameInput' => $this->surnameInput, 'loginInput' => $this->loginInput, 'passwordInput' => $this->passwordInput, 
         'serverError' => $this->serverError, 'errorName' => '', 'errorSurname' => '', 'siteLinks'=>$siteLink 
         ,'name'=>$this->nameInput, 'surname'=>$this->surnameInput, 'mail'=>$this->emailInput, 'login'=>$this->loginInput]);
+    }
+
+    private function remove($id)
+    {
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }else{
+                header("Location:" . ROOT . "/home");
+            }
+        }else{
+            header("Location:" . ROOT . "/login");
+        }
+        
+        if(isset($id)){
+            require_once dirname(__FILE__,2) . '/core/database.php';
+            $query="DELETE FROM users WHERE id=:id";
+            $result = $db->prepare($query);
+            $result->bindParam(':id', $id);
+            $result->execute();
+        }
+    }
+
+    public function list_of_users(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
+
+        $query="SELECT id, name, lastName, email, login, password FROM users WHERE role='user' ORDER BY id";
+        $result = $db->query($query);
+        $result = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        $rmUserPath=ROOT."/admin/remove_user";
+        $editUserPath=ROOT."/admin/edit_user";
+        $this->view('admin/list_of_users', ['siteLinks'=>$siteLink ,'usersArray'=>$result, 'rmpath'=>$rmUserPath, 'editpath'=>$editUserPath]);
+
+    }
+
+    public function edit_user($id){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
+
+        $query="SELECT id, name, lastName, email, login, password, role FROM users WHERE id=:id";
+        $result = $db->prepare($query);
+        $result->bindParam(':id', $id);
+        $result->execute();
+        $result = $result->fetch(PDO::FETCH_ASSOC);
+        $name = $result["name"];
+        $lastName = $result["lastName"];
+        $email = $result["email"];
+        $login = $result["login"];
+        $password = '';
+        $role = $result["role"];
+        if(isset($_POST['senduser']))
+        {
+            $query = "SELECT id FROM users ORDER BY id DESC LIMIT 1";
+            $result = $db->prepare($query);
+            $result->execute();
+            $result = $result->fetch(PDO::FETCH_ASSOC);;
+
+            $name = ucfirst(strtolower($_POST['name']));
+            $lastName = ucfirst(strtolower($_POST['surname']));
+            $email = $_POST['mail'];
+            $login = strtolower($_POST['login']);
+            $password = $_POST['pass'];
+            $role = "user";
+            $temporary = 1;
+            $authhash = hash('sha256',$name . $lastName . $email . $login . $role . $result['id']);
+
+            if(empty($password)){
+                $length = 10;
+                $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                $charactersLength = strlen($characters);
+                for ($i = 0; $i < $length; $i++) {
+                    $password.= $characters[rand(0, $charactersLength - 1)];
+                }
+            }
+            if(empty($name) || empty($lastName) || empty($email) || empty($login)){
+                $_SESSION['error_page'] = "edit_user";
+                header("Location:" . ROOT . "/admin/error_page/1");
+            }else{
+                $hashedPassword = hash('sha256', $password);
+
+                $query = "SELECT COUNT(id) AS amount FROM users WHERE login=:login";
+                $result = $db->prepare($query);
+                $result->bindParam(':login', $login);
+                $result->execute();
+                $result = $result->fetch(PDO::FETCH_ASSOC);
+                
+                $query = "SELECT COUNT(id) AS amount FROM users WHERE email=:email";
+                $result2 = $db->prepare($query);
+                $result2->bindParam(':email', $email);
+                $result2->execute();
+                $result2 = $result2->fetch(PDO::FETCH_ASSOC);
+                
+                if($result['amount']>0 || $result2['amount']>0){
+                    $_SESSION['error_page'] = "edit_user";
+                    header("Location:" . ROOT . "/admin/error_page/2");
+                }
+                else{
+                    $query = "INSERT INTO `users` (name, lastname, email, login, password, role, temporary, authhash) 
+                    VALUES (:name, :lastname, :email, :login, :password, :role, :temporary, :authhash);";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':name', $name);
+                    $result->bindParam(':lastname', $lastName);
+                    $result->bindParam(':email', $email);
+                    $result->bindParam(':login', $login);
+                    $result->bindParam(':password', $hashedPassword);
+                    $result->bindParam(':role', $role);
+                    $result->bindParam(':temporary', $temporary);
+                    $result->bindParam(':authhash', $authhash);
+                    $result->execute();
+                     
+                    $_SESSION['success_page'] = "edit_user";
+                    header("Location:" . ROOT . "/admin/success_page/1");
+                }            
+            }
+        }
+        $this->view('admin/edit_user', ['siteLinks'=>$siteLink,'name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'role'=>$role]);
+    }
+
+    public function add_user(){
+        $a = "add_user";
+        $b = "user";
+        $this->add($a, $b);
     }
 
 
@@ -619,24 +641,8 @@ class Admin extends Controller
         else return false;
     }
 
-    public function remove_user($id_u=NULL){
-        if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
-                unset($_SESSION['successOrErrorResponse']);
-            }else{
-                header("Location:" . ROOT . "/home");
-            }
-        }else{
-            header("Location:" . ROOT . "/login");
-        }
-        
-        if(isset($id_u)){
-            require_once dirname(__FILE__,2) . '/core/database.php';
-            $query="DELETE FROM users WHERE id=:id_u";
-            $result = $db->prepare($query);
-            $result->bindParam(':id_u', $id_u);
-            $result->execute();
-        }
+    public function remove_user($id=NULL){
+        $this->remove($id);
         header("Location:" . ROOT . "/admin/list_of_users");
     }
 
@@ -671,24 +677,14 @@ class Admin extends Controller
         $this->view('admin/list_of_conent_managers', ['siteLinks'=>$siteLink,'usersArray'=>$result, 'rmpath'=>$rmUserPath, 'editpath'=>$editUserPath]);
     }
 
-    public function remove_manager($id_um=NULL){
-        if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
-                unset($_SESSION['successOrErrorResponse']);
-            }else{
-                header("Location:" . ROOT . "/home");
-            }
-        }else{
-            header("Location:" . ROOT . "/login");
-        }
-        
-        if(isset($id_u)){
-            require_once dirname(__FILE__,2) . '/core/database.php';
-            $query="DELETE FROM users WHERE id=:id_um";
-            $result = $db->prepare($query);
-            $result->bindParam(':id_um', $id_um);
-            $result->execute();
-        }
+    public function add_manager(){
+        $a = "add_manager";
+        $b = "contentmanager";
+        $this->add($a, $b);   
+    }
+
+    public function remove_manager($id=NULL){
+        $this->remove($id);
         header("Location:" . ROOT . "/admin/list_of_conent_managers");
     }
 
@@ -731,24 +727,14 @@ class Admin extends Controller
         $this->view('admin/list_of_administrators', ['siteLinks'=>$siteLink,'usersArray'=>$result, 'rmpath'=>$rmUserPath, 'editpath'=>$editUserPath, 'adminId'=>$adminId]);
     }
 
-    public function remove_admin($id_ua=NULL){
-            if(isset($_SESSION['loggedUser'])){
-                if($_SESSION['loggedUser'] == "admin"){
-                    unset($_SESSION['successOrErrorResponse']);
-                }else{
-                    header("Location:" . ROOT . "/home");
-                }
-            }else{
-                header("Location:" . ROOT . "/login");
-            }
-                
-        if(isset($id_ua)){
-            require_once dirname(__FILE__,2) . '/core/database.php';
-            $query="DELETE FROM users WHERE id=:id_ua";
-            $result = $db->prepare($query);
-            $result->bindParam(':id_ua', $id_ua);
-            $result->execute();
-        }
+    public function add_admin(){
+        $a = "add_admin";
+        $b = "admin";
+        $this->add($a, $b);   
+    }
+
+    public function remove_admin($id=NULL){
+        $this->remove($id);
         header("Location:" . ROOT . "/admin/list_of_administrators");
     }
     

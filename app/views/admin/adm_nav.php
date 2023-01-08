@@ -77,14 +77,14 @@
                                 <a href="<?php echo ROOT."/admin/list_of_content_managers"?>" id="mn_list" class="nav-link text-muted">
                                     Lista menedżerów contentu
                                 </a>
-                                <a href="#" class="nav-link text-muted">
+                                <a href="<?php echo ROOT."/admin/add_manager"?>" class="nav-link text-muted" id="addman">
                                     Dodawanie menedżerów contentu
                                 </a>
                                 <hr class="divider">
                                 <a href="<?php echo ROOT."/admin/list_of_administrators"?>" id="ad_list" class="nav-link text-muted">
                                     Lista administratorów
                                 </a>
-                                <a href="#" class="nav-link text-muted">
+                                <a href="<?php echo ROOT."/admin/add_admin"?>" class="nav-link text-muted" id="addad">
                                     Dodawanie administratorów
                                 </a>
                                 <hr class="divider ">
