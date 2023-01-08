@@ -271,7 +271,9 @@ class Admin extends Controller
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $this->view('admin/list_of_users', ['siteLinks'=>$siteLink ,'usersArray'=>$result]);
+        $rmUserPath=ROOT."/admin/remove_user";
+        $editUserPath=ROOT."/admin/edit_user";
+        $this->view('admin/list_of_users', ['siteLinks'=>$siteLink ,'usersArray'=>$result, 'rmpath'=>$rmUserPath, 'editpath'=>$editUserPath]);
 
     }
 
@@ -617,6 +619,27 @@ class Admin extends Controller
         else return false;
     }
 
+    public function remove_user($id_u=NULL){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }else{
+                header("Location:" . ROOT . "/home");
+            }
+        }else{
+            header("Location:" . ROOT . "/login");
+        }
+        
+        if(isset($id_u)){
+            require_once dirname(__FILE__,2) . '/core/database.php';
+            $query="DELETE FROM users WHERE id=:id_u";
+            $result = $db->prepare($query);
+            $result->bindParam(':id_u', $id_u);
+            $result->execute();
+        }
+        header("Location:" . ROOT . "/admin/list_of_users");
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////MANAGERS//////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -642,7 +665,31 @@ class Admin extends Controller
         $query="SELECT id, name, lastName, email, login, password FROM users WHERE role='contentmanager' ORDER BY id";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
-        $this->view('admin/list_of_conent_managers', ['siteLinks'=>$siteLink,'usersArray'=>$result]);
+
+        $rmUserPath=ROOT."/admin/remove_manager";
+        $editUserPath=ROOT."/admin/edit_user";
+        $this->view('admin/list_of_conent_managers', ['siteLinks'=>$siteLink,'usersArray'=>$result, 'rmpath'=>$rmUserPath, 'editpath'=>$editUserPath]);
+    }
+
+    public function remove_manager($id_um=NULL){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }else{
+                header("Location:" . ROOT . "/home");
+            }
+        }else{
+            header("Location:" . ROOT . "/login");
+        }
+        
+        if(isset($id_u)){
+            require_once dirname(__FILE__,2) . '/core/database.php';
+            $query="DELETE FROM users WHERE id=:id_um";
+            $result = $db->prepare($query);
+            $result->bindParam(':id_um', $id_um);
+            $result->execute();
+        }
+        header("Location:" . ROOT . "/admin/list_of_conent_managers");
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -661,28 +708,52 @@ class Admin extends Controller
         else{
             header("Location:" . ROOT . "/login");
         }
-        
-        if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
-                unset($_SESSION['successOrErrorResponse']);
+
+            if(isset($_SESSION['loggedUser'])){
+                if($_SESSION['loggedUser'] == "admin"){
+                    unset($_SESSION['successOrErrorResponse']);
+                }else{
+                    header("Location:" . ROOT . "/home");
+                }
             }else{
-                header("Location:" . ROOT . "/home");
+                header("Location:" . ROOT . "/login");
             }
-        }else{
-            header("Location:" . ROOT . "/login");
-        }
         
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
-
+        $adminId = $_SESSION['idLoggedUser'];
         $query="SELECT id, name, lastName, email, login, password FROM users WHERE role='admin' ORDER BY id";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
-        $this->view('admin/list_of_administrators', ['siteLinks'=>$siteLink,'usersArray'=>$result]);
+
+        $rmUserPath=ROOT."/admin/remove_admin";
+        $editUserPath=ROOT."/admin/edit_user";
+        $this->view('admin/list_of_administrators', ['siteLinks'=>$siteLink,'usersArray'=>$result, 'rmpath'=>$rmUserPath, 'editpath'=>$editUserPath, 'adminId'=>$adminId]);
+    }
+
+    public function remove_admin($id_ua=NULL){
+            if(isset($_SESSION['loggedUser'])){
+                if($_SESSION['loggedUser'] == "admin"){
+                    unset($_SESSION['successOrErrorResponse']);
+                }else{
+                    header("Location:" . ROOT . "/home");
+                }
+            }else{
+                header("Location:" . ROOT . "/login");
+            }
+                
+        if(isset($id_ua)){
+            require_once dirname(__FILE__,2) . '/core/database.php';
+            $query="DELETE FROM users WHERE id=:id_ua";
+            $result = $db->prepare($query);
+            $result->bindParam(':id_ua', $id_ua);
+            $result->execute();
+        }
+        header("Location:" . ROOT . "/admin/list_of_administrators");
     }
     
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////ATRRIBUTES////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////ATTRIBUTES////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public function list_of_attributes()

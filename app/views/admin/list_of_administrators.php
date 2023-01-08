@@ -15,11 +15,15 @@ include 'adm_nav.php';
         <th>Imię</th>
         <th>Nazwisko</th>
         <th>Email</th>
+        <th></th>
         </tr>
         </thead>
         <tbody>
         <?php 
         $users = $data['usersArray'];
+        $rmPath = $data['rmpath'];
+        $editPath = $data['editpath'];
+        $adminId = $data['adminId'];
         foreach($users as $i => $user) 
         {
             echo 
@@ -29,6 +33,14 @@ include 'adm_nav.php';
             <td>{$user['name']}</td>
             <td>{$user['lastName']}</td>
             <td>{$user['email']}</td>
+            <td class='px-0 mx-0'>
+            <a href='".$editPath."/".$user['id']."' type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm mx-1 tabBtn'>
+            <i class='bi bi-gear-fill'></i>
+            </a>
+            <a href='".$rmPath."/".$user['id']."' type='button' data-toggle='collapse' class='btn btn-danger d-inline btn-sm mx-1 tabBtn ";if ($user['id']==$adminId) echo "disabled"; echo"'>
+            <i class='bi bi-trash-fill'></i>
+            </a>
+            </td>
             </tr>";
         }
         ?>
