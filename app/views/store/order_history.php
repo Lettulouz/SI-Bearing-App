@@ -22,7 +22,8 @@
         </div>
         <div class='panel-body'>
         <?php
-        for($i = 1; $i < 5; $i++)
+        $OrderArray = $data['OrderArray'];
+        foreach($OrderArray as $OrderArray) 
         echo "
         
             <div class='row'>
@@ -30,13 +31,14 @@
                 <div class='col-md-11'>
                     <div class='row'>
                         <div class='col-md-12'>
-                            <span><strong>Order name ".$i."</strong></span> <br />
+                            <span><strong>Order name ".$OrderArray['id']."</strong></span> <br />
                             Quantity : 2, cost: $323.13 <br />
                             <a data-placement='top' class='btn btn-success btn-xs glyphicon glyphicon-ok' href='#' title='View'></a>
                             <a data-placement='top' class='btn btn-danger btn-xs glyphicon glyphicon-trash' href='#' title='Danger'></a>
                             <a data-placement='top' class='btn btn-info btn-xs glyphicon glyphicon-usd' href='#' title='Danger'></a>
                         </div>
-                        <div class='col-md-12'>order made on: 05/31/2014 by <a href='#'>Jane Doe </a></div>
+                        <div class='col-md-12'>order destination: ".$OrderArray['ordercountry'].", ".$OrderArray['ordervoivodeship'].", 
+                        ".$OrderArray['ordercity'].", ".$OrderArray['orderpostcode'].", ".$OrderArray['orderstreet'].", ".$OrderArray['orderhomenumber']."</div>
                     </div>
                 </div>
             </div> "
