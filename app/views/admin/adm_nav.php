@@ -98,6 +98,9 @@
                                 <a href="<?php echo ROOT."/admin/list_of_orders"?>" id="ord_list" class="nav-link text-muted">
                                     Zamówienia
                                 </a>
+                                <a href="<?php echo ROOT."/admin/sales_report"?>" id="sales_report" class="nav-link text-muted">
+                                    Raporty sprzedaży
+                                </a>
                             </div>
                         </li>
                         <li class="my-3">
