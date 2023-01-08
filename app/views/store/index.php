@@ -182,7 +182,7 @@
                                                 $html.='<div class="container mt-2 mb-2" id="attributeVal" >';
                                                 $html.='<div class="row">';
                                                 $html.='<div class="col">';
-                                                $html.='<input type="text" autocomplete="off" class="form-control attrnotrange" style="margin-left:-10px" name="arrayOfAttrVal[]" form="submitFilterSearchSort" value="';
+                                                $html.='<input type="text" autocomplete="off" id="attrwhole" class="form-control attrnotrange" style="margin-left:-10px" name="arrayOfAttrVal[]" form="submitFilterSearchSort" value="';
                                                 $html.=$_POST['arrayOfAttrVal'][$jk];
                                                 $html.='"/>';
                                                 $html.='</div>';
@@ -451,6 +451,7 @@
         $('.pricepart').trigger('change');
         $('.attrpart').trigger('input');
         $('.attrpart').trigger('change');
+        //validationCheckboxForm();
         $('#page').val(1);
         $('#pageInside').val(1);
         $('#submitFilterSearchSort').submit();
@@ -536,16 +537,16 @@
             var toCheck = parent.find('input#isrange').val();
             if(toCheck == 0){
                 var html = '';    
-                html+='<div class="container mt-2 mb-2" id="attributeVal" >';
+                html+='<div class="container mt-2 mb-2 attributeFieldVal" id="attributeVal" >';
                 html+='<div class="row">';
                 html+='<div class="col">';
-                html+='<input type="text" autocomplete="off" class="form-control" style="margin-left:-10px" name="arrayOfAttrVal[]" form="submitFilterSearchSort"/>';
+                html+='<input type="text" id="attrwhole" autocomplete="off" class="form-control" style="margin-left:-10px" name="arrayOfAttrVal[]" form="submitFilterSearchSort"/>';
                 html+='</div>';
                 html+='</div>';
                 html+='</div>';
             }else{
                 var html = '';    
-                html+='<div class="container mt-2 mb-2 d-flex justify-content-between" id="attributeVal">';
+                html+='<div class="container mt-2 mb-2 d-flex justify-content-between attributeFieldVal" id="attributeVal">';
                 html+='<div class="row">';
                 html+='<div class="col-5">';
                 html+='<input type="number" min="0" step="0.01" class="form-control attrpart" style="margin-left:-10px" id="attrpart1">';
@@ -656,7 +657,24 @@ document.querySelector(".pricepart").addEventListener("keypress", function (evt)
         evt.preventDefault();
     }
 });
+    function validationCheckboxForm(){
+        var amountOfCheckedCheckBoxes = $(".checkboxvar:checked").parent().length; 
+        var inputElements1 = $(".checkboxvar:checked").parent().find('#attrpart1');
 
+
+        var inputElements2 = $(".checkboxvar:checked").parent().find('#attrpart2');
+
+
+        var inputElements3 = $(".checkboxvar:checked").parent().find('#attrwhole');
+
+        for(let i = 0; i < amountOfCheckedCheckBoxes; i++){
+            console.log(inputElements1[i].val());
+            console.log(inputElements2[i]);
+            console.log(inputElements3[i]);
+        }
+
+
+    }
    $(".pricepart").on('change', function(){
         var part1;
         var part2;

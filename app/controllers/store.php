@@ -228,22 +228,25 @@ class Store extends Controller
                         $first = $tableAttrValues[$k];
                         $second = $tableAttrValues[$k];
                         $first = substr($first .'-', 0, strpos($first , '-'));
-                        $second = substr($second, (strpos($second, '-') ?: -1) + 1);
+                        $second = substr($second, (strpos($second, '-') ?: 0) + 1);
                         $attrIdLoc = $tableAttr[$k];
-                        if(empty($first)){
+                        if($first != "" && $second == ""){
                             $attrQuery .= "AND i.id IN (SELECT id_item FROM attributesofitems 
                             WHERE id_attribute=$attrIdLoc AND valuedecimal<=$second) ";
-                        }else if(empty($second)){
+                        }else if($second != "" && $first == ""){
                             $attrQuery .= "AND i.id IN (SELECT id_item FROM attributesofitems 
                             WHERE id_attribute=$attrIdLoc AND valuedecimal>=$first) ";
-                        }else if(!empty($first) && !empty($second)){
+                        }else if($first != "" && $second != ""){
                             $attrQuery .= "AND i.id IN (SELECT id_item FROM attributesofitems 
                             WHERE id_attribute=$attrIdLoc AND valuedecimal>=$first AND valuedecimal<=$second) ";
                         }
                     }else{
+                        $tblAttrValue = $tableAttrValues[$k];
                         $attrIdLoc = $tableAttr[$k];
-                        $attrQuery .= " AND i.id IN (SELECT id_item FROM attributesofitems 
-                        WHERE id_attribute=$attrIdLoc AND value LIKE CONCAT('%', :tblAttrValue$attrIdLoc, '%')) ";
+                        if($tblAttrValue != ""){
+                            $attrQuery .= " AND i.id IN (SELECT id_item FROM attributesofitems 
+                            WHERE id_attribute=$attrIdLoc AND value LIKE CONCAT('%', :tblAttrValue$attrIdLoc, '%')) ";
+                        }
                     }
                     $k++; 
                 }
@@ -303,7 +306,9 @@ class Store extends Controller
                     if($isItRange[$j] == 0){
                         $attrIdLoc = $tableAttr[$k];
                         $tblAttrValue = $tableAttrValues[$k];
-                        $itemsArr->bindParam(':tblAttrValue' . $attrIdLoc,$tblAttrValue);
+                        if($tblAttrValue != ""){
+                            $itemsArr->bindParam(':tblAttrValue' . $attrIdLoc,$tblAttrValue);
+                        }
                     }
                     $k++; 
                 }
@@ -368,7 +373,9 @@ class Store extends Controller
                     if($isItRange[$j] == 0){
                         $attrIdLoc = $tableAttr[$k];
                         $tblAttrValue = $tableAttrValues[$k];
-                        $numberOfItems->bindParam(':tblAttrValue' . $attrIdLoc,$tblAttrValue);
+                        if($tblAttrValue != ""){
+                            $numberOfItems->bindParam(':tblAttrValue' . $attrIdLoc,$tblAttrValue);
+                        }
                     }
                     $k++; 
                 }
