@@ -37,8 +37,7 @@
                                 <i class="bi bi-person"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">troche tego</a></li>
-                                <li><a class="dropdown-item" href="#">troche tamtego</a></li>
+
                                 <li><a class="dropdown-item" href="<?=ROOT?>/admin/logout"> Wyloguj</a></li>
                             </ul>
                         </li>
@@ -97,6 +96,9 @@
                                 <hr class="divider">
                                 <a href="<?php echo ROOT."/admin/list_of_orders"?>" id="ord_list" class="nav-link text-muted">
                                     Zamówienia
+                                </a>
+                                <a href="<?php echo ROOT."/admin/sales_report"?>" id="sales_report" class="nav-link text-muted">
+                                    Raporty sprzedaży
                                 </a>
                             </div>
                         </li>

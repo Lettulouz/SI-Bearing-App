@@ -514,17 +514,17 @@
         let idValueAmount = jQuery(this).attr("id").split("-");
         
 
-        if(!localStorage.getItem(idValueAmount[0]))
-            localStorage.setItem(idValueAmount[0], '1'+'-'+idValueAmount[1]+'-'+idValueAmount[2]); 
+        if(!sessionStorage.getItem(idValueAmount[0]))
+            sessionStorage.setItem(idValueAmount[0], '1'+'-'+idValueAmount[1]+'-'+idValueAmount[2]); 
         else{
-            let valueAndAmount = localStorage.getItem(idValueAmount[0]).split("-");
+            let valueAndAmount = sessionStorage.getItem(idValueAmount[0]).split("-");
             if(valueAndAmount[2]>valueAndAmount[0]){
                 var newValue = parseFloat(valueAndAmount[0])+1;
-                localStorage.setItem(idValueAmount[0], newValue+'-'+idValueAmount[1]+'-'+idValueAmount[2]); 
+                sessionStorage.setItem(idValueAmount[0], newValue+'-'+idValueAmount[1]+'-'+idValueAmount[2]); 
             }
         }
         var newCookie = "";
-        Object.keys(localStorage).forEach(function(key, value){
+        Object.keys(sessionStorage).forEach(function(key, value){
             newCookie += key + ', ';
         });
         console.log(newCookie);

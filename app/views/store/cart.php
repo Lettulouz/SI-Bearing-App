@@ -74,14 +74,14 @@
     $(".form-control").on("change paste keyup", function() {
         var number = parseFloat($(this).val());
 
-        if(!Number.isNaN(localStorage.getItem(jQuery(this).attr("name")))){
-            let valueAndAmount = localStorage.getItem(jQuery(this).attr("name")).split("-");
+        if(!Number.isNaN(sessionStorage.getItem(jQuery(this).attr("name")))){
+            let valueAndAmount = sessionStorage.getItem(jQuery(this).attr("name")).split("-");
             if(valueAndAmount[2]>number)
-                localStorage.setItem(jQuery(this).attr("name"), number+'-'+valueAndAmount[1]+'-'+valueAndAmount[2]); 
+                sessionStorage.setItem(jQuery(this).attr("name"), number+'-'+valueAndAmount[1]+'-'+valueAndAmount[2]); 
             else if(valueAndAmount[2]<=number)
-                localStorage.setItem(jQuery(this).attr("name"), valueAndAmount[2]+'-'+valueAndAmount[1]+'-'+valueAndAmount[2]); 
+                sessionStorage.setItem(jQuery(this).attr("name"), valueAndAmount[2]+'-'+valueAndAmount[1]+'-'+valueAndAmount[2]); 
             else        
-                localStorage.setItem(jQuery(this).attr("name"), 'NaN'+'-'+valueAndAmount[1]+'-'+valueAndAmount[2]); 
+                sessionStorage.setItem(jQuery(this).attr("name"), 'NaN'+'-'+valueAndAmount[1]+'-'+valueAndAmount[2]); 
         }
         calculateTotalPrice();
         
@@ -93,14 +93,14 @@
 
     $(".form-control").on("focusout", function() {
         var number = parseFloat($(this).val());
-        let valueAndAmount = localStorage.getItem(jQuery(this).attr("name")).split("-");
+        let valueAndAmount = sessionStorage.getItem(jQuery(this).attr("name")).split("-");
 
         if(number >= 1)
-            localStorage.setItem(jQuery(this).attr("name"), number+'-'+valueAndAmount[1]+'-'+valueAndAmount[2]); 
+            sessionStorage.setItem(jQuery(this).attr("name"), number+'-'+valueAndAmount[1]+'-'+valueAndAmount[2]); 
         else if(valueAndAmount[2]>number) 
-            localStorage.setItem(jQuery(this).attr("name"), valueAndAmount[2]+'-'+valueAndAmount[1]+'-'+valueAndAmount[2]); 
+            sessionStorage.setItem(jQuery(this).attr("name"), valueAndAmount[2]+'-'+valueAndAmount[1]+'-'+valueAndAmount[2]); 
         else
-            localStorage.setItem(jQuery(this).attr("name"), 1+'-'+valueAndAmount[1]+'-'+valueAndAmount[2]); 
+            sessionStorage.setItem(jQuery(this).attr("name"), 1+'-'+valueAndAmount[1]+'-'+valueAndAmount[2]); 
         
 
         calculateTotalPrice();
@@ -113,26 +113,31 @@
 
     function calculateTotalPrice(){
         var totalPrice = 0;
-        Object.keys(localStorage).forEach(function(key, value){
-            let valueAndAmount = localStorage.getItem(key).split("-");
-            var itemPrice = 0;
-            if(valueAndAmount[0] >= 1){
-                var itemPrice = parseFloat(valueAndAmount[0])*parseFloat(valueAndAmount[1])
-                $('[name='+key+']').val(parseFloat(valueAndAmount[0]));
+        Object.keys(sessionStorage).forEach(function(key, value){
+            
+            var id = parseInt(key);
+            console.log(id);
+            if(!Number.isNaN(id)){
+                let valueAndAmount = sessionStorage.getItem(key).split("-");
+                var itemPrice = 0;
+                if(valueAndAmount[0] >= 1){
+                    var itemPrice = parseFloat(valueAndAmount[0])*parseFloat(valueAndAmount[1])
+                    $('[name='+key+']').val(parseFloat(valueAndAmount[0]));
+                }
+                else if (Number.isNaN(valueAndAmount[0])){
+                    $('[name='+key+']').val(parseFloat(0));
+                }
+                document.getElementById(key).innerHTML = itemPrice.toFixed(2) + ' zł';
+                totalPrice += itemPrice;
             }
-            else if (Number.isNaN(valueAndAmount[0])){
-                $('[name='+key+']').val(parseFloat(0));
-            }
-            document.getElementById(key).innerHTML = itemPrice + ' zł';
-            totalPrice += itemPrice;
         });
-        document.getElementById('totalCost').innerHTML = '&nbsp' + totalPrice + ' zł';
+        document.getElementById('totalCost').innerHTML = '&nbsp' + totalPrice.toFixed(2)  + ' zł';
     }
 
     $('.remove').click(function() {
-        localStorage.removeItem(jQuery(this).attr("name"));
+        sessionStorage.removeItem(jQuery(this).attr("name"));
         var newCookie = '';
-        Object.keys(localStorage).forEach(function(key, value){
+        Object.keys(sessionStorage).forEach(function(key, value){
             newCookie += key + ', ';
         });
         document.cookie = 'itemsInCart ='+newCookie+';3600, expires=Thu, 18 Dec 2023 12:00:00 UTC; path=/';

@@ -2243,6 +2243,44 @@ class Admin extends Controller
         header("Location:" . ROOT . "/admin/list_of_categories");
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////SALES REPORT////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////
+
+    public function sales_report(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+        $amount='';
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
+
+        if(isset($_POST['reportSub'])){;
+            if(!empty($_POST['dateFrom'])&&!empty($_POST['dateTo'])){
+            $amount="dużo";
+            }
+            else{
+                $_SESSION['error_page'] = "sales_report";
+                header("Location:" . ROOT . "/admin/error_page/1");
+            }
+        }
+
+
+        $this->view('admin/sales_report', ['siteLinks'=>$siteLink, 'amount'=>$amount]);
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////FOOTER//////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////
 
     public function edit_footer(){
         if(isset($_SESSION['loggedUser'])){
@@ -2322,6 +2360,9 @@ class Admin extends Controller
         }
         return $result;
     }
+
+    
+
 
     public function logout(){
         unset($_SESSION['loggedUser']);
