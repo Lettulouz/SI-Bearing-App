@@ -33,7 +33,27 @@ class Store extends Controller
             $limit1 = $_POST['page'];
         }
 
-        
+        $sortValue=0;
+        $sortValueQuery="";
+        if(isset($_POST['sortValue'])){
+            $sortValue=$_POST['sortValue']; 
+        }
+        if($sortValue==0){
+            $sortValueQuery = " ORDER BY i.price ASC";
+        }
+        if($sortValue==1){
+            $sortValueQuery = " ORDER BY i.price ASC";
+        }
+        if($sortValue==2){
+            $sortValueQuery = " ORDER BY i.price DESC";
+        }
+        if($sortValue==3){
+            $sortValueQuery = " ORDER BY i.id DESC";
+        }
+        if($sortValue==4){
+            $sortValueQuery = " ORDER BY i.id ASC";
+        }
+
         if($limit1 < 1)
             $limit1 = 1;
 
@@ -245,9 +265,9 @@ class Store extends Controller
             AND categ.id IN ($id_category) "
             . $querypricestartend  
             . $attrQuery .
-            " GROUP BY i.id
-            ORDER BY i.id ASC
-            LIMIT :limit1, 32 ";
+            " GROUP BY i.id"
+            . $sortValueQuery .
+            " LIMIT :limit1, 32";
         }else{
             $query="SELECT i.name, i.id as itemID, price, m.name as 'name2', i.amount, i.price as itemPrice
             FROM items i 
@@ -265,9 +285,9 @@ class Store extends Controller
             AND catal.id IN ($id_catalog) "
             . $querypricestartend 
             . $attrQuery .
-            " GROUP BY i.id
-            ORDER BY i.id ASC
-            LIMIT :limit1, 32 ";
+            " GROUP BY i.id"
+            . $sortValueQuery .
+            " LIMIT :limit1, 32";
         }
 
         $itemsArr = $db->prepare($query);
@@ -313,8 +333,8 @@ class Store extends Controller
             AND categ.id IN ($id_category) " 
             . $querypricestartend 
             . $attrQuery .
-            " GROUP BY i.id
-            ORDER BY i.id ASC";
+            " GROUP BY i.id"
+            . $sortValueQuery;
         }else{
             $query="SELECT COUNT(i.id) as c
             FROM items i 
@@ -331,8 +351,8 @@ class Store extends Controller
             AND categ.id IN ($id_category)
             AND catal.id IN ($id_catalog) "
             . $attrQuery .
-            " GROUP BY i.id
-            ORDER BY i.id ASC";
+            " GROUP BY i.id"
+            . $sortValueQuery;
         }
 
         $numberOfItems = $db->prepare($query);

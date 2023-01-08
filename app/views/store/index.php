@@ -225,22 +225,27 @@
     <?php }else{?>
         <div class='homeMain container mb-1 mt-5W px-3'>
             <?php if(!empty($data['numberOfItems'])){ ?>
-            <div class="container d-flex justify-content-end">
-                <div class="mb-3" style="margin-right:-20px; margin-left:-20px;">
-                    <button type='button' name='lft' class='btn d-inline shadow-none' style="margin-right:3px; margin-top:-2px; border:0px">
-                        <i class="bi bi-arrow-left-circle" style="font-size:33px"></i>
-                    </button>
-                    <input type='number' style='text-align:center; box-shadow:none; font-size:15px;max-width:75px;' id='pageInside' class='d-inline form-control px-0' 
-                    value='<?=isset($data['limit1']) ? $data['limit1'] : 1 ?>' name='limit1' form='submitFilterSearchSort'/>
+ 
+                <div class="d-flex justify-content-end">
 
-                    <label class="form-control d-inline" style="border:0px;">z <?=$data['numberOfPages']?></label>
-                    <button type='button' name='rgt' 
-                    class='<?=$data['last']==1 ? 'btn disabled;' : 'btn '?> d-inline shadow-none justify-content-end' 
-                    style="margin-left:-12px; margin-top:-2px; border:0px ">
-                        <i class="bi bi-arrow-right-circle" style="font-size:33px"></i>
-                    </button>
+                    
+
+                    <div class="mb-3" style="margin-right:-5x; margin-left:-20px;">
+                        <button type='button' name='lft' class='btn d-inline shadow-none' style="margin-right:3px; margin-top:-2px; border:0px">
+                            <i class="bi bi-arrow-left-circle" style="font-size:33px"></i>
+                        </button>
+                        <input type='number' style='text-align:center; box-shadow:none; font-size:15px;max-width:75px;' id='pageInside' class='d-inline form-control px-0' 
+                        value='<?=isset($data['limit1']) ? $data['limit1'] : 1 ?>' name='limit1' form='submitFilterSearchSort'/>
+
+                        <label class="form-control d-inline" style="border:0px;">z <?=$data['numberOfPages']?></label>
+                        <button type='button' name='rgt' 
+                        class='<?=$data['last']==1 ? 'btn disabled;' : 'btn '?> d-inline shadow-none justify-content-end' 
+                        style="margin-left:-12px; margin-top:-2px; border:0px ">
+                            <i class="bi bi-arrow-right-circle" style="font-size:33px"></i>
+                        </button>
+                    </div>
                 </div>
-            </div>   
+     
             <input type="hidden" id="numberOfPages" value="<?=$data['numberOfPages']?>"/>
             <?php } ?>
 
@@ -300,7 +305,7 @@
             </div>
             <?php if(!empty($data['numberOfItems'])){ ?>
                 <div class="container d-flex justify-content-end">
-                    <div class="mb-3" style="margin-right:-20px; margin-left:-20px;">
+                    <div class="mb-3" style="margin-right:-5px; margin-left:-20px;">
                         <button type='button' name='lft' class='btn d-inline shadow-none' style="margin-right:3px; margin-top:-2px; border:0px">
                             <i class="bi bi-arrow-left-circle" style="font-size:33px"></i>
                         </button>
@@ -364,7 +369,6 @@
     });
 
     $(".attrpart").on('change', function(){
-        console.log('test123');
         var part1;
         var part2;
         var part1AsFl;
