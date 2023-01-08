@@ -250,6 +250,10 @@
   margin-left: 5px !important;
  }
 
+.disabled{
+  pointer-events:none;
+}
+
 @media (max-width:576px){
   .itemField1{
     border: none !important;
