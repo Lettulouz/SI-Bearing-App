@@ -9,7 +9,7 @@ include 'adm_nav.php';
     <div class="collapse collapse show" id="dashcollapse1">
         <div class="row">
             <div class="col-12 col-sm-6 col-xl-4 mb-3">
-                    <div class="card text-white bg-success mb-3 h-100" >
+                    <div class="card text-white bg-success h-100" >
                         <div class="card-header">
                             <i class="bi bi-person-fill"></i>&nbspUżytkownicy
                             <a style='float:right;' class="text-white" href="<?php echo ROOT."/admin/add_user"?>" >
@@ -17,24 +17,52 @@ include 'adm_nav.php';
                             </a>
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">Użytkowników: 0</h5>                       
+                            <h5 class="card-title">Użytkowników: <?php echo $data['usersCount']?></h5>
+                            <p class="card-text">
+                                <?php
+                                $i = 0;
+                                foreach($data['users'] as $user){
+                                    $i++;
+                                    if($i<5)
+                                        echo $user['login']."<br>";
+                                    else if(($i==5 && $data['usersCount']<=5))
+                                        echo $user['login'];
+                                    else if($i==5 && $data['usersCount']>5)
+                                        echo "...";                                    
+                                }
+                                ?>
+                            </p>                       
                         </div>
                         <a href=<?php echo ROOT."/admin/list_of_users"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
                                 Przeglądaj użytkowników
+                                
                             </div>
                         </a>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-xl-4 mb-3">
-                    <div class="card text-white bg-warning mb-3 h-100" >
+                    <div class="card text-white bg-warning  h-100" >
                         <div class="card-header"><i class="bi bi-person-fill-gear"></i>&nbspMenadżerowie contentu
                             <a style='float:right;' class="text-white" href="#" >
                                 <i class="bi bi-plus-lg"></i>
                             </a>
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">Menadżerów: 0</h5>
+                            <h5 class="card-title">Menadżerów: <?php echo $data['managersCount']?></h5>
+                            <p class="card-text">
+                                <?php
+                                $i = 0;
+                                foreach($data['managers'] as $manager){
+                                    $i++;
+                                    if($i<5)
+                                        echo $manager['login']."<br>";
+                                    else if(($i==5 && $data['managersCount']<=5))
+                                        echo $manager['login'];
+                                    else if($i==5 && $data['managersCount']>5)
+                                        echo "...";                                    
+                                }
+                                ?>
                         </div>
                         <a href=<?php echo ROOT."/admin/list_of_content_managers"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
@@ -44,7 +72,7 @@ include 'adm_nav.php';
                     </div>    
                 </div>
                 <div class="col-12 col-sm-6 col-xl-4 mb-3">
-                    <div class="card text-white bg-danger mb-3 h-100" >
+                    <div class="card text-white bg-danger h-100" >
                         <div class="card-header">
                             <i class="bi bi-person-vcard"></i>&nbspAdministratorzy
                             <a style='float:right;' class="text-white" href="#" >
@@ -52,7 +80,20 @@ include 'adm_nav.php';
                             </a>
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">Administratorów: 1</h5>
+                            <h5 class="card-title">Administratorów:  <?php echo $data['adminsCount']?></h5>
+                            <p class="card-text">
+                                <?php
+                                $i = 0;
+                                foreach($data['admins'] as $admin){
+                                    $i++;
+                                    if($i<5)
+                                        echo $admin['login']."<br>";
+                                    else if(($i==5 && $data['adminsCount']<=5))
+                                        echo $admin['login'];
+                                    else if($i==5 && $data['adminsCount']>5)
+                                        echo "...";                                    
+                                }
+                                ?>
                         </div>
                         <a href=<?php echo ROOT."/admin/list_of_administrators"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
@@ -62,7 +103,7 @@ include 'adm_nav.php';
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-xl-4 mb-3">
-                    <div class="card text-white bg-custom-17 mb-3 h-100" >
+                    <div class="card text-white bg-custom-17 h-100" >
                         <div class="card-header">
                             <i class="bi bi-people-fill"></i>&nbspObsługa sklepu
                             <a style='float:right;' class="text-white" href="#" >
@@ -80,7 +121,7 @@ include 'adm_nav.php';
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-xl-4 mb-3">
-                    <div class="card text-white bg-custom-2 mb-3 h-100">
+                    <div class="card text-white bg-custom-2 h-100">
                         <div class="card-header">
                             <i class="bi bi-cart4"></i>&nbspZamówienia
                         </div>

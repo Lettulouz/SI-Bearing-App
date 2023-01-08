@@ -11,6 +11,7 @@ class Login extends Controller
     private $ifUserExist = "";
     private $passwordInput = "";
     private $userRole = "";
+    private $userId = "";
     private $authhash = "";
 
 
@@ -30,6 +31,7 @@ class Login extends Controller
         $this->ifUserExist = "";
         $this->passwordInput = "";
         $this->userRole = "";
+        $this->userId = "";
         
         if($hash != 0 ) {
             $this->authhash=$hash;
@@ -172,7 +174,7 @@ class Login extends Controller
         $this->ifUserExist = "";
         $this->passwordInput = "";
         $this->userRole = "";
-
+        $this->userId = "";
 
         if(!isset($_POST['emailOrLogin']) || !isset($_POST['password'])){
             $this->view('login/index', ['errorPassword' => $this->errorMessage, 'emailOrLoginInput' => $this->emailOrLoginInput, 'serverError' => $this->serverError,
@@ -259,7 +261,11 @@ class Login extends Controller
         $this->ifUserExist = $userQuery->fetch(PDO::FETCH_ASSOC);
         if($this->ifUserExist['temporary'] == true) $this->errorDuringValidation("*Konto nie zostało aktywowane, sprawdź maila celem jego aktywacji");
         if($this->ifUserExist) $_SESSION['loggedUser_name'] = $this->ifUserExist['name'];
-        $this->ifUserExist ? ($this->userRole = $this->ifUserExist['role']) : $this->errorDuringValidation("*Podano błędny email lub hasło");
+        if($this->ifUserExist) {
+            $this->userRole = $this->ifUserExist['role'];
+            $this->userId = $this->ifUserExist['id'];
+        }
+        else $this->errorDuringValidation("*Podano błędny email lub hasło");
     }
 
     /** Function that sets errors
@@ -339,6 +345,7 @@ class Login extends Controller
     private function loginSuccessful(){
         unset($_SESSION['errorMessage']);
         $_SESSION['loggedUser'] = $this->userRole;
+        $_SESSION['idLoggedUser'] = $this->userId;
         if($this->userRole == "admin")
             header("Location:" . ROOT . "/admin");
         else if($this->userRole == "contentmanager")

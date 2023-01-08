@@ -305,6 +305,61 @@ a, a:hover, a:visited, a:active {
 	padding-bottom: 7px; 
 }
 
+.container.card {
+  box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
+}
+.container.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 0 solid rgba(0,0,0,.125);
+  border-radius: 1rem;
+}
+.container.text-reset {
+  --bs-text-opacity: 1;
+  color: inherit!important;
+}
 
 
- 
+.media-small-form-size-box {
+  max-width: 450px;
+}
+
+.media-large-form-size-box {
+  max-width: 1000px;
+}
+
+.error-page-header {
+  font-size: 4rem;
+}
+
+.default-page-domin {
+  background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Ball_bearing.jpg/1024px-Ball_bearing.jpg");
+  background-size: 45%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.table-fixed-size {
+  max-width: 250px;
+}
+
+.table td.fit,
+.table th.fit {
+  white-space: nowrap;
+  width: 1%;
+}
+
+.icon-size {
+  font-size: 4rem;
+}
+
+@media only screen and (max-width: 992px) {
+  .add-content-button {
+      width: 100%;
+  }
+}

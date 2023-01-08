@@ -117,12 +117,55 @@ class Admin extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
 
+        //////////users info////////////////////
+        $query="SELECT Count(login)
+        FROM `users` WHERE role='user'";
+        $result = $db->query($query);
+        $usersCount = $result->fetchAll(PDO::FETCH_ASSOC);
+        $usersCount= $usersCount[0]['Count(login)'];
+
+        $query="SELECT login
+        FROM `users` WHERE role='user'
+        LIMIT 5";
+        $result = $db->query($query);
+        $users = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        $query="SELECT Count(login)
+        FROM `users` WHERE role='contentmanager'";
+        $result = $db->query($query);
+        $managersCount = $result->fetchAll(PDO::FETCH_ASSOC);
+        $managersCount= $managersCount[0]['Count(login)'];
+
+        $query="SELECT login
+        FROM `users` WHERE role='contentmanager'
+        LIMIT 5";
+        $result = $db->query($query);
+        $managers = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        $query="SELECT Count(login)
+        FROM `users` WHERE role='admin'";
+        $result = $db->query($query);
+        $adminsCount = $result->fetchAll(PDO::FETCH_ASSOC);
+        $adminsCount= $adminsCount[0]['Count(login)'];
+
+        $query="SELECT login
+        FROM `users` WHERE role='admin'
+        LIMIT 5";
+        $result = $db->query($query);
+        $admins = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        ///////////////////////////////////
+
         $query="SELECT i.name AS item, m.name AS manufacturer
         FROM items i 
             INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
             INNER JOIN manufacturers m ON m.id=mc.id_manufacturer LIMIT 5";
         $result = $db->query($query);
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
+
+
+
+
 
         $query="SELECT Count(name)
         FROM `items`";
@@ -182,7 +225,8 @@ class Admin extends Controller
 
         $this->view('admin/index', ['siteLinks'=>$siteLink ,'items'=>$items, 'itemsCount'=>$itemsCount, 'catalogs'=>$catalogs, 'catalogsCount'=>$catalogsCount,
         'attributes'=>$attributes, 'attributesCount'=>$attributesCount, 'manufacturers'=>$manufacturers, 
-        'manufacturersCount'=>$manufacturersCount,'categories'=>$categories, 'categoriesCount'=>$categoriesCount]);
+        'manufacturersCount'=>$manufacturersCount,'categories'=>$categories, 'categoriesCount'=>$categoriesCount,
+        'usersCount'=>$usersCount,'users'=>$users, 'managersCount'=>$managersCount,'managers'=>$managers, 'adminsCount'=>$adminsCount,'admins'=>$admins]);
     }
 
 
@@ -227,7 +271,9 @@ class Admin extends Controller
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $this->view('admin/list_of_users', ['siteLinks'=>$siteLink ,'usersArray'=>$result]);
+        $rmUserPath=ROOT."/admin/remove_user";
+        $editUserPath=ROOT."/admin/edit_user";
+        $this->view('admin/list_of_users', ['siteLinks'=>$siteLink ,'usersArray'=>$result, 'rmpath'=>$rmUserPath, 'editpath'=>$editUserPath]);
 
     }
 
@@ -573,6 +619,27 @@ class Admin extends Controller
         else return false;
     }
 
+    public function remove_user($id_u=NULL){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }else{
+                header("Location:" . ROOT . "/home");
+            }
+        }else{
+            header("Location:" . ROOT . "/login");
+        }
+        
+        if(isset($id_u)){
+            require_once dirname(__FILE__,2) . '/core/database.php';
+            $query="DELETE FROM users WHERE id=:id_u";
+            $result = $db->prepare($query);
+            $result->bindParam(':id_u', $id_u);
+            $result->execute();
+        }
+        header("Location:" . ROOT . "/admin/list_of_users");
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////MANAGERS//////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -598,7 +665,31 @@ class Admin extends Controller
         $query="SELECT id, name, lastName, email, login, password FROM users WHERE role='contentmanager' ORDER BY id";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
-        $this->view('admin/list_of_conent_managers', ['siteLinks'=>$siteLink,'usersArray'=>$result]);
+
+        $rmUserPath=ROOT."/admin/remove_manager";
+        $editUserPath=ROOT."/admin/edit_user";
+        $this->view('admin/list_of_conent_managers', ['siteLinks'=>$siteLink,'usersArray'=>$result, 'rmpath'=>$rmUserPath, 'editpath'=>$editUserPath]);
+    }
+
+    public function remove_manager($id_um=NULL){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }else{
+                header("Location:" . ROOT . "/home");
+            }
+        }else{
+            header("Location:" . ROOT . "/login");
+        }
+        
+        if(isset($id_u)){
+            require_once dirname(__FILE__,2) . '/core/database.php';
+            $query="DELETE FROM users WHERE id=:id_um";
+            $result = $db->prepare($query);
+            $result->bindParam(':id_um', $id_um);
+            $result->execute();
+        }
+        header("Location:" . ROOT . "/admin/list_of_conent_managers");
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -617,28 +708,52 @@ class Admin extends Controller
         else{
             header("Location:" . ROOT . "/login");
         }
-        
-        if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
-                unset($_SESSION['successOrErrorResponse']);
+
+            if(isset($_SESSION['loggedUser'])){
+                if($_SESSION['loggedUser'] == "admin"){
+                    unset($_SESSION['successOrErrorResponse']);
+                }else{
+                    header("Location:" . ROOT . "/home");
+                }
             }else{
-                header("Location:" . ROOT . "/home");
+                header("Location:" . ROOT . "/login");
             }
-        }else{
-            header("Location:" . ROOT . "/login");
-        }
         
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
-
+        $adminId = $_SESSION['idLoggedUser'];
         $query="SELECT id, name, lastName, email, login, password FROM users WHERE role='admin' ORDER BY id";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
-        $this->view('admin/list_of_administrators', ['siteLinks'=>$siteLink,'usersArray'=>$result]);
+
+        $rmUserPath=ROOT."/admin/remove_admin";
+        $editUserPath=ROOT."/admin/edit_user";
+        $this->view('admin/list_of_administrators', ['siteLinks'=>$siteLink,'usersArray'=>$result, 'rmpath'=>$rmUserPath, 'editpath'=>$editUserPath, 'adminId'=>$adminId]);
+    }
+
+    public function remove_admin($id_ua=NULL){
+            if(isset($_SESSION['loggedUser'])){
+                if($_SESSION['loggedUser'] == "admin"){
+                    unset($_SESSION['successOrErrorResponse']);
+                }else{
+                    header("Location:" . ROOT . "/home");
+                }
+            }else{
+                header("Location:" . ROOT . "/login");
+            }
+                
+        if(isset($id_ua)){
+            require_once dirname(__FILE__,2) . '/core/database.php';
+            $query="DELETE FROM users WHERE id=:id_ua";
+            $result = $db->prepare($query);
+            $result->bindParam(':id_ua', $id_ua);
+            $result->execute();
+        }
+        header("Location:" . ROOT . "/admin/list_of_administrators");
     }
     
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////ATRRIBUTES////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////ATTRIBUTES////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public function list_of_attributes()
@@ -1431,19 +1546,43 @@ class Admin extends Controller
 
                 $i = 1;
                 while(isset($_POST["attribute_name" . $i])){
-                    $query="SELECT id FROM attributes WHERE name=:attr_name";
+                    $query="SELECT id, isrange FROM attributes WHERE name=:attr_name";
                     $result = $db->prepare($query);
                     $result->bindParam(':attr_name', $_POST["attribute_name" . $i]);
                     $result->execute();
-                    $attr_id=$result->fetch(PDO::FETCH_ASSOC); 
+                    $result=$result->fetch(PDO::FETCH_ASSOC); 
+                    $attr_id=$result['id'];
+                    $attr_isrange=$result['isrange'];
+                    
+                    if($attr_isrange == 0){
+                        $query="INSERT INTO attributesofitems (id_item, id_attribute, value) 
+                        VALUES (:id_item, :id_attribute, :in_value)";
+                        $result = $db->prepare($query);
+                        $result->bindParam(':id_item',$item_id);
+                        $result->bindParam(':id_attribute',$attr_id);
+                        $result->bindParam(':in_value',$_POST["attribute_value" . $i]);
+                        $result->execute();
+                    }else if($attr_isrange == 1){
+                        $attrValuePost = $_POST["attribute_value" . $i];
+                        $floatVal = floatval($attrValuePost);
 
-                    $query="INSERT INTO attributesofitems (id_item, id_attribute, value) 
-                    VALUES (:id_item, :id_attribute, :in_value)";
-                    $result = $db->prepare($query);
-                    $result->bindParam(':id_item',$item_id);
-                    $result->bindParam(':id_attribute',$attr_id['id']);
-                    $result->bindParam(':in_value',$_POST["attribute_value" . $i]);
-                    $result->execute();
+                        $query="INSERT INTO attributesofitems (id_item, id_attribute, value, valuedecimal) 
+                        VALUES (:id_item, :id_attribute, :in_value, :in_valuedecimal)";
+                        $result = $db->prepare($query);
+                        $result->bindParam(':id_item',$item_id);
+                        $result->bindParam(':id_attribute',$attr_id);
+                        if($floatVal)
+                        {
+                            $result->bindParam(':in_valuedecimal',$attrValuePost);
+                            $result->bindParam(':in_value',$attrValuePost);
+                        }else{
+                            $attrValuePost = 0;
+                            $result->bindParam(':in_valuedecimal',$attrValuePost);
+                            $result->bindParam(':in_value',$attrValuePost);
+                        }
+                        $result->execute();
+                    }
+
 
                    // var_dump($_POST["attribute_name" . $i] . ", " . $_POST["attribute_value" . $i]);
                     $i += 1;
@@ -1604,24 +1743,72 @@ class Admin extends Controller
                     if(!isset($_POST["attribute_name" . $i]) &&!isset($_POST["attribute_value" . $i])&&!isset($_POST["attrId" . $i])){
 
                     }else{
-                        if($_POST["attrId" . $i] != 0){
-                            echo "<script>alert('test')</script>";
-                            $query="UPDATE attributesofitems SET id_attribute=:id_attr, value=:val WHERE id=:id";
-                            $result = $db->prepare($query);
-                            $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
-                            $result->bindParam(':val',$_POST["attribute_value" . $i]);
-                            $result->bindParam(':id',$_POST["attrId" . $i]);
-                            $result->execute();
+                        $query="SELECT isrange FROM attributes WHERE id=:attr_id";
+                        $result = $db->prepare($query);
+                        $result->bindParam(':attr_id', $_POST["attribute_name" . $i]);
+                        $result->execute();
+                        $result=$result->fetch(PDO::FETCH_ASSOC); 
+                        $attr_isrange=$result['isrange'];
+                        if($_POST["attrId" . $i] != 0){       
+                            if($attr_isrange == 0){               
+                                $query="UPDATE attributesofitems SET id_attribute=:id_attr, value=:val WHERE id=:id";
+                                $result = $db->prepare($query);
+                                $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
+                                $result->bindParam(':val',$_POST["attribute_value" . $i]);
+                                $result->bindParam(':id',$_POST["attrId" . $i]);
+                                $result->execute();
+                            }else{
+                                $attrValuePost = $_POST["attribute_value" . $i];
+                                $floatVal = floatval($attrValuePost);
+                            
+                                $query="UPDATE attributesofitems SET id_attribute=:id_attr, value=:val, valuedecimal=:valuedecimal WHERE id=:id";
+                                $result = $db->prepare($query);
+                                $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
+                                if($floatVal){
+                                    $result->bindParam(':val',$attrValuePost);
+                                    $result->bindParam(':valuedecimal',$attrValuePost);
+                                }else{
+                                    $attrValuePost = 0;
+                                    $result->bindParam(':val',$attrValuePost);
+                                    $result->bindParam(':valuedecimal',$attrValuePost);
+                                }
+                                $result->bindParam(':id',$_POST["attrId" . $i]);
+                                $result->execute();
+
+                            }
                             array_push($remainingAttrID, $_POST["attrId".$i]);
                         }else{
-                            $query="INSERT INTO attributesofitems (id_item, id_attribute, value) VALUES (:id_item, :id_attr, :val)";
-                            $result = $db->prepare($query);
-                            $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
-                            $result->bindParam(':val',$_POST["attribute_value" . $i]);
-                            $result->bindParam(':id_item',$editId);
-                            $result->execute();
-                            $aId = $db->lastInsertId();
-                            array_push($remainingAttrID, $aId);
+                            if($attr_isrange == 0){               
+                                $query="INSERT INTO attributesofitems (id_item, id_attribute, value) VALUES (:id_item, :id_attr, :val)";
+                                $result = $db->prepare($query);
+                                $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
+                                $result->bindParam(':val',$_POST["attribute_value" . $i]);
+                                $result->bindParam(':id_item',$editId);
+                                $result->execute();
+                                $aId = $db->lastInsertId();
+                                array_push($remainingAttrID, $aId);
+                            }else if($attr_isrange == 1){
+                                $attrValuePost = $_POST["attribute_value" . $i];
+                                $floatVal = floatval($attrValuePost);
+
+                                $query="INSERT INTO attributesofitems (id_item, id_attribute, value, valuedecimal) VALUES (:id_item, :id_attr, :val, :valuedecimal)";
+                                $result = $db->prepare($query);
+                                $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
+
+                                if($floatVal)
+                                {
+                                    $result->bindParam(':val',$attrValuePost);
+                                    $result->bindParam(':valuedecimal',$attrValuePost);
+                                }else{
+                                    $attrValuePost = 0;
+                                    $result->bindParam(':val',$attrValuePost);
+                                    $result->bindParam(':valuedecimal',$attrValuePost);
+                                }
+                                $result->bindParam(':id_item',$editId);
+                                $result->execute();
+                                $aId = $db->lastInsertId();
+                                array_push($remainingAttrID, $aId);
+                            }
                         }
                     }
                 }
@@ -1654,7 +1841,6 @@ class Admin extends Controller
 
                     }else{
                         if($_POST["descriptionId" . $i] != 0){
-                            echo "<script>alert('test')</script>";
                             $query="UPDATE descriptions SET title=:title, description=:desc WHERE id=:id";
                             $result = $db->prepare($query);
                             $result->bindParam(':title',$_POST["descriptionTitle" . $i]);
@@ -1703,7 +1889,7 @@ class Admin extends Controller
             }
             else{
                 $_SESSION['error_page'] = "list_of_items";
-                header("Location:" . ROOT . "/admin/error_page/2");
+                header("Location:" . ROOT . "/admin/error_page/1");
             }
         }
 
@@ -1854,6 +2040,74 @@ class Admin extends Controller
         $this->view('admin/list_of_items', ['siteLinks'=>$siteLink,'itemsArray' => $items, 'categoriesArray' => $categoriesArray, 
         'catalogArray' => $catalogArray, 'attrArray' => $attrArray, 'editItemPath' => $editItemPath, 'removeItemPath' => $removeItemPath]);
     }
+
+
+
+    public function list_of_uncategorized_items(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }else{
+                header("Location:" . ROOT . "/home");
+            }
+        }else{
+            header("Location:" . ROOT . "/login");
+        }
+        
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
+
+        $query="SELECT i.id AS iid, i.name AS itemName, m.name AS manufacturerName, 
+        c.name AS manufacturerCountry, i.amount AS amount, i.price AS price
+        FROM items i
+        	LEFT OUTER JOIN categoriesofitem coi ON i.id=coi.id_item
+            LEFT OUTER JOIN categories cat ON coi.id_category=cat.id
+            INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
+            INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
+            INNER JOIN countries c ON mc.id_country=c.id
+            WHERE id_category IS NULL";
+        $result = $db->query($query);
+        $items = $result->fetchAll(PDO::FETCH_ASSOC);
+
+
+        $queryCat="SELECT c.name AS catname
+        FROM items i 
+        INNER JOIN itemsincatalog ic ON i.id=ic.id_item
+        INNER JOIN catalog c ON ic.id_catalog=c.id
+        WHERE i.id=:iid";
+
+        $queryAttr="SELECT a.name AS attrname, ai.value AS aval
+        FROM items i 
+        INNER JOIN attributesofitems ai ON i.id=ai.id_item
+        INNER JOIN attributes a ON ai.id_attribute=a.id
+        WHERE i.id=:iid";
+
+        $catalogArray=array();
+        $attrArray=array();
+
+        foreach($items as $id){
+
+            $result = $db->prepare($queryCat);
+            $result->bindParam(':iid', $id['iid']);
+            $result->execute();
+            $result =  $result->fetchAll(PDO::FETCH_ASSOC);
+            $catalogArray[$id['iid']]= $result;
+
+            $result = $db->prepare($queryAttr);
+            $result->bindParam(':iid', $id['iid']);
+            $result->execute();
+            $result =  $result->fetchAll(PDO::FETCH_ASSOC);
+            $attrArray[$id['iid']]= $result;
+        }
+        
+        $editItemPath=ROOT."/admin/edit_item";
+        $removeItemPath=ROOT."/admin/remove_item";
+        
+        $this->view('admin/list_of_uncategorized_items', ['siteLinks'=>$siteLink,'itemsArray' => $items,
+        'catalogArray' => $catalogArray, 'attrArray' => $attrArray, 'editItemPath' => $editItemPath, 'removeItemPath' => $removeItemPath]);
+    }
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////CATEGORIES////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

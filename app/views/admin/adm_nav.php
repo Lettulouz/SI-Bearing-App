@@ -113,6 +113,9 @@
                                 <a href="<?php echo ROOT."/admin/list_of_items"?>" id="prd_list" class="nav-link text-muted">
                                     Lista produktów
                                 </a>
+                                <a href="<?php echo ROOT."/admin/list_of_uncategorized_items"?>" id="uc_prd_list" class="nav-link text-muted">
+                                    Lista produktów bez kategorii
+                                </a>
                                 <a href="<?php echo ROOT."/admin/add_item"?>" id="additem" class="nav-link text-muted">
                                     Dodaj produkty
                                 </a>

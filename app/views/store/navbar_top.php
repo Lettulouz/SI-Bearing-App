@@ -44,7 +44,7 @@
                             data-bs-toggle="dropdown" aria-expanded="false">
                                 Witaj <?=$data['loggedUser_name']?>!
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <li>
                                     <a class="dropdown-item" href="<?=ROOT?>/logout">Wyloguj</a>
                                 </li>
