@@ -284,11 +284,11 @@ class Store extends Controller
         $result->bindParam(':id_category',$id_category);
         if(!$querySwitch) $result->bindParam(':id_catalog',$id_catalog);
         $result -> execute();
-        print_r($result);
   
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
    
-
+        print_r($result);
+        die();
 
         $query="SELECT COUNT(i.id) AS c
         FROM items i 
