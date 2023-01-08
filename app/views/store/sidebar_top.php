@@ -3,12 +3,12 @@
         <nav class="navbar-light">
             <ul class="navbar-nav">
                 <li>
-                    <a class="btn btn-light btn-lg" type="button" data-bs-toggle="offcanvas" href=".sidebar" role="button" aria-controls="sidebar">
+                    <a class="btn btn-light btn-lg mt-1" type="button" data-bs-toggle="offcanvas" href=".sidebar" role="button" aria-controls="sidebar">
                         <i class="bi bi-list"></i>
                     </a> 
                 </li>
                 <li class="my-2 small fw-bold text-uppercase text-decoration-none">Sortowanie</li>
-                <li>
+                <li> 
                     <div class="form-check">
                         <select class="form-control" name="sortValue" form='submitFilterSearchSort' style="height:35px">
                             <option value="1">Sortuj: cena rosnąco</option>
