@@ -117,12 +117,55 @@ class Admin extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
 
+        //////////users info////////////////////
+        $query="SELECT Count(login)
+        FROM `users` WHERE role='user'";
+        $result = $db->query($query);
+        $usersCount = $result->fetchAll(PDO::FETCH_ASSOC);
+        $usersCount= $usersCount[0]['Count(login)'];
+
+        $query="SELECT login
+        FROM `users` WHERE role='user'
+        LIMIT 5";
+        $result = $db->query($query);
+        $users = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        $query="SELECT Count(login)
+        FROM `users` WHERE role='contentmanager'";
+        $result = $db->query($query);
+        $managersCount = $result->fetchAll(PDO::FETCH_ASSOC);
+        $managersCount= $managersCount[0]['Count(login)'];
+
+        $query="SELECT login
+        FROM `users` WHERE role='contentmanager'
+        LIMIT 5";
+        $result = $db->query($query);
+        $managers = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        $query="SELECT Count(login)
+        FROM `users` WHERE role='admin'";
+        $result = $db->query($query);
+        $adminsCount = $result->fetchAll(PDO::FETCH_ASSOC);
+        $adminsCount= $adminsCount[0]['Count(login)'];
+
+        $query="SELECT login
+        FROM `users` WHERE role='admin'
+        LIMIT 5";
+        $result = $db->query($query);
+        $admins = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        ///////////////////////////////////
+
         $query="SELECT i.name AS item, m.name AS manufacturer
         FROM items i 
             INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
             INNER JOIN manufacturers m ON m.id=mc.id_manufacturer LIMIT 5";
         $result = $db->query($query);
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
+
+
+
+
 
         $query="SELECT Count(name)
         FROM `items`";
@@ -182,7 +225,8 @@ class Admin extends Controller
 
         $this->view('admin/index', ['siteLinks'=>$siteLink ,'items'=>$items, 'itemsCount'=>$itemsCount, 'catalogs'=>$catalogs, 'catalogsCount'=>$catalogsCount,
         'attributes'=>$attributes, 'attributesCount'=>$attributesCount, 'manufacturers'=>$manufacturers, 
-        'manufacturersCount'=>$manufacturersCount,'categories'=>$categories, 'categoriesCount'=>$categoriesCount]);
+        'manufacturersCount'=>$manufacturersCount,'categories'=>$categories, 'categoriesCount'=>$categoriesCount,
+        'usersCount'=>$usersCount,'users'=>$users, 'managersCount'=>$managersCount,'managers'=>$managers, 'adminsCount'=>$adminsCount,'admins'=>$admins]);
     }
 
 
@@ -1703,7 +1747,7 @@ class Admin extends Controller
             }
             else{
                 $_SESSION['error_page'] = "list_of_items";
-                header("Location:" . ROOT . "/admin/error_page/2");
+                header("Location:" . ROOT . "/admin/error_page/1");
             }
         }
 
@@ -1854,6 +1898,74 @@ class Admin extends Controller
         $this->view('admin/list_of_items', ['siteLinks'=>$siteLink,'itemsArray' => $items, 'categoriesArray' => $categoriesArray, 
         'catalogArray' => $catalogArray, 'attrArray' => $attrArray, 'editItemPath' => $editItemPath, 'removeItemPath' => $removeItemPath]);
     }
+
+
+
+    public function list_of_uncategorized_items(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }else{
+                header("Location:" . ROOT . "/home");
+            }
+        }else{
+            header("Location:" . ROOT . "/login");
+        }
+        
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
+
+        $query="SELECT i.id AS iid, i.name AS itemName, m.name AS manufacturerName, 
+        c.name AS manufacturerCountry, i.amount AS amount, i.price AS price
+        FROM items i
+        	LEFT OUTER JOIN categoriesofitem coi ON i.id=coi.id_item
+            LEFT OUTER JOIN categories cat ON coi.id_category=cat.id
+            INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
+            INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
+            INNER JOIN countries c ON mc.id_country=c.id
+            WHERE id_category IS NULL";
+        $result = $db->query($query);
+        $items = $result->fetchAll(PDO::FETCH_ASSOC);
+
+
+        $queryCat="SELECT c.name AS catname
+        FROM items i 
+        INNER JOIN itemsincatalog ic ON i.id=ic.id_item
+        INNER JOIN catalog c ON ic.id_catalog=c.id
+        WHERE i.id=:iid";
+
+        $queryAttr="SELECT a.name AS attrname, ai.value AS aval
+        FROM items i 
+        INNER JOIN attributesofitems ai ON i.id=ai.id_item
+        INNER JOIN attributes a ON ai.id_attribute=a.id
+        WHERE i.id=:iid";
+
+        $catalogArray=array();
+        $attrArray=array();
+
+        foreach($items as $id){
+
+            $result = $db->prepare($queryCat);
+            $result->bindParam(':iid', $id['iid']);
+            $result->execute();
+            $result =  $result->fetchAll(PDO::FETCH_ASSOC);
+            $catalogArray[$id['iid']]= $result;
+
+            $result = $db->prepare($queryAttr);
+            $result->bindParam(':iid', $id['iid']);
+            $result->execute();
+            $result =  $result->fetchAll(PDO::FETCH_ASSOC);
+            $attrArray[$id['iid']]= $result;
+        }
+        
+        $editItemPath=ROOT."/admin/edit_item";
+        $removeItemPath=ROOT."/admin/remove_item";
+        
+        $this->view('admin/list_of_uncategorized_items', ['siteLinks'=>$siteLink,'itemsArray' => $items,
+        'catalogArray' => $catalogArray, 'attrArray' => $attrArray, 'editItemPath' => $editItemPath, 'removeItemPath' => $removeItemPath]);
+    }
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////CATEGORIES////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

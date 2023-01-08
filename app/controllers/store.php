@@ -290,7 +290,6 @@ class Store extends Controller
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
    
 
-
         $query="SELECT COUNT(i.id) AS c
         FROM items i 
         INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
