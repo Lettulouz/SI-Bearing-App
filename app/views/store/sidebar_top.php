@@ -3,7 +3,7 @@
         <nav class="navbar-light">
             <ul class="navbar-nav">
                 <li>
-                    <a class="btn btn-light btn-lg" type="button" data-bs-toggle="offcanvas" href=".sidebar" role="button" aria-controls="sidebar">
+                    <a class="btn btn-light btn-lg mt-1" type="button" data-bs-toggle="offcanvas" href=".sidebar" role="button" aria-controls="sidebar">
                         <i class="bi bi-list"></i>
                     </a> 
                 </li>

@@ -37,7 +37,7 @@
             <span class="bi bi-chevron-right right-icon ms-auto"></span>
         </a>
 
-        <div class='collapse <?=!empty( $data['manufacturersArray']) ? 'show' : '' ?>' id="manufacturersGroup">
+        <div class='collapse <?=!empty($_POST['checkBoxVarManufacturers']) ? 'show' : '' ?>' id="manufacturersGroup">
             <?php
                 $k = 0;
                 $manufacturers = $data['manufacturersArray'];
@@ -67,7 +67,7 @@
                 <span class="bi bi-chevron-right right-icon ms-auto"></span>
             </a>
 
-            <div class='collapse <?=!empty($data['categoriesArray']) ? 'show' : '' ?>' id="categGroup">
+            <div class='collapse <?=!empty($_POST['checkBoxVarCategories']) ? 'show' : '' ?>' id="categGroup">
                 <?php
                     $k = 0;
                     $categories = $data['categoriesArray'];
@@ -98,7 +98,7 @@
                 <span class="bi bi-chevron-right right-icon ms-auto"></span>
             </a>
 
-            <div class='collapse <?=!empty($data['catalogsArray']) ? 'show' : '' ?>' id="catGroup">
+            <div class='collapse <?=!empty($_POST['checkBoxVarCatalogs']) ? 'show' : '' ?>' id="catGroup">
                 <?php
                     $k = 0;
                     $catalogs = $data['catalogsArray'];
@@ -129,7 +129,7 @@
                 <span class="bi bi-chevron-right right-icon ms-auto"></span>
             </a>
 
-            <div class='collapse <?=!empty($data['attributesArray']) ? 'show' : '' ?>' id="attrGroup">
+            <div class='collapse <?=!empty($_POST['checkBoxVarAttributes']) ? 'show' : '' ?>' id="attrGroup">
                 <?php
                     $k = 0;
                     $jk = 0;
@@ -249,7 +249,7 @@
             <input type="hidden" id="numberOfPages" value="<?=$data['numberOfPages']?>"/>
             <?php } ?>
 
-            <div class="row items mw-75">          
+            <div class="row items mw-75 mx-7">          
                 <?php        
                 $j = 0;
                 $three = 3;
@@ -339,7 +339,7 @@
 
         //show sidebar at load page if at least one of checkboxes is checked
         //and window is wide enough
-        if($(window).width()>1536 && $('.sidebar').find(':checkbox:checked').length > 0){
+        if($(window).width()>1880 && $('.sidebar').find(':checkbox:checked').length > 0){
             $('.sidebar').offcanvas('show')
         }
 
