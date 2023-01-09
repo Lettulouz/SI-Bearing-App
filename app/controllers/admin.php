@@ -443,6 +443,38 @@ class Admin extends Controller
         ,'name'=>$this->nameInput, 'surname'=>$this->surnameInput, 'mail'=>$this->emailInput, 'login'=>$this->loginInput]);
     }
 
+    public function add_shop_service(){
+        $a = "add_shop_service";
+        $b = "shopservice";
+        $this->add($a, $b);
+    }
+
+    public function list_of_service_accounts(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
+
+        $query="SELECT id, name, lastName, email, login, password FROM users WHERE role='shopservice' ORDER BY id";
+        $result = $db->query($query);
+        $result = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        $rmUserPath=ROOT."/admin/remove_user";
+        $editUserPath=ROOT."/admin/edit_user";
+        $this->view('admin/list_of_service_accounts', ['siteLinks'=>$siteLink ,'usersArray'=>$result, 'rmpath'=>$rmUserPath, 'editpath'=>$editUserPath]);
+
+    }
+
     private function remove($id)
     {
         if(isset($_SESSION['loggedUser'])){
@@ -2277,6 +2309,37 @@ class Admin extends Controller
         $this->view('admin/sales_report', ['siteLinks'=>$siteLink, 'amount'=>$amount]);
     }
 
+    public function edit_informations(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
+
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        
+        if(isset($_POST['informationsEditSubmit'])){
+            $query="UPDATE siteinfo SET sitename=:sitename";
+            $result = $db->prepare($query);
+            $result->bindParam(':sitename', $_POST['siteName']);
+            $result->execute();
+            $_SESSION['success_page'] = "edit_informations";
+            header("Location:" . ROOT . "/admin/success_page/2");
+        }
+
+        $query="SELECT sitename FROM siteinfo LIMIT 1";
+        $result = $db->prepare($query);
+        $result->execute();
+        $result=$result->fetch(PDO::FETCH_ASSOC);
+
+        $this->view('admin/edit_informations', ['result' => $result]);
+    }
 
     //////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////FOOTER//////////////////////////////////////////////////////

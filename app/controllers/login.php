@@ -350,7 +350,7 @@ class Login extends Controller
             header("Location:" . ROOT . "/admin");
         else if($this->userRole == "contentmanager")
             header("Location:" . ROOT . "/manager");
-        else if($this->userRole == "service")
+        else if($this->userRole == "shopservice")
             header("Location:" . ROOT . "/service");
         else if($this->userRole == "user")
             header("Location:" . ROOT . "/home");
