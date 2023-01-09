@@ -230,7 +230,7 @@
 
                     
 
-                    <div class="mb-3 me-7">
+                    <div class="mb-3 me-2 me-sm-3 me-md-5 me-lg-7 mt-2">
                         <button type='button' name='lft' class='btn d-inline shadow-none' style="margin-right:3px; margin-top:-2px; border:0px">
                             <i class="bi bi-arrow-left-circle" style="font-size:33px"></i>
                         </button>
@@ -249,7 +249,7 @@
             <input type="hidden" id="numberOfPages" value="<?=$data['numberOfPages']?>"/>
             <?php } ?>
 
-            <div class="row items mw-75 mx-7">          
+            <div class="row items mw-75 mx-1 mx-sm-3 mx-md-5 mx-lg-7">          
                 <?php        
                 $j = 0;
                 $three = 3;
