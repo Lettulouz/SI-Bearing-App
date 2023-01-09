@@ -21,75 +21,47 @@
     </div>
 </div>
 <hr>
-<h3 class="section-subheading text-muted p-2">Opis produktu</h3>
+<h3 class="text-muted p-2 ms-7 mb-3">Opis produktu</h3>
 
     <div class="container mb-5">
         <?php 
         $descriptions = $data['itemDescrs'];
-        foreach($descriptions as $description) {
-            $desc = $description['description'];
-            $title = $description['title'];
-            echo "<h3 class='text-wrap fs-1 text-center mb-4'>$title</h3>
-            <h6 class='text-wrap text text-left mb-5'>$desc</h6>";
-
-
-        } 
+        if(!empty($descriptions)){
+            foreach($descriptions as $description) {
+                $desc = $description['description'];
+                $title = $description['title'];
+                echo "<h5 class='text-wrap text text-left mb-3'>$title</h5>
+                <h6 class='text-muted text-wrap text text-left mb-5 fw-light fs-5'>$desc</h6>";
+            } 
+        }else{
+            echo "<h5 class='text-wrap text text-left border-0'>Ooops! Administrator serwisu nie dostarczył żadnego opisu dla tego produktu!</h5>";
+        }
         ?>
     </div>
 
 <hr>
-<h3 id="section-spec" class="section-subheading text-muted p-2">Specyfikacja</h3>
+<h3 class="text-muted p-2 ms-7 mb-3">Specyfikacja</h3>
 
     <div class="container mb-5">
         <div class="table-responsive">
-            <table class="table table-striped table-hover border-top border-top">
-                <tbody>
-                    <tr>
-                        <td class="align-middle fw-bold text-center">Product designation</td>
-                        <td class="align-middle text-start">For gamers</td>
-                    </tr>
-                    <tr>
-                        <td class="align-middle fw-bold text-center">Screen diagonal</td>
-                        <td class="align-middle text-start">"25"</td>
-                    </tr>
-                    <tr>
-                        <td class="align-middle fw-bold text-center">Matrix surface</td>
-                        <td class="align-middle text-start">Matte</td>
-                    </tr>
-                    <tr>
-                        <td class="align-middle fw-bold text-center">Matrix type</td>
-                        <td class="align-middle text-start">LED, IPS</td>
-                    </tr>
-                    <tr>
-                        <td class="align-middle fw-bold text-center">Monitor type</td>
-                        <td class="align-middle text-start">Flat</td>
-                    </tr>
-                    <tr>
-                        <td class="align-middle fw-bold text-center">Frameless monitor</td>
-                        <td class="align-middle text-start">Yes</td>
-                    </tr>
-                    <tr>
-                        <td class="align-middle fw-bold text-center">Screen resolution</td>
-                        <td class="align-middle text-start">1920 x 1080 (FullHD)</td>
-                    </tr>
-                    <tr>
-                        <td class="align-middle fw-bold text-center">Monitor format</td>
-                        <td class="align-middle text-start">16:9</td>
-                    </tr>
-                    <tr>
-                        <td class="align-middle fw-bold text-center">Screen refresh rate</td>
-                        <td class="align-middle text-start">240 Hz</td>
-                    </tr>
-                    <tr>
-                        <td class="align-middle fw-bold text-center">The number of colors displayed</td>
-                        <td class="align-middle text-start">16,7 mln</td>
-                    </tr>
-                    <tr>
-                        <td class="align-middle fw-bold text-center">HDR</td>
-                        <td class="align-middle text-start">HDR 10</td>
-                    </tr>
-                </tbody>
-            </table>
+            <?php 
+            $attributes = $data['itemAttrs'];
+            if(!empty($attributes)){
+                echo "<table class='table table-striped table-hover border-top border-top'>
+                <tbody>";
+                foreach($attributes as $attribute) {
+                    $attrName = $attribute['attrName'];
+                    $attrValue = $attribute['attrValue'];
+                    echo "<tr>
+                    <td class='align-middle fw-bold text-center'>$attrName</td>
+                    <td class='align-middle text-start'>$attrValue</td>
+                </tr>";
+                } 
+                echo "</tbody></table>";
+            }else{
+                echo "<h5 class='text-wrap text text-left border-0'>Ooops! Administrator serwisu nie dostarczył żadnych atrybutów dla tego produktu!</h5>";
+            }
+            ?>
         </div>
     </div>
 

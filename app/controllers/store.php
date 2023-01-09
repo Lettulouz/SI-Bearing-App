@@ -259,8 +259,8 @@ class Store extends Controller
             INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
             INNER JOIN categoriesofitem coi ON i.id = coi.id_item
             INNER JOIN categories categ ON coi.id_category = categ.id
-            INNER JOIN attributesofitems aoi ON i.id = aoi.id_item 
-            INNER JOIN attributes attr ON aoi.id_attribute = attr.id 
+            LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
+            LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
             LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
             LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
             WHERE i.name LIKE CONCAT('%', :search, '%')
@@ -278,8 +278,8 @@ class Store extends Controller
             INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
             INNER JOIN categoriesofitem coi ON i.id = coi.id_item
             INNER JOIN categories categ ON coi.id_category = categ.id
-            INNER JOIN attributesofitems aoi ON i.id = aoi.id_item 
-            INNER JOIN attributes attr ON aoi.id_attribute = attr.id 
+            LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
+            LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
             LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
             LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
             WHERE i.name LIKE CONCAT('%', :search, '%')
@@ -329,8 +329,8 @@ class Store extends Controller
             INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
             INNER JOIN categoriesofitem coi ON i.id = coi.id_item
             INNER JOIN categories categ ON coi.id_category = categ.id
-            INNER JOIN attributesofitems aoi ON i.id = aoi.id_item 
-            INNER JOIN attributes attr ON aoi.id_attribute = attr.id 
+            LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
+            LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
             LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
             LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
             WHERE i.name LIKE CONCAT('%', :search, '%')
@@ -347,8 +347,8 @@ class Store extends Controller
             INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
             INNER JOIN categoriesofitem coi ON i.id = coi.id_item
             INNER JOIN categories categ ON coi.id_category = categ.id
-            INNER JOIN attributesofitems aoi ON i.id = aoi.id_item 
-            INNER JOIN attributes attr ON aoi.id_attribute = attr.id 
+            LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
+            LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
             LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
             LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
             WHERE i.name LIKE CONCAT('%', :search, '%')
@@ -451,19 +451,30 @@ class Store extends Controller
         $itemParams -> execute();
         $itemParams = $itemParams->fetch(PDO::FETCH_ASSOC);
 
+
         $query="SELECT d.title, d.description FROM items i
         INNER JOIN descriptions d ON i.id=d.id_item
         WHERE i.id=:id";
-
 
         $itemDescrs = $db->prepare($query);
         $itemDescrs -> bindParam(':id',$id);
         $itemDescrs -> execute();
         $itemDescrs = $itemDescrs->fetchAll(PDO::FETCH_ASSOC);
+
+
+        $query="SELECT aoi.value as attrValue, a.name as attrName FROM items i
+        INNER JOIN attributesofitems aoi ON i.id=aoi.id_item
+        INNER JOIN attributes a ON a.id=aoi.id_attribute
+        WHERE i.id=:id";
+
+        $itemAttrs = $db->prepare($query);
+        $itemAttrs -> bindParam(':id',$id);
+        $itemAttrs -> execute();
+        $itemAttrs = $itemAttrs->fetchAll(PDO::FETCH_ASSOC);
         
         $this->view('store/item', ['id' => $id, 'siteFooter' => $siteFooter, 
         'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name, 'itemParams' => $itemParams, 
-        'itemDescrs' => $itemDescrs]);
+        'itemDescrs' => $itemDescrs, 'itemAttrs' => $itemAttrs]);
     }
 
     public function order_history(){
