@@ -6,7 +6,7 @@
 <div class="container">
   <!-- Title -->
   <div class="d-flex justify-content-between align-items-center py-3">
-    <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Order #16123222</h2>
+    <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Zamówienie </h2>
   </div>
 
   <!-- Main content -->
@@ -17,69 +17,34 @@
         <div class="card-body">
           <div class="mb-3 d-flex justify-content-between">
             <div>
-              <span class="me-3">22-11-2021</span>
-              <span class="me-3">#16123222</span>
-              <span class="me-3">Visa -1234</span>
-              <span class="badge rounded-pill bg-info">SHIPPING</span>
+              <span class="me-3"><?php echo date('d/m/Y');?></span>
+
             </div>
-            <div class="d-flex">
-              <button class="btn btn-link p-0 me-3 d-none d-lg-block btn-icon-text"><i class="bi bi-download"></i> <span class="text">Invoice</span></button>
-              <div class="dropdown">
-                <button class="btn btn-link p-0 text-muted" type="button" data-bs-toggle="dropdown">
-                  <i class="bi bi-three-dots-vertical"></i>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                  <li><a class="dropdown-item" href="#"><i class="bi bi-pencil"></i> Edit</a></li>
-                  <li><a class="dropdown-item" href="#"><i class="bi bi-printer"></i> Print</a></li>
-                </ul>
-              </div>
-            </div>
+
           </div>
           <table class="table table-borderless">
             <tbody>
               <tr>
-                <td>
-                  <div class="d-flex mb-2">
-                    <div class="flex-shrink-0">
-                      <img src="https://www.bootdey.com/image/280x280/87CEFA/000000" alt="" width="35" class="img-fluid">
-                    </div>
-                    <div class="flex-lg-grow-1 ms-3">
-                      <h6 class="small mb-0"><a href="#" class="text-reset">Wireless Headphones with Noise Cancellation Tru Bass Bluetooth HiFi</a></h6>
-                      <span class="small">Color: Black</span>
-                    </div>
-                  </div>
-                </td>
-                <td>1</td>
-                <td class="text-end">$79.99</td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="d-flex mb-2">
-                    <div class="flex-shrink-0">
-                      <img src="https://www.bootdey.com/image/280x280/FF69B4/000000" alt="" width="35" class="img-fluid">
-                    </div>
-                    <div class="flex-lg-grow-1 ms-3">
-                      <h6 class="small mb-0"><a href="#" class="text-reset">Smartwatch IP68 Waterproof GPS and Bluetooth Support</a></h6>
-                      <span class="small">Color: White</span>
-                    </div>
-                  </div>
-                </td>
-                <td>1</td>
-                <td class="text-end">$79.99</td>
+              <?php
+                echo "<td></td>
+                <td></td>
+                <td></td>
+                <td></td>";
+                ?>
               </tr>
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="2">Subtotal</td>
-                <td class="text-end">$159,98</td>
+                <td colspan="2">Kwota zamówienia</td>
+                <td class="text-end"></td>
               </tr>
               <tr>
-                <td colspan="2">Shipping</td>
-                <td class="text-end">$20.00</td>
+                <td colspan="2">Wysyłka</td>
+                <td class="text-end"></td>
               </tr>
               <tr class="fw-bold">
-                <td colspan="2">TOTAL</td>
-                <td class="text-end">$169,98</td>
+                <td colspan="2">Razem</td>
+                <td class="text-end"></td>
               </tr>
             </tfoot>
           </table>
@@ -90,47 +55,93 @@
         <div class="card-body">
           <div class="row">
             <div class="col-lg-6">
-              <h3 class="h6">Payment Method</h3>
-              <p>Visa -1234 <br>
-              Total: $169,98 <span class="badge bg-success rounded-pill">PAID</span></p>
+              <h3 class="h6">Płatność i dostawa</h3>
+                <div class='row'>
+                    <div class="col-12 p-1">
+                      <input class="form-control form-control-sm" type="text" name="cardname" placeholder="Właściciel karty" required>
+                    </div>
+                </div>
+
+                <div class='row'>
+                    <div class="col-12 p-1">
+                      <input class="form-control form-control-sm py-0" type="number" name="cardnumber" pattern="[0-9]{12}" placeholder="Numer karty" required>
+                    </div>
+                </div>
+
+                <div class='row'>
+                        <div class="col-12 col-md-6 p-1">
+                          <input class="form-control form-control-sm" type="text" name="expires" pattern="(0[1-9]|1[0-2])\/?([0-9]{2})" placeholder="Data wygaśnięcia" required>
+                        </div>
+                        <div class="col-12 col-md-6 p-1">
+                          <input class="form-control form-control-sm" type="text" name="cvv" pattern='[0-9]{3, 4}' placeholder="CVV" required>
+                        </div>
+                </div>
+
+                <div class='row'>
+                        <div class="col-12 p-1">
+                        <select class="form-select form-select-sm" name="shipping">
+                          <option selected disabled>Dostawa</option>
+                          <option value="1">Odbiór osobisty</option>
+                          <option value="2">Kurier</option>
+                        </select>
+                        </div>
+                </div>
+
             </div>
             <div class="col-lg-6">
-              <h3 class="h6">Billing address</h3>
-              <address>
-                <strong>John Doe</strong><br>
-                1355 Market St, Suite 900<br>
-                San Francisco, CA 94103<br>
-                <abbr title="Phone">P:</abbr> (123) 456-7890
-              </address>
+              <h3 class="h6">Dane dostawy</h3>
+              <div class='row'>
+                <div class="col-12 col-md-6 col-lg-4 p-1">
+                  <input class="form-control form-control-sm" type="text" name="name" placeholder="Imię" required>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 p-1">
+                  <input class="form-control form-control-sm" type="text" name="surname" placeholder="Nazwisko" required>
+                </div>
+              </div>
+              <div class='row'>
+                <div class="col-12 col-md-6 col-lg-4 p-1">
+                  <input class="form-control form-control-sm" type="text" name="city" placeholder="Miasto" required>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 p-1">
+                  <input class="form-control form-control-sm" type="text" name="postcode" placeholder="Kod pocztowy" required>
+                </div>
+              </div>
+              <div class='row'>
+                <div class="col-12 col-md-6 col-lg-4 p-1">
+                  <input class="form-control form-control-sm" type="text" name="city" placeholder="Ulica" required>
+                </div>
+                <div class="col-6 col-md-3 col-lg-3 p-1">
+                  <input class="form-control form-control-sm" type="number" name="postcode" placeholder="Nr budynku" required>
+                </div>
+                <div class="col-6 col-md-3 col-lg-3 p-1">
+                  <input class="form-control form-control-sm" type="number" name="postcode" placeholder="Nr mieszkania" >
+                </div>
+              </div>
+              <div class='row'>
+                <div class="col-12 col-md-6 col-lg-4 p-1">
+                  <input class="form-control form-control-sm" type="text" name="Country" placeholder="Kraj" required>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 p-1">
+                  <input class="form-control form-control-sm" type="text" name="voivoden" placeholder="Województwo" required>
+                </div>
+              </div>
+              <div class='row'>
+                <div class=" col-9 col-md-6 p-1">
+                  <input class="form-control form-control-sm" type="tel" name="Country" placeholder="numer telefonu" required>
+                </div>
+
+                <div class=" col-auto p-1 float-end">
+                  <input type="submit"  class="btn btn-primary btn-sm">
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-lg-4">
-      <!-- Customer Notes -->
-      <div class="card mb-4">
-        <div class="card-body">
-          <h3 class="h6">Customer Notes</h3>
-          <p>Sed enim, faucibus litora velit vestibulum habitasse. Cras lobortis cum sem aliquet mauris rutrum. Sollicitudin. Morbi, sem tellus vestibulum porttitor.</p>
-        </div>
-      </div>
-      <div class="card mb-4">
-        <!-- Shipping information -->
-        <div class="card-body">
-          <h3 class="h6">Shipping Information</h3>
-          <strong>FedEx</strong>
-          <span><a href="#" class="text-decoration-underline" target="_blank">FF1234567890</a> <i class="bi bi-box-arrow-up-right"></i> </span>
-          <hr>
-          <h3 class="h6">Address</h3>
-          <address>
-            <strong>John Doe</strong><br>
-            1355 Market St, Suite 900<br>
-            San Francisco, CA 94103<br>
-            <abbr title="Phone">P:</abbr> (123) 456-7890
-          </address>
-        </div>
-      </div>
+
+      
     </div>
   </div>
 </div>
