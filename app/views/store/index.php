@@ -230,7 +230,7 @@
 
                     
 
-                    <div class="mb-3" style="margin-right:-5x; margin-left:-20px;">
+                    <div class="mb-3 me-7">
                         <button type='button' name='lft' class='btn d-inline shadow-none' style="margin-right:3px; margin-top:-2px; border:0px">
                             <i class="bi bi-arrow-left-circle" style="font-size:33px"></i>
                         </button>
@@ -270,21 +270,21 @@
                                     echo ROOT."/store/item/{$item['itemID']}";
                                     echo " >";
                                     echo "<img src='" . $imagePath . "'  alt='zdjęcie łożyska' class='card-img-top img-thumbnail' 
-                                    style='object-fit:contain; height:286px;'>";
+                                    style='object-fit:contain; height:240px;'>";
                                     echo "</a>";
 
                                     echo "<div class='card-body'>
-                                        <h4  class='card-title'>";
+                                        <h5  class='card-title'>";
 
                                         // nazwa jako link do itemku
                                         echo " <a href= ";
                                         echo ROOT."/store/item/{$item['itemID']}";
-                                        echo " >";
+                                        echo " class='text-body'>";
                                         echo "<b>  {$item['name']} </b>";
                                         echo "</a>";
 
-                                        echo "</h4> <div class='card-text'> 
-                                        <h5>firma: {$item['name2']} </h5>
+                                        echo "</h5> <div class='card-text'> 
+                                        <h6 class='text-muted fw-light'>firma: {$item['name2']} </h5>
                                     </div>
                                     </div>
                                         <div class='card-footer'>
@@ -305,7 +305,7 @@
             </div>
             <?php if(!empty($data['numberOfItems'])){ ?>
                 <div class="container d-flex justify-content-end">
-                    <div class="mb-3" style="margin-right:-5px; margin-left:-20px;">
+                    <div class="mb-3 me-7">
                         <button type='button' name='lft' class='btn d-inline shadow-none' style="margin-right:3px; margin-top:-2px; border:0px">
                             <i class="bi bi-arrow-left-circle" style="font-size:33px"></i>
                         </button>

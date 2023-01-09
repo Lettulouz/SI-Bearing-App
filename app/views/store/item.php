@@ -6,9 +6,11 @@
 
 <div class="container d-flex" style="min-height: 400px;">
     <div class="row vw-100">
-        <div class="col-sm-6 default-page-domin d-sm-block border border-0" style="min-height: 400px;"></div>
+        <div class="col-sm-6 border border-1" style="max-height: 400px;"> 
+            <img src="<?=APPPATH?>/resources/itemsPhotos/brak_zdjecia.png"  alt='zdjęcie łożyska' 
+            class='card-img-top img-thumbnail' style='object-fit:contain; height:286px;'></div>
         <div class="col-sm-6 d-flex flex-column justify-content-center align-items-center border-0"
-            style="min-height: 400px;">
+            style="max-height: 400px;">
 
             <h1 class="text-wrap fs-1 text"><?=$data['itemParams']['name']?></h1>
             <h4 class="text-wrap text fw-light">Producent: <?=$data['itemParams']['manname']?></h3>

@@ -6,7 +6,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button> 
 
-            <a class="navbar-brand" href=<?php echo ROOT."/home"?> style="margin-top:-4px">Grontsmar</a>                 
+            <a class="navbar-brand" href=<?php echo ROOT."/home"?> style="margin-top:-4px"><?=$data['siteName']['sitename']?></a>                 
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -19,7 +19,7 @@
                 </ul>
             </div>
 
-            <ul class="navbar-nav mx-auto mb-2 mb-lg-0 d-none d-lg-flex flex-grow-1" id="searchBoxUl"> 
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0 d-none d-lg-flex flex-grow-1 me-8" id="searchBoxUl"> 
                 <div class="input-group">
                     <input type='text' class='form-control form-sm' id='searchRemote1' 
                     value='<?=isset($data['search']) ? $data['search'] : '' ?>' name='searchRemote1' placeholder="szukaj" autocomplete="off">

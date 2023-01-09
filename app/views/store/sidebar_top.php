@@ -9,8 +9,8 @@
                 </li>
                 <li class="my-2 small fw-bold text-uppercase text-decoration-none" value="margin-right:100px">Sortowanie</li>
                 <li> 
-                    <div class="form-check">
-                        <select class="form-control" name="sortValue" form='submitFilterSearchSort' style="height:35px;">
+                    <div class="form-check" style="margin-right:20px;">
+                        <select class="form-control" name="sortValue" form='submitFilterSearchSort' style="height:40px;">
                             <option value="1">Sortuj: cena rosnąco</option>
                             <option value="2">cena malejąco</option>
                             <option value="3">od najnowszych</option>

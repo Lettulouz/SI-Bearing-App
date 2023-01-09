@@ -23,6 +23,7 @@ class Login extends Controller
         unset($_SESSION['loggedUser']);
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteFooter = $this->getFooter($db);
+        $siteName = $this->getSiteName($db);
 
         $this->errorMessage = "";
         $this->serverError = false;
@@ -55,7 +56,8 @@ class Login extends Controller
         }
 
         if(!isset($_POST['password']) || !isset($_POST['repeatPassword'])){
-            $this->view('login/set_new_password', ['errorPassword' => $this->errorMessage, 'serverError' => $this->serverError, 'siteFooter' => $siteFooter]);
+            $this->view('login/set_new_password', ['errorPassword' => $this->errorMessage, 
+            'serverError' => $this->serverError, 'siteFooter' => $siteFooter, 'siteName' => $siteName]);
             return;
         }
         
@@ -90,13 +92,15 @@ class Login extends Controller
 
         $_SESSION['errorPassword'] = $this->errorMessage;
 
-        $this->view('login/set_new_password', ['errorPassword' => $this->errorMessage, 'serverError' => $this->serverError, 'siteFooter'=> $siteFooter]);
+        $this->view('login/set_new_password', ['errorPassword' => $this->errorMessage, 'serverError' => $this->serverError, 
+        'siteFooter'=> $siteFooter, 'siteName' => $siteName]);
     }
 
     public function forgotten_password(){
         unset($_SESSION['loggedUser']);
         require_once dirname(__FILE__,2) . '/core/database.php';
-        $siteFooter = $this->getFooter($db);
+        $siteFooter = $this->getFooter($db);       
+        $siteName = $this->getSiteName($db);
 
         if(isset($_POST['forgottenPasswordSubmit'])){
             $email = $_POST['email'];
@@ -159,13 +163,14 @@ class Login extends Controller
             $this->view('login/info_page', ['infoPage' => 1]);
             return;
         }
-        $this->view('login/forgotten_password', ['siteFooter' => $siteFooter]);
+        $this->view('login/forgotten_password', ['siteFooter' => $siteFooter, 'siteName' => $siteName]);
     }
     
     public function validate(){
         unset($_SESSION['loggedUser']);
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteFooter = $this->getFooter($db);
+        $siteName = $this->getSiteName($db);
 
         $this->errorMessage = "";
         $this->serverError = false;
@@ -178,7 +183,7 @@ class Login extends Controller
 
         if(!isset($_POST['emailOrLogin']) || !isset($_POST['password'])){
             $this->view('login/index', ['errorPassword' => $this->errorMessage, 'emailOrLoginInput' => $this->emailOrLoginInput, 'serverError' => $this->serverError,
-            'siteFooter' => $siteFooter]);
+            'siteFooter' => $siteFooter, 'siteName' => $siteName]);
             return;
         }
         
@@ -194,7 +199,7 @@ class Login extends Controller
         $_SESSION['errorPassword'] = $this->errorMessage;
 
         $this->view('login/index', ['errorPassword' => $this->errorMessage, 'emailOrLoginInput' => $this->emailOrLoginInput, 
-        'serverError' => $this->serverError, 'siteFooter' => $siteFooter]);
+        'serverError' => $this->serverError, 'siteFooter' => $siteFooter, 'siteName' => $siteName]);
 
     }
 
@@ -259,13 +264,17 @@ class Login extends Controller
         $userQuery->execute();
 
         $this->ifUserExist = $userQuery->fetch(PDO::FETCH_ASSOC);
-        if($this->ifUserExist['temporary'] == true) $this->errorDuringValidation("*Konto nie zostało aktywowane, sprawdź maila celem jego aktywacji");
-        if($this->ifUserExist) $_SESSION['loggedUser_name'] = $this->ifUserExist['name'];
-        if($this->ifUserExist) {
-            $this->userRole = $this->ifUserExist['role'];
-            $this->userId = $this->ifUserExist['id'];
+        if(!empty($this->ifUserExist)){
+            if($this->ifUserExist['temporary'] == true) $this->errorDuringValidation("*Konto nie zostało aktywowane, sprawdź maila celem jego aktywacji");
+            if($this->ifUserExist) $_SESSION['loggedUser_name'] = $this->ifUserExist['name'];
+            if($this->ifUserExist) {
+                $this->userRole = $this->ifUserExist['role'];
+                $this->userId = $this->ifUserExist['id'];
+            }
+            else $this->errorDuringValidation("*Podano błędny email lub hasło");
+        }else{
+            $this->errorDuringValidation("*Błąd łączenia z bazą danych");
         }
-        else $this->errorDuringValidation("*Podano błędny email lub hasło");
     }
 
     /** Function that sets errors
@@ -364,6 +373,18 @@ class Login extends Controller
             $result = $db->query($query);
             $result = $result->fetch(PDO::FETCH_ASSOC);
             $_SESSION['siteFooter'] = $result;
+        }
+        return $result;
+    }
+
+    private function getSiteName($db){
+        if(isset($_SESSION['siteName'])){
+            $result = $_SESSION['siteName'];
+        }else{
+            $query = "SELECT sitename FROM siteinfo LIMIT 1";
+            $result = $db->query($query);
+            $result = $result->fetch(PDO::FETCH_ASSOC);
+            $_SESSION['siteName'] = $result;
         }
         return $result;
     }

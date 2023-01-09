@@ -20,7 +20,8 @@ class Store extends Controller
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
 
         require_once dirname(__FILE__,2) . '/core/database.php';
-        $siteFooter = $this->getFooter($db);
+        $siteFooter = $this->getFooter($db);       
+        $siteName = $this->getSiteName($db);
 
         isset($_POST['limit1']) ? $limit1 = $_POST['limit1'] : $limit1=1;
 
@@ -393,9 +394,10 @@ class Store extends Controller
         
         $this->view('store/index', ['itemsArray'=>$itemsArr, 'search' => $search, 'limit1' => $page, 
             'manufacturersArray' => $manufacturers, 'last'=> $endofitems,
-            'test' => $id_manufacturer, 'siteFooter' => $siteFooter, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name,
-        'categoriesArray'=>$categories, 'catalogsArray'=>$catalogs, 'attributesArray'=>$attributes, 'numberOfPages' => $numberOfPages, 
-        'numberOfItems' => $numberOfItems, 'pricepartstart' => $pricepartstart, 'pricepartend' => $pricepartend]); // ten 'test' to do wywalenia na koniec
+            'test' => $id_manufacturer, 'siteFooter' => $siteFooter, 'isLogged' => $isLogged, 
+            'loggedUser_name' => $loggedUser_name, 'categoriesArray'=>$categories, 'catalogsArray'=>$catalogs, 
+            'attributesArray'=>$attributes, 'numberOfPages' => $numberOfPages, 'numberOfItems' => $numberOfItems, 
+            'pricepartstart' => $pricepartstart, 'pricepartend' => $pricepartend, 'siteName' => $siteName]); // ten 'test' to do wywalenia na koniec
             
     }
 
@@ -403,7 +405,8 @@ class Store extends Controller
         isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
         require_once dirname(__FILE__,2) . '/core/database.php';
-        $siteFooter = $this->getFooter($db);
+        $siteFooter = $this->getFooter($db);       
+        $siteName = $this->getSiteName($db);
 
         $itemsInCart = NULL;
         if(isset($_COOKIE['itemsInCart']) && $_COOKIE['itemsInCart'] != ''){
@@ -419,7 +422,7 @@ class Store extends Controller
             $itemsInCart = $itemsInCart->fetchAll(PDO::FETCH_ASSOC);
         }
      
-        $this->view('store/cart', ['siteFooter' => $siteFooter, 'itemsArray'=>$itemsInCart, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
+        $this->view('store/cart', ['siteFooter' => $siteFooter, 'siteName' => $siteName, 'itemsArray'=>$itemsInCart, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
     }
 
     private function getFooter($db){
@@ -434,11 +437,24 @@ class Store extends Controller
         return $result;
     }
 
+    private function getSiteName($db){
+        if(isset($_SESSION['siteName'])){
+            $result = $_SESSION['siteName'];
+        }else{
+            $query = "SELECT sitename FROM siteinfo LIMIT 1";
+            $result = $db->query($query);
+            $result = $result->fetch(PDO::FETCH_ASSOC);
+            $_SESSION['siteName'] = $result;
+        }
+        return $result;
+    }
+
     public function item($id){
         isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
         require_once dirname(__FILE__,2) . '/core/database.php';
-        $siteFooter = $this->getFooter($db);
+        $siteFooter = $this->getFooter($db);    
+        $siteName = $this->getSiteName($db);
 
         $query="SELECT i.price as price, i.name as name, i.amount as amount, m.name as manname FROM items i
         INNER JOIN manufacturercountries mc on i.id_manufacturercountry-mc.id_manufacturer
@@ -472,7 +488,7 @@ class Store extends Controller
         $itemAttrs -> execute();
         $itemAttrs = $itemAttrs->fetchAll(PDO::FETCH_ASSOC);
         
-        $this->view('store/item', ['id' => $id, 'siteFooter' => $siteFooter, 
+        $this->view('store/item', ['id' => $id, 'siteFooter' => $siteFooter, 'siteName' => $siteName, 
         'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name, 'itemParams' => $itemParams, 
         'itemDescrs' => $itemDescrs, 'itemAttrs' => $itemAttrs]);
     }
@@ -481,7 +497,8 @@ class Store extends Controller
         isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
         require_once dirname(__FILE__,2) . '/core/database.php';
-        $siteFooter = $this->getFooter($db);
+        $siteFooter = $this->getFooter($db);   
+        $siteName = $this->getSiteName($db);
 
         $query="SELECT * FROM `orders` ";
 
@@ -489,15 +506,19 @@ class Store extends Controller
         $Order = $db->query($query);
         $Order = $Order->fetchAll(PDO::FETCH_ASSOC);
         
-        $this->view('store/order_history', ['OrderArray'=>$Order, 'siteFooter' => $siteFooter, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
+        $this->view('store/order_history', ['OrderArray'=>$Order, 'siteName' => $siteName, 
+        'siteFooter' => $siteFooter, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
     }
 
     public function invoice(){
         isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
         require_once dirname(__FILE__,2) . '/core/database.php';
-        $siteFooter = $this->getFooter($db);
-        $this->view('store/invoice', ['siteFooter' => $siteFooter, 'itemsArray'=>$itemsInCart, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
+        $siteFooter = $this->getFooter($db);   
+        $siteName = $this->getSiteName($db);
+
+        $this->view('store/invoice', ['siteFooter' => $siteFooter, 'siteName' => $siteName, 
+        'itemsArray'=>$itemsInCart, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
  
     }
 

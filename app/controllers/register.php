@@ -43,6 +43,7 @@ class Register extends Controller
         unset($_SESSION['loggedUser']);
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteFooter = $this->getFooter($db);
+        $siteName = $this->getSiteName($db);
 
         $this->serverError = false;
         $this->inputError = false;
@@ -119,7 +120,8 @@ class Register extends Controller
         $this->view('register/index', ['errorPassword' => $this->errorPassword, 'errorLogin' => $this->errorLogin, 
         'errorEmail' => $this->errorEmail, 'emailInput' => $this->emailInput, 'nameInput' => $this->nameInput, 
         'surnameInput' => $this->surnameInput, 'loginInput' => $this->loginInput, 'passwordInput' => $this->passwordInput, 
-        'serverError' => $this->serverError, 'errorName' => $this->errorName, 'errorSurname' => $this->errorSurname, 'siteFooter' => $siteFooter]);
+        'serverError' => $this->serverError, 'errorName' => $this->errorName, 'errorSurname' => $this->errorSurname, 
+        'siteFooter' => $siteFooter, 'siteName' => $siteName]);
     }
 
     private function checkIfUserExists($db){

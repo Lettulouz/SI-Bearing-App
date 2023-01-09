@@ -3,6 +3,7 @@
 
         <title>PHP</title>
         <meta charset="UTF-8">
+        <link rel="icon" type="image" href="<?=MAINPATH?>/resources/shopPhotos/siteicon.png">
         <link rel="stylesheet" href="<?=CUSTOMCSS?>/registerandlogin.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
