@@ -1,6 +1,7 @@
 <!doctype html>
 <html >
   <head>
+  <title>Obsługa sklepu</title>
   <link rel="icon" type="image" href="<?=MAINPATH?>/resources/shopPhotos/siteicon.png">
     <!-- Required meta tags -->
     <meta charset="UTF-8">

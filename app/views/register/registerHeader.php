@@ -1,7 +1,7 @@
 <html>
     <head> 
 
-        <title>PHP</title>
+        <title>Rejestracja</title>
         <meta charset="UTF-8">
         <link rel="icon" type="image" href="<?=MAINPATH?>/resources/shopPhotos/siteicon.png">
         <link rel="stylesheet" href="<?=CUSTOMCSS?>/registerandlogin.css">
