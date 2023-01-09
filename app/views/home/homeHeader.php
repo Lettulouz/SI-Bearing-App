@@ -2,6 +2,7 @@
     <head> 
 
         <title>Strona główna</title>
+        <link rel="icon" type="image" href="<?=MAINPATH?>/resources/shopPhotos/siteicon.png">
         <meta charset="UTF-8">
         <link rel="stylesheet" href="<?=CUSTOMCSS?>/styles.css">
         <link href="<?=MAINPATH?>/scss/custom_bootstrap.css" rel="stylesheet">
