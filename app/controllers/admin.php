@@ -2297,7 +2297,31 @@ class Admin extends Controller
 
         if(isset($_POST['reportSub'])){;
             if(!empty($_POST['dateFrom'])&&!empty($_POST['dateTo'])){
-            $amount="dużo";
+            $query="SELECT SUM(amount) FROM itemsinorder iio
+            INNER JOIN orders o on o.id=iio.id_order
+            WHERE orderdate BETWEEN :dateFrom AND :dateTo";
+            $result=$db->prepare($query);
+            $result->bindParam(':dateFrom', $_POST['dateFrom']);
+            $result->bindParam(':dateTo', $_POST['dateTo']);
+            $result->execute();
+            $amount=$result->fetchAll(PDO::FETCH_ASSOC);
+            $amount=$amount[0]['SUM(amount)'];
+            if(empty( $amount)){
+                $amount=0;
+            }
+
+            $query="SELECT SUM(iio.amount*price) FROM itemsinorder iio
+            INNER JOIN orders o on o.id=iio.id_order
+            INNER JOIN items i on i.id=iio.id_item
+            WHERE orderdate BETWEEN :dateFrom AND :dateTo";
+            $result=$db->prepare($query);
+            $result->bindParam(':dateFrom', $_POST['dateFrom']);
+            $result->bindParam(':dateTo', $_POST['dateTo']);
+            $result->execute();
+            
+
+
+
             }
             else{
                 $_SESSION['error_page'] = "sales_report";
