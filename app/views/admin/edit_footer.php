@@ -36,7 +36,7 @@ include 'adm_nav.php';
 </div>
 
 
-<div class="row mx-2">
+<div class="row">
         <div class="col-6">
             <h1 class="text-muted headers-padding ">Edycja stopki</h1>
         </div>

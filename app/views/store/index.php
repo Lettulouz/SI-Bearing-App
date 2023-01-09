@@ -269,7 +269,7 @@
                                     echo "<a href=";
                                     echo ROOT."/store/item/{$item['itemID']}";
                                     echo " >";
-                                    echo "<img src='" . $imagePath . "'  alt='zdjęcie łożyska' class='card-img-top img-thumbnail' 
+                                    echo "<img src='" . $imagePath . "'  alt='Zdjęcie łożyska' class='card-img-top img-thumbnail' 
                                     style='object-fit:contain; height:240px;'>";
                                     echo "</a>";
 
