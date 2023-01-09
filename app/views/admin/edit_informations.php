@@ -21,7 +21,7 @@ include 'adm_nav.php';
                     <div class="col">
                         <div class="form-floating ">
                             <input type="text" class="form-control" id="nameInput" name="siteName" placeholder="Nazwa" 
-                            value="<?=$data['result']['sitename']?>">
+                            value="<?=$data['result']['sitename']?>" required>
                             <label class="form-control-lg lg-custom" for="nameInput">Nazwa strony</label>
                         </div>
                     </div>

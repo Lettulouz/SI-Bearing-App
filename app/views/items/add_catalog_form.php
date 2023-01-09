@@ -14,7 +14,7 @@
                 <div class="row m-2">
                     <div class="col-12">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="catalogNameInput" name="catname" placeholder="Grontex">
+                            <input type="text" class="form-control" id="catalogNameInput" name="catname" placeholder="Grontex" required>
                             <label class="form-control-lg lg-custom" for="catalogNameInput">
                                 Nazwa katalogu
                             </label>
@@ -24,7 +24,7 @@
                 <div class="row m-2">
                     <div class="col-12">
                         <select class="select2 form-select-lg" multiple="multiple" id="item" name="itemcat[]" aria-label="example-xl" 
-                        aria-selected="<?=$data['itemcat']?>" aria-autocomplete="TRUE">
+                        aria-selected="<?=$data['itemcat']?>" aria-autocomplete="TRUE" required>
                             <?php
                                 foreach($data['items'] as $i => $result) {
                                     $temp = "";

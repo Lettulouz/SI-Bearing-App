@@ -9,7 +9,7 @@
                     <div class="col-12">
                         <div class="form-floating">
                             <input type="text" class="form-control" id="heightInput" 
-                            name="manufacturer" placeholder="20" value="<?=$data['manufacturer']?>">
+                            name="manufacturer" placeholder="20" value="<?=$data['manufacturer']?>" required>
                             <label class="form-control-lg lg-custom" for="heightInput">Dodaj producenta</label>
                         </div>
                     </div>

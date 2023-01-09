@@ -272,7 +272,7 @@ include 'adm_nav.php';
                     <button class="btn btn-outline-secondary linkBtn" type="button" id="button-addon2" style="height:55px" data-bs-toggle="modal" data-bs-target="#exampleModal"
                     target="bottomtextpath">Link</button>
                     <input type="hidden" id="bottomtextpath" name="bottomtextpath" value="<?=$data['result']['bottomtextpath']?>">
-                    <input type="hidden" id="defaulttextpath" name="defaulttextpath" value="<?=ROOT?>/specialpage/9">
+                    <input type="hidden" id="defaultbottomtextpath" name="defaultbottomtextpath" value="<?=PUBLICPATH?>/specialpage/9">
                 </div>
             </div>
         </div>

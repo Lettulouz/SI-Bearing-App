@@ -15,7 +15,8 @@
                                     type="text" 
                                     name="email" 
                                     id="email" 
-                                    autocomplete="on"> 
+                                    autocomplete="on"
+                                    required> 
                                 <label id="errorEmailOrLogin"></label>
                             </div>         
                 

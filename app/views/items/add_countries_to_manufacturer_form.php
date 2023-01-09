@@ -15,7 +15,7 @@
                 <div class="row m-2">
                     <div class="col-12">
                         <select class="select2 form-select-lg" id="manufacturerName" name="manufacturerid" 
-                        aria-label="example-xl">
+                        aria-label="example-xl" required>
                         <option></option>
                             <?php
                                 foreach($data['manufacturers'] as $i => $result) {
@@ -30,7 +30,7 @@
                 <div class="row m-2">
                     <div class="col-12">
                         <select class="select2 form-select-lg" multiple id="countries" name="selCountries[]" 
-                        aria-label="example-xl" aria-selected="<?=$data['selCountries']?>" aria-autocomplete="TRUE">
+                        aria-label="example-xl" aria-selected="<?=$data['selCountries']?>" aria-autocomplete="TRUE" required>
                             <?php
                                 foreach($data['countries'] as $i => $result) {
                                     $temp = "";

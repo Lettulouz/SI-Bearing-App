@@ -24,7 +24,7 @@
                 <div class="row m-2">
                     <div class="col">
                         <div class="form-floating ">
-                            <input type="text" class="form-control" id="nameInput" name="name" placeholder="Nazwa">
+                            <input type="text" class="form-control" id="nameInput" name="name" placeholder="Nazwa" required>
                             <label class="form-control-lg lg-custom" for="nameInput">Nazwa</label>
                         </div>
                     </div>
@@ -32,7 +32,7 @@
                 <div class="row m-2">
                     <div class="col">
                         <div class="form-floating">
-                            <input type="number" class="form-control" id="quantityInput" min="0.01" name="price" step="0.01" placeholder="1">
+                            <input type="number" class="form-control" id="quantityInput" min="0.01" name="price" step="0.01" placeholder="1" required>
                             <label class="form-control-lg lg-custom" for="quantityInput">Cena</label>
                         </div>
                     </div>
@@ -40,14 +40,14 @@
                 <div class="row m-2">
                     <div class="col">
                         <div class="form-floating ">
-                            <input type="number" class="form-control" id="quantityInput" min="0"  name="quantity" placeholder="1">
+                            <input type="number" class="form-control" id="quantityInput" min="0"  name="quantity" placeholder="1" required>
                             <label class="form-control-lg lg-custom" for="quantityInput">Ilość</label>
                         </div>
                     </div>
                 </div>
                 <div class="row m-2">
                     <div class="col-12">
-                        <select class="select2 form-control form-select-lg" id="manufacturer" name="manufacturer" aria-label="example-xl" >
+                        <select class="select2 form-control form-select-lg" id="manufacturer" name="manufacturer" aria-label="example-xl" required>
                                 <?php
                                     echo "<option></option>";
                                     foreach($data['items'] as $i => $result) {
@@ -60,7 +60,7 @@
                 <div class="row m-2">
                     <div class="col-12">
                         <select class="select2 form-select-lg" multiple id="categories" name="selCategories[]" 
-                        aria-label="example-xl" aria-selected="<?=$data['selCategories']?>" aria-autocomplete="TRUE">
+                        aria-label="example-xl" aria-selected="<?=$data['selCategories']?>" aria-autocomplete="TRUE" required>
                             <?php
                                 foreach($data['categories'] as $i => $result) {
                                     $temp = "";
@@ -142,7 +142,7 @@
             var html = '';
             html+='<div class="row">';
             html+='<div class="col-12 col-md-5 mb-3">';
-            html+='<select class="select2 form-control selectattr requiredattr form-select-lg" id="attribute_name' + attrNum +  '" aria-label="example-xl" onchange="updateAttrList();">';
+            html+='<select class="select2 form-control selectattr requiredattr form-select-lg" id="attribute_name' + attrNum +  '" aria-label="example-xl" onchange="updateAttrList();" required>';
             html+='<option>';
             html+='</option>';
             tempPossibleOptions.forEach((id) => {
@@ -155,7 +155,7 @@
             html+='</div>';
             html+='<div class="col-8 col-md-5 mb-3">';
             html+='<div class="form-floating">';
-            html+='<input type="text" name="attribute_value' + attrNum + '" id="attribute_value' + attrNum + '" class="form-control requiredattr" placeholder="Wartość" required onkeyup="enableAttrSubmit()" autocomplete="off">';
+            html+='<input type="text" name="attribute_value' + attrNum + '" id="attribute_value' + attrNum + '" class="form-control requiredattr" placeholder="Wartość" required onkeyup="enableAttrSubmit()" autocomplete="off" required>';
             html+='<label class="form-control-lg lg-custom" for="attribute_value'+ attrNum +'">Wartość...</label>';
             html+='</div>';
             html+='</div>';
@@ -213,10 +213,10 @@
             html+='<label class="fw-bold">Tytuł</label>';
            // html+='<input type="text" class="form-control desctitle requireddesc" style="margin-top: 10px" id="descriptionTitle' + descNum  + '" placeholder="Tytuł..." maxlength="50">';
             html+='<textarea class="form-control mt-1 desctitle requireddesc" style="overflow:hidden;"'; 
-            html+='id="descriptionTitle' + descNum + '" name="descriptionTitle' + descNum + '" maxlength="100" placeholder="Tytuł..." rows="1" cols="5"></textarea>';
+            html+='id="descriptionTitle' + descNum + '" name="descriptionTitle' + descNum + '" maxlength="100" placeholder="Tytuł..." rows="1" cols="5" required></textarea>';
             html+='<span class="pull-right mt-1 label label-default spanTitle" id="titleCount_message' + descNum + '"></span>';
             html+='<label class="fw-bold mt-1">Opis</label>';
-            html+='<textarea class="form-control mt-1 desc requireddesc" style="overflow:hidden;" id="description' + descNum + '" name="description' + descNum + '" maxlength="1000" placeholder="Opis..." rows="2" cols="5"></textarea>';
+            html+='<textarea class="form-control mt-1 desc requireddesc" style="overflow:hidden;" id="description' + descNum + '" name="description' + descNum + '" maxlength="1000" placeholder="Opis..." rows="2" cols="5" required></textarea>';
             html+='<span class="pull-right mt-1 label label-default spanDesc" id="count_message' + descNum + '"></span>';
             html+='<button class="btn btn-danger mt-3 remove_desc_btn">-</button>';
             html+='<hr class="divider mt-3">';
