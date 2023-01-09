@@ -16,7 +16,7 @@ include 'adm_nav.php';
                             <div class="form-floating "> 
                                 <input type="text" class="form-control" id="name" name="name" placeholder="a"
                                 style="border:<?php if($data['errorName']) echo "2px solid rgb(255, 0, 0)"; else echo ""?>"
-                                 value="<?=$data['name']?>">
+                                 value="<?=$data['name']?>" required>
                                 <label for="name" id="nameSpan" 
                                 style="color:<?php if($data['errorName']) echo "rgb(255, 0, 0)"; else echo""?>"
                                 >Imię</label>
@@ -29,7 +29,7 @@ include 'adm_nav.php';
                             <div class="form-floating ">
                                 <input type="text" class="form-control" id="surname" name="surname" placeholder="a" value="<?=$data['surname'] ?>"
                                 style="border:<?php if($data['errorSurname']) echo "2px solid rgb(255, 0, 0)"; else echo ""?>"
-                                >
+                                required>
                                 <label for="surname" id="surnameSpan"
                                 style="color:<?php if($data['errorSurname']) echo "rgb(255, 0, 0)"; else echo""?>"
                                 >Nazwisko</label>
@@ -59,7 +59,7 @@ include 'adm_nav.php';
                             <div class="form-floating">
                                 <input type="text" class="form-control" id="login" placeholder="a" name="login" value="<?=$data['login'] ?>"
                                 style="border:<?php if($data['errorLogin']) echo "2px solid rgb(255, 0, 0)"; else echo ""?>" 
-                                >
+                                required>
                                 <label for="login" id="loginSpan"
                                 style="color:<?php if($data['errorLogin']) echo "rgb(255, 0, 0)"; else echo""?>"
                                 >Login</label>

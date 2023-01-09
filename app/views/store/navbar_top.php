@@ -45,8 +45,27 @@
                                 Witaj <?=$data['loggedUser_name']?>!
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <?php if($_SESSION['loggedUser']=="admin"){ ?>
+                                    <li>
+                                        <a class="dropdown-item mt-1" href="<?=PUBLICPATH?>/admin">
+                                            <i class="bi bi-grid-3x3-gap-fill"></i> Panel
+                                        </a>
+                                    </li>
+                                <?php }else if($_SESSION['loggedUser']=="contentmanager"){?>
+                                    <li>
+                                        <a class="dropdown-item mt-1" href="<?=PUBLICPATH?>/manager">
+                                            <i class="bi bi-grid-3x3-gap-fill"></i> Panel
+                                        </a>
+                                    </li>
+                                <?php }else if($_SESSION['loggedUser']=="shopservice"){?>
+                                    <li>
+                                        <a class="dropdown-item mt-1" href="<?=PUBLICPATH?>/shopservice">
+                                            <i class="bi bi-grid-3x3-gap-fill"></i> Panel
+                                        </a>
+                                    </li>
+                                <?php } ?>
                                 <li>
-                                    <a class="dropdown-item" href="<?=ROOT?>/logout">Wyloguj</a>
+                                    <a class="dropdown-item" href="<?=ROOT?>/logout"><i class="bi bi-box-arrow-left"></i> Wyloguj</a>
                                 </li>
                             </ul>
                         </li>

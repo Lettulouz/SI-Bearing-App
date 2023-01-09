@@ -15,7 +15,8 @@
                                     type="password" 
                                     name="password" 
                                     id="password" 
-                                    autocomplete="on"> 
+                                    autocomplete="on"
+                                    required> 
                                 <i 
                                     id="blinkingPassword" 
                                     class='bx bxs-error-circle bx-flip-horizontal bx-burst' 
@@ -28,7 +29,8 @@
                                     style="border:<?php if($data['serverError']) echo "2px solid rgb(255, 0, 0)"; else echo ""?>" 
                                     type="password" 
                                     name="repeatPassword"     
-                                    id="repeatPassword">
+                                    id="repeatPassword"
+                                    required>
                                 <i 
                                     id="blinkingRepeatPassword" 
                                     class='bx bxs-error-circle bx-flip-horizontal bx-burst'

@@ -10,13 +10,13 @@ include 'adm_nav.php';
                 <div class="row m-2">
                     <div class="col-6">
                         <div class="form-floating ">
-                            <input type="text" class="form-control" id="nameInput" name="name" value="<?=$data['name'] ?>">
+                            <input type="text" class="form-control" id="nameInput" name="name" value="<?=$data['name'] ?>" required>
                             <label for="nameInput">Imię</label>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="form-floating ">
-                            <input type="text" class="form-control" id="surnameInput" name="surname" value="<?=$data['surname'] ?>">
+                            <input type="text" class="form-control" id="surnameInput" name="surname" value="<?=$data['surname'] ?>" required>
                             <label for="surnameInput">Nazwisko</label>
                         </div>
                     </div>
@@ -32,7 +32,7 @@ include 'adm_nav.php';
                 <div class="row m-2">
                     <div class="col-12">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="loginInput" name="login" value="<?=$data['login'] ?>">
+                            <input type="text" class="form-control" id="loginInput" name="login" value="<?=$data['login'] ?>" required>
                             <label for="loginInput" >Login</label>
                         </div>
                     </div>
@@ -48,9 +48,10 @@ include 'adm_nav.php';
                 <div class="row m-2">
                     <div class="col-12">
                         <div class="form-floating ">
-                            <select class="form-select" id="roleInput" name="role">                             
+                            <select class="form-select" id="roleInput" name="role" required>                             
                                 <option hidden></option>
                                 <option <?php if ($data['role']=="user") echo "selected " ?>value="user">Użytkownik</option>
+                                <option <?php if ($data['role']=="admin") echo "selected " ?>value="shopservice">Obsługa sklepu</option>
                                 <option <?php if ($data['role']=="manager") echo "selected " ?>value="manager">Menedżer</option>
                                 <option <?php if ($data['role']=="admin") echo "selected " ?>value="admin">Administrator</option>
                             </select>

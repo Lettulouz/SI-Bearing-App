@@ -18,7 +18,8 @@
                                     name="emailOrLogin" 
                                     id="emailOrLogin" 
                                     autocomplete="on"  
-                                    value="<?=$data['emailOrLoginInput']?>"> 
+                                    value="<?=$data['emailOrLoginInput']?>"
+                                    required> 
                                 <i 
                                     id="blinkingEmailOrLogin" 
                                     class='bx bxs-error-circle bx-flip-horizontal bx-burst' 
@@ -32,7 +33,8 @@
                                     style="border:<?php if($data['serverError']) echo "2px solid rgb(255, 0, 0)"; else echo ""?>" 
                                     type="password" 
                                     name="password"     
-                                    id="password">
+                                    id="password"
+                                    required>
                                 <i 
                                     id="blinkingPassword" 
                                     class='bx bxs-error-circle bx-flip-horizontal bx-burst'

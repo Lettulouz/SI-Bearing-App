@@ -1701,17 +1701,7 @@ class Admin extends Controller
                 $item_id=$result->fetch(PDO::FETCH_ASSOC);
                 $item_id=$item_id['id'];
 
-                $imagePathCheck = PHOTOSPATH . "/[" . $item_id. "].png";
 
-                if(file_exists($imagePathCheck)) unlink($imagePathCheck);
-                $path = $_FILES['formFile']['name'];
-                $ext = pathinfo($path, PATHINFO_EXTENSION);
-                $imagename = "[" . $item_id . "]." . $ext;    
-                $tmpname = $_FILES['formFile']['tmp_name'];
-                if (!move_uploaded_file($tmpname, PHOTOSPATH . "/" . $imagename)) {
-                    $_SESSION['error_page'] = "list_of_items";
-                    header("Location:" . ROOT . "/admin/error_page/3");
-                }
 
                 //////////////////////categories//////////////////////////////////////////
                 $categArray = array();
@@ -1761,72 +1751,78 @@ class Admin extends Controller
                     if(!isset($_POST["attribute_name" . $i]) &&!isset($_POST["attribute_value" . $i])&&!isset($_POST["attrId" . $i])){
 
                     }else{
-                        $query="SELECT isrange FROM attributes WHERE id=:attr_id";
-                        $result = $db->prepare($query);
-                        $result->bindParam(':attr_id', $_POST["attribute_name" . $i]);
-                        $result->execute();
-                        $result=$result->fetch(PDO::FETCH_ASSOC); 
-                        $attr_isrange=$result['isrange'];
-                        if($_POST["attrId" . $i] != 0){       
-                            if($attr_isrange == 0){               
-                                $query="UPDATE attributesofitems SET id_attribute=:id_attr, value=:val WHERE id=:id";
-                                $result = $db->prepare($query);
-                                $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
-                                $result->bindParam(':val',$_POST["attribute_value" . $i]);
-                                $result->bindParam(':id',$_POST["attrId" . $i]);
-                                $result->execute();
+                        if(!empty($_POST["attribute_name" . $i])){
+                            $query="SELECT isrange FROM attributes WHERE id=:attr_id";
+                            $result = $db->prepare($query);
+                            $result->bindParam(':attr_id', $_POST["attribute_name" . $i]);
+                            $result->execute();
+                            $result=$result->fetch(PDO::FETCH_ASSOC); 
+                            $attr_isrange=$result['isrange'];
+                            if($_POST["attrId" . $i] != 0){       
+                                if($attr_isrange == 0){               
+                                    $query="UPDATE attributesofitems SET id_attribute=:id_attr, value=:val WHERE id=:id";
+                                    $result = $db->prepare($query);
+                                    $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
+                                    $result->bindParam(':val',$_POST["attribute_value" . $i]);
+                                    $result->bindParam(':id',$_POST["attrId" . $i]);
+                                    $result->execute();
+                                }else{
+                                    $attrValuePost = $_POST["attribute_value" . $i];
+                                    $floatVal = floatval($attrValuePost);
+                                
+                                    $query="UPDATE attributesofitems SET id_attribute=:id_attr, value=:val, valuedecimal=:valuedecimal WHERE id=:id";
+                                    $result = $db->prepare($query);
+                                    $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
+                                    if($floatVal){
+                                        $result->bindParam(':val',$attrValuePost);
+                                        $result->bindParam(':valuedecimal',$attrValuePost);
+                                    }else{
+                                        $attrValuePost = 0;
+                                        $result->bindParam(':val',$attrValuePost);
+                                        $result->bindParam(':valuedecimal',$attrValuePost);
+                                    }
+                                    $result->bindParam(':id',$_POST["attrId" . $i]);
+                                    $result->execute();
+
+                                }
+                                array_push($remainingAttrID, $_POST["attrId".$i]);
                             }else{
-                                $attrValuePost = $_POST["attribute_value" . $i];
-                                $floatVal = floatval($attrValuePost);
-                            
-                                $query="UPDATE attributesofitems SET id_attribute=:id_attr, value=:val, valuedecimal=:valuedecimal WHERE id=:id";
-                                $result = $db->prepare($query);
-                                $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
-                                if($floatVal){
-                                    $result->bindParam(':val',$attrValuePost);
-                                    $result->bindParam(':valuedecimal',$attrValuePost);
-                                }else{
-                                    $attrValuePost = 0;
-                                    $result->bindParam(':val',$attrValuePost);
-                                    $result->bindParam(':valuedecimal',$attrValuePost);
+                                if($attr_isrange == 0){               
+                                    $query="INSERT INTO attributesofitems (id_item, id_attribute, value) VALUES (:id_item, :id_attr, :val)";
+                                    $result = $db->prepare($query);
+                                    $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
+                                    $result->bindParam(':val',$_POST["attribute_value" . $i]);
+                                    $result->bindParam(':id_item',$editId);
+                                    $result->execute();
+                                    $aId = $db->lastInsertId();
+                                    array_push($remainingAttrID, $aId);
+                                }else if($attr_isrange == 1){
+                                    $attrValuePost = $_POST["attribute_value" . $i];
+                                    $floatVal = floatval($attrValuePost);
+
+                                    $query="INSERT INTO attributesofitems (id_item, id_attribute, value, valuedecimal) VALUES (:id_item, :id_attr, :val, :valuedecimal)";
+                                    $result = $db->prepare($query);
+                                    $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
+
+                                    if($floatVal)
+                                    {
+                                        $result->bindParam(':val',$attrValuePost);
+                                        $result->bindParam(':valuedecimal',$attrValuePost);
+                                    }else{
+                                        $attrValuePost = 0;
+                                        $result->bindParam(':val',$attrValuePost);
+                                        $result->bindParam(':valuedecimal',$attrValuePost);
+                                    }
+                                    $result->bindParam(':id_item',$editId);
+                                    $result->execute();
+                                    $aId = $db->lastInsertId();
+                                    array_push($remainingAttrID, $aId);
                                 }
-                                $result->bindParam(':id',$_POST["attrId" . $i]);
-                                $result->execute();
-
                             }
-                            array_push($remainingAttrID, $_POST["attrId".$i]);
-                        }else{
-                            if($attr_isrange == 0){               
-                                $query="INSERT INTO attributesofitems (id_item, id_attribute, value) VALUES (:id_item, :id_attr, :val)";
-                                $result = $db->prepare($query);
-                                $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
-                                $result->bindParam(':val',$_POST["attribute_value" . $i]);
-                                $result->bindParam(':id_item',$editId);
-                                $result->execute();
-                                $aId = $db->lastInsertId();
-                                array_push($remainingAttrID, $aId);
-                            }else if($attr_isrange == 1){
-                                $attrValuePost = $_POST["attribute_value" . $i];
-                                $floatVal = floatval($attrValuePost);
-
-                                $query="INSERT INTO attributesofitems (id_item, id_attribute, value, valuedecimal) VALUES (:id_item, :id_attr, :val, :valuedecimal)";
-                                $result = $db->prepare($query);
-                                $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
-
-                                if($floatVal)
-                                {
-                                    $result->bindParam(':val',$attrValuePost);
-                                    $result->bindParam(':valuedecimal',$attrValuePost);
-                                }else{
-                                    $attrValuePost = 0;
-                                    $result->bindParam(':val',$attrValuePost);
-                                    $result->bindParam(':valuedecimal',$attrValuePost);
-                                }
-                                $result->bindParam(':id_item',$editId);
-                                $result->execute();
-                                $aId = $db->lastInsertId();
-                                array_push($remainingAttrID, $aId);
-                            }
+                        }
+                        else{
+                            $_SESSION['error_page'] = "list_of_items";
+                            header("Location:" . ROOT . "/admin/error_page/1");
                         }
                     }
                 }
@@ -1899,6 +1895,18 @@ class Admin extends Controller
                     $result = $db->prepare($query);
                     $result->bindParam(':id',$element);
                     $result->execute();
+                }
+
+                $imagePathCheck = PHOTOSPATH . "/[" . $item_id. "].png";
+
+                if(file_exists($imagePathCheck)) unlink($imagePathCheck);
+                $path = $_FILES['formFile']['name'];
+                $ext = pathinfo($path, PATHINFO_EXTENSION);
+                $imagename = "[" . $item_id . "]." . $ext;    
+                $tmpname = $_FILES['formFile']['tmp_name'];
+                if (!move_uploaded_file($tmpname, PHOTOSPATH . "/" . $imagename)) {
+                    $_SESSION['error_page'] = "list_of_items";
+                    header("Location:" . ROOT . "/admin/error_page/3");
                 }
                 
                 $_SESSION['success_page'] = "list_of_items";

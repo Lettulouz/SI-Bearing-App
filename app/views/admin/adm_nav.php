@@ -39,7 +39,17 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
 
-                                <li><a class="dropdown-item" href="<?=ROOT?>/admin/logout"> Wyloguj</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="<?=ROOT?>/home">
+                                        <i class="bi bi-house"></i> Strona główna
+                                    </a>
+                                    <a class="dropdown-item" href="<?=ROOT?>/store">
+                                        <i class="bi bi-shop"></i></i> Sklep
+                                    </a>
+                                    <a class="dropdown-item" href="<?=ROOT?>/admin/logout">
+                                        <i class="bi bi-box-arrow-left"></i> Wyloguj
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     </ul>
