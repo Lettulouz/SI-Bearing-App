@@ -3,7 +3,7 @@ include 'adm_nav.php';
 
 ?>
 
-<div class="row mx-2">
+<div class="row">
         <div class="col-6">
             <h1 class="text-muted headers-padding ">Edycja informacji</h1>
         </div>
@@ -49,10 +49,10 @@ include 'adm_nav.php';
 </div>
 
 <script>
-    document.getElementById('users_collapse').classList.add('show');
-    document.getElementById('users_collapse_btn').setAttribute( 'aria-expanded', 'true' );
-    document.getElementById('users_collapse_btn').setAttribute( 'style', 'color:white !important' );
-    document.getElementById('ad_list').setAttribute( 'style', 'color:white !important' );
+    document.getElementById('settings_collapse').classList.add('show');
+    document.getElementById('settings_collapse_btn').setAttribute( 'aria-expanded', 'true' );
+    document.getElementById('settings_collapse_btn').setAttribute( 'style', 'color:white !important' );
+    document.getElementById('infoedit').setAttribute( 'style', 'color:white !important' );
 
     $("#informationsSubmitRemote").click(function(e){ 
         $("#informationsEditSubmit").click();

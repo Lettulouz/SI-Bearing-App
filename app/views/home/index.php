@@ -57,81 +57,107 @@
     </div>
 
     <!-- Products-->
-    <section class="page-section" id="services">
+
         <div class="container mt-5 mb-5">
             <div class="text-center">
                 <h2 class="section-heading text-uppercase">Grontsmar</h2>
                 <h3 class="section-subheading text-muted mb-4">Our products</h3>
             </div>
 
-            <div class="d-flex container justify-content-center align-items-center">
+            <div class="d-block container align-items-center">
                 <div class="row">
-                    <div class="col-12 col-md-6 col-xl-3">
-                        <div class="card h-100 mt-3" style="width: 18rem;">
-                            <a href="https://pl.wikipedia.org/">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Ball_bearing.jpg/1024px-Ball_bearing.jpg"
-                                    class="card-img-top" alt="image" width="286" height="270">
-                            </a>
-                            <div class="card-body" style="min-height:130px;">
-                                <a href="https://pl.wikipedia.org/" class="text-decoration-none text-dark">
-                                    <h5 class="card-title text-center">Bearing z-5r</h5>
-                                    <p class="card-text text-center">Some quick example text.</p>
-                                </a>
+                    <?php if(!empty($data['selectedItems'])) {?>
+                        <?php if(!empty($data['selectedItems'][0]['id'])){ ?> 
+                            <div class="col-12 col-md-6 col-xl-3 mt-3">
+                                <div class="card h-100 mt-3">
+                                    <a href="<?=ROOT?>/store/item/<?=$data['selectedItems'][0]['id']?>">
+                                        <?php if(file_exists(PHOTOSPATH . "/[" . $data['selectedItems'][0]['id'] . "].png")){ ?>
+                                            <img src='<?=APPPATH?>/resources/itemsPhotos/[<?=$data['selectedItems'][0]['id']?>].png' 
+                                            alt='Zdjęcie łożyska' class='card-img-top img-thumbnail' style='object-fit:contain; height:240px;'>
+                                        <?php }else{?>
+                                            <img src='<?=APPPATH?>/resources/itemsPhotos/brak_zdjecia.png' 
+                                            alt='Zdjęcie łożyska' class='card-img-top img-thumbnail' style='object-fit:contain; height:240px;'>
+                                        <?php } ?>
+                                    </a>
+                                    <div class="card-body" style="min-height:130px;">
+                                        <a href="<?=ROOT?>/store/item/<?=$data['selectedItems'][0]['id']?>">
+                                            <h5 class="text-dark text-center"><?=$data['selectedItems'][0]['name']?></h5>
+                                            <h6 class="card-text text-center text-muted fw-light"><?=$data['selectedItems'][0]['manname']?></h6>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        <?php } ?>
+                        <?php if(!empty($data['selectedItems'][1]['id'])){ ?> 
+                            <div class="col-12 col-md-6 col-xl-3 mt-3">
+                                <div class="card h-100 mt-3">
+                                    <a href="<?=ROOT?>/store/item/<?=$data['selectedItems'][1]['id']?>">
+                                        <?php if(file_exists(PHOTOSPATH . "/[" . $data['selectedItems'][1]['id'] . "].png")){ ?>
+                                            <img src='<?=APPPATH?>/resources/itemsPhotos/[<?=$data['selectedItems'][1]['id']?>].png' 
+                                            alt='Zdjęcie łożyska' class='card-img-top img-thumbnail' style='object-fit:contain; height:240px;'>
+                                        <?php }else{?>
+                                            <img src='<?=APPPATH?>/resources/itemsPhotos/brak_zdjecia.png' 
+                                            alt='Zdjęcie łożyska' class='card-img-top img-thumbnail' style='object-fit:contain; height:240px;'>
+                                        <?php } ?>
+                                    </a>
+                                    <div class="card-body" style="min-height:130px;">
+                                        <a href="<?=ROOT?>/store/item/<?=$data['selectedItems'][1]['id']?>">
+                                            <h5 class="text-dark text-center"><?=$data['selectedItems'][1]['name']?></h5>
+                                            <h6 class="card-text text-center text-muted fw-light"><?=$data['selectedItems'][1]['manname']?></h6>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+                        <?php if(!empty($data['selectedItems'][2]['id'])){ ?> 
+                            <div class="col-12 col-md-6 col-xl-3 mt-3">
+                                <div class="card h-100 mt-3">
+                                    <a href="<?=ROOT?>/store/item/<?=$data['selectedItems'][2]['id']?>">
+                                        <?php if(file_exists(PHOTOSPATH . "/[" . $data['selectedItems'][2]['id'] . "].png")){ ?>
+                                            <img src='<?=APPPATH?>/resources/itemsPhotos/[<?=$data['selectedItems'][2]['id']?>].png' 
+                                            alt='Zdjęcie łożyska' class='card-img-top img-thumbnail' style='object-fit:contain; height:240px;'>
+                                        <?php }else{?>
+                                            <img src='<?=APPPATH?>/resources/itemsPhotos/brak_zdjecia.png' 
+                                            alt='Zdjęcie łożyska' class='card-img-top img-thumbnail' style='object-fit:contain; height:240px;'>
+                                        <?php } ?>
+                                    </a>
+                                    <div class="card-body" style="min-height:130px;">
+                                        <a href="<?=ROOT?>/store/item/<?=$data['selectedItems'][2]['id']?>">
+                                            <h5 class="text-dark text-center"><?=$data['selectedItems'][2]['name']?></h5>
+                                            <h6 class="card-text text-center text-muted fw-light"><?=$data['selectedItems'][2]['manname']?></h6>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+                        <?php if(!empty($data['selectedItems'][3]['id'])){ ?> 
+                            <div class="col-12 col-md-6 col-xl-3 mt-3">
+                                <div class="card h-100 mt-3"    >
+                                    <a href="<?=ROOT?>/store/item/<?=$data['selectedItems'][3]['id']?>">
+                                        <?php if(file_exists(PHOTOSPATH . "/[" . $data['selectedItems'][3]['id'] . "].png")){ ?>
+                                            <img src='<?=APPPATH?>/resources/itemsPhotos/[<?=$data['selectedItems'][3]['id']?>].png' 
+                                            alt='Zdjęcie łożyska' class='card-img-top img-thumbnail' style='object-fit:contain; height:240px;'>
+                                        <?php }else{?>
+                                            <img src='<?=APPPATH?>/resources/itemsPhotos/brak_zdjecia.png' 
+                                            alt='Zdjęcie łożyska' class='card-img-top img-thumbnail' style='object-fit:contain; height:240px;'>
+                                        <?php } ?>
+                                    </a>
+                                    <div class="card-body" style="min-height:130px;">
+                                        <a href="<?=ROOT?>/store/item/<?=$data['selectedItems'][3]['id']?>">
+                                            <h5 class="text-dark text-center"><?=$data['selectedItems'][3]['name']?></h5>
+                                            <h6 class="card-text text-center text-muted fw-light"><?=$data['selectedItems'][3]['manname']?></h6>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    <?php } ?>
 
-                        </span>
-                    </div>
-                    <div class="col-12 col-md-6 col-xl-3">
-                        <div class="card h-100 mt-3" style="width: 18rem;">
-                            <a href="https://pl.wikipedia.org/">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Steyr_30302_C_18.JPG/1024px-Steyr_30302_C_18.JPG"
-                                    class="card-img-top" alt="image" width="286" height="270">
-                            </a>
-                            <div class="card-body" style="min-height:130px;">
-                                <a href="https://pl.wikipedia.org/" class="text-decoration-none text-dark">
-                                    <h5 class="card-title text-center">Bearing Z-9667</h5>
-                                    <p class="card-text text-center">Some quick example text.</p>
-                                </a>
-                            </div>
-                        </div>
-                        </span>
-                    </div>
-                    <div class="col-12 col-md-6 col-xl-3">
-                        <div class="card h-100 mt-3" style="width: 18rem;">
-                            <a href="https://pl.wikipedia.org/">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Slewing_bearing.jpg/800px-Slewing_bearing.jpg"
-                                    class="card-img-top" alt="image" width="286" height="270">
-                            </a>
-                            <div class="card-body" style="min-height:130px;">
-                                <a href="https://pl.wikipedia.org/" class="text-decoration-none text-dark">
-                                    <h5 class="card-title text-center">Slewing bearing x-21k</h5>
-                                    <p class="card-text text-center">Some quick example text.</p>
-                                </a>
-                            </div>
-                        </div>
-                        </span>
-                    </div>
-                    <div class="col-12 col-md-6 col-xl-3">
-                        <div class="card h-100 mt-3" style="width: 18rem;">
-                            <a href="https://pl.wikipedia.org/">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/9/9a/Needle_bearing.jpg"
-                                    class="card-img-top" alt="image" width="286" height="270">
-                            </a>
-                            <div class="card-body" style="min-height:130px;">
-                                <a href="https://pl.wikipedia.org/" class="text-decoration-none text-dark">
-                                    <h5 class="card-title text-center">Needle bearing hq-8k</h5>
-                                    <p class="card-text text-center">Some quick example text.</p>
-                                </a>
-                            </div>
-                        </div>
-                        </span>
-                    </div>
                 </div>
             </div>
         </div>
-        </div>
-    </section>
+    </div>
+
 
 </div>
 

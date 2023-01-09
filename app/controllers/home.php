@@ -8,9 +8,42 @@ class Home extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteFooter = $this->getFooter($db);
         $siteName = $this->getSiteName($db);
+        $query = "SELECT COUNT(id) as c FROM items";
+        $result = $db->query($query);
+        $itemsInDb = $result->fetch(PDO::FETCH_ASSOC);
+        $itemsInDb = $itemsInDb['c'];
+
+        $randNumbers = array();
+        
+        $randNumbers = $this->randomGen(0,$itemsInDb-1,4);
+        
+        $query = "SELECT id FROM items";
+        $result = $db->query($query);
+        $allItems = $result->fetchAll(PDO::FETCH_ASSOC);
+
+
+        $inQuery = "(";
+
+        for($i=0;$i<4;$i++){
+            $inQuery .= $allItems[$randNumbers[$i]]['id'] . ",";
+        }
+        $inQuery = rtrim($inQuery, ",");
+        $inQuery .= ")";
+
+        $query= "SELECT i.id, i.name as name, price, m.name as manname
+        FROM items i 
+        INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
+        INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
+        WHERE i.id IN " . $inQuery;
+        $result = $db->query($query);
+        
+        $selectedItems = $result->fetchAll(PDO::FETCH_ASSOC);
+    
         $this->view('home/index', ['siteFooter' => $siteFooter, 'siteName' => $siteName, 
-        'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
+        'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name, 
+        'selectedItems' => $selectedItems]);
     }
+
     private function getFooter($db){
         if(isset($_SESSION['siteFooter'])){
             $result = $_SESSION['siteFooter'];
@@ -32,5 +65,11 @@ class Home extends Controller
             $_SESSION['siteName'] = $result;
         }
         return $result;
+    }
+
+    private function randomGen($min, $max, $quantity) {
+        $numbers = range($min, $max);
+        shuffle($numbers);
+        return array_slice($numbers, 0, $quantity);
     }
 }

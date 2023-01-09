@@ -1,7 +1,8 @@
 <html>
     <head> 
 
-        <title>PHP</title>
+        <title>Błąd!</title>
+        <link rel="icon" type="image" href="<?=MAINPATH?>/resources/shopPhotos/siteicon.png">
         <meta charset="UTF-8">
         <link rel="stylesheet" href="<?=CUSTOMCSS?>/registerandlogin.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
