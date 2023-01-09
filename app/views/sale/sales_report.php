@@ -1,5 +1,6 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
 
+
 <h1 class="text-muted headers-padding">Raporty sprzedaży</h1>
     <hr class="divider mt-0">
         <form method="post" autocomplete="off" class="m-0" action="">
@@ -20,11 +21,42 @@
         </form>
         <div class="container">
             <?php
-            if(isset($_POST['reportSub']))
-            echo "<div class='text-white bg-secondary p-1 mb-2'>
+            if(isset($_POST['reportSub'])){
+
+            echo "
+            <div class='container'>
+            <div class='text-white bg-secondary p-1 mb-3'>
             <h5 class='m-0'>Raport sprzedaży w okresie od ".$_POST['dateFrom']." do ".$_POST['dateTo']."</h5></div>
-            <p>Sprzedane produkty: ".$data['amount']."</p>";
-            
+
+            <table class='table table-striped'>
+                <thead>
+                    <tr>
+                         <th>Przedmiot</th>
+                         <th>Cena</th>
+                         <th>Producent</th>
+                         <th>Kraj</th>
+                         <th>Wartość sprzedaży</th>
+                         <th>Łączna sprzedaż</th>
+                    </tr>
+                </thead>
+                <tbody>";
+                    foreach($data['selling'] as $item){
+                        echo "<tr>
+                        <td>{$item['item']}</td>
+                        <td>{$item['price']}</td>
+                        <td>{$item['mnf']}</td>
+                        <td>{$item['country']}</td>
+                        <td>{$item['earnings']}</td>
+                        <td>{$item['sellAmount']}</td>
+                        </tr>";
+                    }
+                echo "</tbody>
+            </table>
+
+            <b class='m-1'>Sprzedane produkty: ".$data['amount']."</b><br>
+            <b class='m-1'>Wartość sprzedaży: ".$data['earnings']." zł</b>
+            </div>";
+                }
             ?>
         </div>
 
@@ -33,4 +65,5 @@
     document.getElementById('users_collapse_btn').setAttribute( 'aria-expanded', 'true' );
     document.getElementById('users_collapse_btn').setAttribute( 'style', 'color:white !important' );
     document.getElementById('sales_report').setAttribute( 'style', 'color:white !important' );
+
     </script>
