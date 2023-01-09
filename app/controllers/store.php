@@ -482,8 +482,14 @@ class Store extends Controller
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteFooter = $this->getFooter($db);
+
+        $query="SELECT * FROM `orders` ";
+
+
+        $Order = $db->query($query);
+        $Order = $Order->fetchAll(PDO::FETCH_ASSOC);
         
-        $this->view('store/order_history', ['siteFooter' => $siteFooter, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
+        $this->view('store/order_history', ['OrderArray'=>$Order, 'siteFooter' => $siteFooter, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
     }
 
     public function invoice(){

@@ -2,7 +2,7 @@
 include 'adm_nav.php';
 ?>
 <script type="text/javascript" src="<?=APPPATH?>/scripts/usersAdm.js"></script>
-<h1 class="text-muted headers-padding">Dodawanie użytkownika</h1> 
+<h1 class="text-muted headers-padding">Dodawanie administratora</h1> 
     <hr class="divider mt-0">
 <div class="container" style="max-width:720px;">
     
@@ -109,7 +109,7 @@ include 'adm_nav.php';
 document.getElementById('users_collapse').classList.add('show');
 document.getElementById('users_collapse_btn').setAttribute('aria-expanded', 'true');
 document.getElementById('users_collapse_btn').setAttribute('style', 'color:white !important');
-document.getElementById('addus').setAttribute('style', 'color:white !important');
+document.getElementById('addad').setAttribute('style', 'color:white !important');
 
 </script>
 
