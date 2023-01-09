@@ -11,10 +11,10 @@
             style="min-height: 400px;">
 
             <h1 class="text-wrap fs-1 text"><?=$data['itemParams']['name']?></h1>
-            <h3 class="text-wrap text">Firma: <?=$data['itemParams']['manname']?></h3>
+            <h4 class="text-wrap text fw-light">Producent: <?=$data['itemParams']['manname']?></h3>
             <h6 class="text-wrap text"><?=$data['itemParams']['price']?> zł</h6>
             <div class="col-sm-6 d-flex flex-column justify-content-center align-items-center">
-                <a href="#" class="btn btn-primary btn-md py-2 px-4 mt-4">Dodaj do koszyka</a>
+                <a href="#" class="btn btn-success py-2 px-4 mt-4">Dodaj do koszyka</a>
             
             </div>
         </div>
