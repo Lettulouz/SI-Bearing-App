@@ -87,10 +87,10 @@
                                     Dodawanie administratorów
                                 </a>
                                 <hr class="divider ">
-                                <a href="<?php echo ROOT."/admin/list_of_content_managers"?>" id="mn_list" class="nav-link text-muted">
+                                <a href="<?php echo ROOT."/admin/list_of_service_accounts"?>" id="sa_list" class="nav-link text-muted">
                                     Lista obsługi sklepu
                                 </a>
-                                <a href="#" class="nav-link text-muted">
+                                <a href="<?php echo ROOT."/admin/add_shop_service"?>" id="addsa" class="nav-link text-muted">
                                     Dodawanie obsługi sklepu
                                 </a>
                                 <hr class="divider">
@@ -212,7 +212,7 @@
                                 <span class="bi bi-chevron-right right-icon ms-auto"></span>
                             </a>
                             <div class="collapse" id="settings_collapse">
-                                <a href="<?php echo ROOT."/admin/edit_information"?>" id="infoedit" class="nav-link text-muted">
+                                <a href="<?php echo ROOT."/admin/edit_informations"?>" id="infoedit" class="nav-link text-muted">
                                     Informacje
                                 </a>
                                 <a href="<?php echo ROOT."/admin/edit_footer"?>" id="footedit" class="nav-link text-muted">
