@@ -564,56 +564,75 @@ class Admin extends Controller
             $role = "user";
             $temporary = 1;
             $authhash = hash('sha256',$name . $lastName . $email . $login . $role . $result['id']);
+            $hashedPassword = hash('sha256', $password);
 
-            if(empty($password)){
-                $length = 10;
-                $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                $charactersLength = strlen($characters);
-                for ($i = 0; $i < $length; $i++) {
-                    $password.= $characters[rand(0, $charactersLength - 1)];
-                }
-            }
-            if(empty($name) || empty($lastName) || empty($email) || empty($login)){
-                $_SESSION['error_page'] = "edit_user";
-                header("Location:" . ROOT . "/admin/error_page/1");
+            if(empty($password)){                
+                $userdata = [
+                    'id' => $id,
+                    'name' => $name,
+                    'lastname' => $lastName,
+                    'email' => $email,
+                    'login' => $login,
+                    'role' => $role,
+                    'temporary' => $temporary,
+                    'authhash' => $authhash
+                ];
             }else{
-                $hashedPassword = hash('sha256', $password);
-
-                $query = "SELECT COUNT(id) AS amount FROM users WHERE login=:login";
-                $result = $db->prepare($query);
-                $result->bindParam(':login', $login);
-                $result->execute();
-                $result = $result->fetch(PDO::FETCH_ASSOC);
-                
-                $query = "SELECT COUNT(id) AS amount FROM users WHERE email=:email";
-                $result2 = $db->prepare($query);
-                $result2->bindParam(':email', $email);
-                $result2->execute();
-                $result2 = $result2->fetch(PDO::FETCH_ASSOC);
-                
-                if($result['amount']>0 || $result2['amount']>0){
-                    $_SESSION['error_page'] = "edit_user";
-                    header("Location:" . ROOT . "/admin/error_page/2");
-                }
-                else{
-                    $query = "INSERT INTO `users` (name, lastname, email, login, password, role, temporary, authhash) 
-                    VALUES (:name, :lastname, :email, :login, :password, :role, :temporary, :authhash);";
-                    $result = $db->prepare($query);
-                    $result->bindParam(':name', $name);
-                    $result->bindParam(':lastname', $lastName);
-                    $result->bindParam(':email', $email);
-                    $result->bindParam(':login', $login);
-                    $result->bindParam(':password', $hashedPassword);
-                    $result->bindParam(':role', $role);
-                    $result->bindParam(':temporary', $temporary);
-                    $result->bindParam(':authhash', $authhash);
-                    $result->execute();
-                     
-                    $_SESSION['success_page'] = "edit_user";
-                    header("Location:" . ROOT . "/admin/success_page/1");
-                }            
+                $userdata = [
+                    'id' => $id,
+                    'name' => $name,
+                    'lastname' => $lastName,
+                    'email' => $email,
+                    'login' => $login,
+                    'password' => $hashedPassword,
+                    'role' => $role,
+                    'temporary' => $temporary,
+                    'authhash' => $authhash
+                ];
             }
-        }
+            if(empty($name) || empty($lastName) || empty($login)){
+                $_SESSION['error_page'] = "edit_user/".$id."";
+                header("Location:" . ROOT . "/admin/error_page/1");
+            }else if(empty($password)){
+                $query = "UPDATE users SET name=:name, lastname=:lastname, email=:email, login=:login, role=:role, temporary=:temporary, authhash=:authhash 
+                WHERE id=:id;";
+                $result = $db->prepare($query);
+                $result->bindParam(':name', $name);
+                $result->bindParam(':lastname', $lastName);
+                $result->bindParam(':email', $email);
+                $result->bindParam(':login', $login);
+                $result->bindParam(':role', $role);
+                $result->bindParam(':temporary', $temporary);
+                $result->bindParam(':authhash', $authhash);
+                $result->execute($userdata);                     
+                    
+            }else{
+                $query = "UPDATE users SET name=:name, lastname=:lastname, email=:email, login=:login, password=:password, role=:role, temporary=:temporary, authhash=:authhash 
+                WHERE id=:id;";
+                $result = $db->prepare($query);
+                $result->bindParam(':name', $name);
+                $result->bindParam(':lastname', $lastName);
+                $result->bindParam(':email', $email);
+                $result->bindParam(':login', $login);
+                $result->bindParam(':password', $hashedPassword);
+                $result->bindParam(':role', $role);
+                $result->bindParam(':temporary', $temporary);
+                $result->bindParam(':authhash', $authhash);
+                $result->execute($userdata);
+            }
+
+            switch($role){
+                case "user": $c="users";
+                break;
+                case "contentmanager": $c="content_managers";
+                break;
+                case "admin": $c="admins";
+                break;
+                case "shopservice": $c="service_accounts";
+            }
+            $_SESSION['success_page'] = "list_of_".$c."";
+            header("Location:" . ROOT . "/admin/success_page/1");            
+            }
         $this->view('admin/edit_user', ['siteLinks'=>$siteLink,'name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'role'=>$role]);
     }
 
@@ -622,7 +641,6 @@ class Admin extends Controller
         $b = "user";
         $this->add($a, $b);
     }
-
 
     /** Function that checks if given password meets the conditions
      * @return Returns boolean, password meets the conditions - true, else - false
