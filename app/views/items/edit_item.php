@@ -302,11 +302,11 @@
             html+='<div class="row mx-2">';
             html+='<input type="hidden" name="descriptionId' + descNum + '" value="0">';
             html+='<label class="fw-bold">Tytuł</label>';
-            html+='<textarea class="form-control mt-1 desctitle requireddesc" style="overflow:hidden;" required'; 
+            html+='<textarea class="form-control mt-1 desctitle requireddesc" style="overflow:hidden; resize:none;" required'; 
             html+='id="descriptionTitle' + descNum + '" name="descriptionTitle' + descNum + '" maxlength="100" placeholder="Tytuł..." rows="1" cols="5"></textarea>';
             html+='<span class="pull-right mt-1 label label-default spanTitle" id="titleCount_message' + descNum + '"></span>';
             html+='<label class="fw-bold mt-1">Opis</label>';
-            html+='<textarea class="form-control mt-1 desc requireddesc" required style="overflow:hidden;" id="description' + descNum + '" name="description' + descNum + '" maxlength="1000" placeholder="Opis..." rows="2" cols="5"></textarea>';
+            html+='<textarea class="form-control mt-1 desc requireddesc" required style="overflow:hidden; resize:none;" id="description' + descNum + '" name="description' + descNum + '" maxlength="1000" placeholder="Opis..." rows="2" cols="5"></textarea>';
             html+='<span class="pull-right mt-1 label label-default spanDesc" id="count_message' + descNum + '"></span>';
             html+='<button class="btn btn-danger mt-3 remove_desc_btn">-</button>';
             html+='<hr class="divider mt-3">';
@@ -329,6 +329,7 @@
             $(inputcmtitle).text('0 / ' + textTitle_max );
 
             inputdesctitle = '#descriptionTitle' + descNum;
+            $(inputdesctitle).attr('style', 'height:auto; resize:none; font-size: 18px; overflow:hidden;');
             var schtitle = $(inputdesctitle).prop('scrollHeight');
             //schtitle = schtitle+10;
             $(inputdesctitle).attr('style', `resize:none; font-size: 18px; height:${schtitle}px; overflow:hidden;`);
@@ -406,9 +407,23 @@
             enableDescSubmit();
         });
 
+        $(document).on('change mouseenter mouseleave paste', '.desctitle', function(e){ 
+            $(this).attr('style', 'height:auto; resize:none; font-size: 18px; overflow:hidden;');
+            var sch = $(this).prop('scrollHeight');
+            $(this).attr('style', `height:${sch}px; resize:none; font-size: 18px; overflow:hidden;`);
+            enableDescSubmit();
+        });
+        $(document).on('change mouseenter mouseleave paste', '.desc', function(e){ 
+            $(this).attr('style', 'height:auto; resize:none; font-size: 18px; overflow:hidden;');
+            var sch = $(this).prop('scrollHeight');
+            $(this).attr('style', `height:${sch}px; resize:none; font-size: 18px; overflow:hidden;`);
+            enableDescSubmit();
+        });
+
         $(document).on('click', '.remove_desc_btn', function(e){ 
             e.preventDefault();
             let row_desc = $(this).parent();
+            
 
             $(row_desc).remove();
             enableDescSubmit();

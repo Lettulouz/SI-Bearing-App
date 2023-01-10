@@ -1947,15 +1947,16 @@ class Admin extends Controller
                 }
 
                 $imagePathCheck = PHOTOSPATH . "/[" . $item_id. "].png";
-
-                if(file_exists($imagePathCheck)) unlink($imagePathCheck);
-                $path = $_FILES['formFile']['name'];
-                $ext = pathinfo($path, PATHINFO_EXTENSION);
-                $imagename = "[" . $item_id . "]." . $ext;    
-                $tmpname = $_FILES['formFile']['tmp_name'];
-                if (!move_uploaded_file($tmpname, PHOTOSPATH . "/" . $imagename)) {
-                    $_SESSION['error_page'] = "list_of_items";
-                    header("Location:" . ROOT . "/admin/error_page/3");
+                if(!empty($_FILES['formFile']['name'])){
+                    if(file_exists($imagePathCheck)) unlink($imagePathCheck);
+                    $path = $_FILES['formFile']['name'];
+                    $ext = pathinfo($path, PATHINFO_EXTENSION);
+                    $imagename = "[" . $item_id . "]." . $ext;    
+                    $tmpname = $_FILES['formFile']['tmp_name'];
+                    if (!move_uploaded_file($tmpname, PHOTOSPATH . "/" . $imagename)) {
+                        $_SESSION['error_page'] = "list_of_items";
+                        header("Location:" . ROOT . "/admin/error_page/3");
+                    }
                 }
                 
                 $_SESSION['success_page'] = "list_of_items";
@@ -2031,11 +2032,11 @@ class Admin extends Controller
         $result->execute();
         $prevDesc = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $imagePath = APPPATH . "/resources/[" . $editId . "].png";
+        $imagePath = APPPATH . "/resources/itemsPhotos/[" . $editId . "].png";
         $imagePathCheck = PHOTOSPATH . "/[" . $editId . "].png";
 
         if(!file_exists($imagePathCheck)){
-            $imagePath = APPPATH . "/resources/brak_zdjecia.png";
+            $imagePath = APPPATH . "/resources/itemsPhotos/brak_zdjecia.png";
         }
 
         $this->view('admin/edit_item_admin', ['siteLinks'=>$siteLink,'items'=>$items, 'attributes' => $attributes, 'categories'=>$categories, 
@@ -2715,13 +2716,13 @@ class Admin extends Controller
             $result->execute();
 
             if(!empty($_FILES['formFile']['name'])){
-                $imagePathCheck = PHOTOSPATH . "/baner.png";
+                $imagePathCheck = PHOTOSPATH . "/upload/baner.png";
                 if(file_exists($imagePathCheck)) unlink($imagePathCheck);
                 $path = $_FILES['formFile']['name'];
                 $ext = pathinfo($path, PATHINFO_EXTENSION);
                 $imagename = "baner." . $ext;
                 $tmpname = $_FILES['formFile']['tmp_name'];
-                if (!move_uploaded_file($tmpname, PHOTOSPATH . "/" . $imagename)) {
+                if (!move_uploaded_file($tmpname, PHOTOSPATH . "/upload/" . $imagename)) {
                     $_SESSION['error_page'] = "list_of_items";
                     header("Location:" . ROOT . "/admin/error_page/3");
                 }  
@@ -2759,12 +2760,22 @@ class Admin extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
 
         $siteLink = $this->getFooter($db);
-
+        $imagePath = MAINPATH . "/resources/shopPhotos/siteicon.png";
         if(isset($_POST['informationsEditSubmit'])){
             $query="UPDATE siteinfo SET sitename=:sitename";
             $result = $db->prepare($query);
             $result->bindParam(':sitename', $_POST['siteName']);
             $result->execute();
+
+            if(!empty($_FILES['formFile']['name'])){
+                $imagePathCheck = MAINPATHLOC . "/resources/shopPhotos/siteicon.png";
+                if(file_exists($imagePathCheck)) unlink($imagePathCheck); 
+                $tmpname = $_FILES['formFile']['tmp_name'];
+                if (!move_uploaded_file($tmpname, MAINPATHLOC . "/resources/shopPhotos/siteicon.png")) {
+                    $_SESSION['error_page'] = "edit_informations";
+                    header("Location:" . ROOT . "/admin/error_page/3");
+                }
+            }
             $_SESSION['success_page'] = "edit_informations";
             header("Location:" . ROOT . "/admin/success_page/2");
         }
@@ -2774,7 +2785,7 @@ class Admin extends Controller
         $result->execute();
         $result=$result->fetch(PDO::FETCH_ASSOC);
 
-        $this->view('admin/edit_informations', ['result' => $result, 'siteLinks'=>$siteLink]);
+        $this->view('admin/edit_informations', ['result' => $result, 'siteLinks'=>$siteLink, 'imagePath' => $imagePath]);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////

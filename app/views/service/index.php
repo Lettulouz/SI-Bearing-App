@@ -26,8 +26,7 @@ include 'srv_nav.php';
              </div>
         </div>
     </div>
-</div>
-            
+</div>        
 
 
 <script>
