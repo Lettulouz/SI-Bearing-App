@@ -227,9 +227,6 @@
             <?php if(!empty($data['numberOfItems'])){ ?>
  
                 <div class="d-flex justify-content-end">
-
-                    
-
                     <div class="mb-3 me-2 me-sm-3 me-md-5 me-lg-7 mt-2">
                         <button type='button' name='lft' class='btn d-inline shadow-none' style="margin-right:3px; margin-top:-2px; border:0px">
                             <i class="bi bi-arrow-left-circle" style="font-size:33px"></i>
@@ -305,13 +302,13 @@
                 ?>
             </div>
             <?php if(!empty($data['numberOfItems'])){ ?>
-                <div class="container d-flex justify-content-end">
-                    <div class="mb-3 me-7">
+                <div class="d-flex justify-content-end">
+                    <div class="mb-3 me-2 me-sm-3 me-md-5 me-lg-7 mt-2">
                         <button type='button' name='lft' class='btn d-inline shadow-none' style="margin-right:3px; margin-top:-2px; border:0px">
                             <i class="bi bi-arrow-left-circle" style="font-size:33px"></i>
                         </button>
-                        <input type='number' style='text-align:center; box-shadow:none; font-size:15px;max-width:75px;' id='page' class='d-inline form-control px-0' 
-                        value='<?=isset($data['limit1']) ? $data['limit1'] : 1 ?>' name='limit1'/>
+                        <input type='number' style='text-align:center; box-shadow:none; font-size:15px;max-width:75px;' id='pageInside' class='d-inline form-control px-0' 
+                        value='<?=isset($data['limit1']) ? $data['limit1'] : 1 ?>' name='limit1' form='submitFilterSearchSort'/>
 
                         <label class="form-control d-inline" style="border:0px;">z <?=$data['numberOfPages']?></label>
                         <button type='button' name='rgt' 
@@ -320,7 +317,7 @@
                             <i class="bi bi-arrow-right-circle" style="font-size:33px"></i>
                         </button>
                     </div>
-                </div> 
+                </div>
             <?php } ?>
         </div>
     <?php } ?>

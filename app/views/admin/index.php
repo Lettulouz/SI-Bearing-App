@@ -148,9 +148,9 @@ include 'adm_nav.php';
                                     $i++;
                                     if($i<5)
                                         echo $item['manufacturer']."-".$item['item']."<br>";
-                                    else if(($i==5 && $data['attributesCount']<=5))
+                                    else if(($i==5 && $data['itemsCount']<=5))
                                         echo $item['manufacturer']."-".$item['item'];
-                                    else if($i==5 && $data['attributesCount']>5)
+                                    else if($i==5 && $data['itemsCount']>5)
                                         echo "...";                                    
                                 }
                                 ?>
