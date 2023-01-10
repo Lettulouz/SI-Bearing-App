@@ -793,9 +793,9 @@ class Admin extends Controller
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);    
 
-        $rmCatPath=ROOT."/admin/remove_attribute";
-        $editCatPath=ROOT."/admin/edit_attribute";
-        $this->view('admin/list_of_attributes', ['siteLinks'=>$siteLink,'attributesArray'=>$result, 'rmpath'=> $rmCatPath, 'editpath'=> $editCatPath]);
+        $rmAttrPath=ROOT."/admin/remove_attribute";
+        $editAttrPath=ROOT."/admin/edit_attribute";
+        $this->view('admin/list_of_attributes', ['siteLinks'=>$siteLink,'attributesArray'=>$result, 'rmpath'=> $rmAttrPath, 'editpath'=> $editAttrPath]);
     }
 
     public function edit_attribute($id_a=NULL){
@@ -816,9 +816,7 @@ class Admin extends Controller
                 $tekst1 = strtolower($attribute);
                 $tekst2 = ucfirst($tekst1);
                 isset($_POST['attributeUnit']) ? $attributeUnit = $_POST['attributeUnit'] : $attributeUnit="";
-                isset($_POST['attributeRange']) ? $attributeRange = 1 : $attributeRange = 0;
                 
-
                 $query="SELECT id, COUNT(id) FROM attributes WHERE name=:attr";
                 $result = $db->prepare($query);
                 $result->bindParam(':attr', $attribute);
@@ -832,7 +830,6 @@ class Admin extends Controller
                     $query = "UPDATE `attributes` 
                         SET name = '$tekst2',
                         unit='$attributeUnit',
-                        isrange='$attributeRange'
                         WHERE id = '$id_a';";
                     $result = $db->prepare($query);
                     $result->execute();
@@ -927,7 +924,6 @@ class Admin extends Controller
         } 
 
         require_once dirname(__FILE__,2) . '/core/database.php';
-        $siteLink = $this->getFooter($db);
 
         $attributeName = "";
         $attributeUnit = "";
@@ -2364,6 +2360,218 @@ class Admin extends Controller
 
 
         $this->view('admin/sales_report', ['siteLinks'=>$siteLink, 'amount'=>$amount, 'earnings'=>$earnings, 'selling'=> $selling]);
+    }
+
+    public function add_shipping_method(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }else{
+                header("Location:" . ROOT . "/home");
+            }
+        }else{
+            header("Location:" . ROOT . "/login");
+        } 
+        $methodName = "";
+        $methodPrice = "";
+        $methodActive = "";
+        if(isset($_SESSION['successOrErrorResponse'])){
+            if($_SESSION['successOrErrorResponse'] == "add_shipping_method"){
+                if(isset($_SESSION['methodName'])) {$methodName = $_SESSION['methodName']; unset($_SESSION['methodName']);} 
+                if(isset($_SESSION['methodPrice'])) {$methodPrice = $_SESSION['methodPrice']; unset($_SESSION['methodPrice']);} 
+                if(isset($_SESSION['methodActive'])) {$methodActive = $_SESSION['methodActive']; unset($_SESSION['methodActive']);} 
+            }
+            unset($_SESSION['successOrErrorResponse']);
+        }
+
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        if(isset($_POST['attrEditSub'])){
+            if(isset($_POST['attributeName'])) $_SESSION['attributeName'] = $_POST['attributeName'];
+            if(isset($_POST['attributeUnit'])) $_SESSION['attributeUnit'] = $_POST['attributeUnit'];
+            if(isset($_POST['attributeRange'])) $_SESSION['attributeRange'] = $_POST['attributeRange'];
+
+            if(!empty($_POST['attributeName'])){
+            
+                $attributeName = $_POST['attributeName'];
+                isset($_POST['attributeUnit']) ? $attributeUnit = $_POST['attributeUnit'] : $attributeUnit="";
+                isset($_POST['attributeRange']) ? $attributeRange = 1 : $attributeRange = 0;
+                
+                $attributeName = strtolower($attributeName);
+                $attributeName = ucfirst($attributeName);
+
+                $query="SELECT COUNT(id) as amount
+                FROM attributes WHERE name=:name";
+                $result = $db->prepare($query);
+                $result->bindParam(':name', $attributeName);
+                $result->execute(); 
+                $result = $result->fetch(PDO::FETCH_ASSOC);
+                if($result['amount']>0){
+                    $_SESSION['error_page'] = "add_attribute";
+                    $_SESSION['attributeName'] = $attributeName;
+                    header("Location:" . ROOT . "/admin/error_page/2");
+                }else{
+                    $query = "INSERT INTO attributes (name, unit, isrange) VALUES ('$attributeName', '$attributeUnit', '$attributeRange');";
+                    $result = $db->prepare($query);
+                    $result->execute();
+                    $_SESSION['success_page'] = "add_attribute";
+                    header("Location:" . ROOT . "/admin/success_page/1");
+                }
+            }else{
+                $_SESSION['error_page'] = "add_attribute";
+                header("Location:" . ROOT . "/admin/error_page/1");
+            }
+        }else{
+            $this->view('admin/add_shipping_method_admin', []);
+        }
+    }
+
+    public function list_of_shipping_methods(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }else{
+                header("Location:" . ROOT . "/home");
+            }
+        }else{
+            header("Location:" . ROOT . "/login");
+        } 
+
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $query="SELECT id, name, price, active FROM shippingmethods";
+        $result = $db->query($query);
+        $result = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        $editMethPath=ROOT."/admin/edit_shipping_method";
+        $this->view('admin/list_of_shipping_methods_admin', ['shippingArray' => $result, 'editpath' => $editMethPath]);
+    }
+
+    public function edit_shipping_method($id_m=NULL){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }else{
+                header("Location:" . ROOT . "/home");
+            }
+        }else{
+            header("Location:" . ROOT . "/login");
+        } 
+        
+        if(isset($id_m)){
+            isset($_POST['edit_method']) ? $method=$_POST['edit_method'] : $method="";
+            if(!empty($method)){
+                require_once dirname(__FILE__,2) . '/core/database.php';
+                isset($_POST['methodPrice']) ? $methodPrice = $_POST['methodPrice'] : $methodPrice=0.00;
+                isset($_POST['methActive']) ? $methActive = 1 : $methActive=0;
+
+                $query="SELECT id, COUNT(id) FROM shippingmethods WHERE name=:meth";
+                $result = $db->prepare($query);
+                $result->bindParam(':meth', $method);
+                $result->execute();
+                $meth_id=$result->fetch(PDO::FETCH_ASSOC);
+                $temp = $meth_id['COUNT(id)'];
+                if($temp>0&&$meth_id['id']!=$id_m){
+                    $_SESSION['error_page'] = "list_of_shipping_methods";
+                    header("Location:" . ROOT . "/admin/error_page/2");
+                }else{
+                    $query = "UPDATE `shippingmethods` 
+                        SET name = '$method',
+                        price='$methodPrice',
+                        active='$methActive'
+                        WHERE id = '$id_m';";
+                    $result = $db->prepare($query);
+                    $result->execute();
+                    $_SESSION['success_page'] = "list_of_shipping_methods";
+                    header("Location:" . ROOT . "/admin/success_page/1");
+                }
+
+            }else{
+                $_SESSION['error_page'] = "list_of_attributes";
+                header("Location:" . ROOT . "/admin/error_page/1");
+            }
+        }else{
+            header("Location:" . ROOT . "/admin/list_of_attributes");
+        }
+    }
+
+    public function add_payment_method(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }else{
+                header("Location:" . ROOT . "/home");
+            }
+        }else{
+            header("Location:" . ROOT . "/login");
+        } 
+
+        $this->view('admin/add_payment_method_admin', []);
+    }
+
+    public function list_of_payment_methods(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }else{
+                header("Location:" . ROOT . "/home");
+            }
+        }else{
+            header("Location:" . ROOT . "/login");
+        } 
+
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $query="SELECT id, name, fee, active FROM paymentmethods";
+        $result = $db->query($query);
+        $result = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        $editMethPath=ROOT."/admin/edit_shipping_method";
+        $this->view('admin/list_of_payment_methods_admin', ['paymentArray' => $result, 'editpath' => $editMethPath]);
+    }
+
+    public function edit_payment_method($id_p=NULL){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }else{
+                header("Location:" . ROOT . "/home");
+            }
+        }else{
+            header("Location:" . ROOT . "/login");
+        } 
+        
+        if(isset($id_p)){
+            isset($_POST['edit_method']) ? $method=$_POST['edit_method'] : $method="";
+            if(!empty($method)){
+                require_once dirname(__FILE__,2) . '/core/database.php';
+                isset($_POST['methodFee']) ? $methodFee = $_POST['methodFee'] : $methodFee=0.00;
+                isset($_POST['methActive']) ? $methActive = 1 : $methActive=0;
+;
+                $query="SELECT id, COUNT(id) FROM paymentmethods WHERE name=:meth";
+                $result = $db->prepare($query);
+                $result->bindParam(':meth', $method);
+                $result->execute();
+                $meth_id=$result->fetch(PDO::FETCH_ASSOC);
+                $temp = $meth_id['COUNT(id)'];
+                if($temp>0&&$meth_id['id']!=$id_p){
+                    $_SESSION['error_page'] = "list_of_payment_methods";
+                    header("Location:" . ROOT . "/admin/error_page/2");
+                }else{
+                    $query = "UPDATE `paymentmethods` 
+                        SET name = '$method',
+                        price='$methodFee',
+                        active='$methActive'
+                        WHERE id = '$id_p';";
+                    $result = $db->prepare($query);
+                    $result->execute();
+                    $_SESSION['success_page'] = "list_of_payment_methods";
+                    header("Location:" . ROOT . "/admin/success_page/1");
+                }
+            }else{
+                $_SESSION['error_page'] = "list_of_attributes";
+                header("Location:" . ROOT . "/admin/error_page/1");
+            }
+        }else{
+            header("Location:" . ROOT . "/admin/list_of_attributes");
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////
