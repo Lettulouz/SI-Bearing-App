@@ -123,37 +123,37 @@ class Admin extends Controller
 
         //////////users info////////////////////
         $query="SELECT Count(login)
-        FROM `users` WHERE role='user'";
+        FROM `users` WHERE role='user' AND active=1";
         $result = $db->query($query);
         $usersCount = $result->fetchAll(PDO::FETCH_ASSOC);
         $usersCount= $usersCount[0]['Count(login)'];
 
         $query="SELECT login
-        FROM `users` WHERE role='user'
+        FROM `users` WHERE role='user' AND active=1
         LIMIT 5";
         $result = $db->query($query);
         $users = $result->fetchAll(PDO::FETCH_ASSOC);
 
         $query="SELECT Count(login)
-        FROM `users` WHERE role='contentmanager'";
+        FROM `users` WHERE role='contentmanager' AND active=1";
         $result = $db->query($query);
         $managersCount = $result->fetchAll(PDO::FETCH_ASSOC);
         $managersCount= $managersCount[0]['Count(login)'];
 
         $query="SELECT login
-        FROM `users` WHERE role='contentmanager'
+        FROM `users` WHERE role='contentmanager' AND active=1
         LIMIT 5";
         $result = $db->query($query);
         $managers = $result->fetchAll(PDO::FETCH_ASSOC);
 
         $query="SELECT Count(login)
-        FROM `users` WHERE role='admin'";
+        FROM `users` WHERE role='admin' AND active=1";
         $result = $db->query($query);
         $adminsCount = $result->fetchAll(PDO::FETCH_ASSOC);
         $adminsCount= $adminsCount[0]['Count(login)'];
 
         $query="SELECT login
-        FROM `users` WHERE role='admin'
+        FROM `users` WHERE role='admin' AND active=1
         LIMIT 5";
         $result = $db->query($query);
         $admins = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -169,7 +169,7 @@ class Admin extends Controller
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
         $query="SELECT Count(name)
-        FROM `items` WHERE i.active=1";
+        FROM `items` WHERE active=1";
         $result = $db->query($query);
         
         $itemsCount = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -546,7 +546,7 @@ class Admin extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
 
-        $query="SELECT id, name, lastName, email, login, password FROM users WHERE role='user' ORDER BY id";
+        $query="SELECT id, name, lastName, email, login, password FROM users WHERE role='user' AND active=1 ORDER BY id";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -2112,7 +2112,7 @@ class Admin extends Controller
         FROM items i 
             INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
             INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-            INNER JOIN countries c ON mc.id_country=c.id";
+            INNER JOIN countries c ON mc.id_country=c.id WHERE i.active=1";
         $result = $db->query($query);
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -2120,19 +2120,19 @@ class Admin extends Controller
         FROM items i 
         INNER JOIN categoriesofitem coi ON i.id=coi.id_item
         INNER JOIN categories c ON coi.id_category=c.id
-        WHERE i.id=:iid";
+        WHERE i.id=:iid AND i.active=1";
 
         $queryCat="SELECT c.name AS catname
         FROM items i 
         INNER JOIN itemsincatalog ic ON i.id=ic.id_item
         INNER JOIN catalog c ON ic.id_catalog=c.id
-        WHERE i.id=:iid";
+        WHERE i.id=:iid  AND i.active=1";
 
         $queryAttr="SELECT a.name AS attrname, ai.value AS aval
         FROM items i 
         INNER JOIN attributesofitems ai ON i.id=ai.id_item
         INNER JOIN attributes a ON ai.id_attribute=a.id
-        WHERE i.id=:iid";
+        WHERE i.id=:iid AND i.active=1";
 
         $categoriesArray=array();
         $catalogArray=array();
