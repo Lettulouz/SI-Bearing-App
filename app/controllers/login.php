@@ -267,6 +267,7 @@ class Login extends Controller
         if(!empty($this->ifUserExist)){
             if($this->ifUserExist['temporary'] == true) $this->errorDuringValidation("*Konto nie zostało aktywowane, sprawdź maila celem jego aktywacji");
             if($this->ifUserExist) $_SESSION['loggedUser_name'] = $this->ifUserExist['name'];
+            if($this->ifUserExist) $_SESSION['loggedUser_id'] = $this->ifUserExist['id'];
             if($this->ifUserExist) {
                 $this->userRole = $this->ifUserExist['role'];
                 $this->userId = $this->ifUserExist['id'];

@@ -45,6 +45,11 @@
                                 Witaj <?=$data['loggedUser_name']?>!
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <li>
+                                        <a class="dropdown-item mt-1" href="<?=PUBLICPATH?>/store/order_history">
+                                            <i class="bi bi-book"></i> Moje zamówienia
+                                        </a>
+                                    </li>
                                 <?php if($_SESSION['loggedUser']=="admin"){ ?>
                                     <li>
                                         <a class="dropdown-item mt-1" href="<?=PUBLICPATH?>/admin">
