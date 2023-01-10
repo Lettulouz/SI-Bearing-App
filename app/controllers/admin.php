@@ -2377,47 +2377,44 @@ class Admin extends Controller
         $methodActive = "";
         if(isset($_SESSION['successOrErrorResponse'])){
             if($_SESSION['successOrErrorResponse'] == "add_shipping_method"){
-                if(isset($_SESSION['methodName'])) {$methodName = $_SESSION['methodName']; unset($_SESSION['methodName']);} 
+                if(isset($_SESSION['methodName'])) {$methodName = $_SESSION['paymentMethodName']; unset($_SESSION['paymentMethodName']);} 
                 if(isset($_SESSION['methodPrice'])) {$methodPrice = $_SESSION['methodPrice']; unset($_SESSION['methodPrice']);} 
-                if(isset($_SESSION['methodActive'])) {$methodActive = $_SESSION['methodActive']; unset($_SESSION['methodActive']);} 
+                if(isset($_SESSION['methodActive'])) {$methodActive = $_SESSION['paymentMethodActive']; unset($_SESSION['paymentMethodActive']);} 
             }
             unset($_SESSION['successOrErrorResponse']);
         }
 
         require_once dirname(__FILE__,2) . '/core/database.php';
-        if(isset($_POST['attrEditSub'])){
-            if(isset($_POST['attributeName'])) $_SESSION['attributeName'] = $_POST['attributeName'];
-            if(isset($_POST['attributeUnit'])) $_SESSION['attributeUnit'] = $_POST['attributeUnit'];
-            if(isset($_POST['attributeRange'])) $_SESSION['attributeRange'] = $_POST['attributeRange'];
+        if(isset($_POST['addpaymeth'])){
+            if(isset($_POST['methodName'])) $_SESSION['paymentMethodName'] = $_POST['methodName'];
+            if(isset($_POST['methodPrice'])) $_SESSION['methodPrice'] = $_POST['methodPrice'];
+            if(isset($_POST['methodActive'])) $_SESSION['paymentMethodActive'] = $_POST['methodActive'];
 
-            if(!empty($_POST['attributeName'])){
+            if(!empty($_POST['methodName'])){
             
-                $attributeName = $_POST['attributeName'];
-                isset($_POST['attributeUnit']) ? $attributeUnit = $_POST['attributeUnit'] : $attributeUnit="";
-                isset($_POST['attributeRange']) ? $attributeRange = 1 : $attributeRange = 0;
-                
-                $attributeName = strtolower($attributeName);
-                $attributeName = ucfirst($attributeName);
+                $methodName = $_POST['methodName'];
+                isset($_POST['methodPrice']) ? $methodPrice = $_POST['methodPrice'] : $methodPrice="";
+                isset($_POST['methodActive']) ? $methodActive = 1 : $methodActive = 0;
 
                 $query="SELECT COUNT(id) as amount
-                FROM attributes WHERE name=:name";
+                FROM shippingmethods WHERE name=:name";
                 $result = $db->prepare($query);
-                $result->bindParam(':name', $attributeName);
+                $result->bindParam(':name', $methodName);
                 $result->execute(); 
                 $result = $result->fetch(PDO::FETCH_ASSOC);
                 if($result['amount']>0){
-                    $_SESSION['error_page'] = "add_attribute";
-                    $_SESSION['attributeName'] = $attributeName;
+                    $_SESSION['error_page'] = "shipping_method";
+                    $_SESSION['methodName'] = $methodName;
                     header("Location:" . ROOT . "/admin/error_page/2");
                 }else{
-                    $query = "INSERT INTO attributes (name, unit, isrange) VALUES ('$attributeName', '$attributeUnit', '$attributeRange');";
+                    $query = "INSERT INTO shippingmethods (name, price, active) VALUES ('$methodName', '$methodPrice', '$methodActive');";
                     $result = $db->prepare($query);
                     $result->execute();
-                    $_SESSION['success_page'] = "add_attribute";
+                    $_SESSION['success_page'] = "shipping_method";
                     header("Location:" . ROOT . "/admin/success_page/1");
                 }
             }else{
-                $_SESSION['error_page'] = "add_attribute";
+                $_SESSION['error_page'] = "shipping_method";
                 header("Location:" . ROOT . "/admin/error_page/1");
             }
         }else{
@@ -2436,13 +2433,27 @@ class Admin extends Controller
             header("Location:" . ROOT . "/login");
         } 
 
+        $shippingOnlyActive = 1;
+        if(isset($_POST['onlyActiveSubmit'])){
+            if(!isset($_POST['onlyActive']))
+                $shippingOnlyActive = 0;
+        }
         require_once dirname(__FILE__,2) . '/core/database.php';
-        $query="SELECT id, name, price, active FROM shippingmethods";
-        $result = $db->query($query);
-        $result = $result->fetchAll(PDO::FETCH_ASSOC);
+        if($shippingOnlyActive==1){        
+            $query="SELECT id, name, price, active FROM shippingmethods WHERE active=1";
+            $result = $db->query($query);
+            $result = $result->fetchAll(PDO::FETCH_ASSOC);
+        }else{
+            $query="SELECT id, name, price, active FROM shippingmethods";
+            $result = $db->query($query);
+            $result = $result->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        
 
         $editMethPath=ROOT."/admin/edit_shipping_method";
-        $this->view('admin/list_of_shipping_methods_admin', ['shippingArray' => $result, 'editpath' => $editMethPath]);
+        $this->view('admin/list_of_shipping_methods_admin', ['shippingArray' => $result, 'editpath' => $editMethPath,  
+        'shippingOnlyActive' =>$shippingOnlyActive]);
     }
 
     public function edit_shipping_method($id_m=NULL){
@@ -2481,7 +2492,7 @@ class Admin extends Controller
                     $result = $db->prepare($query);
                     $result->execute();
                     $_SESSION['success_page'] = "list_of_shipping_methods";
-                    header("Location:" . ROOT . "/admin/success_page/1");
+                    header("Location:" . ROOT . "/admin/success_page/2");
                 }
 
             }else{
@@ -2503,8 +2514,54 @@ class Admin extends Controller
         }else{
             header("Location:" . ROOT . "/login");
         } 
+        $methodName = "";
+        $methodFee = "";
+        $methodActive = "";
+        if(isset($_SESSION['successOrErrorResponse'])){
+            if($_SESSION['successOrErrorResponse'] == "add_shipping_method"){
+                if(isset($_SESSION['methodName'])) {$methodName = $_SESSION['paymentMethodName']; unset($_SESSION['paymentMethodName']);} 
+                if(isset($_SESSION['methodFee'])) {$methodFee = $_SESSION['methodFee']; unset($_SESSION['methodFee']);} 
+                if(isset($_SESSION['methodActive'])) {$methodActive = $_SESSION['paymentMethodActive']; unset($_SESSION['paymentMethodActive']);} 
+            }
+            unset($_SESSION['successOrErrorResponse']);
+        }
 
-        $this->view('admin/add_payment_method_admin', []);
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        if(isset($_POST['addpaymeth'])){
+            if(isset($_POST['methodName'])) $_SESSION['paymentMethodName'] = $_POST['methodName'];
+            if(isset($_POST['methodFee'])) $_SESSION['methodFee'] = $_POST['methodFee'];
+            if(isset($_POST['methodActive'])) $_SESSION['paymentMethodActive'] = $_POST['methodActive'];
+
+            if(!empty($_POST['methodName'])){
+            
+                $methodName = $_POST['methodName'];
+                isset($_POST['methodFee']) ? $methodFee = $_POST['methodFee'] : $methodFee="";
+                isset($_POST['methodActive']) ? $methodActive = 1 : $methodActive = 0;
+
+                $query="SELECT COUNT(id) as amount
+                FROM paymentmethods WHERE name=:name";
+                $result = $db->prepare($query);
+                $result->bindParam(':name', $methodName);
+                $result->execute(); 
+                $result = $result->fetch(PDO::FETCH_ASSOC);
+                if($result['amount']>0){
+                    $_SESSION['error_page'] = "add_payment_method";
+                    $_SESSION['paymentMethodName'] = $methodName;
+                    header("Location:" . ROOT . "/admin/error_page/2");
+                }else{
+                    $query = "INSERT INTO paymentmethods (name, fee, active) VALUES ('$methodName', '$methodFee', '$methodActive');";
+                    $result = $db->prepare($query);
+                    $result->execute();
+                    $_SESSION['success_page'] = "add_payment_method";
+                    header("Location:" . ROOT . "/admin/success_page/1");
+                }
+            }else{
+                $_SESSION['error_page'] = "add_payment_method";
+                header("Location:" . ROOT . "/admin/error_page/1");
+            }
+        }else{
+            $this->view('admin/add_payment_method_admin', []);
+        }
     }
 
     public function list_of_payment_methods(){
@@ -2518,13 +2575,25 @@ class Admin extends Controller
             header("Location:" . ROOT . "/login");
         } 
 
+        $paymentOnlyActive = 1;
+        if(isset($_POST['onlyActiveSubmit'])){
+            if(isset($_POST['onlyActive']))
+                $paymentOnlyActive = 0;
+        }
         require_once dirname(__FILE__,2) . '/core/database.php';
-        $query="SELECT id, name, fee, active FROM paymentmethods";
-        $result = $db->query($query);
-        $result = $result->fetchAll(PDO::FETCH_ASSOC);
+        if($paymentOnlyActive==1){        
+            $query="SELECT id, name, fee, active FROM paymentmethods WHERE active=1";
+            $result = $db->query($query);
+            $result = $result->fetchAll(PDO::FETCH_ASSOC);
+        }else{
+            $query="SELECT id, name, fee, active FROM paymentmethods";
+            $result = $db->query($query);
+            $result = $result->fetchAll(PDO::FETCH_ASSOC);
+        }
 
-        $editMethPath=ROOT."/admin/edit_shipping_method";
-        $this->view('admin/list_of_payment_methods_admin', ['paymentArray' => $result, 'editpath' => $editMethPath]);
+        $editMethPath=ROOT."/admin/edit_payment_method";
+        $this->view('admin/list_of_payment_methods_admin', ['paymentArray' => $result, 'editpath' => $editMethPath, 
+        'paymentOnlyActive' =>$paymentOnlyActive]);
     }
 
     public function edit_payment_method($id_p=NULL){
@@ -2557,13 +2626,13 @@ class Admin extends Controller
                 }else{
                     $query = "UPDATE `paymentmethods` 
                         SET name = '$method',
-                        price='$methodFee',
+                        fee='$methodFee',
                         active='$methActive'
                         WHERE id = '$id_p';";
                     $result = $db->prepare($query);
                     $result->execute();
                     $_SESSION['success_page'] = "list_of_payment_methods";
-                    header("Location:" . ROOT . "/admin/success_page/1");
+                    header("Location:" . ROOT . "/admin/success_page/2");
                 }
             }else{
                 $_SESSION['error_page'] = "list_of_attributes";
