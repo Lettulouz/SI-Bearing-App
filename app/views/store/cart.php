@@ -40,6 +40,7 @@
                                                     </td>
                                                     <td> 
                                                         <input class='form-control' name='{$item['itemID']}' step='0.01' type='number' value=1>
+                                                    </td>
                                                     <td>
                                                         <div class='price-wrap'> <var class='price' id='{$item['itemID']}'></var> <small class='text-muted'>{$item['itemPrice']} zł każdy </small> </div>
                                                     </td>
@@ -102,7 +103,6 @@
         var number = parseFloat($(this).val());
         let valueAndAmount = sessionStorage.getItem(jQuery(this).attr("name")).split("-");
 
-        console.log(valueAndAmount[3])
         if (valueAndAmount[3] == '1' && number % 1 > 0)
             number = Math.trunc(number * 100) / 100;
         else

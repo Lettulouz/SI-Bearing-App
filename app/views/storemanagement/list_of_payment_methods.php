@@ -67,14 +67,6 @@
                             <div class='hidTab collapse container' id='row".$i."'>
                             <form  method='POST' class='form-inline row p-1' action ='".$editPath."/".$id."'>
                             <div class='d-flex justify-content-end'>                                                 
-
-                            <div class='col-md-2 col-sm-3 col-3 mx-2'>
-                                <input type='text' name='edit_method' class='form-control ' value='{$method['name']}' placeholder='metoda'/>
-                            </div>
-                            <div class='col-lg-1 col-sm-2 col-3 mx-2'>
-                                <input type='text' name='methodFee' class='form-control ' value='{$method['fee']}' placeholder='cena'/>   
-                            </div>
-
                             <div class='form-check form-switch me-3'>
                             <label class='form-check-label d-none d-sm-inline-block' 
                             style='margin-top: 5px; margin-left: 5px; margin-right: 10px; font-weight: bold; font-size:18px' 

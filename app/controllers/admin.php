@@ -2468,37 +2468,18 @@ class Admin extends Controller
         } 
         
         if(isset($id_m)){
-            isset($_POST['edit_method']) ? $method=$_POST['edit_method'] : $method="";
-            if(!empty($method)){
-                require_once dirname(__FILE__,2) . '/core/database.php';
-                isset($_POST['methodPrice']) ? $methodPrice = $_POST['methodPrice'] : $methodPrice=0.00;
-                isset($_POST['methActive']) ? $methActive = 1 : $methActive=0;
 
-                $query="SELECT id, COUNT(id) FROM shippingmethods WHERE name=:meth";
-                $result = $db->prepare($query);
-                $result->bindParam(':meth', $method);
-                $result->execute();
-                $meth_id=$result->fetch(PDO::FETCH_ASSOC);
-                $temp = $meth_id['COUNT(id)'];
-                if($temp>0&&$meth_id['id']!=$id_m){
-                    $_SESSION['error_page'] = "list_of_shipping_methods";
-                    header("Location:" . ROOT . "/admin/error_page/2");
-                }else{
-                    $query = "UPDATE `shippingmethods` 
-                        SET name = '$method',
-                        price='$methodPrice',
-                        active='$methActive'
-                        WHERE id = '$id_m';";
-                    $result = $db->prepare($query);
-                    $result->execute();
-                    $_SESSION['success_page'] = "list_of_shipping_methods";
-                    header("Location:" . ROOT . "/admin/success_page/2");
-                }
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        isset($_POST['methActive']) ? $methActive = 1 : $methActive=0;
 
-            }else{
-                $_SESSION['error_page'] = "list_of_attributes";
-                header("Location:" . ROOT . "/admin/error_page/1");
-            }
+        $query = "UPDATE `shippingmethods` 
+            SET active='$methActive'
+            WHERE id = '$id_m';";
+        $result = $db->prepare($query);
+        $result->execute();
+        $_SESSION['success_page'] = "list_of_shipping_methods";
+        header("Location:" . ROOT . "/admin/success_page/2");
+        
         }else{
             header("Location:" . ROOT . "/admin/list_of_attributes");
         }
@@ -2608,36 +2589,22 @@ class Admin extends Controller
         } 
         
         if(isset($id_p)){
-            isset($_POST['edit_method']) ? $method=$_POST['edit_method'] : $method="";
-            if(!empty($method)){
-                require_once dirname(__FILE__,2) . '/core/database.php';
-                isset($_POST['methodFee']) ? $methodFee = $_POST['methodFee'] : $methodFee=0.00;
-                isset($_POST['methActive']) ? $methActive = 1 : $methActive=0;
-;
-                $query="SELECT id, COUNT(id) FROM paymentmethods WHERE name=:meth";
-                $result = $db->prepare($query);
-                $result->bindParam(':meth', $method);
-                $result->execute();
-                $meth_id=$result->fetch(PDO::FETCH_ASSOC);
-                $temp = $meth_id['COUNT(id)'];
-                if($temp>0&&$meth_id['id']!=$id_p){
-                    $_SESSION['error_page'] = "list_of_payment_methods";
-                    header("Location:" . ROOT . "/admin/error_page/2");
-                }else{
-                    $query = "UPDATE `paymentmethods` 
-                        SET name = '$method',
-                        fee='$methodFee',
-                        active='$methActive'
-                        WHERE id = '$id_p';";
-                    $result = $db->prepare($query);
-                    $result->execute();
-                    $_SESSION['success_page'] = "list_of_payment_methods";
-                    header("Location:" . ROOT . "/admin/success_page/2");
-                }
-            }else{
-                $_SESSION['error_page'] = "list_of_attributes";
-                header("Location:" . ROOT . "/admin/error_page/1");
-            }
+            
+         
+            require_once dirname(__FILE__,2) . '/core/database.php';
+            isset($_POST['methActive']) ? $methActive = 1 : $methActive=0;
+    
+           
+            $query = "UPDATE `paymentmethods` 
+                SET name = 
+                active='$methActive'
+                WHERE id = '$id_p';";
+            $result = $db->prepare($query);
+            $result->execute();
+            $_SESSION['success_page'] = "list_of_payment_methods";
+            header("Location:" . ROOT . "/admin/success_page/2");
+            
+         
         }else{
             header("Location:" . ROOT . "/admin/list_of_attributes");
         }
