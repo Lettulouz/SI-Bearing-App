@@ -40,7 +40,7 @@ include 'adm_nav.php';
                 <div class="row m-2">
                     <div class="col-12">
                         <div class="form-floating ">
-                            <input type="text" class="form-control" id="passInput" name="pass" value="<?=$data['pass'] ?>">
+                            <input type="text" class="form-control" id="passInput" name="pass" value="">
                             <label for="passInput" >Hasło</label> 
                         </div>
                     </div>
@@ -64,7 +64,8 @@ include 'adm_nav.php';
                         <button type="submit" class="btn btn-primary btn-lg float-end" name="senduser">Zapisz zmiany</button>
                     </div>
                 </div>
-            </div>          
+            </div> 
+        </div>       
     </form>
 </div>
 

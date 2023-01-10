@@ -120,22 +120,6 @@ include 'adm_nav.php';
                         </a>
                     </div>
                 </div>
-                <div class="col-12 col-sm-6 col-xl-4 mb-3">
-                    <div class="card text-white bg-custom-2 h-100">
-                        <div class="card-header">
-                            <i class="bi bi-cart4"></i>&nbspZamówienia
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">Zamówień: [ilość]</h5>
-                            <p class="card-text">Zamówień w ciągu ostanich 7 dni: </p>
-                        </div>
-                        <a href=<?php echo ROOT."/admin/list_of_orders"?> id="orders_lists" class="nav-link text-white p-0">
-                            <div class="card-footer p-3">
-                                Przeglądaj zamówienia
-                            </div>
-                        </a>
-                    </div>
-                </div>
             </div>
         </div>
         <!-- Second row on xl -->
@@ -312,7 +296,7 @@ include 'adm_nav.php';
                 </div>  
             </div>
         </div>
-        <!-- Third row on xl -->
+    <!-- Third row on xl -->
         <p class="mb-0">
             <a class="text-muted small fw-bold text-uppercase text-decoration-none dash-list"
                 data-bs-toggle="collapse" href="#dashcollapse3" role="button" aria-expanded="true" aria-controls="dashcollapse3">Podstrony
@@ -320,6 +304,65 @@ include 'adm_nav.php';
             </a>
         </p>
         <div class="collapse collapse show" id="dashcollapse3">
+            <div class="row">
+                <div class="col-12 col-sm-6 col-xl-4 mb-3">
+                    <div class="card text-white bg-custom-2 h-100">
+                        <div class="card-header">
+                            <i class="bi bi-cart4"></i>&nbspZamówienia
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Zamówień: [ilość]</h5>
+                            <p class="card-text">Zamówień w ciągu ostanich 7 dni: </p>
+                        </div>
+                        <a href=<?php echo ROOT."/admin/list_of_orders"?> id="orders_lists" class="nav-link text-white p-0">
+                            <div class="card-footer p-3">
+                                Przeglądaj zamówienia
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-xl-4 mb-3">
+                    <div class="card text-white bg-custom-18 h-100">
+                        <div class="card-header">
+                            <i class="bi bi-cart4"></i>&nbspMetody płatności
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Dodanych metod płatności: [ilość]</h5>
+                            <p class="card-text text-truncate">ciąg rekordów</p>
+                        </div>
+                        <a href=<?php echo ROOT."/admin/list_of_orders"?> id="orders_lists" class="nav-link text-white p-0">
+                            <div class="card-footer p-3">
+                                Edytuj metody płatności
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-xl-4 mb-3">
+                    <div class="card text-white bg-custom-19 h-100">
+                        <div class="card-header">
+                            <i class="bi bi-cart4"></i>&nbspMetody wysyłki
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title text-truncate">Dodanych metod wysyłki: [ilość]</h5>
+                        </div>
+                        <a href=<?php echo ROOT."/admin/list_of_orders"?> id="orders_lists" class="nav-link text-white p-0">
+                            <div class="card-footer p-3">
+                                Edytuj metody wysyłki
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fourth row on xl -->
+        <p class="mb-0">
+            <a class="text-muted small fw-bold text-uppercase text-decoration-none dash-list"
+                data-bs-toggle="collapse" href="#dashcollapse4" role="button" aria-expanded="true" aria-controls="dashcollapse4">Podstrony
+                <span class="bi bi-chevron-down right-icon ms-auto"></span>
+            </a>
+        </p>
+        <div class="collapse collapse show" id="dashcollapse4">
             <div class="row">
                 <div class="col-12 col-sm-6 col-xl-4 mb-3">
                     <div class="card text-white bg-custom-6 h-100">
@@ -405,15 +448,15 @@ include 'adm_nav.php';
             </div>
         </div>
           
-        <!-- Fourth row on xl -->
+        <!-- Fifth row on xl -->
         <p class="mb-0">
             <a class="text-muted small fw-bold text-uppercase text-decoration-none dash-list"
-            data-bs-toggle="collapse" href="#dashcollapse4" role="button" aria-expanded="true" 
-            aria-controls="dashcollapse4">Ustawienia
+            data-bs-toggle="collapse" href="#dashcollapse5" role="button" aria-expanded="true" 
+            aria-controls="dashcollapse5">Ustawienia
                 <span class="bi bi-chevron-down right-icon ms-auto"></span>
             </a>
         </p> 
-        <div class="collapse collapse show" id="dashcollapse4">
+        <div class="collapse collapse show" id="dashcollapse5">
             <div class="row">
                 <div class="col-12 col-sm-6 col-xl-4 mb-3">
                     <div class="card text-white bg-custom-15 h-100" >

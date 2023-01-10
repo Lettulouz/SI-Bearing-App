@@ -1,5 +1,5 @@
 
-<h1 class="text-muted headers-padding">Lista atrybutów</h1>
+<h1 class="text-muted headers-padding">Lista metod wysyłki</h1>
     <hr class="divider mt-0 ">
     <div class="headers-padding" style="padding-right: 15px;">
     <div class="col-12 col-md-6 col-lg-4">
@@ -12,7 +12,7 @@
             </div>
         </div>
 
-        <?php if(!empty($data['attributesArray'])) {?>
+        <?php if(!empty($data['shippingArray'])) {?>
         <table class="table text-center">
         <thead>
         <tr>
@@ -23,26 +23,22 @@
         </thead>
         <tbody>
         <?php 
-        $attributes = $data['attributesArray'];
-        $rmPath=$data['rmpath'];
+        $methods = $data['shippingArray'];
         $editPath = $data['editpath'];
         $i = 1;
-        foreach($attributes as $attribute) 
+        foreach($methods as $method) 
         {
-            $id = $attribute['id'];
-            $name = $attribute['name'];
+            $id = $method['id'];
+            $name = $method['name'];
             echo 
             "<tr class='tabrow'>
             <td>{$i}</td>   
-            <td>{$attribute['name']}</td>
+            <td>{$method['name']}</td>
             <td class='px-0 mx-0'>
                 <button type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm mx-1 tabBtn' 
                 data-bs-toggle='collapse' data-bs-target='#row".$i."' aria-expanded='false'>
                 <i class='bi-gear-fill'> </i>
                 </button>
-                <a href='".$rmPath."/".$id."' type='button' data-toggle='collapse' class='btn btn-danger d-inline btn-sm mx-1 tabBtn'>
-                <i class='bi bi-trash-fill'> </i>
-                </a>
             </td>
             </tr>";
             echo "<tr>
@@ -54,13 +50,23 @@
                            
 
                             <div class='col-md-2 col-sm-3 col-3 mx-2'>
-                                <input type='text' name='edit_atr' class='form-control ' value='{$attribute['name']}' placeholder='atrybut'/>
+                                <input type='text' name='edit_method' class='form-control ' value='{$method['name']}' placeholder='metoda'/>
                             </div>
                             <div class='col-lg-1 col-sm-2 col-3 mx-2'>
-                                <input type='text' name='attributeUnit' class='form-control ' value='{$attribute['unit']}' placeholder='jednostka'/>   
+                                <input type='text' name='methodPrice' class='form-control ' value='{$method['price']}' placeholder='cena'/>   
                             </div>
 
-                      
+                            <div class='form-check form-switch me-3'>
+                            <label class='form-check-label d-none d-sm-inline-block' 
+                            style='margin-top: 5px; margin-left: 5px; margin-right: 10px; font-weight: bold; font-size:18px' 
+                            for='methActive'>Zakres</label>
+                            <input class='form-check-input methActive' style='height:30px; width:60px;' type='checkbox' 
+                            id='methActive' name='methActive' ";
+                            if($method['active']==1){
+                              echo 'checked';
+                            }
+                            echo">
+                            </div>
                         <input type='submit' class='btn btn-primary  p-1' value='Edytuj' />
                             </div>
                             </div>
@@ -73,15 +79,15 @@
         ?>
         </tbody>
         </table>
-        <?php } else {echo "Brak dodanych atrybutów.";}?>
+        <?php } else {echo "Brak dodanych metod wysyłki.";}?>
         
     </div>
 
 <script>
-    document.getElementById('content_collapse').classList.add('show');
-    document.getElementById('content_collapse_btn').setAttribute( 'aria-expanded', 'true' );
-    document.getElementById('content_collapse_btn').setAttribute( 'style', 'color:white !important' );
-    document.getElementById('attr_list').setAttribute( 'style', 'color:white !important' );
+    document.getElementById('store_collapse').classList.add('show');
+    document.getElementById('store_collapse_btn').setAttribute( 'aria-expanded', 'true' );
+    document.getElementById('store_collapse_btn').setAttribute( 'style', 'color:white !important' );
+    document.getElementById('listspmt').setAttribute( 'style', 'color:white !important' );
 
     $(document).ready(function(){
   $("#searchBox").on("keyup", function() {

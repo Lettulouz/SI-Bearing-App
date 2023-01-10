@@ -500,7 +500,7 @@ class Store extends Controller
         $siteFooter = $this->getFooter($db);   
         $siteName = $this->getSiteName($db);
 
-        $query="SELECT * FROM `orders` ";
+        $query="SELECT * FROM orders";
 
 
         $Order = $db->query($query);

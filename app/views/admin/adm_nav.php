@@ -103,14 +103,7 @@
                                 </a>
                                 <a href="<?php echo ROOT."/admin/add_shop_service"?>" id="addsa" class="nav-link text-muted">
                                     Dodawanie obsługi sklepu
-                                </a>
-                                <hr class="divider">
-                                <a href="<?php echo ROOT."/admin/list_of_orders"?>" id="ord_list" class="nav-link text-muted">
-                                    Zamówienia
-                                </a>
-                                <a href="<?php echo ROOT."/admin/sales_report"?>" id="sales_report" class="nav-link text-muted">
-                                    Raporty sprzedaży
-                                </a>
+                                </a>                      
                             </div>
                         </li>
                         <li class="my-3">
@@ -172,6 +165,38 @@
                                 <a href="<?php echo ROOT."/admin/add_category"?>" id="addcateg" class="nav-link text-muted">
                                     Dodaj kategorię
                                 </a>                        
+                            </div>
+                        </li>
+                        <li class="my-3">
+                            <hr class="dropdown divider">
+                        </li>
+                        <li>
+                            <a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link "
+                            data-bs-toggle="collapse" id="store_collapse_btn" href="#store_collapse" role="button" 
+                            aria-expanded="false" aria-controls="store_collapse">Sklep
+                                <span class="bi bi-chevron-right right-icon ms-auto"></span>
+                            </a>
+                            <div class="collapse" id="store_collapse">
+                                <a href="<?php echo ROOT."/admin/list_of_orders"?>" id="ord_list" class="nav-link text-muted">
+                                    Zamówienia
+                                </a>
+                                <a href="<?php echo ROOT."/admin/sales_report"?>" id="sales_report" class="nav-link text-muted">
+                                    Raporty sprzedaży
+                                </a>
+                                <hr class="divider">
+                                <a href="<?php echo ROOT."/admin/list_of_shipping_methods"?>" id="listspmt" class="nav-link text-muted">
+                                    Lista metod dostawy
+                                </a>
+                                <a href="<?php echo ROOT."/admin/add_shipping_method"?>" id="addspmt" class="nav-link text-muted">
+                                    Dodawanie metod dostawy
+                                </a>
+                                <hr class="divider">          
+                                <a href="<?php echo ROOT."/admin/list_of_payment_methods"?>" id="listpmmt" class="nav-link text-muted">
+                                    Lista metod płatności
+                                </a>
+                                <a href="<?php echo ROOT."/admin/add_payment_method"?>" id="addpmmt" class="nav-link text-muted">
+                                    Dodawanie metod płatności
+                                </a>
                             </div>
                         </li>
                         <li class="my-3">

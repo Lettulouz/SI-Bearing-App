@@ -33,9 +33,9 @@
                         <div class='col-md-12'>
                             <span><strong>Order state ".$OrderArray['orderstate']."</strong></span> <br />
                             Quantity : 2, cost: $323.13 <br />
-                            Order from: ".$OrderArray['shippingform']." <br />
-                            Tracking number: ".$OrderArray['trackingnumber']." <br />
-                            Phonenumber: ".$OrderArray['orderphonenumber']." <br />
+                            Forma dostawy: ".$OrderArray['shippingmethod']." <br />
+                            Numer śledzenia: ".$OrderArray['trackingnumber']." <br />
+                            Numer telefonu: ".$OrderArray['orderphonenumber']." <br />
                         </div>
                         <div class='col-md-12'>order destination: ".$OrderArray['ordercountry'].", ".$OrderArray['ordervoivodeship'].", 
                         ".$OrderArray['ordercity'].", ".$OrderArray['orderpostcode'].", ".$OrderArray['orderstreet'].", ".$OrderArray['orderhomenumber']."</div>

@@ -58,11 +58,11 @@ include 'adm_nav.php';
                         <div class="forms-inputs"> 
                             <div class="form-floating">
                                 <input type="text" class="form-control" id="login" placeholder="a" name="login" value="<?=$data['login'] ?>"
-                                style="border:<?php if($data['errorLogin']) echo "2px solid rgb(255, 0, 0)"; else echo ""?>" 
-                                >
+                                style="border:<?php if($data['errorLogin']) echo "2px solid rgb(255, 0, 0)"; else echo ""?>"         
+                                required>
                                 <label for="login" id="loginSpan"
                                 style="color:<?php if($data['errorLogin']) echo "rgb(255, 0, 0)"; else echo""?>"
-                                required>Login</label>
+                                >Login</label>
                             </div>
                             <label id="errorLogin"  class='errorLabel'><?=$data['errorLogin']?></label>
                         </div>    
