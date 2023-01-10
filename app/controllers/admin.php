@@ -2640,11 +2640,52 @@ class Admin extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
         
-        if(isset($_POST['informationsEditSubmit'])){
+        if(isset($_POST['homeEditSubmit'])){
+
+
+            $query="UPDATE homepageinfo SET icon1=:ico1,
+            title1=:title1, desc1=:desc1, icon2=:ico2,
+            title2=:title2, desc2=:desc2, icon3=:ico3,
+            title3=:title3, desc3=:desc3, youtubeUrl=:link";
+
+            $result= $db->prepare($query);
+            $result->bindParam(':ico1', $_POST['ico1']);
+            $result->bindParam(':title1', $_POST['title1']);
+            $result->bindParam(':desc1', $_POST['brief1']);
+            $result->bindParam(':ico2', $_POST['ico2']);
+            $result->bindParam(':title2', $_POST['title2']);
+            $result->bindParam(':desc2', $_POST['brief2']);
+            $result->bindParam(':ico3', $_POST['ico3']);
+            $result->bindParam(':title3', $_POST['title3']);
+            $result->bindParam(':desc3', $_POST['brief3']);
+            $result->bindParam(':link', $_POST['video']);
+            $result->execute();
+
+            if(!empty($_FILES['formFile']['name'])){
+                $imagePathCheck = PHOTOSPATH . "/baner.png";
+                if(file_exists($imagePathCheck)) unlink($imagePathCheck);
+                $path = $_FILES['formFile']['name'];
+                $ext = pathinfo($path, PATHINFO_EXTENSION);
+                $imagename = "baner." . $ext;
+                $tmpname = $_FILES['formFile']['tmp_name'];
+                if (!move_uploaded_file($tmpname, PHOTOSPATH . "/" . $imagename)) {
+                    $_SESSION['error_page'] = "list_of_items";
+                    header("Location:" . ROOT . "/admin/error_page/3");
+                }  
+            }
+
+            $_SESSION['success_page'] = "edit_home";
+            header("Location:" . ROOT . "/admin/success_page/2");
 
         }
 
-        $this->view('admin/edit_home', ['siteLinks'=>$siteLink]);
+        $query="SELECT * FROM homepageinfo LIMIT 1";
+        $result = $db->prepare($query);
+        $result->execute();
+        $result=$result->fetch(PDO::FETCH_ASSOC);
+
+
+        $this->view('admin/edit_home', ['result'=>$result, 'siteLinks'=>$siteLink]);
     }
     //////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////INFO////////////////////////////////////////////////////////

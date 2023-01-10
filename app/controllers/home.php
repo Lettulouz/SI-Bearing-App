@@ -39,9 +39,14 @@ class Home extends Controller
         
         $selectedItems = $result->fetchAll(PDO::FETCH_ASSOC);
     
+        $query="SELECT * FROM homepageinfo LIMIT 1";
+        $result = $db->prepare($query);
+        $result->execute();
+        $homeData=$result->fetch(PDO::FETCH_ASSOC);
+
         $this->view('home/index', ['siteFooter' => $siteFooter, 'siteName' => $siteName, 
         'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name, 
-        'selectedItems' => $selectedItems]);
+        'selectedItems' => $selectedItems, 'homeData'=>$homeData]);
     }
 
     private function getFooter($db){
