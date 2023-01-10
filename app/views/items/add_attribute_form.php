@@ -8,7 +8,7 @@
                 <div class="row m-2">
                     <div class="col-12">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="heightAttributeName" name="attributeName" placeholder="25" value=<?=$data['attributeName']?> required>
+                            <input type="text" class="form-control" id="heightAttributeName" name="attributeName" placeholder="25" value='<?=$data['attributeName']?>' required>
                             <label class="form-control-lg lg-custom" for="heightAttributeName">Nazwa</label>
                         </div>
                     </div>
@@ -17,7 +17,7 @@
                 <div class="row m-2">
                     <div class="col-12">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="heightAttributeUnit" name="attributeUnit" placeholder="25" value=<?=$data['attributeUnit']?>>
+                            <input type="text" class="form-control" id="heightAttributeUnit" name="attributeUnit" placeholder="25" value='<?=$data['attributeUnit']?>'>
                             <label class="form-control-lg lg-custom" for="heightAttributeUnit">Jednostka</label>
                         </div>
                     </div>

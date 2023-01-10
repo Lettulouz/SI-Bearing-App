@@ -1025,6 +1025,7 @@ class Admin extends Controller
         } 
 
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
 
         $attributeName = "";
         $attributeUnit = "";
