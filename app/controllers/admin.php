@@ -2646,8 +2646,7 @@ class Admin extends Controller
             $query="UPDATE homepageinfo SET icon1=:ico1,
             title1=:title1, desc1=:desc1, icon2=:ico2,
             title2=:title2, desc2=:desc2, icon3=:ico3,
-            title3=:title3, desc3=:desc3, 
-            youtubeUrl=:link";
+            title3=:title3, desc3=:desc3, youtubeUrl=:link";
 
             $result= $db->prepare($query);
             $result->bindParam(':ico1', $_POST['ico1']);
