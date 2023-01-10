@@ -565,7 +565,7 @@ class Admin extends Controller
             $email = $_POST['mail'];
             $login = strtolower($_POST['login']);
             $password = $_POST['pass'];
-            $role = "user";
+            $role = $_POST['role'];
             $temporary = 1;
             $authhash = hash('sha256',$name . $lastName . $email . $login . $role . $result['id']);
             $hashedPassword = hash('sha256', $password);

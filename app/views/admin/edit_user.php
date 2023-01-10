@@ -52,7 +52,7 @@ include 'adm_nav.php';
                                 <option hidden></option>
                                 <option <?php if ($data['role']=="user") echo "selected " ?>value="user">Użytkownik</option>
                                 <option <?php if ($data['role']=="shopservice") echo "selected " ?>value="shopservice">Obsługa sklepu</option>
-                                <option <?php if ($data['role']=="contentmanager") echo "selected " ?>value="manager">Menedżer</option>
+                                <option <?php if ($data['role']=="contentmanager") echo "selected " ?>value="contentmanager">Menedżer</option>
                                 <option <?php if ($data['role']=="admin") echo "selected " ?>value="admin">Administrator</option>
                             </select>
                             <label for="roleInput" >Uprawnienia</label>
