@@ -500,13 +500,15 @@ class Store extends Controller
         $siteFooter = $this->getFooter($db);   
         $siteName = $this->getSiteName($db);
 
-        $query="SELECT * FROM orders";
-
-
-        $Order = $db->query($query);
-        $Order = $Order->fetchAll(PDO::FETCH_ASSOC);
+        isset($_SESSION['loggedUser_id']) ? $id_user=$_SESSION['loggedUser_id'] : $id_user = 0;
+        $query="SELECT o.*, sm.name as smName FROM orders o INNER JOIN shippingmethods sm 
+        ON o.id_shippingmethod=sm.id WHERE id_user=:id_user";
+        $orders = $db->prepare($query);
+        $orders->bindParam(':id_user', $id_user);
+        $orders->execute();
+        $orders = $orders->fetchAll(PDO::FETCH_ASSOC);
         
-        $this->view('store/order_history', ['OrderArray'=>$Order, 'siteName' => $siteName, 
+        $this->view('store/order_history', ['ordersArray'=>$orders, 'siteName' => $siteName, 
         'siteFooter' => $siteFooter, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
     }
 
