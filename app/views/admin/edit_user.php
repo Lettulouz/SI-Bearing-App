@@ -51,8 +51,8 @@ include 'adm_nav.php';
                             <select class="form-select" id="roleInput" name="role" required>                             
                                 <option hidden></option>
                                 <option <?php if ($data['role']=="user") echo "selected " ?>value="user">Użytkownik</option>
-                                <option <?php if ($data['role']=="admin") echo "selected " ?>value="shopservice">Obsługa sklepu</option>
-                                <option <?php if ($data['role']=="manager") echo "selected " ?>value="manager">Menedżer</option>
+                                <option <?php if ($data['role']=="shopservice") echo "selected " ?>value="shopservice">Obsługa sklepu</option>
+                                <option <?php if ($data['role']=="contentmanager") echo "selected " ?>value="manager">Menedżer</option>
                                 <option <?php if ($data['role']=="admin") echo "selected " ?>value="admin">Administrator</option>
                             </select>
                             <label for="roleInput" >Uprawnienia</label>
