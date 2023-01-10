@@ -129,7 +129,7 @@ include 'adm_nav.php';
             <div class="row m-1">
                 <div class="col">
                     <div class="form-floating">
-                        <textarea id="brief3" name="brief" class="form-control" style="overflow:hidden;resize:none; height:244px" maxlength="250"> <?=$data['result']['desc3']?></textarea>
+                        <textarea id="brief3" name="brief3" class="form-control" style="overflow:hidden;resize:none; height:244px" maxlength="250"> <?=$data['result']['desc3']?></textarea>
                         <label class="form-control-lg lg-custom" for="brief">Opis</label>
                     </div>
                 </div>
