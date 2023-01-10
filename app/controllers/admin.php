@@ -2385,6 +2385,9 @@ class Admin extends Controller
         }
 
         require_once dirname(__FILE__,2) . '/core/database.php';
+
+        $siteLink = $this->getFooter($db);
+
         if(isset($_POST['addpaymeth'])){
             if(isset($_POST['methodName'])) $_SESSION['paymentMethodName'] = $_POST['methodName'];
             if(isset($_POST['methodPrice'])) $_SESSION['methodPrice'] = $_POST['methodPrice'];
@@ -2418,7 +2421,7 @@ class Admin extends Controller
                 header("Location:" . ROOT . "/admin/error_page/1");
             }
         }else{
-            $this->view('admin/add_shipping_method_admin', []);
+            $this->view('admin/add_shipping_method_admin', ['siteLinks'=>$siteLink]);
         }
     }
 
@@ -2439,6 +2442,9 @@ class Admin extends Controller
                 $shippingOnlyActive = 0;
         }
         require_once dirname(__FILE__,2) . '/core/database.php';
+
+        $siteLink = $this->getFooter($db);
+
         if($shippingOnlyActive==1){        
             $query="SELECT id, name, price, active FROM shippingmethods WHERE active=1";
             $result = $db->query($query);
@@ -2452,7 +2458,7 @@ class Admin extends Controller
         
 
         $editMethPath=ROOT."/admin/edit_shipping_method";
-        $this->view('admin/list_of_shipping_methods_admin', ['shippingArray' => $result, 'editpath' => $editMethPath,  
+        $this->view('admin/list_of_shipping_methods_admin', ['siteLinks'=>$siteLink, 'shippingArray' => $result, 'editpath' => $editMethPath,  
         'shippingOnlyActive' =>$shippingOnlyActive]);
     }
 
@@ -2527,6 +2533,9 @@ class Admin extends Controller
         }
 
         require_once dirname(__FILE__,2) . '/core/database.php';
+
+        $siteLink = $this->getFooter($db);
+
         if(isset($_POST['addpaymeth'])){
             if(isset($_POST['methodName'])) $_SESSION['paymentMethodName'] = $_POST['methodName'];
             if(isset($_POST['methodFee'])) $_SESSION['methodFee'] = $_POST['methodFee'];
@@ -2560,7 +2569,7 @@ class Admin extends Controller
                 header("Location:" . ROOT . "/admin/error_page/1");
             }
         }else{
-            $this->view('admin/add_payment_method_admin', []);
+            $this->view('admin/add_payment_method_admin', ['siteLinks'=>$siteLink]);
         }
     }
 
@@ -2581,6 +2590,9 @@ class Admin extends Controller
                 $paymentOnlyActive = 0;
         }
         require_once dirname(__FILE__,2) . '/core/database.php';
+
+        $siteLink = $this->getFooter($db);
+
         if($paymentOnlyActive==1){        
             $query="SELECT id, name, fee, active FROM paymentmethods WHERE active=1";
             $result = $db->query($query);
@@ -2592,7 +2604,7 @@ class Admin extends Controller
         }
 
         $editMethPath=ROOT."/admin/edit_payment_method";
-        $this->view('admin/list_of_payment_methods_admin', ['paymentArray' => $result, 'editpath' => $editMethPath, 
+        $this->view('admin/list_of_payment_methods_admin', ['siteLinks'=>$siteLink,'paymentArray' => $result, 'editpath' => $editMethPath, 
         'paymentOnlyActive' =>$paymentOnlyActive]);
     }
 
@@ -2613,7 +2625,6 @@ class Admin extends Controller
                 require_once dirname(__FILE__,2) . '/core/database.php';
                 isset($_POST['methodFee']) ? $methodFee = $_POST['methodFee'] : $methodFee=0.00;
                 isset($_POST['methActive']) ? $methActive = 1 : $methActive=0;
-;
                 $query="SELECT id, COUNT(id) FROM paymentmethods WHERE name=:meth";
                 $result = $db->prepare($query);
                 $result->bindParam(':meth', $method);
@@ -2642,7 +2653,31 @@ class Admin extends Controller
             header("Location:" . ROOT . "/admin/list_of_attributes");
         }
     }
+    //////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////HOME PAGE///////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////// 
+    public function edit_home(){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }
+            else{
+                header("Location:" . ROOT . "/home");
+            }
+        }
+        else{
+            header("Location:" . ROOT . "/login");
+        }
 
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
+        
+        if(isset($_POST['informationsEditSubmit'])){
+
+        }
+
+        $this->view('admin/edit_home', ['siteLinks'=>$siteLink]);
+    }
     //////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////INFO////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////// 
@@ -2660,7 +2695,9 @@ class Admin extends Controller
         }
 
         require_once dirname(__FILE__,2) . '/core/database.php';
-        
+
+        $siteLink = $this->getFooter($db);
+
         if(isset($_POST['informationsEditSubmit'])){
             $query="UPDATE siteinfo SET sitename=:sitename";
             $result = $db->prepare($query);
@@ -2675,7 +2712,7 @@ class Admin extends Controller
         $result->execute();
         $result=$result->fetch(PDO::FETCH_ASSOC);
 
-        $this->view('admin/edit_informations', ['result' => $result]);
+        $this->view('admin/edit_informations', ['result' => $result, 'siteLinks'=>$siteLink]);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////

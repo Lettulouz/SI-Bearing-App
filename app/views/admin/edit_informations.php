@@ -3,7 +3,7 @@ include 'adm_nav.php';
 
 ?>
 
-<div class="row">
+<div class="row mx-0">
         <div class="col-6">
             <h1 class="text-muted headers-padding ">Edycja informacji</h1>
         </div>

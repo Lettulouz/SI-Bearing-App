@@ -249,6 +249,9 @@
                                 <span class="bi bi-chevron-right right-icon ms-auto"></span>
                             </a>
                             <div class="collapse" id="settings_collapse">
+                            <a href="<?php echo ROOT."/admin/edit_home"?>" id="homeedit" class="nav-link text-muted">
+                                    Strona główna
+                                </a>
                                 <a href="<?php echo ROOT."/admin/edit_informations"?>" id="infoedit" class="nav-link text-muted">
                                     Informacje
                                 </a>
