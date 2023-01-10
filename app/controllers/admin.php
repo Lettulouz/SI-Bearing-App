@@ -2107,32 +2107,63 @@ class Admin extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
 
-        $query="SELECT i.id AS iid, i.name AS itemName, m.name AS manufacturerName, 
-        c.name AS manufacturerCountry, i.amount AS amount, i.price AS price
-        FROM items i 
-            INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
-            INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-            INNER JOIN countries c ON mc.id_country=c.id WHERE i.active=1";
-        $result = $db->query($query);
-        $items = $result->fetchAll(PDO::FETCH_ASSOC);
+        isset($_POST['onlyActive']) ? $historyItems = 1 : $historyItems = 0;
 
-        $queryCateg="SELECT c.name AS categname
-        FROM items i 
-        INNER JOIN categoriesofitem coi ON i.id=coi.id_item
-        INNER JOIN categories c ON coi.id_category=c.id
-        WHERE i.id=:iid AND i.active=1";
+        if($historyItems==0){
+            $query="SELECT i.id AS iid, i.name AS itemName, m.name AS manufacturerName, 
+            c.name AS manufacturerCountry, i.amount AS amount, i.price AS price
+            FROM items i 
+                INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
+                INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
+                INNER JOIN countries c ON mc.id_country=c.id WHERE i.active=1";
+            $result = $db->query($query);
+            $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $queryCat="SELECT c.name AS catname
-        FROM items i 
-        INNER JOIN itemsincatalog ic ON i.id=ic.id_item
-        INNER JOIN catalog c ON ic.id_catalog=c.id
-        WHERE i.id=:iid  AND i.active=1";
+            $queryCateg="SELECT c.name AS categname
+            FROM items i 
+            INNER JOIN categoriesofitem coi ON i.id=coi.id_item
+            INNER JOIN categories c ON coi.id_category=c.id
+            WHERE i.id=:iid AND i.active=1";
 
-        $queryAttr="SELECT a.name AS attrname, ai.value AS aval
-        FROM items i 
-        INNER JOIN attributesofitems ai ON i.id=ai.id_item
-        INNER JOIN attributes a ON ai.id_attribute=a.id
-        WHERE i.id=:iid AND i.active=1";
+            $queryCat="SELECT c.name AS catname
+            FROM items i 
+            INNER JOIN itemsincatalog ic ON i.id=ic.id_item
+            INNER JOIN catalog c ON ic.id_catalog=c.id
+            WHERE i.id=:iid  AND i.active=1";
+
+            $queryAttr="SELECT a.name AS attrname, ai.value AS aval
+            FROM items i 
+            INNER JOIN attributesofitems ai ON i.id=ai.id_item
+            INNER JOIN attributes a ON ai.id_attribute=a.id
+            WHERE i.id=:iid AND i.active=1";
+        }else{
+            $query="SELECT i.id AS iid, i.name AS itemName, m.name AS manufacturerName, 
+            c.name AS manufacturerCountry, i.amount AS amount, i.price AS price
+            FROM items i 
+                INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
+                INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
+                INNER JOIN countries c ON mc.id_country=c.id WHERE i.active=0";
+            $result = $db->query($query);
+            $items = $result->fetchAll(PDO::FETCH_ASSOC);
+
+            $queryCateg="SELECT c.name AS categname
+            FROM items i 
+            INNER JOIN categoriesofitem coi ON i.id=coi.id_item
+            INNER JOIN categories c ON coi.id_category=c.id
+            WHERE i.id=:iid AND i.active=0";
+
+            $queryCat="SELECT c.name AS catname
+            FROM items i 
+            INNER JOIN itemsincatalog ic ON i.id=ic.id_item
+            INNER JOIN catalog c ON ic.id_catalog=c.id
+            WHERE i.id=:iid  AND i.active=0";
+
+            $queryAttr="SELECT a.name AS attrname, ai.value AS aval
+            FROM items i 
+            INNER JOIN attributesofitems ai ON i.id=ai.id_item
+            INNER JOIN attributes a ON ai.id_attribute=a.id
+            WHERE i.id=:iid AND i.active=0";
+        }
 
         $categoriesArray=array();
         $catalogArray=array();
@@ -2157,12 +2188,16 @@ class Admin extends Controller
             $result =  $result->fetchAll(PDO::FETCH_ASSOC);
             $attrArray[$id['iid']]= $result;
         }
+
+
+
         
         $editItemPath=ROOT."/admin/edit_item";
         $removeItemPath=ROOT."/admin/remove_item";
         
-        $this->view('admin/list_of_items', ['siteLinks'=>$siteLink,'itemsArray' => $items, 'categoriesArray' => $categoriesArray, 
-        'catalogArray' => $catalogArray, 'attrArray' => $attrArray, 'editItemPath' => $editItemPath, 'removeItemPath' => $removeItemPath]);
+        $this->view('admin/list_of_items', ['siteLinks'=>$siteLink,'itemsArray' => $items, 
+        'categoriesArray' => $categoriesArray, 'catalogArray' => $catalogArray, 'attrArray' => $attrArray, 
+        'editItemPath' => $editItemPath, 'removeItemPath' => $removeItemPath, 'historyItems' => $historyItems]);
     }
 
 
