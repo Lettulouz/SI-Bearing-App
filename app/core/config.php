@@ -36,7 +36,10 @@ define('APPPATH', $appPath);
 
 $rootDir = getcwd();
 $resourcePath = rtrim($rootDir, 'public');
+
 $photosPath = $resourcePath;
+
+define('MAINPATHLOC', $resourcePath);
 
 $photosPath .= "app/resources/itemsPhotos";
 

@@ -59,7 +59,7 @@
                                     <td class="text-end"></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2">Wysyłka <strong id='orderPrice'><?=$data['orderInfo']['shippingPrice'] ?></strong></td>
+                                    <td colspan="2">Wysyłka <strong id='orderPrice'><?=$data['orderInfo']['shippingPrice'] ?> zł</strong></td>
                                     <td class="text-end"></td>
                                 </tr>
                                 <tr class="fw-bold">

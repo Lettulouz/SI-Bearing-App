@@ -511,6 +511,8 @@ class Store extends Controller
         $orders->execute();
         $orders = $orders->fetchAll(PDO::FETCH_ASSOC);
         
+
+        
         $this->view('store/order_history', ['ordersArray'=>$orders, 'siteName' => $siteName, 
         'siteFooter' => $siteFooter, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
     }
@@ -604,8 +606,10 @@ class Store extends Controller
 
         $totalOrderPrice = $result['orderPrice'] +  $result['shippingPrice'];
 
-       // print_r($result);
-      //  die();
+        if(empty($itemsInOrder) || empty($result)){
+            header("Location:" . ROOT . "/store");
+            return;
+        }
 
         $this->view('store/orderview', ['siteFooter' => $siteFooter, 'siteName' => $siteName,
         'itemsArray'=>$itemsInOrder, 'isLogged' => $isLogged,
