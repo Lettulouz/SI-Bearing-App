@@ -7,13 +7,21 @@
         <div class="panel panel-default panel-order">
             <div class="panel-heading">
                 <h1>Historia zamówień</h1>
+                <hr/>
                 <div class="btn-group pull-right">
                     <div class="btn-group">
+
+                        <!-- 
+                        // tutaj był przycisk do filtrów, nie działał 
+                        // nie wiem też, czy chcemyy robić filtrowanie tutaj 
+                        // dlatego go wykomentowałem. Wojtek
+
                         <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">Filter history <i class="fa fa-filter"></i></button>
                         <ul class="dropdown-menu dropdown-menu-right">
                             <li><a href="#">Approved orders</a></li>
                             <li><a href="#">Pending orders</a></li>
                         </ul>
+                        -->
                     </div>
                 </div>
             </div>
@@ -33,11 +41,13 @@
                                         <span><strong>Stan zamówienia: " . $order['orderstate'] . "</strong></span> <br />
                                         Cena: " . $order['price'] . " zł<br />
                                         Forma dostawy: " . $order['smName'] . " <br />
-                                        Numer śledzenia: " . $order['trackingnumber'] . " <br />
+                                        Numer paczki: " . $order['trackingnumber'] . " <br />
                                         Numer telefonu: " . $order['orderphonenumber'] . " <br />
                                     </div>
-                                    <div class='col-md-12'>Adres dostawy: " . $order['ordercountry'] . ", " . $order['ordervoivodeship'] . ", 
-                                    " . $order['ordercity'] . ", " . $order['orderpostcode'] . ", " . $order['orderstreet'] . ", " . $order['orderhomenumber'] . "</div>
+                                    <div class='col-md-12'>Adres dostawy: " . $order['ordercountry'] . ", woj. " . $order['ordervoivodeship'] . ", 
+                                    " . $order['orderpostcode'] . ", " . $order['ordercity'] . " ul. " . $order['orderstreet'] . " " . $order['orderhomenumber'] ."
+                                    <br/> Data złożenia zamówienia: " . $order['orderdate'] . "
+                                    </div>
                                 </div>
                             </div>
                         
