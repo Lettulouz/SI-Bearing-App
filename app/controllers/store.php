@@ -231,10 +231,10 @@ class Store extends Controller
                         $first = substr($first .'-', 0, strpos($first , '-'));
                         $second = substr($second, (strpos($second, '-') ?: 0) + 1);
                         $attrIdLoc = $tableAttr[$k];
-                        if($first != "" && $second == ""){
+                        if($first == "" && $second != ""){
                             $attrQuery .= "AND i.id IN (SELECT id_item FROM attributesofitems 
                             WHERE id_attribute=$attrIdLoc AND valuedecimal<=$second) ";
-                        }else if($second != "" && $first == ""){
+                        }else if($second == "" && $first != ""){
                             $attrQuery .= "AND i.id IN (SELECT id_item FROM attributesofitems 
                             WHERE id_attribute=$attrIdLoc AND valuedecimal>=$first) ";
                         }else if($first != "" && $second != ""){
@@ -265,6 +265,7 @@ class Store extends Controller
             LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
             LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
             WHERE i.name LIKE CONCAT('%', :search, '%')
+            AND i.amount >0
             AND m.id IN ($id_manufacturer)
             AND categ.id IN ($id_category) "
             . $querypricestartend  
@@ -284,6 +285,7 @@ class Store extends Controller
             LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
             LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
             WHERE i.name LIKE CONCAT('%', :search, '%')
+            AND i.amount >0
             AND m.id IN ($id_manufacturer)
             AND categ.id IN ($id_category)
             AND catal.id IN ($id_catalog) "
@@ -293,7 +295,6 @@ class Store extends Controller
             . $sortValueQuery .
             " LIMIT :limit1, 32";
         }
-
         $itemsArr = $db->prepare($query);
         
         if (isset($_POST['checkBoxVarAttributes']) && isset($_POST['arrayOfAttrVal'])) 
@@ -335,6 +336,7 @@ class Store extends Controller
             LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
             LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
             WHERE i.name LIKE CONCAT('%', :search, '%')
+            AND i.amount >0
             AND m.id IN ($id_manufacturer)
             AND categ.id IN ($id_category) " 
             . $querypricestartend 
@@ -353,6 +355,7 @@ class Store extends Controller
             LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
             LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
             WHERE i.name LIKE CONCAT('%', :search, '%')
+            AND i.amount >0
             AND m.id IN ($id_manufacturer)
             AND categ.id IN ($id_category)
             AND catal.id IN ($id_catalog) "
@@ -360,7 +363,7 @@ class Store extends Controller
             " GROUP BY i.id"
             . $sortValueQuery;
         }
-
+        
         $numberOfItems = $db->prepare($query);
 
         if (isset($_POST['checkBoxVarAttributes']) && isset($_POST['arrayOfAttrVal'])) 
@@ -572,11 +575,12 @@ class Store extends Controller
         
         isset($_SESSION['loggedUser_id']) ? $id_user=$_SESSION['loggedUser_id'] : $id_user = 0;
         
-        $query="SELECT o.price as orderprice, i.id as itemID, o.orderdate as orderdate, sm.price as shippingPrice
+        $query="SELECT i.id as itemID, iio.amount as itemAmount, i.price as itemPrice, i.name as itemName, m.name as itemManName
         FROM orders o 
         INNER JOIN itemsinorder iio ON o.id=iio.id_order 
         INNER JOIN items i ON iio.id_item=i.id
-        INNER JOIN shippingmethods sm ON o.id_shippingmethod=sm.id 
+        INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
+        INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
         WHERE o.id=:id_order AND id_user=:id_user";
 
         $itemsInOrder = $db->prepare($query);
@@ -585,13 +589,29 @@ class Store extends Controller
         $itemsInOrder->execute();
         $itemsInOrder = $itemsInOrder->fetchAll(PDO::FETCH_ASSOC);
 
+        $query="SELECT o.orderdate as orderDate, sm.name as shippingName, sm.price as shippingPrice, o.price as orderPrice, o.*
+        FROM orders o 
+        INNER JOIN itemsinorder iio ON o.id=iio.id_order 
+        INNER JOIN items i ON iio.id_item=i.id
+        INNER JOIN shippingmethods sm ON o.id_shippingmethod=sm.id
+        WHERE o.id=:id_order AND id_user=:id_user";
+
+        $result = $db->prepare($query);
+        $result->bindParam(':id_user',$id_user);
+        $result->bindParam(':id_order', $o_id);
+        $result->execute();
+        $result = $result->fetch(PDO::FETCH_ASSOC);
+
+        $totalOrderPrice = $result['orderPrice'] +  $result['shippingPrice'];
+
+       // print_r($result);
+      //  die();
+
         $this->view('store/orderview', ['siteFooter' => $siteFooter, 'siteName' => $siteName,
         'itemsArray'=>$itemsInOrder, 'isLogged' => $isLogged,
-        'loggedUser_name' => $loggedUser_name]);
+        'loggedUser_name' => $loggedUser_name, 'orderInfo' => $result, 'totalOrderPrice'=>$totalOrderPrice]);
  
     }
-
-
 }
 
 ?>

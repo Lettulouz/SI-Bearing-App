@@ -113,7 +113,7 @@
 
             </div>
             <div class="col-lg-6">
-              <h3 class="h6">Dane dostawy</h3>
+              <h3 class="h6 mt-2">Dane dostawy</h3>
               <div class='row'>
                 <div class="col-12 col-md-6 p-1">
                   <input class="form-control form-control-sm" type="text" name="name" placeholder="Imię" required>
@@ -134,7 +134,7 @@
                 <div class="col-12 col-md-6 p-1">
                   <input class="form-control form-control-sm" type="text" name="street" placeholder="Ulica" required>
                 </div>
-                <div class="col-6 col-md-6 p-1">
+                <div class="col-12 col-md-6 p-1">
                   <input class="form-control form-control-sm" type="number" name="housenumber" placeholder="Numer" required>
                 </div>
               </div>
