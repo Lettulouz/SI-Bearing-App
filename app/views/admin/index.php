@@ -299,7 +299,7 @@ include 'adm_nav.php';
     <!-- Third row on xl -->
         <p class="mb-0">
             <a class="text-muted small fw-bold text-uppercase text-decoration-none dash-list"
-                data-bs-toggle="collapse" href="#dashcollapse3" role="button" aria-expanded="true" aria-controls="dashcollapse3">Podstrony
+                data-bs-toggle="collapse" href="#dashcollapse3" role="button" aria-expanded="true" aria-controls="dashcollapse3">Sklep
                 <span class="bi bi-chevron-down right-icon ms-auto"></span>
             </a>
         </p>
@@ -459,8 +459,17 @@ include 'adm_nav.php';
         <div class="collapse collapse show" id="dashcollapse5">
             <div class="row">
                 <div class="col-12 col-sm-6 col-xl-4 mb-3">
+                    <div class="card text-white bg-custom-3 h-100" >
+                        <a href=<?php echo ROOT."/admin/edit_home"?> id="orders_lists" class="nav-link text-white p-0">
+                            <div class="card-footer p-3">
+                                Edytuj stronę główną
+                            </div>
+                        </a>
+                    </div>    
+                </div>  
+                <div class="col-12 col-sm-6 col-xl-4 mb-3">
                     <div class="card text-white bg-custom-15 h-100" >
-                        <a href=<?php echo ROOT."/admin/edit_page/8"?> id="orders_lists" class="nav-link text-white p-0">
+                        <a href=<?php echo ROOT."/admin/edit_informations"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
                                 Edytuj informacje
                             </div>

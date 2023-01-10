@@ -20,6 +20,10 @@ class Admin extends Controller
                 $firstLine = "Usunięto rekord";
                 $secondLine = "pomyślnie!";
             }
+            else if($sid==4){
+                $firstLine = "Zmieniono status";
+                $secondLine = "pomyślnie!";
+            }
             $this->view('success_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
             header("Refresh: 2; url=" . ROOT . "/admin/" . $path);
         }
@@ -906,7 +910,56 @@ class Admin extends Controller
         }
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
-        $this->view('admin/list_of_orders', ['siteLinks'=>$siteLink]);
+
+        if(isset($_POST['stateSubmit'])){
+           if(!empty($_POST['orderid'])){
+                $query="UPDATE orders SET trackingnumber=:trackingnumber, orderstate=:orderstate
+                WHERE id=:id";
+                $result = $db->prepare($query);
+                $result->bindParam(':trackingnumber',$_POST['trackingnumber']);
+                $result->bindParam(':orderstate',$_POST['orderstate']);
+                $result->bindParam(':id',$_POST['orderid']);
+                $result->execute();
+                $_SESSION['success_page'] = "list_of_orders";
+                header("Location:" . ROOT . "/admin/success_page/4");
+           }else{
+            $_SESSION['error_page'] = "list_of_orders";
+            header("Location:" . ROOT . "/admin/error_page/1");
+           }
+
+      }
+
+
+        $query="SELECT o.*, sm.name AS smName, u.name AS user, u.email FROM orders o
+        INNER JOIN shippingmethods sm ON o.id_shippingmethod=sm.id
+        INNER JOIN users u ON u.id=o.id_user
+        ORDER BY orderdate DESC";
+        $orders = $db->prepare($query);
+        $orders->execute();
+        $orders = $orders->fetchAll(PDO::FETCH_ASSOC);
+
+        $queryItems="SELECT i.name AS item, m.name AS mnf,
+        c.name AS country, iio.amount AS amount, i.price AS price
+        FROM orders o 
+        INNER JOIN itemsinorder iio ON o.id=iio.id_order
+        INNER JOIN items i ON i.id=iio.id_item
+        INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
+        INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
+        INNER JOIN countries c ON mc.id_country=c.id 
+        WHERE o.id=:iid";
+
+        $OrderItems=array();
+
+        foreach($orders as $id){
+            $result = $db->prepare($queryItems);
+            $result->bindParam(':iid', $id['id']);
+            $result->execute();
+            $result =  $result->fetchAll(PDO::FETCH_ASSOC);
+            $OrderItems[$id['id']]= $result;
+        }
+
+
+        $this->view('admin/list_of_orders', ['siteLinks'=>$siteLink, 'orders'=>$orders, 'orderItems'=>$OrderItems]);
     }
 
     /** Function that add attributes
