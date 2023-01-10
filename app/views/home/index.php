@@ -4,11 +4,10 @@
 <div class="mt-6">
     <div class="container-fluid d-flex">
         <div class="row vw-100 w-25 mb-5">
-            <div class="col-sm-12 px-0 dominik-test d-sm-block" style="height: 300px">
-                <br><br>
-                <p class="text-end text-uppercase fst-italic fs-1 p-4 me-4" style="color: white">WELCOME TO OUR SHOP!</p>
-                <p class="text-end text-uppercase fw-light fs-2 p-4 me-4" style="color: white">Best quality and price
-                    &nbsp&nbsp&nbsp&nbsp</p>
+            <div class="col-sm-12 px-0 dominik-test d-sm-block" style="height: 300px;">
+              
+                <img src=<?= PHOTOSPATH . "/baner.png"?>>
+
             </div>
         </div>
     </div>
@@ -16,34 +15,31 @@
     <section class="page-section" id="services">
         <div class="container">
             <div class="text-center">
-                <h2 class="section-heading text-uppercase">Grontsmar</h2>
-                <h3 class="section-subheading text-muted mb-4">Our service</h3>
+                <h2 class="section-heading text-uppercase"><?=$data['siteName']['sitename']?></h2>
+                <h3 class="section-subheading text-muted mb-4">Nasze usługi</h3>
             </div>
             <div class="row text-center">
                 <div class="col-md-4">
                     <span class="fa-stack fa-4x">
-                        <i class="bi bi-globe icon-size-dom"></i>
+                        <i class="<?=$data['homeData']['icon1']?> icon-size-dom"></i>
 
                     </span>
-                    <h4 class="my-3">Market experience</h4>
-                    <p class="text-muted">Our company has been on the market since 1979 and we cooperate with other
-                        companies located all over the world.</p>
+                    <h4 class="my-3"><?=$data['homeData']['title1']?></h4>
+                    <p class="text-muted"><?=$data['homeData']['desc1']?></p>
                 </div>
                 <div class="col-md-4">
                     <span class="fa-stack fa-4x">
-                        <i class="bi bi-gear icon-size-dom"></i>
+                        <i class="<?=$data['homeData']['icon2']?> icon-size-dom"></i>
                     </span>
-                    <h4 class="my-3">Original parts</h4>
-                    <p class="text-muted">The goods sold by our website meet all European standards regarding strength and
-                        reliability in difficult conditions.</p>
+                    <h4 class="my-3"><?=$data['homeData']['title2']?></h4>
+                    <p class="text-muted"><?=$data['homeData']['desc2']?></p>
                 </div>
                 <div class="col-md-4">
                     <span class="fa-stack fa-4x">
-                        <i class="bi bi-cart-check icon-size-dom"></i>
+                        <i class="<?=$data['homeData']['icon3']?> icon-size-dom"></i>
                     </span>
-                    <h4 class="my-3">Safe shopping</h4>
-                    <p class="text-muted">Thanks to our reliable customer service, you don't have to worry about the things
-                        you ordered.</p>
+                    <h4 class="my-3"><?=$data['homeData']['title3']?></h4>
+                    <p class="text-muted"><?=$data['homeData']['desc3']?></p>
                 </div>
             </div>
         </div>
@@ -52,7 +48,7 @@
     <div class="container-fluid d-flex mt-4">
         <div class="row vw-100 wh-100">
             <iframe class="embed-responsive-item" style="width: 100vw;height: 100vh;position: relative;"
-                src="https://www.youtube.com/embed/jwssU2vNj78?rel=0" allowfullscreen></iframe>
+                src="<?=$data['homeData']['youtubeUrl']?>" allowfullscreen></iframe>
         </div>
     </div>
 
@@ -60,8 +56,8 @@
 
         <div class="container mt-5 mb-5">
             <div class="text-center">
-                <h2 class="section-heading text-uppercase">Grontsmar</h2>
-                <h3 class="section-subheading text-muted mb-4">Our products</h3>
+                <h2 class="section-heading text-uppercase"><?=$data['siteName']['sitename']?></h2>
+                <h3 class="section-subheading text-muted mb-4">Nasze produkty</h3>
             </div>
 
             <div class="d-block container align-items-center">

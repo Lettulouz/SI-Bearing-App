@@ -7,7 +7,7 @@ include 'adm_nav.php';
             <h1 class="text-muted headers-padding ">Edycja strony głównej</h1>
         </div>
         <div class="col-6 align-self-center">
-            <button type="submit" id="footerSubmitRemote" name="footerSubmitRemote" class="btn btn-primary btn-lg float-end me-3" >Edytuj</button>
+            <button type="submit" id="homeSubmitRemote" name="homeSubmitRemote" class="btn btn-primary btn-lg float-end me-3" >Edytuj</button>
         </div>
     </div>
 </div>
@@ -38,7 +38,8 @@ include 'adm_nav.php';
             <div class="row m-1">
                 <div class="col">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="ico1" name="ico1" placeholder="icon 1">
+                        <input type="text" class="form-control" id="ico1" name="ico1" max="75" placeholder="icon 1"
+                        value="<?=$data['result']['icon1']?>">
                         <label for="ico1" style="color:darkgray">Ikona</label>
                     </div>
                 </div>
@@ -47,7 +48,8 @@ include 'adm_nav.php';
             <div class="row m-1">
                 <div class="col">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="title1" name="title1" placeholder="icon 1">
+                        <input type="text" class="form-control" id="title1" name="title1" max="100" placeholder="icon 1"
+                        value="<?=$data['result']['title1']?>">
                         <label for="title1" style="color:darkgray">Tytuł</label>
                     </div>
                 </div>
@@ -56,7 +58,7 @@ include 'adm_nav.php';
             <div class="row m-1">
                 <div class="col">
                     <div class="form-floating">
-                        <textarea id="brief" name="brief1" class="form-control" style="overflow:hidden;resize:none; height:244px" maxlength="250"></textarea>
+                        <textarea id="brief" name="brief1" class="form-control" style="overflow:hidden;resize:none; height:244px" maxlength="250"><?=$data['result']['desc1']?></textarea>
                         <label class="form-control-lg lg-custom" for="brief">Opis</label>
                     </div>
                 </div>
@@ -72,7 +74,8 @@ include 'adm_nav.php';
             <div class="row m-1">
                 <div class="col">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="ico2" name="ico2" placeholder="icon 1">
+                        <input type="text" class="form-control" id="ico2" name="ico2"  max="75" placeholder="icon 1"
+                        value="<?=$data['result']['icon2']?>">
                         <label for="ico2" style="color:darkgray">Ikona</label>
                     </div>
                 </div>
@@ -81,7 +84,8 @@ include 'adm_nav.php';
             <div class="row m-1">
                 <div class="col">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="title2" name="title2" placeholder="icon 1">
+                        <input type="text" class="form-control" id="title2" name="title2"  max="100" placeholder="icon 1"
+                        value="<?=$data['result']['title2']?>">
                         <label for="title2" style="color:darkgray">Tytuł</label>
                     </div>
                 </div>
@@ -90,7 +94,7 @@ include 'adm_nav.php';
             <div class="row m-1">
                 <div class="col">
                     <div class="form-floating">
-                        <textarea id="brief" name="brief2" class="form-control" style="overflow:hidden;resize:none; height:244px" maxlength="250"></textarea>
+                        <textarea id="brief" name="brief2" class="form-control" style="overflow:hidden;resize:none; height:244px" maxlength="250"><?=$data['result']['desc2']?></textarea>
                         <label class="form-control-lg lg-custom" for="brief">Opis</label>
                     </div>
                 </div>
@@ -105,7 +109,8 @@ include 'adm_nav.php';
             <div class="row m-1">
                 <div class="col">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="ico3" name="ico3" placeholder="icon 1">
+                        <input type="text" class="form-control" id="ico3" name="ico3" max="75" placeholder="icon 1"
+                        value="<?=$data['result']['icon3']?>">
                         <label for="ico3" style="color:darkgray">Ikona</label>
                     </div>
                 </div>
@@ -114,7 +119,8 @@ include 'adm_nav.php';
             <div class="row m-1">
                 <div class="col">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="title3" name="title3" placeholder="icon 1">
+                        <input type="text" class="form-control" id="title3" name="title3"  max="100" placeholder="icon 1"
+                        value="<?=$data['result']['title3']?>">
                         <label for="title3" style="color:darkgray">Tytuł</label>
                     </div>
                 </div>
@@ -123,7 +129,7 @@ include 'adm_nav.php';
             <div class="row m-1">
                 <div class="col">
                     <div class="form-floating">
-                        <textarea id="brief3" name="brief" class="form-control" style="overflow:hidden;resize:none; height:244px" maxlength="250"></textarea>
+                        <textarea id="brief3" name="brief" class="form-control" style="overflow:hidden;resize:none; height:244px" maxlength="250"> <?=$data['result']['desc3']?></textarea>
                         <label class="form-control-lg lg-custom" for="brief">Opis</label>
                     </div>
                 </div>
@@ -131,18 +137,19 @@ include 'adm_nav.php';
 
         </div>
         <label style="color:darkgray" class=" ps-4">*W polu ikona należy podać odpowiednią klasę z katalogu ikon
-        <a href="https://icons.getbootstrap.com/" style="color:darkgray">bootstrapa</a></label>
+        <a href="https://icons.getbootstrap.com/" target="_blank" style="color:darkgray">bootstrapa</a></label>
     </div>
 
     <div class="row m-2">
         <div class="col px-4">
             <div class="form-floating">
-                <input type="text" class="form-control" id="video" name="video" placeholder="yt">
+                <input type="text" class="form-control" id="video" name="video" max="300" placeholder="yt"
+                value="<?=$data['result']['youtubeUrl']?>">
                 <label for="video" style="color:darkgray">video</label>
             </div>
         </div>
     </div>
-
+    <input type="submit" id="homeEditSubmit" name="homeEditSubmit" style="display:none">
 </form>
 </div>
 
@@ -164,4 +171,8 @@ include 'adm_nav.php';
         document.getElementById('deleteImageBtn').setAttribute('style', 'display:none');
         frame.src = "";
     }
+
+    $("#homeSubmitRemote").click(function(e){ 
+        $("#homeEditSubmit").click();
+    });
 </script>
