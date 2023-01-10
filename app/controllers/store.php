@@ -548,9 +548,46 @@ class Store extends Controller
             return;
         }
 
+
+
         $this->view('store/summary', ['siteFooter' => $siteFooter, 'siteName' => $siteName, 'totalItemPrice' => $totalItemPrice,
         'itemsArray'=>$itemsInCart, 'isLogged' => $isLogged, 'totalOrderPrice' => $totalOrderPrice,
         'loggedUser_name' => $loggedUser_name, 'numberOfItems' => $numberOfItems]);
+ 
+    }
+
+    public function orderview($order_id){
+        isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
+        isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteFooter = $this->getFooter($db);   
+        $siteName = $this->getSiteName($db);
+
+        $itemsInOrder = NULL;
+
+        $o_id = $order_id;
+
+        if(!is_numeric($order_id))
+            $o_id  = 0;
+        
+        isset($_SESSION['loggedUser_id']) ? $id_user=$_SESSION['loggedUser_id'] : $id_user = 0;
+        
+        $query="SELECT o.price as orderprice, i.id as itemID, o.orderdate as orderdate, sm.price as shippingPrice
+        FROM orders o 
+        INNER JOIN itemsinorder iio ON o.id=iio.id_order 
+        INNER JOIN items i ON iio.id_item=i.id
+        INNER JOIN shippingmethods sm ON o.id_shippingmethod=sm.id 
+        WHERE o.id=:id_order AND id_user=:id_user";
+
+        $itemsInOrder = $db->prepare($query);
+        $itemsInOrder->bindParam(':id_user',$id_user);
+        $itemsInOrder->bindParam(':id_order', $o_id);
+        $itemsInOrder->execute();
+        $itemsInOrder = $itemsInOrder->fetchAll(PDO::FETCH_ASSOC);
+
+        $this->view('store/orderview', ['siteFooter' => $siteFooter, 'siteName' => $siteName,
+        'itemsArray'=>$itemsInOrder, 'isLogged' => $isLogged,
+        'loggedUser_name' => $loggedUser_name]);
  
     }
 

@@ -10,13 +10,13 @@
 
         <!-- Main content -->
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <!-- Details -->
                 <div class="card mb-4">
                     <div class="card-body">
                         <div class="mb-3 d-flex justify-content-between">
                             <div>
-                                <span class="me-3"><?php echo date('d/m/Y'); ?></span>
+                                <span class="me-3"><?php $data['itemsArray'][0]['orderdate'] ?></span>
                             </div>
                         </div>
                         <table class="table table-borderless">
@@ -25,21 +25,9 @@
                                     <?php
                                     $items = $data['itemsArray'];
                                     foreach ($items as $j => $item) {
-                                        $imagePath = APPPATH . "/resources/itemsPhotos/[" . $item['itemID'] . "].png";
-                                        $imagePathCheck = RESOURCEPATH . "/[" . $item['itemID'] . "].png";
-                                        if (!file_exists($imagePathCheck)) {
-                                            $imagePath = APPPATH . "/resources/itemsPhotos/brak_zdjecia.png";
-                                        }
                                         echo "
-                                    <tr>
-                                        <td>
-                                            <figure class='itemside align-items-center'>
-                                                <div class='aside'><img src='$imagePath' class='img-sm'></div>
-                                                <figcaption class='info'> <a href='#' class='title text-dark' data-abc='true'>{$item['name']}</a>
-                                                    <p class='text-muted small'> Firma: {$item['name2']} </p>
-                                                </figcaption>
-                                            </figure>
-                                        </td>
+                                        
+                                    <tr>                                       
                                         <td> 
                                             <div class='price-wrap'> {$data['numberOfItems'][$j]} szt</div>
                                         <td>
@@ -53,7 +41,7 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="2">Kwota zamówienia <strong id='totalItemPrice'> <?php echo $data['totalOrderPrice'] ?> zł</strong></td>
+                                    <td colspan="2">Kwota zamówienia <strong id='totalItemPrice'> <?php echo $data['itemsArray'][0]['orderprice'] ?> zł</strong></td>
                                     <td class="text-end"></td>
                                 </tr>
                                 <tr>
