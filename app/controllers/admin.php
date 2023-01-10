@@ -523,7 +523,7 @@ class Admin extends Controller
         if(isset($id)){
             require_once dirname(__FILE__,2) . '/core/database.php';
             $query="UPDATE users SET login='kontousuniete', password='', name='Konto usunięte', lastname='', 
-            role='none', active=0 WHERE id=:id";
+            role='none', active=0, email='', temporary='0', authhash='' WHERE id=:id";
             $result = $db->prepare($query);
             $result->bindParam(':id', $id);
             $result->execute();
