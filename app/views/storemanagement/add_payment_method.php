@@ -10,7 +10,7 @@
                         <div class="forms-inputs"> 
                             <div class="form-floating">
                                 <input type="text" class="form-control" id="methodName" placeholder="a" name="methodName" value="">
-                                <label class="form-control-lg lg-custom" for="methodName">Nazwa</label>
+                                <label class="form-control-lg lg-custom" for="methodName" required>Nazwa</label>
                             </div>
                         </div>
                     </div>
@@ -21,7 +21,7 @@
                             <div class="form-floating">
                                 <input type="number" min="0" step="0.01" class="form-control" id="methodFee" placeholder="a"
                                 name="methodFee" value="">
-                                <label class="form-control-lg lg-custom" for="methodFee">Prowizja</label>
+                                <label class="form-control-lg lg-custom" for="methodFee" required>Prowizja</label>
                             </div>
                         </div>    
                     </div>
