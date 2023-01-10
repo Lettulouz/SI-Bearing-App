@@ -44,7 +44,7 @@ include 'adm_nav.php';
                 <div class="col-12 col-sm-6 col-xl-4 mb-3">
                     <div class="card text-white bg-warning  h-100" >
                         <div class="card-header"><i class="bi bi-person-fill-gear"></i>&nbspMenadżerowie contentu
-                            <a style='float:right;' class="text-white" href="#" >
+                            <a style='float:right;' class="text-white" href="<?php echo ROOT."/admin/add_manager"?>" >
                                 <i class="bi bi-plus-lg"></i>
                             </a>
                         </div>
@@ -75,7 +75,7 @@ include 'adm_nav.php';
                     <div class="card text-white bg-danger h-100" >
                         <div class="card-header">
                             <i class="bi bi-person-vcard"></i>&nbspAdministratorzy
-                            <a style='float:right;' class="text-white" href="#" >
+                            <a style='float:right;' class="text-white" href="<?php echo ROOT."/admin/add_admin"?>" >
                                 <i class="bi bi-plus-lg"></i>
                             </a>
                         </div>
@@ -106,7 +106,7 @@ include 'adm_nav.php';
                     <div class="card text-white bg-custom-17 h-100" >
                         <div class="card-header">
                             <i class="bi bi-people-fill"></i>&nbspObsługa sklepu
-                            <a style='float:right;' class="text-white" href="#" >
+                            <a style='float:right;' class="text-white" href="<?php echo ROOT."/admin/add_shop_service"?>" >
                                 <i class="bi bi-plus-lg"></i>
                             </a>
                         </div>
