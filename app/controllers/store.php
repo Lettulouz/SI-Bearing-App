@@ -265,7 +265,8 @@ class Store extends Controller
             LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
             LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
             WHERE i.name LIKE CONCAT('%', :search, '%')
-            AND i.amount >0
+            AND i.amount>0
+            AND i.active=1
             AND m.id IN ($id_manufacturer)
             AND categ.id IN ($id_category) "
             . $querypricestartend  
@@ -285,7 +286,8 @@ class Store extends Controller
             LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
             LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
             WHERE i.name LIKE CONCAT('%', :search, '%')
-            AND i.amount >0
+            AND i.amount>0
+            AND i.active=1
             AND m.id IN ($id_manufacturer)
             AND categ.id IN ($id_category)
             AND catal.id IN ($id_catalog) "
@@ -336,7 +338,8 @@ class Store extends Controller
             LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
             LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
             WHERE i.name LIKE CONCAT('%', :search, '%')
-            AND i.amount >0
+            AND i.amount>0
+            AND i.active=1
             AND m.id IN ($id_manufacturer)
             AND categ.id IN ($id_category) " 
             . $querypricestartend 
@@ -355,7 +358,8 @@ class Store extends Controller
             LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
             LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
             WHERE i.name LIKE CONCAT('%', :search, '%')
-            AND i.amount >0
+            AND i.amount>0
+            AND i.active=1
             AND m.id IN ($id_manufacturer)
             AND categ.id IN ($id_category)
             AND catal.id IN ($id_catalog) "

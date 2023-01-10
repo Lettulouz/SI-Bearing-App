@@ -122,12 +122,12 @@ class Manager extends Controller
         $query="SELECT i.name AS item, m.name AS manufacturer
         FROM items i 
             INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
-            INNER JOIN manufacturers m ON m.id=mc.id_manufacturer LIMIT 5";
+            INNER JOIN manufacturers m ON m.id=mc.id_manufacturer WHERE i.active=1 LIMIT 5";
         $result = $db->query($query);
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
         $query="SELECT Count(name)
-        FROM `items`";
+        FROM `items` WHERE active=1";
         $result = $db->query($query);
         
         $itemsCount = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -326,7 +326,7 @@ class Manager extends Controller
 
         if(isset($id_a)){
             require_once dirname(__FILE__,2) . '/core/database.php';
-            $query="DELETE FROM items WHERE id=:id_a";
+            $query="UPDATE items SET active=0 WHERE id=:id_a";
             $result = $db->prepare($query);
             $result->bindParam(':id_a', $id_a);
             $result->execute();
@@ -1440,7 +1440,7 @@ class Manager extends Controller
         FROM items i 
             INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
             INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-            INNER JOIN countries c ON mc.id_country=c.id";
+            INNER JOIN countries c ON mc.id_country=c.id WHERE i.active=1";
         $result = $db->query($query);
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -1448,19 +1448,19 @@ class Manager extends Controller
         FROM items i 
         INNER JOIN categoriesofitem coi ON i.id=coi.id_item
         INNER JOIN categories c ON coi.id_category=c.id
-        WHERE i.id=:iid";
+        WHERE i.id=:iid AND i.active=1";
 
         $queryCat="SELECT c.name AS catname
         FROM items i 
         INNER JOIN itemsincatalog ic ON i.id=ic.id_item
         INNER JOIN catalog c ON ic.id_catalog=c.id
-        WHERE i.id=:iid";
+        WHERE i.id=:iid AND i.active=1";
 
         $queryAttr="SELECT a.name AS attrname, ai.value AS aval
         FROM items i 
         INNER JOIN attributesofitems ai ON i.id=ai.id_item
         INNER JOIN attributes a ON ai.id_attribute=a.id
-        WHERE i.id=:iid";
+        WHERE i.id=:iid AND i.active=1";
 
         $categoriesArray=array();
         $catalogArray=array();
