@@ -163,12 +163,13 @@ class Admin extends Controller
         $query="SELECT i.name AS item, m.name AS manufacturer
         FROM items i 
             INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
-            INNER JOIN manufacturers m ON m.id=mc.id_manufacturer LIMIT 5";
+            INNER JOIN manufacturers m ON m.id=mc.id_manufacturer
+            WHERE i.active=1 LIMIT 5";
         $result = $db->query($query);
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
         $query="SELECT Count(name)
-        FROM `items`";
+        FROM `items` WHERE i.active=1";
         $result = $db->query($query);
         
         $itemsCount = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -521,7 +522,8 @@ class Admin extends Controller
         
         if(isset($id)){
             require_once dirname(__FILE__,2) . '/core/database.php';
-            $query="DELETE FROM users WHERE id=:id";
+            $query="UPDATE users SET login='kontousuniete', password='', name='Konto usunięte', lastname='', 
+            role='none', active=0 WHERE id=:id";
             $result = $db->prepare($query);
             $result->bindParam(':id', $id);
             $result->execute();
@@ -931,7 +933,7 @@ class Admin extends Controller
 
         if(isset($id_a)){
             require_once dirname(__FILE__,2) . '/core/database.php';
-            $query="DELETE FROM items WHERE id=:id_a";
+            $query="UPDATE items SET active=0 WHERE id=:id_a";
             $result = $db->prepare($query);
             $result->bindParam(':id_a', $id_a);
             $result->execute();

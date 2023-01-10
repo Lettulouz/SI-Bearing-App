@@ -122,12 +122,12 @@ class Manager extends Controller
         $query="SELECT i.name AS item, m.name AS manufacturer
         FROM items i 
             INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
-            INNER JOIN manufacturers m ON m.id=mc.id_manufacturer LIMIT 5";
+            INNER JOIN manufacturers m ON m.id=mc.id_manufacturer WHERE i.active=1 LIMIT 5";
         $result = $db->query($query);
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
         $query="SELECT Count(name)
-        FROM `items`";
+        FROM `items` WHERE i.active=1";
         $result = $db->query($query);
         
         $itemsCount = $result->fetchAll(PDO::FETCH_ASSOC);
