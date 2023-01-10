@@ -1,4 +1,4 @@
-<h1 class="text-muted headers-padding">Dodawanie metody wysyłki</h1> 
+<h1 class="text-muted headers-padding">Dodawanie metody dostawy</h1> 
     <hr class="divider mt-0">
 <div class="container" style="max-width:720px;">
     
@@ -9,8 +9,8 @@
                     <div class="col-12">
                         <div class="forms-inputs"> 
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="nameInput" placeholder="a" name="nameInput" value="">
-                                <label class="form-control-lg lg-custom" for="nameInput">Nazwa</label>
+                                <input type="text" class="form-control" id="methodName" placeholder="a" name="methodName" value="">
+                                <label class="form-control-lg lg-custom" for="methodName" required>Nazwa</label>
                             </div>
                         </div>
                     </div>
@@ -19,9 +19,9 @@
                     <div class="col-12">
                         <div class="forms-inputs"> 
                             <div class="form-floating">
-                                <input type="number" min="0" step="0.01" class="form-control" id="priceInput" placeholder="a"
-                                name="priceInput" value="">
-                                <label class="form-control-lg lg-custom" for="priceInput">Cena</label>
+                                <input type="number" min="0" step="0.01" class="form-control" id="methodPrice" placeholder="a"
+                                name="methodPrice" value="" required>
+                                <label class="form-control-lg lg-custom" for="methodPrice">Cena</label>
                             </div>
                         </div>    
                     </div>
@@ -31,15 +31,15 @@
                         <div class="form-check form-switch">
                             <label class="form-check-label" 
                             style="margin-top: 5px; margin-left: 10px; font-weight: bold; font-size:18px" 
-                            for="methodActivated">Aktywna</label>
+                            for="methActive">Aktywna</label>
                             <input class="form-check-input" style="height:30px; width:60px;" type="checkbox" 
-                            id="methodActivated" name="methodActivated" checked>
+                            id="methActive" name="methActive" checked>
                         </div>
                     </div>
                 </div>
                 <div class="row m-2">
                     <div class="float-end">
-                        <button type="submit" class="btn btn-primary btn-lg float-end" name="senduser">Zapisz zmiany</button>
+                        <button type="submit" class="btn btn-primary btn-lg float-end" name="addshipmeth">Zapisz zmiany</button>
                     </div>
                 </div>
             </div> 

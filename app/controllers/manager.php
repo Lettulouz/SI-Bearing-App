@@ -21,7 +21,7 @@ class Manager extends Controller
                 $secondLine = "pomyślnie!";
             }
             $this->view('success_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
-            header("Refresh: 2; url=" . ROOT . "/admin/" . $path);
+            header("Refresh: 2; url=" . ROOT . "/manager/" . $path);
         }
         else header("Location:" . ROOT . "");
     }
@@ -44,7 +44,7 @@ class Manager extends Controller
             }
             $this->view('error_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
             $_SESSION['successOrErrorResponse'] = $path;
-            header("Refresh: 2; url=" . ROOT . "/admin/" . $path);
+            header("Refresh: 2; url=" . ROOT . "/manager/" . $path);
 
         }
         else header("Location:" . ROOT . "");
@@ -96,7 +96,7 @@ class Manager extends Controller
         $pageContent = $result->fetch(PDO::FETCH_ASSOC);
         !empty($pageContent) ? $pageContent = $pageContent['content'] : $pageContent = "";    
 
-        $this->view('admin/edit_page', ['pageNames'=>$pageNames,'siteLinks'=>$siteLink,'editingId' => $id,'storedValue' => $pageContent]);
+        $this->view('manager/edit_page', ['pageNames'=>$pageNames,'siteLinks'=>$siteLink,'editingId' => $id,'storedValue' => $pageContent]);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -182,304 +182,37 @@ class Manager extends Controller
         $categoriesCount = $result->fetchAll(PDO::FETCH_ASSOC);
         $categoriesCount = $categoriesCount[0]['Count(name)'];
 
-        $this->view('admin/index', ['siteLinks'=>$siteLink ,'items'=>$items, 'itemsCount'=>$itemsCount, 'catalogs'=>$catalogs, 'catalogsCount'=>$catalogsCount,
-        'attributes'=>$attributes, 'attributesCount'=>$attributesCount, 'manufacturers'=>$manufacturers, 
-        'manufacturersCount'=>$manufacturersCount,'categories'=>$categories, 'categoriesCount'=>$categoriesCount]);
-    }
-    
-    private function remove($id)
-    {
-        if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
-                unset($_SESSION['successOrErrorResponse']);
-            }else{
-                header("Location:" . ROOT . "/home");
-            }
-        }else{
-            header("Location:" . ROOT . "/login");
-        }
-        
-        if(isset($id)){
-            require_once dirname(__FILE__,2) . '/core/database.php';
-            $query="DELETE FROM users WHERE id=:id";
-            $result = $db->prepare($query);
-            $result->bindParam(':id', $id);
-            $result->execute();
-        }
-    }
-
-    public function list_of_users(){
-        if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
-                unset($_SESSION['successOrErrorResponse']);
-            }
-            else{
-                header("Location:" . ROOT . "/home");
-            }
-        }
-        else{
-            header("Location:" . ROOT . "/login");
-        }
-
-        require_once dirname(__FILE__,2) . '/core/database.php';
-        $siteLink = $this->getFooter($db);
-
-        $query="SELECT id, name, lastName, email, login, password FROM users WHERE role='user' ORDER BY id";
+        $query="SELECT GROUP_CONCAT(name SEPARATOR ', ') as shippingMethodsString FROM shippingmethods WHERE active=1";
         $result = $db->query($query);
-        $result = $result->fetchAll(PDO::FETCH_ASSOC);
-
-        $rmUserPath=ROOT."/admin/remove_user";
-        $editUserPath=ROOT."/admin/edit_user";
-        $this->view('admin/list_of_users', ['siteLinks'=>$siteLink ,'usersArray'=>$result, 'rmpath'=>$rmUserPath, 'editpath'=>$editUserPath]);
-
-    }
-
-    public function edit_user($id){
-        if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
-                unset($_SESSION['successOrErrorResponse']);
-            }
-            else{
-                header("Location:" . ROOT . "/home");
-            }
-        }
-        else{
-            header("Location:" . ROOT . "/login");
-        }
         
-        require_once dirname(__FILE__,2) . '/core/database.php';
-        $siteLink = $this->getFooter($db);
-
-        $query="SELECT id, name, lastName, email, login, password, role FROM users WHERE id=:id";
-        $result = $db->prepare($query);
-        $result->bindParam(':id', $id);
-        $result->execute();
-        $result = $result->fetch(PDO::FETCH_ASSOC);
-        $name = $result["name"];
-        $lastName = $result["lastName"];
-        $email = $result["email"];
-        $login = $result["login"];
-        $password = '';
-        $role = $result["role"];
-        if(isset($_POST['senduser']))
-        {
-            $query = "SELECT id FROM users ORDER BY id DESC LIMIT 1";
-            $result = $db->prepare($query);
-            $result->execute();
-            $result = $result->fetch(PDO::FETCH_ASSOC);;
-
-            $name = ucfirst(strtolower($_POST['name']));
-            $lastName = ucfirst(strtolower($_POST['surname']));
-            $email = $_POST['mail'];
-            $login = strtolower($_POST['login']);
-            $password = $_POST['pass'];
-            $role = "user";
-            $temporary = 1;
-            $authhash = hash('sha256',$name . $lastName . $email . $login . $role . $result['id']);
-
-            if(empty($password)){
-                $length = 10;
-                $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                $charactersLength = strlen($characters);
-                for ($i = 0; $i < $length; $i++) {
-                    $password.= $characters[rand(0, $charactersLength - 1)];
-                }
-            }
-            if(empty($name) || empty($lastName) || empty($email) || empty($login)){
-                $_SESSION['error_page'] = "edit_user";
-                header("Location:" . ROOT . "/admin/error_page/1");
-            }else{
-                $hashedPassword = hash('sha256', $password);
-
-                $query = "SELECT COUNT(id) AS amount FROM users WHERE login=:login";
-                $result = $db->prepare($query);
-                $result->bindParam(':login', $login);
-                $result->execute();
-                $result = $result->fetch(PDO::FETCH_ASSOC);
-                
-                $query = "SELECT COUNT(id) AS amount FROM users WHERE email=:email";
-                $result2 = $db->prepare($query);
-                $result2->bindParam(':email', $email);
-                $result2->execute();
-                $result2 = $result2->fetch(PDO::FETCH_ASSOC);
-                
-                if($result['amount']>0 || $result2['amount']>0){
-                    $_SESSION['error_page'] = "edit_user";
-                    header("Location:" . ROOT . "/admin/error_page/2");
-                }
-                else{
-                    $query = "INSERT INTO `users` (name, lastname, email, login, password, role, temporary, authhash) 
-                    VALUES (:name, :lastname, :email, :login, :password, :role, :temporary, :authhash);";
-                    $result = $db->prepare($query);
-                    $result->bindParam(':name', $name);
-                    $result->bindParam(':lastname', $lastName);
-                    $result->bindParam(':email', $email);
-                    $result->bindParam(':login', $login);
-                    $result->bindParam(':password', $hashedPassword);
-                    $result->bindParam(':role', $role);
-                    $result->bindParam(':temporary', $temporary);
-                    $result->bindParam(':authhash', $authhash);
-                    $result->execute();
-                     
-                    $_SESSION['success_page'] = "edit_user";
-                    header("Location:" . ROOT . "/admin/success_page/1");
-                }            
-            }
-        }
-        $this->view('admin/edit_user', ['siteLinks'=>$siteLink,'name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'role'=>$role]);
-    }
-
-    public function add_user(){
-        $a = "add_user";
-        $b = "user";
-        $this->add($a, $b);
-    }
-
-
-    /** Function that checks if given password meets the conditions
-     * @return Returns boolean, password meets the conditions - true, else - false
-     * 
-     */
-    private function verifyPassword($password){
-        $password = trim($password, " ");
-        if(strlen($password) < 8){
-            return false;
-        }
-        if(strlen($password) > 25){
-            return false;
-        }
-        return true;
-    }
-
-    private function errorDuringValidation($errorMessage){
-        $this->errorMessage = $errorMessage;
-        //$this->serverError = true;
-        $this->check = false;
-    }
-
-    private function verifyEmail($email){
-        $regex = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/';
-
-        if(preg_match($regex, $email)){
-            return true;
-        }
-        else return false;
-    }
-
-    private function verifyName($name){
-        $regex  = '/^[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+$/';
-        if(preg_match($regex, $name)){
-            return true;
-        }
-        else return false;
-    }
-
-    /** Function that checks if given login meets the conditions
-     * 
-     */
-    private function verifyLogin($login){
-        $regex  = '/^[a-z0-9]+$/';
-        if(preg_match($regex, $login) && strlen($login)>=8){
-            return true;
-        }
-        else return false;
-    }
-
-    public function remove_user($id=NULL){
-        $this->remove($id);
-        header("Location:" . ROOT . "/admin/list_of_users");
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////MANAGERS//////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public function list_of_content_managers(){
-
+        $shippingMethodsString = $result->fetch(PDO::FETCH_ASSOC);
+        $shippingMethodsString = $shippingMethodsString['shippingMethodsString'];
         
-        if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
-                unset($_SESSION['successOrErrorResponse']);
-            }
-            else{
-                header("Location:" . ROOT . "/home");
-            }
-        }
-        else{
-            header("Location:" . ROOT . "/login");
-        }
-        
-        require_once dirname(__FILE__,2) . '/core/database.php';
-        $siteLink = $this->getFooter($db);
-
-        $query="SELECT id, name, lastName, email, login, password FROM users WHERE role='contentmanager' ORDER BY id";
+        $query="SELECT Count(name) as c
+        FROM shippingmethods WHERE active=1";
         $result = $db->query($query);
-        $result = $result->fetchAll(PDO::FETCH_ASSOC);
-
-        $rmUserPath=ROOT."/admin/remove_manager";
-        $editUserPath=ROOT."/admin/edit_user";
-        $this->view('admin/list_of_conent_managers', ['siteLinks'=>$siteLink,'usersArray'=>$result, 'rmpath'=>$rmUserPath, 'editpath'=>$editUserPath]);
-    }
-
-    public function add_manager(){
-        $a = "add_manager";
-        $b = "contentmanager";
-        $this->add($a, $b);   
-    }
-
-    public function remove_manager($id=NULL){
-        $this->remove($id);
-        header("Location:" . ROOT . "/admin/list_of_conent_managers");
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////ADMINS////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public function list_of_administrators(){
-        if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
-                unset($_SESSION['successOrErrorResponse']);
-            }
-            else{
-                header("Location:" . ROOT . "/home");
-            }
-        }
-        else{
-            header("Location:" . ROOT . "/login");
-        }
-
-            if(isset($_SESSION['loggedUser'])){
-                if($_SESSION['loggedUser'] == "admin"){
-                    unset($_SESSION['successOrErrorResponse']);
-                }else{
-                    header("Location:" . ROOT . "/home");
-                }
-            }else{
-                header("Location:" . ROOT . "/login");
-            }
         
-        require_once dirname(__FILE__,2) . '/core/database.php';
-        $siteLink = $this->getFooter($db);
-        $adminId = $_SESSION['idLoggedUser'];
-        $query="SELECT id, name, lastName, email, login, password FROM users WHERE role='admin' ORDER BY id";
+        $shippingMethodsCount = $result->fetch(PDO::FETCH_ASSOC);
+        $shippingMethodsCount = $shippingMethodsCount['c'];
+
+        $query="SELECT GROUP_CONCAT(name SEPARATOR ', ') as paymentMethodsString FROM paymentmethods WHERE active=1";
         $result = $db->query($query);
-        $result = $result->fetchAll(PDO::FETCH_ASSOC);
+        
+        $paymentMethodsString = $result->fetch(PDO::FETCH_ASSOC);
+        $paymentMethodsString = $paymentMethodsString['paymentMethodsString'];
+        
+        $query="SELECT Count(name) as c
+        FROM paymentmethods WHERE active=1";
+        $result = $db->query($query);
+        
+        $paymentMethodsCount = $result->fetch(PDO::FETCH_ASSOC);
+        $paymentMethodsCount = $paymentMethodsCount['c'];
 
-        $rmUserPath=ROOT."/admin/remove_admin";
-        $editUserPath=ROOT."/admin/edit_user";
-        $this->view('admin/list_of_administrators', ['siteLinks'=>$siteLink,'usersArray'=>$result, 'rmpath'=>$rmUserPath, 'editpath'=>$editUserPath, 'adminId'=>$adminId]);
-    }
-
-    public function add_admin(){
-        $a = "add_admin";
-        $b = "admin";
-        $this->add($a, $b);   
-    }
-
-    public function remove_admin($id=NULL){
-        $this->remove($id);
-        header("Location:" . ROOT . "/admin/list_of_administrators");
+        $this->view('manager/index', ['siteLinks'=>$siteLink ,'items'=>$items, 'itemsCount'=>$itemsCount, 'catalogs'=>$catalogs, 
+        'catalogsCount'=>$catalogsCount, 'attributes'=>$attributes, 'attributesCount'=>$attributesCount, 'manufacturers'=>$manufacturers, 
+        'manufacturersCount'=>$manufacturersCount,'categories'=>$categories, 'categoriesCount'=>$categoriesCount, 
+        'shippingMethodsString' => $shippingMethodsString, 'shippingMethodsCount' => $shippingMethodsCount, 
+        'paymentMethodsCount' => $paymentMethodsCount,'paymentMethodsString' => $paymentMethodsString]);
     }
     
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -489,7 +222,7 @@ class Manager extends Controller
     public function list_of_attributes()
     {
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }else{
                 header("Location:" . ROOT . "/home");
@@ -505,14 +238,14 @@ class Manager extends Controller
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);    
 
-        $rmAttrPath=ROOT."/admin/remove_attribute";
-        $editAttrPath=ROOT."/admin/edit_attribute";
-        $this->view('admin/list_of_attributes', ['siteLinks'=>$siteLink,'attributesArray'=>$result, 'rmpath'=> $rmAttrPath, 'editpath'=> $editAttrPath]);
+        $rmAttrPath=ROOT."/manager/remove_attribute";
+        $editAttrPath=ROOT."/manager/edit_attribute";
+        $this->view('manager/list_of_attributes', ['siteLinks'=>$siteLink,'attributesArray'=>$result, 'rmpath'=> $rmAttrPath, 'editpath'=> $editAttrPath]);
     }
 
     public function edit_attribute($id_a=NULL){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }else{
                 header("Location:" . ROOT . "/home");
@@ -537,7 +270,7 @@ class Manager extends Controller
                 $temp = $attr_id['COUNT(id)'];
                 if($temp>0&&$attr_id['id']!=$id_a){
                     $_SESSION['error_page'] = "list_of_attributes";
-                    header("Location:" . ROOT . "/admin/error_page/2");
+                    header("Location:" . ROOT . "/manager/error_page/2");
                 }else{
                     $query = "UPDATE `attributes` 
                         SET name = '$tekst2',
@@ -546,21 +279,21 @@ class Manager extends Controller
                     $result = $db->prepare($query);
                     $result->execute();
                     $_SESSION['success_page'] = "list_of_attributes";
-                    header("Location:" . ROOT . "/admin/success_page/1");
+                    header("Location:" . ROOT . "/manager/success_page/1");
                 }
 
             }else{
                 $_SESSION['error_page'] = "list_of_attributes";
-                header("Location:" . ROOT . "/admin/error_page/1");
+                header("Location:" . ROOT . "/manager/error_page/1");
             }
         }else{
-            header("Location:" . ROOT . "/admin/list_of_attributes");
+            header("Location:" . ROOT . "/manager/list_of_attributes");
         }
     }
 
     public function remove_attribute($id_a=NULL){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }else{
                 header("Location:" . ROOT . "/home");
@@ -577,12 +310,12 @@ class Manager extends Controller
             $result->execute();
         }
     
-        header("Location:" . ROOT . "/admin/list_of_attributes");
+        header("Location:" . ROOT . "/manager/list_of_attributes");
     }
 
     public function remove_item($id_a=NULL){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }else{
                 header("Location:" . ROOT . "/home");
@@ -603,22 +336,7 @@ class Manager extends Controller
             if(file_exists($imagePathCheck)) unlink($imagePathCheck);
         }
     
-        header("Location:" . ROOT . "/admin/list_of_items");
-    }
-
-    public function list_of_orders(){
-        if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
-                unset($_SESSION['successOrErrorResponse']);
-            }else{
-                header("Location:" . ROOT . "/home");
-            }
-        }else{
-            header("Location:" . ROOT . "/login");
-        }
-        require_once dirname(__FILE__,2) . '/core/database.php';
-        $siteLink = $this->getFooter($db);
-        $this->view('admin/list_of_orders', ['siteLinks'=>$siteLink]);
+        header("Location:" . ROOT . "/manager/list_of_items");
     }
 
     /** Function that add attributes
@@ -626,7 +344,7 @@ class Manager extends Controller
     */
     public function add_attribute(){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }else{
                 header("Location:" . ROOT . "/home");
@@ -672,20 +390,20 @@ class Manager extends Controller
                 if($result['amount']>0){
                     $_SESSION['error_page'] = "add_attribute";
                     $_SESSION['attributeName'] = $attributeName;
-                    header("Location:" . ROOT . "/admin/error_page/2");
+                    header("Location:" . ROOT . "/manager/error_page/2");
                 }else{
                     $query = "INSERT INTO attributes (name, unit, isrange) VALUES ('$attributeName', '$attributeUnit', '$attributeRange');";
                     $result = $db->prepare($query);
                     $result->execute();
                     $_SESSION['success_page'] = "add_attribute";
-                    header("Location:" . ROOT . "/admin/success_page/1");
+                    header("Location:" . ROOT . "/manager/success_page/1");
                 }
             }else{
                 $_SESSION['error_page'] = "add_attribute";
-                header("Location:" . ROOT . "/admin/error_page/1");
+                header("Location:" . ROOT . "/manager/error_page/1");
             }
         }else{
-        $this->view('admin/add_attribute_admin', ['siteLinks'=>$siteLink,'attributeName' => $attributeName, 
+        $this->view('manager/add_attribute_manager', ['siteLinks'=>$siteLink,'attributeName' => $attributeName, 
         'attributeUnit' => $attributeUnit, 'attributeRange' => $attributeRange]);
         }
     }
@@ -696,7 +414,7 @@ class Manager extends Controller
 
     public function add_catalog(){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }else{
                 header("Location:" . ROOT . "/home");
@@ -738,7 +456,7 @@ class Manager extends Controller
                 $temp = $cat_id['COUNT(id)'];
                 if($temp>0){
                     $_SESSION['error_page'] = "add_catalog";
-                    header("Location:" . ROOT . "/admin/error_page/2");
+                    header("Location:" . ROOT . "/manager/error_page/2");
                 }else{
                     $query="INSERT INTO catalog (name) VALUES (:cat_name)";
                     $result = $db->prepare($query);
@@ -760,11 +478,11 @@ class Manager extends Controller
                     }
                     $_SESSION['success_page'] = "add_catalog";
                     unset($_SESSION['catname']);
-                    header("Location:" . ROOT . "/admin/success_page/1");
+                    header("Location:" . ROOT . "/manager/success_page/1");
                 }
             }else{
                 $_SESSION['error_page'] = "add_catalog";
-                header("Location:" . ROOT . "/admin/error_page/1");
+                header("Location:" . ROOT . "/manager/error_page/1");
             }
         }
 
@@ -777,12 +495,12 @@ class Manager extends Controller
         $result->execute();
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
         
-        $this->view('admin/add_catalog_admin', ['siteLinks'=>$siteLink,'items'=>$items, 'msg_color' => $return_msg_color , 'msg' => $return_msg, 'catname' => $catname, 'itemcat'=> $itemstocat]);
+        $this->view('manager/add_catalog_manager', ['siteLinks'=>$siteLink,'items'=>$items, 'msg_color' => $return_msg_color , 'msg' => $return_msg, 'catname' => $catname, 'itemcat'=> $itemstocat]);
     }
 
     public function list_of_catalogs(){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }else{
                 header("Location:" . ROOT . "/home");
@@ -811,7 +529,7 @@ class Manager extends Controller
                     //check if catalog name is already use by different catalog
                     if($temp>0&&$cat_id['id']!=$catid){
                         $_SESSION['error_page'] = "list_of_catalogs";
-                        header("Location:" . ROOT . "/admin/error_page/2");
+                        header("Location:" . ROOT . "/manager/error_page/2");
                     }else{
                         $query="UPDATE catalog SET name=:catname WHERE id=:catid";
                         $result = $db->prepare($query);
@@ -833,11 +551,11 @@ class Manager extends Controller
                             $result->execute();
                             }
                         $_SESSION['success_page'] = "list_of_catalogs";
-                        header("Location:" . ROOT . "/admin/success_page/1");
+                        header("Location:" . ROOT . "/manager/success_page/1");
                     }
                 }else{
                     $_SESSION['error_page'] = "list_of_catalogs";
-                    header("Location:" . ROOT . "/admin/error_page/1");
+                    header("Location:" . ROOT . "/manager/error_page/1");
                 }
             } 
 
@@ -876,14 +594,14 @@ class Manager extends Controller
                 $itemsInCat[$res['id']]= $result_id;
         }
  
-        $rmCatPath=ROOT."/admin/";
+        $rmCatPath=ROOT."/manager/";
 
-        $this->view('admin/list_of_catalogs', ['siteLinks'=>$siteLink,'catalogsArray'=>$result, 'catalogsItems'=>$itemsInCat,'items'=>$items ,'rmpath'=> $rmCatPath]);
+        $this->view('manager/list_of_catalogs', ['siteLinks'=>$siteLink,'catalogsArray'=>$result, 'catalogsItems'=>$itemsInCat,'items'=>$items ,'rmpath'=> $rmCatPath]);
     }
 
     public function remove_catalog($cid=NULL){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }else{
                 header("Location:" . ROOT . "/home");
@@ -899,7 +617,7 @@ class Manager extends Controller
             $result->bindParam(':cid', $cid);
             $result->execute();
         }
-        header("Location:" . ROOT . "/admin/list_of_catalogs");
+        header("Location:" . ROOT . "/manager/list_of_catalogs");
     }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -908,7 +626,7 @@ class Manager extends Controller
 
     public function add_manufacturer(){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }else{
                 header("Location:" . ROOT . "/home");
@@ -940,26 +658,26 @@ class Manager extends Controller
                 if($result['amount']>0){
                     $_SESSION['error_page'] = "add_manufacturer";
                     $_SESSION['manufacturer'] = $manufacturerName;
-                    header("Location:" . ROOT . "/admin/error_page/2");
+                    header("Location:" . ROOT . "/manager/error_page/2");
                 }else{
                     $query = "INSERT INTO `manufacturers` (name) VALUES ('$manufacturerName');";
                     $result = $db->prepare($query);
                     $result->execute();
                     $_SESSION['success_page'] = "add_manufacturer";
-                    header("Location:" . ROOT . "/admin/success_page/1");
+                    header("Location:" . ROOT . "/manager/success_page/1");
                 }
             }else{
                 $_SESSION['error_page'] = "add_manufacturer";
-                header("Location:" . ROOT . "/admin/error_page/1");
+                header("Location:" . ROOT . "/manager/error_page/1");
             }
         }else{
-            $this->view('admin/add_manufacturer_admin', ['siteLinks'=>$siteLink,'manufacturer' => $manufacturerName]);
+            $this->view('manager/add_manufacturer_manager', ['siteLinks'=>$siteLink,'manufacturer' => $manufacturerName]);
         }
     }
 
     public function add_countries_to_manufacturer(){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }
             else{
@@ -1030,12 +748,12 @@ class Manager extends Controller
                 } 
                 $_SESSION['success_page'] = "add_manufacturer";
                 unset($_SESSION['manufacturername']);
-                header("Location:" . ROOT . "/admin/success_page/1");
+                header("Location:" . ROOT . "/manager/success_page/1");
                 
             }
             else{
                 $_SESSION['error_page'] = "add_countries_to_manufacturer";
-                header("Location:" . ROOT . "/admin/error_page/1");
+                header("Location:" . ROOT . "/manager/error_page/1");
             }
 
         }
@@ -1061,13 +779,13 @@ class Manager extends Controller
  
         }
 
-        $this->view('admin/add_countries_to_manufacturer_admin', ['siteLinks'=>$siteLink,'countries'=>$countries, 'manufacturers'=>$manufacturers, 'msg_color' => $return_msg_color ,
+        $this->view('manager/add_countries_to_manufacturer_manager', ['siteLinks'=>$siteLink,'countries'=>$countries, 'manufacturers'=>$manufacturers, 'msg_color' => $return_msg_color ,
         'msg' => $return_msg, 'manufacturername' => $manufacturername, 'selCountries'=> $selCountries, 'mnf_countries'=>$mnfCountries]);
     }
 
     public function list_of_manufacturers(){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }
             else{
@@ -1129,7 +847,7 @@ class Manager extends Controller
                 $countryArray = array();
                 if($temp>0&&$mnf_id['id']!=$mnfid){
                     $_SESSION['error_page'] = "list_of_manufacturers";
-                    header("Location:" . ROOT . "/admin/error_page/2");
+                    header("Location:" . ROOT . "/manager/error_page/2");
                 }else{
                     $queryI="INSERT INTO manufacturercountries (id_manufacturer,id_country) VALUES (:mnf_id,:ctr_id)";
                     foreach ($countrymnf as $country){
@@ -1167,18 +885,17 @@ class Manager extends Controller
                     }
 
                     $_SESSION['success_page'] = "list_of_manufacturers";
-                    header("Location:" . ROOT . "/admin/success_page/1");
+                    header("Location:" . ROOT . "/manager/success_page/1");
                 }
             }else{
                 $_SESSION['error_page'] = "list_of_manufacturers";
-                header("Location:" . ROOT . "/admin/error_page/1");
+                header("Location:" . ROOT . "/manager/error_page/1");
             }
         }
 
-        $rmPath=ROOT."/admin/remove_manufacturer";
-        //$editPath=ROOT."/admin/edit_category";
+        $rmPath=ROOT."/manager/remove_manufacturer";
 
-        $this->view('admin/list_of_manufacturers',['siteLinks'=>$siteLink,'mnfArray'=> $manufacturers, 'mnfCts'=> $mnfCountries,
+        $this->view('manager/list_of_manufacturers',['siteLinks'=>$siteLink,'mnfArray'=> $manufacturers, 'mnfCts'=> $mnfCountries,
          'rmpath'=> $rmPath, 'countries'=>$resultCnt]);
 
     }
@@ -1186,7 +903,7 @@ class Manager extends Controller
 
     public function remove_manufacturer($id_manuf=NULL){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "manager"){
                 unset($_SESSION['successOrErrorResponse']);
             }
             else{
@@ -1205,7 +922,7 @@ class Manager extends Controller
             $result->execute();
         }
     
-        header("Location:" . ROOT . "/admin/list_of_manufacturers");
+        header("Location:" . ROOT . "/manager/list_of_manufacturers");
     }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1213,7 +930,7 @@ class Manager extends Controller
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public function add_item(){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }else{
                 header("Location:" . ROOT . "/home");
@@ -1258,7 +975,7 @@ class Manager extends Controller
                 $tmpname = $_FILES['formFile']['tmp_name'];
                 if (!move_uploaded_file($tmpname, PHOTOSPATH . "/" . $imagename)) {
                     $_SESSION['error_page'] = "list_of_items";
-                    header("Location:" . ROOT . "/admin/error_page/3");
+                    header("Location:" . ROOT . "/manager/error_page/3");
                 } 
 
                 foreach($selCategories as $i){
@@ -1334,11 +1051,11 @@ class Manager extends Controller
                 }  
 
                 $_SESSION['success_page'] = "list_of_items";
-                header("Location:" . ROOT . "/admin/success_page/1");
+                header("Location:" . ROOT . "/manager/success_page/1");
 
             }else{
                 $_SESSION['error_page'] = "list_of_items";
-                header("Location:" . ROOT . "/admin/error_page/1");
+                header("Location:" . ROOT . "/manager/error_page/1");
             }
         }
 
@@ -1362,14 +1079,14 @@ class Manager extends Controller
         $selCategories = "";
 
         
-        $this->view('admin/add_item_admin', ['siteLinks'=>$siteLink,'items'=>$result, 'attributes' => $result2, 'categories'=>$categories, 
+        $this->view('manager/add_item_manager', ['siteLinks'=>$siteLink,'items'=>$result, 'attributes' => $result2, 'categories'=>$categories, 
         'selCategories'=>$selCategories]);
         
     }
 
     public function edit_item($editId){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }else{
                 header("Location:" . ROOT . "/home");
@@ -1530,7 +1247,7 @@ class Manager extends Controller
                         }
                         else{
                             $_SESSION['error_page'] = "list_of_items";
-                            header("Location:" . ROOT . "/admin/error_page/1");
+                            header("Location:" . ROOT . "/manager/error_page/1");
                         }
                     }
                 }
@@ -1614,17 +1331,17 @@ class Manager extends Controller
                     $tmpname = $_FILES['formFile']['tmp_name'];
                     if (!move_uploaded_file($tmpname, PHOTOSPATH . "/" . $imagename)) {
                         $_SESSION['error_page'] = "list_of_items";
-                        header("Location:" . ROOT . "/admin/error_page/3");
+                        header("Location:" . ROOT . "/manager/error_page/3");
                     }
                 }
                 
                 $_SESSION['success_page'] = "list_of_items";
-                header("Location:" . ROOT . "/admin/success_page/2");
+                header("Location:" . ROOT . "/manager/success_page/2");
 
             }
             else{
                 $_SESSION['error_page'] = "list_of_items";
-                header("Location:" . ROOT . "/admin/error_page/1");
+                header("Location:" . ROOT . "/manager/error_page/1");
             }
         }
 
@@ -1698,7 +1415,7 @@ class Manager extends Controller
             $imagePath = APPPATH . "/resources/itemsPhotos/brak_zdjecia.png";
         }
 
-        $this->view('admin/edit_item_admin', ['siteLinks'=>$siteLink,'items'=>$items, 'attributes' => $attributes, 'categories'=>$categories, 
+        $this->view('manager/edit_item_manager', ['siteLinks'=>$siteLink,'items'=>$items, 'attributes' => $attributes, 'categories'=>$categories, 
         'selCategories'=>$prevCtg, 'prevItems'=>$prevItems, 'prevCtg'=>$prevCtg, 'prevAttr'=>$prevAttr, 
         'prevDesc'=>$prevDesc, 'imagePath'=>$imagePath]);
         
@@ -1706,7 +1423,7 @@ class Manager extends Controller
 
     public function list_of_items(){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }else{
                 header("Location:" . ROOT . "/home");
@@ -1769,10 +1486,10 @@ class Manager extends Controller
             $attrArray[$id['iid']]= $result;
         }
         
-        $editItemPath=ROOT."/admin/edit_item";
-        $removeItemPath=ROOT."/admin/remove_item";
+        $editItemPath=ROOT."/manager/edit_item";
+        $removeItemPath=ROOT."/manager/remove_item";
         
-        $this->view('admin/list_of_items', ['siteLinks'=>$siteLink,'itemsArray' => $items, 'categoriesArray' => $categoriesArray, 
+        $this->view('manager/list_of_items', ['siteLinks'=>$siteLink,'itemsArray' => $items, 'categoriesArray' => $categoriesArray, 
         'catalogArray' => $catalogArray, 'attrArray' => $attrArray, 'editItemPath' => $editItemPath, 'removeItemPath' => $removeItemPath]);
     }
 
@@ -1780,7 +1497,7 @@ class Manager extends Controller
 
     public function list_of_uncategorized_items(){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }else{
                 header("Location:" . ROOT . "/home");
@@ -1835,10 +1552,10 @@ class Manager extends Controller
             $attrArray[$id['iid']]= $result;
         }
         
-        $editItemPath=ROOT."/admin/edit_item";
-        $removeItemPath=ROOT."/admin/remove_item";
+        $editItemPath=ROOT."/manager/edit_item";
+        $removeItemPath=ROOT."/manager/remove_item";
         
-        $this->view('admin/list_of_uncategorized_items', ['siteLinks'=>$siteLink,'itemsArray' => $items,
+        $this->view('manager/list_of_uncategorized_items', ['siteLinks'=>$siteLink,'itemsArray' => $items,
         'catalogArray' => $catalogArray, 'attrArray' => $attrArray, 'editItemPath' => $editItemPath, 'removeItemPath' => $removeItemPath]);
     }
 
@@ -1849,7 +1566,7 @@ class Manager extends Controller
  
     public function add_category(){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }else{
                 header("Location:" . ROOT . "/home");
@@ -1883,20 +1600,20 @@ class Manager extends Controller
                 if($result['amount']>0){
                     $_SESSION['error_page'] = "add_category";
                     $_SESSION['categoryName'] = $tekst2;
-                    header("Location:" . ROOT . "/admin/error_page/2");
+                    header("Location:" . ROOT . "/manager/error_page/2");
                 }else{
                     $query = "INSERT INTO `categories` (name) VALUES ('$tekst2');";
                     $result = $db->prepare($query);
                     $result->execute();
                     $_SESSION['success_page'] = "add_category";
-                    header("Location:" . ROOT . "/admin/success_page/1");
+                    header("Location:" . ROOT . "/manager/success_page/1");
                 }
             }else{
                 $_SESSION['error_page'] = "add_category";
-                header("Location:" . ROOT . "/admin/error_page/1");
+                header("Location:" . ROOT . "/manager/error_page/1");
             }
         }else{
-            $this->view('admin/add_category_admin', ['siteLinks'=>$siteLink,'category' => $tekst2]);
+            $this->view('manager/add_category_manager', ['siteLinks'=>$siteLink,'category' => $tekst2]);
         }
     }
 
@@ -1904,7 +1621,7 @@ class Manager extends Controller
     public function list_of_categories()
     {
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }else{
                 header("Location:" . ROOT . "/home");
@@ -1919,15 +1636,15 @@ class Manager extends Controller
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC); 
 
-        $rmCatPath=ROOT."/admin/remove_category";
-        $editCatPath=ROOT."/admin/edit_category";
-        $this->view('admin/list_of_categories', ['siteLinks'=>$siteLink,'categoriesArray'=>$result, 'rmpath'=> $rmCatPath, 'editpath'=> $editCatPath]);
+        $rmCatPath=ROOT."/manager/remove_category";
+        $editCatPath=ROOT."/manager/edit_category";
+        $this->view('manager/list_of_categories', ['siteLinks'=>$siteLink,'categoriesArray'=>$result, 'rmpath'=> $rmCatPath, 'editpath'=> $editCatPath]);
     }
 
 
     public function edit_category($id_categ=NULL){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }else{
                 header("Location:" . ROOT . "/home");
@@ -1951,7 +1668,7 @@ class Manager extends Controller
                 $temp = $categ_id['COUNT(id)'];
                 if($temp>0&&$categ_id['id']!=$id_categ){
                     $_SESSION['error_page'] = "list_of_categories";
-                    header("Location:" . ROOT . "/admin/error_page/2");
+                    header("Location:" . ROOT . "/manager/error_page/2");
                 }else{
                     $query = "UPDATE `categories` 
                         SET name = '$tekst2' 
@@ -1959,20 +1676,20 @@ class Manager extends Controller
                     $result = $db->prepare($query);
                     $result->execute();
                     $_SESSION['success_page'] = "list_of_categories";
-                    header("Location:" . ROOT . "/admin/success_page/1");
+                    header("Location:" . ROOT . "/manager/success_page/1");
                 }
             }else{
                 $_SESSION['error_page'] = "list_of_categories";
-                header("Location:" . ROOT . "/admin/error_page/1");
+                header("Location:" . ROOT . "/manager/error_page/1");
             }
         }else{
-            header("Location:" . ROOT . "/admin/list_of_categories");
+            header("Location:" . ROOT . "/manager/list_of_categories");
         }
     }
 
     public function remove_category($id_categ=NULL){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }else{
                 header("Location:" . ROOT . "/home");
@@ -1989,95 +1706,12 @@ class Manager extends Controller
             $result->execute();
         }  
     
-        header("Location:" . ROOT . "/admin/list_of_categories");
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////SALES REPORT////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////
-
-    public function sales_report(){
-        if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
-                unset($_SESSION['successOrErrorResponse']);
-            }
-            else{
-                header("Location:" . ROOT . "/home");
-            }
-        }
-        else{
-            header("Location:" . ROOT . "/login");
-        }
-
-        require_once dirname(__FILE__,2) . '/core/database.php';
-        $siteLink = $this->getFooter($db);
-
-        $amount='';
-        $earnings='';
-        $selling='';
-
-
-        if(isset($_POST['reportSub'])){;
-            if(!empty($_POST['dateFrom'])&&!empty($_POST['dateTo'])){
-            $query="SELECT SUM(amount) FROM itemsinorder iio
-            INNER JOIN orders o on o.id=iio.id_order
-            WHERE orderdate BETWEEN :dateFrom AND :dateTo";
-            $result=$db->prepare($query);
-            $result->bindParam(':dateFrom', $_POST['dateFrom']);
-            $result->bindParam(':dateTo', $_POST['dateTo']);
-            $result->execute();
-            $amount=$result->fetchAll(PDO::FETCH_ASSOC);
-            $amount=$amount[0]['SUM(amount)'];
-            if(empty( $amount)){
-                $amount=0;
-            }
-
-            $query="SELECT SUM(iio.amount*price) FROM itemsinorder iio
-            INNER JOIN orders o on o.id=iio.id_order
-            INNER JOIN items i on i.id=iio.id_item
-            WHERE orderdate BETWEEN :dateFrom AND :dateTo";
-            $result=$db->prepare($query);
-            $result->bindParam(':dateFrom', $_POST['dateFrom']);
-            $result->bindParam(':dateTo', $_POST['dateTo']);
-            $result->execute();
-            $earnings=$result->fetchAll(PDO::FETCH_ASSOC);
-            $earnings= $earnings[0]['SUM(iio.amount*price)'];
-            if(empty( $earnings)){
-                $earnings=0;
-            }
-
-            $query="SELECT i.name AS item, i.price AS price,
-             m.name AS mnf, c.name AS country, SUM(i.price*iio.amount) AS earnings, SUM(iio.amount) AS sellAmount
-            FROM items i
-            INNER JOIN itemsinorder iio ON i.id = iio.id_item
-            INNER JOIN orders o ON o.id=iio.id_order
-            INNER JOIN manufacturercountries mc on mc.id=i.id_manufacturercountry
-            INNER JOIN manufacturers m on m.id=mc.id_manufacturer
-            INNER JOIN countries c on c.id=mc.id_country
-            WHERE orderdate BETWEEN :dateFrom AND :dateTo
-            GROUP BY i.name
-            ORDER BY SUM(iio.amount) DESC";
-            $result=$db->prepare($query);
-            $result->bindParam(':dateFrom', $_POST['dateFrom']);
-            $result->bindParam(':dateTo', $_POST['dateTo']);
-            $result->execute();
-            $selling=$result->fetchAll(PDO::FETCH_ASSOC);
-
-
-            }
-            else{
-                $_SESSION['error_page'] = "sales_report";
-                header("Location:" . ROOT . "/admin/error_page/1");
-            }
-        }
-
-
-        $this->view('admin/sales_report', ['siteLinks'=>$siteLink, 'amount'=>$amount, 'earnings'=>$earnings, 'selling'=> $selling]);
+        header("Location:" . ROOT . "/manager/list_of_categories");
     }
 
     public function add_shipping_method(){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }else{
                 header("Location:" . ROOT . "/home");
@@ -2101,7 +1735,7 @@ class Manager extends Controller
 
         $siteLink = $this->getFooter($db);
 
-        if(isset($_POST['addpaymeth'])){
+        if(isset($_POST['addshipmeth'])){
             if(isset($_POST['methodName'])) $_SESSION['paymentMethodName'] = $_POST['methodName'];
             if(isset($_POST['methodPrice'])) $_SESSION['methodPrice'] = $_POST['methodPrice'];
             if(isset($_POST['methodActive'])) $_SESSION['paymentMethodActive'] = $_POST['methodActive'];
@@ -2121,26 +1755,26 @@ class Manager extends Controller
                 if($result['amount']>0){
                     $_SESSION['error_page'] = "shipping_method";
                     $_SESSION['methodName'] = $methodName;
-                    header("Location:" . ROOT . "/admin/error_page/2");
+                    header("Location:" . ROOT . "/manager/error_page/2");
                 }else{
                     $query = "INSERT INTO shippingmethods (name, price, active) VALUES ('$methodName', '$methodPrice', '$methodActive');";
                     $result = $db->prepare($query);
                     $result->execute();
                     $_SESSION['success_page'] = "shipping_method";
-                    header("Location:" . ROOT . "/admin/success_page/1");
+                    header("Location:" . ROOT . "/manager/success_page/1");
                 }
             }else{
                 $_SESSION['error_page'] = "shipping_method";
-                header("Location:" . ROOT . "/admin/error_page/1");
+                header("Location:" . ROOT . "/manager/error_page/1");
             }
         }else{
-            $this->view('admin/add_shipping_method_admin', ['siteLinks'=>$siteLink]);
+            $this->view('manager/add_shipping_method_manager', ['siteLinks'=>$siteLink]);
         }
     }
 
     public function list_of_shipping_methods(){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }else{
                 header("Location:" . ROOT . "/home");
@@ -2170,14 +1804,14 @@ class Manager extends Controller
 
         
 
-        $editMethPath=ROOT."/admin/edit_shipping_method";
-        $this->view('admin/list_of_shipping_methods_admin', ['siteLinks'=>$siteLink, 'shippingArray' => $result, 'editpath' => $editMethPath,  
+        $editMethPath=ROOT."/manager/edit_shipping_method";
+        $this->view('manager/list_of_shipping_methods_manager', ['siteLinks'=>$siteLink, 'shippingArray' => $result, 'editpath' => $editMethPath,  
         'shippingOnlyActive' =>$shippingOnlyActive]);
     }
 
     public function edit_shipping_method($id_m=NULL){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }else{
                 header("Location:" . ROOT . "/home");
@@ -2197,16 +1831,16 @@ class Manager extends Controller
         $result = $db->prepare($query);
         $result->execute();
         $_SESSION['success_page'] = "list_of_shipping_methods";
-        header("Location:" . ROOT . "/admin/success_page/2");
+        header("Location:" . ROOT . "/manager/success_page/2");
         
         }else{
-            header("Location:" . ROOT . "/admin/list_of_attributes");
+            header("Location:" . ROOT . "/manager/list_of_attributes");
         }
     }
 
     public function add_payment_method(){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }else{
                 header("Location:" . ROOT . "/home");
@@ -2250,26 +1884,26 @@ class Manager extends Controller
                 if($result['amount']>0){
                     $_SESSION['error_page'] = "add_payment_method";
                     $_SESSION['paymentMethodName'] = $methodName;
-                    header("Location:" . ROOT . "/admin/error_page/2");
+                    header("Location:" . ROOT . "/manager/error_page/2");
                 }else{
                     $query = "INSERT INTO paymentmethods (name, fee, active) VALUES ('$methodName', '$methodFee', '$methodActive');";
                     $result = $db->prepare($query);
                     $result->execute();
                     $_SESSION['success_page'] = "add_payment_method";
-                    header("Location:" . ROOT . "/admin/success_page/1");
+                    header("Location:" . ROOT . "/manager/success_page/1");
                 }
             }else{
                 $_SESSION['error_page'] = "add_payment_method";
-                header("Location:" . ROOT . "/admin/error_page/1");
+                header("Location:" . ROOT . "/manager/error_page/1");
             }
         }else{
-            $this->view('admin/add_payment_method_admin', ['siteLinks'=>$siteLink]);
+            $this->view('manager/add_payment_method_manager', ['siteLinks'=>$siteLink]);
         }
     }
 
     public function list_of_payment_methods(){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }else{
                 header("Location:" . ROOT . "/home");
@@ -2297,14 +1931,14 @@ class Manager extends Controller
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        $editMethPath=ROOT."/admin/edit_payment_method";
-        $this->view('admin/list_of_payment_methods_admin', ['siteLinks'=>$siteLink,'paymentArray' => $result, 'editpath' => $editMethPath, 
+        $editMethPath=ROOT."/manager/edit_payment_method";
+        $this->view('manager/list_of_payment_methods_manager', ['siteLinks'=>$siteLink,'paymentArray' => $result, 'editpath' => $editMethPath, 
         'paymentOnlyActive' =>$paymentOnlyActive]);
     }
 
     public function edit_payment_method($id_p=NULL){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "manager"){
                 unset($_SESSION['successOrErrorResponse']);
             }else{
                 header("Location:" . ROOT . "/home");
@@ -2327,11 +1961,11 @@ class Manager extends Controller
             $result = $db->prepare($query);
             $result->execute();
             $_SESSION['success_page'] = "list_of_payment_methods";
-            header("Location:" . ROOT . "/admin/success_page/2");
+            header("Location:" . ROOT . "/manager/success_page/2");
             
          
         }else{
-            header("Location:" . ROOT . "/admin/list_of_attributes");
+            header("Location:" . ROOT . "/manager/list_of_attributes");
         }
     }
     //////////////////////////////////////////////////////////////////////////////////////
@@ -2339,7 +1973,7 @@ class Manager extends Controller
     ////////////////////////////////////////////////////////////////////////////////////// 
     public function edit_home(){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }
             else{
@@ -2383,12 +2017,12 @@ class Manager extends Controller
                 $tmpname = $_FILES['formFile']['tmp_name'];
                 if (!move_uploaded_file($tmpname, PHOTOSPATH . "/upload/" . $imagename)) {
                     $_SESSION['error_page'] = "list_of_items";
-                    header("Location:" . ROOT . "/admin/error_page/3");
+                    header("Location:" . ROOT . "/manager/error_page/3");
                 }  
             }
 
             $_SESSION['success_page'] = "edit_home";
-            header("Location:" . ROOT . "/admin/success_page/2");
+            header("Location:" . ROOT . "/manager/success_page/2");
 
         }
 
@@ -2398,14 +2032,14 @@ class Manager extends Controller
         $result=$result->fetch(PDO::FETCH_ASSOC);
 
 
-        $this->view('admin/edit_home', ['result'=>$result, 'siteLinks'=>$siteLink]);
+        $this->view('manager/edit_home', ['result'=>$result, 'siteLinks'=>$siteLink]);
     }
     //////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////INFO////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////// 
     public function edit_informations(){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }
             else{
@@ -2432,11 +2066,11 @@ class Manager extends Controller
                 $tmpname = $_FILES['formFile']['tmp_name'];
                 if (!move_uploaded_file($tmpname, MAINPATHLOC . "/resources/shopPhotos/siteicon.png")) {
                     $_SESSION['error_page'] = "edit_informations";
-                    header("Location:" . ROOT . "/admin/error_page/3");
+                    header("Location:" . ROOT . "/manager/error_page/3");
                 }
             }
             $_SESSION['success_page'] = "edit_informations";
-            header("Location:" . ROOT . "/admin/success_page/2");
+            header("Location:" . ROOT . "/manager/success_page/2");
         }
 
         $query="SELECT sitename FROM siteinfo LIMIT 1";
@@ -2444,7 +2078,7 @@ class Manager extends Controller
         $result->execute();
         $result=$result->fetch(PDO::FETCH_ASSOC);
 
-        $this->view('admin/edit_informations', ['result' => $result, 'siteLinks'=>$siteLink, 'imagePath' => $imagePath]);
+        $this->view('manager/edit_informations', ['result' => $result, 'siteLinks'=>$siteLink, 'imagePath' => $imagePath]);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////
@@ -2453,7 +2087,7 @@ class Manager extends Controller
 
     public function edit_footer(){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "admin"){
+            if($_SESSION['loggedUser'] == "manager"){
                 unset($_SESSION['successOrErrorResponse']);
             }
             else{
@@ -2507,7 +2141,7 @@ class Manager extends Controller
             $result->bindParam(':bottomtextpath', $_POST['bottomtextpath']);
             $result->execute();
             $_SESSION['success_page'] = "edit_footer";
-            header("Location:" . ROOT . "/admin/success_page/2");
+            header("Location:" . ROOT . "/manager/success_page/2");
         }
 
         $query="SELECT * FROM footer LIMIT 1";
@@ -2515,7 +2149,7 @@ class Manager extends Controller
         $result->execute();
         $result=$result->fetch(PDO::FETCH_ASSOC);
 
-        $this->view('admin/edit_footer', ['result' => $result, 'siteLinks'=>$siteLink]);
+        $this->view('manager/edit_footer', ['result' => $result, 'siteLinks'=>$siteLink]);
     }
 
     private function getFooter($db){

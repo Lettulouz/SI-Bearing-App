@@ -219,10 +219,38 @@ class Admin extends Controller
         $categoriesCount = $result->fetchAll(PDO::FETCH_ASSOC);
         $categoriesCount = $categoriesCount[0]['Count(name)'];
 
-        $this->view('admin/index', ['siteLinks'=>$siteLink ,'items'=>$items, 'itemsCount'=>$itemsCount, 'catalogs'=>$catalogs, 'catalogsCount'=>$catalogsCount,
-        'attributes'=>$attributes, 'attributesCount'=>$attributesCount, 'manufacturers'=>$manufacturers, 
+        $query="SELECT GROUP_CONCAT(name SEPARATOR ', ') as shippingMethodsString FROM shippingmethods WHERE active=1";
+        $result = $db->query($query);
+        
+        $shippingMethodsString = $result->fetch(PDO::FETCH_ASSOC);
+        $shippingMethodsString = $shippingMethodsString['shippingMethodsString'];
+        
+        $query="SELECT Count(name) as c
+        FROM shippingmethods WHERE active=1";
+        $result = $db->query($query);
+        
+        $shippingMethodsCount = $result->fetch(PDO::FETCH_ASSOC);
+        $shippingMethodsCount = $shippingMethodsCount['c'];
+
+        $query="SELECT GROUP_CONCAT(name SEPARATOR ', ') as paymentMethodsString FROM paymentmethods WHERE active=1";
+        $result = $db->query($query);
+        
+        $paymentMethodsString = $result->fetch(PDO::FETCH_ASSOC);
+        $paymentMethodsString = $paymentMethodsString['paymentMethodsString'];
+        
+        $query="SELECT Count(name) as c
+        FROM paymentmethods WHERE active=1";
+        $result = $db->query($query);
+        
+        $paymentMethodsCount = $result->fetch(PDO::FETCH_ASSOC);
+        $paymentMethodsCount = $paymentMethodsCount['c'];
+
+        $this->view('admin/index', ['siteLinks'=>$siteLink ,'items'=>$items, 'itemsCount'=>$itemsCount, 'catalogs'=>$catalogs, 
+        'catalogsCount'=>$catalogsCount, 'attributes'=>$attributes, 'attributesCount'=>$attributesCount, 'manufacturers'=>$manufacturers, 
         'manufacturersCount'=>$manufacturersCount,'categories'=>$categories, 'categoriesCount'=>$categoriesCount,
-        'usersCount'=>$usersCount,'users'=>$users, 'managersCount'=>$managersCount,'managers'=>$managers, 'adminsCount'=>$adminsCount,'admins'=>$admins]);
+        'usersCount'=>$usersCount,'users'=>$users, 'managersCount'=>$managersCount,'managers'=>$managers, 'adminsCount'=>$adminsCount,
+        'admins'=>$admins, 'shippingMethodsString' => $shippingMethodsString, 'shippingMethodsCount' => $shippingMethodsCount, 
+        'paymentMethodsCount' => $paymentMethodsCount,'paymentMethodsString' => $paymentMethodsString]);
     }
 
 
