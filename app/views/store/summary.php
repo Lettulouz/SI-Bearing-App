@@ -66,7 +66,7 @@
               </tr>
               <tr class="fw-bold">
                 <input type='hidden' id='totalOrderPriceH' value ='<?php echo $data['totalOrderPrice'] ?>'>
-                <td colspan="2">Razem <strong id='totalOrderPrice'> <?php echo $data['totalOrderPrice'] ?>zł</strong></td>
+                <td colspan="2">Razem <strong id='totalOrderPrice'> <?php echo $data['totalOrderPrice'] ?> zł</strong></td>
                 <td class="text-end"></td>
               </tr>
             </tfoot>
@@ -105,7 +105,8 @@
                         <select class="form-select form-select-sm delivery" name="shipping">
                           <option selected disabled>Dostawa</option>
                           <option value="1">Odbiór osobisty</option>
-                          <option value="2">Kurier</option>
+                          <option value="2">Kurier DHL</option>
+                          <option value="3">Kurier DPD</option>
                         </select>
                         </div>
                 </div>
@@ -114,47 +115,44 @@
             <div class="col-lg-6">
               <h3 class="h6">Dane dostawy</h3>
               <div class='row'>
-                <div class="col-12 col-md-6 col-lg-4 p-1">
+                <div class="col-12 col-md-6 p-1">
                   <input class="form-control form-control-sm" type="text" name="name" placeholder="Imię" required>
                 </div>
-                <div class="col-12 col-md-6 col-lg-4 p-1">
+                <div class="col-12 col-md-6 p-1">
                   <input class="form-control form-control-sm" type="text" name="surname" placeholder="Nazwisko" required>
                 </div>
               </div>
               <div class='row'>
-                <div class="col-12 col-md-6 col-lg-4 p-1">
+                <div class="col-12 col-md-6 p-1">
                   <input class="form-control form-control-sm" type="text" name="city" placeholder="Miasto" required>
                 </div>
-                <div class="col-12 col-md-6 col-lg-4 p-1">
+                <div class="col-12 col-md-6 p-1">
                   <input class="form-control form-control-sm" type="text" name="postcode" placeholder="Kod pocztowy" required>
                 </div>
               </div>
               <div class='row'>
-                <div class="col-12 col-md-6 col-lg-4 p-1">
-                  <input class="form-control form-control-sm" type="text" name="city" placeholder="Ulica" required>
+                <div class="col-12 col-md-6 p-1">
+                  <input class="form-control form-control-sm" type="text" name="street" placeholder="Ulica" required>
                 </div>
-                <div class="col-6 col-md-3 col-lg-3 p-1">
-                  <input class="form-control form-control-sm" type="number" name="postcode" placeholder="Nr budynku" required>
-                </div>
-                <div class="col-6 col-md-3 col-lg-3 p-1">
-                  <input class="form-control form-control-sm" type="number" name="postcode" placeholder="Nr mieszkania" >
+                <div class="col-6 col-md-6 p-1">
+                  <input class="form-control form-control-sm" type="number" name="housenumber" placeholder="Numer" required>
                 </div>
               </div>
               <div class='row'>
-                <div class="col-12 col-md-6 col-lg-4 p-1">
-                  <input class="form-control form-control-sm" type="text" name="Country" placeholder="Kraj" required>
+                <div class="col-12 col-md-6 p-1">
+                  <input class="form-control form-control-sm" type="text" name="country" placeholder="Kraj" required>
                 </div>
-                <div class="col-12 col-md-6 col-lg-4 p-1">
+                <div class="col-12 col-md-6 p-1">
                   <input class="form-control form-control-sm" type="text" name="voivoden" placeholder="Województwo" required>
                 </div>
               </div>
               <div class='row'>
-                <div class=" col-9 col-md-6 p-1">
-                  <input class="form-control form-control-sm" type="tel" name="Country" placeholder="numer telefonu" required>
+                <div class="col-9 p-1">
+                  <input class="form-control form-control-sm" type="tel" name="phonenumber" placeholder="Numer telefonu" required>
                 </div>
 
-                <div class=" col-auto p-1 float-end">
-                  <input type="submit"  class="btn btn-primary btn-sm">
+                <div class="col-3 p-1 ">
+                  <input type="submit"  class="btn btn-primary btn-sm w-100">
                 </div>
               </div>
 
@@ -174,12 +172,16 @@
   <script>
     $( ".delivery" ).change(function() {
       if($(this).val() == 1){
-        document.getElementById('orderPrice').innerHTML = '10 zł';
-        document.getElementById('totalOrderPrice').innerHTML = parseFloat(document.getElementById('totalOrderPriceH').value) + 10 + " zł";
+        document.getElementById('orderPrice').innerHTML = 'Nie dotyczy';
+        document.getElementById('totalOrderPrice').innerHTML = parseFloat(document.getElementById('totalOrderPriceH').value) + 0 + " zł";
       }
       else if($(this).val() == 2){
-        document.getElementById('orderPrice').innerHTML = '5 zł';
-        document.getElementById('totalOrderPrice').innerHTML = parseFloat(document.getElementById('totalOrderPriceH').value) + 5 + " zł";
+        document.getElementById('orderPrice').innerHTML = '14 zł';
+        document.getElementById('totalOrderPrice').innerHTML = parseFloat(document.getElementById('totalOrderPriceH').value) + 14 + " zł";
+      }
+      else if($(this).val() == 3){
+        document.getElementById('orderPrice').innerHTML = '12 zł';
+        document.getElementById('totalOrderPrice').innerHTML = parseFloat(document.getElementById('totalOrderPriceH').value) + 12 + " zł";
       }
     });
 </script>

@@ -2,7 +2,7 @@
 <?php include "navbar_top.php"; ?>
 <div class="homeMain">
     <div class="container-fluid my-4">
-    <form method="POST"  action=<?php echo ROOT."/store/invoice"?>>
+    <form method="POST"  action=<?php echo ROOT."/store/summary"?>>
         <div class="row d-flex justify-content-center">
            
                 <aside class="col-lg-6">
@@ -44,7 +44,7 @@
                                                     <td>
                                                         <div class='price-wrap'> <var class='price' id='{$item['itemID']}'></var> <small class='text-muted'>{$item['itemPrice']} zł każdy </small> </div>
                                                     </td>
-                                                    <td class='text-right d-none d-md-block'><button type='button' class='btn btn-light btn-round remove' data-abc='true' name='{$item['itemID']}'> Remove</a> </td>
+                                                    <td class='text-right d-none d-md-block'><button type='button' class='btn btn-lg btn-light btn-round remove fs-6' data-abc='true' name='{$item['itemID']}'> Usuń</a> </td>
                                                 </tr>";
                                             }
                                         ?>
@@ -62,10 +62,12 @@
                     <div class="card">
                         <div class="card-body">
                             <dl class="dlist-align">
-                                <dt>Total:</dt>
-                                <dd class="text-right text-dark b ml-3"><strong id='totalCost'>$59.97</strong></dd>
+                                <dt>Razem:</dt>
+                                <dd class="text-right text-dark b ml-3"><strong id='totalCost'>0.00 zł</strong></dd>
                             </dl>
-                            <hr> <button type='submit' class="btn btn-out btn-primary btn-square btn-main" data-abc="true"> Dokonaj zakupu </button> <a href=<?php echo ROOT."/store"?> class="btn btn-out btn-success btn-square btn-main mt-2" data-abc="true">Continue Shopping</a>
+                            <hr> 
+                            <button type='submit' class="btn btn-out btn-primary btn-square btn-main" data-abc="true" <?php if(empty($data['itemsArray'])) echo "disabled"?>> Dokonaj zakupu </button> 
+                            <a href=<?php echo ROOT."/store"?> class="btn btn-out btn-success btn-square btn-main mt-2" data-abc="true">Kontynuuj zakupy</a>
                         </div>
                     </div>
                 </aside>

@@ -510,7 +510,7 @@ class Store extends Controller
         'siteFooter' => $siteFooter, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
     }
 
-    public function invoice(){
+    public function summary(){
         isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
         require_once dirname(__FILE__,2) . '/core/database.php';
@@ -541,9 +541,12 @@ class Store extends Controller
                 $i++;
             }
 
+        }else{
+            header("Location:" . ROOT . "/store/cart");
+            return;
         }
 
-        $this->view('store/invoice', ['siteFooter' => $siteFooter, 'siteName' => $siteName, 'totalItemPrice' => $totalItemPrice,
+        $this->view('store/summary', ['siteFooter' => $siteFooter, 'siteName' => $siteName, 'totalItemPrice' => $totalItemPrice,
         'itemsArray'=>$itemsInCart, 'isLogged' => $isLogged, 'totalOrderPrice' => $totalOrderPrice,
         'loggedUser_name' => $loggedUser_name, 'numberOfItems' => $numberOfItems]);
  
