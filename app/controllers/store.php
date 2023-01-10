@@ -254,7 +254,7 @@ class Store extends Controller
             }
         }
         if($querySwitch){
-            $query="SELECT i.name, i.id as itemID, price, m.name as 'name2', i.amount, i.price as itemPrice
+            $query="SELECT i.name, i.id as itemID, price, m.name as 'name2', i.amount, i.price as itemPrice, i.amountComma as isDouble
             FROM items i 
             INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
             INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
@@ -273,7 +273,7 @@ class Store extends Controller
             . $sortValueQuery .
             " LIMIT :limit1, 32";
         }else{
-            $query="SELECT i.name, i.id as itemID, price, m.name as 'name2', i.amount, i.price as itemPrice
+            $query="SELECT i.name, i.id as itemID, price, m.name as 'name2', i.amount, i.price as itemPrice, i.amountComma as isDouble
             FROM items i 
             INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
             INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
@@ -517,8 +517,35 @@ class Store extends Controller
         $siteFooter = $this->getFooter($db);   
         $siteName = $this->getSiteName($db);
 
-        $this->view('store/invoice', ['siteFooter' => $siteFooter, 'siteName' => $siteName, 
-        'itemsArray'=>$itemsInCart, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
+        $itemsInCart = NULL;
+        $numberOfItems = array();
+        $totalItemPrice = array();
+        $totalOrderPrice = 0;
+        
+        if(isset($_COOKIE['itemsInCart']) && $_COOKIE['itemsInCart'] != ''){
+            $query="SELECT d.title, d.description, i.name, i.id as itemID, m.name as 'name2', i.price as itemPrice
+                FROM items i 
+                LEFT JOIN descriptions d ON d.id_item=i.id
+                INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
+                INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
+                WHERE i.id IN (".rtrim($_COOKIE['itemsInCart'],',').")";
+
+
+            $itemsInCart = $db->query($query);
+            $itemsInCart = $itemsInCart->fetchAll(PDO::FETCH_ASSOC);
+            $i = 0;
+            foreach($_POST as $key => $value){
+                array_push($numberOfItems, $value);
+                array_push($totalItemPrice, $itemsInCart[$i]['itemPrice'] * $value);
+                $totalOrderPrice += $totalItemPrice[$i];
+                $i++;
+            }
+
+        }
+
+        $this->view('store/invoice', ['siteFooter' => $siteFooter, 'siteName' => $siteName, 'totalItemPrice' => $totalItemPrice,
+        'itemsArray'=>$itemsInCart, 'isLogged' => $isLogged, 'totalOrderPrice' => $totalOrderPrice,
+        'loggedUser_name' => $loggedUser_name, 'numberOfItems' => $numberOfItems]);
  
     }
 

@@ -25,25 +25,48 @@
           <table class="table table-borderless">
             <tbody>
               <tr>
-              <?php
-                echo "<td></td>
-                <td></td>
-                <td></td>
-                <td></td>";
+                <?php
+                  $items = $data['itemsArray'];
+                  foreach($items as $j => $item) 
+                  {
+                      $imagePath = APPPATH . "/resources/itemsPhotos/[" . $item['itemID'] . "].png";
+                      $imagePathCheck = RESOURCEPATH . "/[" . $item['itemID'] . "].png";
+                      if(!file_exists($imagePathCheck)){
+                          $imagePath = APPPATH . "/resources/itemsPhotos/brak_zdjecia.png";
+                      }
+                      echo "
+                      <tr>
+                          <td>
+                              <figure class='itemside align-items-center'>
+                                  <div class='aside'><img src='$imagePath' class='img-sm'></div>
+                                  <figcaption class='info'> <a href='#' class='title text-dark' data-abc='true'>{$item['name']}</a>
+                                      <p class='text-muted small'> Firma: {$item['name2']} </p>
+                                  </figcaption>
+                              </figure>
+                          </td>
+                          <td> 
+                              <div class='price-wrap'> {$data['numberOfItems'][$j]} szt</div>
+                          <td>
+                              <div class='price-wrap'> <var class='price' id='{$item['itemID']}'> {$data['totalItemPrice'][$j]} zł </var> 
+                              <br><small class='text-muted'>{$item['itemPrice']} zł każdy </small> </div>
+                          </td>
+                      </tr>";
+                  }
                 ?>
               </tr>
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="2">Kwota zamówienia</td>
+                <td colspan="2" >Kwota zamówienia <strong id='totalItemPrice'> <?php echo $data['totalOrderPrice'] ?> zł</strong></td>
                 <td class="text-end"></td>
               </tr>
               <tr>
-                <td colspan="2">Wysyłka</td>
+                <td colspan="2">Wysyłka <strong id='orderPrice'></strong></td>
                 <td class="text-end"></td>
               </tr>
               <tr class="fw-bold">
-                <td colspan="2">Razem</td>
+                <input type='hidden' id='totalOrderPriceH' value ='<?php echo $data['totalOrderPrice'] ?>'>
+                <td colspan="2">Razem <strong id='totalOrderPrice'> <?php echo $data['totalOrderPrice'] ?>zł</strong></td>
                 <td class="text-end"></td>
               </tr>
             </tfoot>
@@ -79,7 +102,7 @@
 
                 <div class='row'>
                         <div class="col-12 p-1">
-                        <select class="form-select form-select-sm" name="shipping">
+                        <select class="form-select form-select-sm delivery" name="shipping">
                           <option selected disabled>Dostawa</option>
                           <option value="1">Odbiór osobisty</option>
                           <option value="2">Kurier</option>
@@ -147,3 +170,16 @@
 </div>
   </div>
   <?php include dirname(__FILE__,2) . "/footer.php"; ?>
+
+  <script>
+    $( ".delivery" ).change(function() {
+      if($(this).val() == 1){
+        document.getElementById('orderPrice').innerHTML = '10 zł';
+        document.getElementById('totalOrderPrice').innerHTML = parseFloat(document.getElementById('totalOrderPriceH').value) + 10 + " zł";
+      }
+      else if($(this).val() == 2){
+        document.getElementById('orderPrice').innerHTML = '5 zł';
+        document.getElementById('totalOrderPrice').innerHTML = parseFloat(document.getElementById('totalOrderPriceH').value) + 5 + " zł";
+      }
+    });
+</script>

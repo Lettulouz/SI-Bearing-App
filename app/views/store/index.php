@@ -291,7 +291,8 @@
 
                                             <b> Cena: {$item['price']} zł </b>
                                                 <input type='hidden' value=".$item['itemID']." name='itemID'>
-                                                <button type='submit' class='btn btn-danger float-end ' id='".$item['itemID']."-".$item['itemPrice']."-".$item['amount']."' name='addToCart'>
+                                                <button type='submit' class='btn btn-danger float-end ' 
+                                                id='".$item['itemID']."-".$item['itemPrice']."-".$item['amount']."-".$item['isDouble']."' name='addToCart'>
                                                     <i class='bi bi-basket2'></i>
                                                 </button>
 
@@ -513,22 +514,25 @@
     $('[name="addToCart"]').click(function(){
         let idValueAmount = jQuery(this).attr("id").split("-");
         
-
         if(!sessionStorage.getItem(idValueAmount[0]))
-            sessionStorage.setItem(idValueAmount[0], '1'+'-'+idValueAmount[1]+'-'+idValueAmount[2]); 
+            sessionStorage.setItem(idValueAmount[0], '1'+'-'+idValueAmount[1]+'-'+idValueAmount[2]+'-'+idValueAmount[3]); 
         else{
             let valueAndAmount = sessionStorage.getItem(idValueAmount[0]).split("-");
-            if(valueAndAmount[2]>valueAndAmount[0]){
+            if(valueAndAmount[2]>=valueAndAmount[0]+1){
                 var newValue = parseFloat(valueAndAmount[0])+1;
-                sessionStorage.setItem(idValueAmount[0], newValue+'-'+idValueAmount[1]+'-'+idValueAmount[2]); 
+                sessionStorage.setItem(idValueAmount[0], newValue+'-'+idValueAmount[1]+'-'+idValueAmount[2]+'-'+idValueAmount[3]); 
             }
         }
         var newCookie = "";
+        
         Object.keys(sessionStorage).forEach(function(key, value){
-            newCookie += key + ', ';
+            if(!Number.isNaN(Number.parseInt(key)))
+                newCookie += key + ', ';
         });
-        console.log(newCookie);
-        document.cookie = 'itemsInCart ='+newCookie+';3600, expires=Thu, 18 Dec 2023 12:00:00 UTC; path=/';
+        var today = new Date();
+        var expire = new Date();
+        expire.setTime(today.getTime() + 3600000*24*7);
+        document.cookie = 'itemsInCart ='+newCookie+';3600, expires='+expire.toGMTString()+'; path=/';
     });
 
     $(".checkboxvarattr").click(function(e){
@@ -730,3 +734,4 @@ document.querySelector(".pricepart").addEventListener("keypress", function (evt)
 </script>
 
 <?php include dirname(__FILE__,2) . "/footer.php"; ?>
+
