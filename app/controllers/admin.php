@@ -20,6 +20,10 @@ class Admin extends Controller
                 $firstLine = "Usunięto rekord";
                 $secondLine = "pomyślnie!";
             }
+            else if($sid==4){
+                $firstLine = "Zmieniono status";
+                $secondLine = "pomyślnie!";
+            }
             $this->view('success_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
             header("Refresh: 2; url=" . ROOT . "/admin/" . $path);
         }
@@ -924,7 +928,56 @@ class Admin extends Controller
         }
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
-        $this->view('admin/list_of_orders', ['siteLinks'=>$siteLink]);
+
+        if(isset($_POST['stateSubmit'])){
+           if(!empty($_POST['orderid'])){
+                $query="UPDATE orders SET trackingnumber=:trackingnumber, orderstate=:orderstate
+                WHERE id=:id";
+                $result = $db->prepare($query);
+                $result->bindParam(':trackingnumber',$_POST['trackingnumber']);
+                $result->bindParam(':orderstate',$_POST['orderstate']);
+                $result->bindParam(':id',$_POST['orderid']);
+                $result->execute();
+                $_SESSION['success_page'] = "list_of_orders";
+                header("Location:" . ROOT . "/admin/success_page/4");
+           }else{
+            $_SESSION['error_page'] = "list_of_orders";
+            header("Location:" . ROOT . "/admin/error_page/1");
+           }
+
+      }
+
+
+        $query="SELECT o.*, sm.name AS smName, u.name AS user, u.email FROM orders o
+        INNER JOIN shippingmethods sm ON o.id_shippingmethod=sm.id
+        INNER JOIN users u ON u.id=o.id_user
+        ORDER BY orderdate DESC";
+        $orders = $db->prepare($query);
+        $orders->execute();
+        $orders = $orders->fetchAll(PDO::FETCH_ASSOC);
+
+        $queryItems="SELECT i.name AS item, m.name AS mnf,
+        c.name AS country, iio.amount AS amount, i.price AS price
+        FROM orders o 
+        INNER JOIN itemsinorder iio ON o.id=iio.id_order
+        INNER JOIN items i ON i.id=iio.id_item
+        INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
+        INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
+        INNER JOIN countries c ON mc.id_country=c.id 
+        WHERE o.id=:iid";
+
+        $OrderItems=array();
+
+        foreach($orders as $id){
+            $result = $db->prepare($queryItems);
+            $result->bindParam(':iid', $id['id']);
+            $result->execute();
+            $result =  $result->fetchAll(PDO::FETCH_ASSOC);
+            $OrderItems[$id['id']]= $result;
+        }
+
+
+        $this->view('admin/list_of_orders', ['siteLinks'=>$siteLink, 'orders'=>$orders, 'orderItems'=>$OrderItems]);
     }
 
     /** Function that add attributes
@@ -1912,15 +1965,16 @@ class Admin extends Controller
                 }
 
                 $imagePathCheck = PHOTOSPATH . "/[" . $item_id. "].png";
-
-                if(file_exists($imagePathCheck)) unlink($imagePathCheck);
-                $path = $_FILES['formFile']['name'];
-                $ext = pathinfo($path, PATHINFO_EXTENSION);
-                $imagename = "[" . $item_id . "]." . $ext;    
-                $tmpname = $_FILES['formFile']['tmp_name'];
-                if (!move_uploaded_file($tmpname, PHOTOSPATH . "/" . $imagename)) {
-                    $_SESSION['error_page'] = "list_of_items";
-                    header("Location:" . ROOT . "/admin/error_page/3");
+                if(!empty($_FILES['formFile']['name'])){
+                    if(file_exists($imagePathCheck)) unlink($imagePathCheck);
+                    $path = $_FILES['formFile']['name'];
+                    $ext = pathinfo($path, PATHINFO_EXTENSION);
+                    $imagename = "[" . $item_id . "]." . $ext;    
+                    $tmpname = $_FILES['formFile']['tmp_name'];
+                    if (!move_uploaded_file($tmpname, PHOTOSPATH . "/" . $imagename)) {
+                        $_SESSION['error_page'] = "list_of_items";
+                        header("Location:" . ROOT . "/admin/error_page/3");
+                    }
                 }
                 
                 $_SESSION['success_page'] = "list_of_items";
@@ -1996,11 +2050,11 @@ class Admin extends Controller
         $result->execute();
         $prevDesc = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $imagePath = APPPATH . "/resources/[" . $editId . "].png";
+        $imagePath = APPPATH . "/resources/itemsPhotos/[" . $editId . "].png";
         $imagePathCheck = PHOTOSPATH . "/[" . $editId . "].png";
 
         if(!file_exists($imagePathCheck)){
-            $imagePath = APPPATH . "/resources/brak_zdjecia.png";
+            $imagePath = APPPATH . "/resources/itemsPhotos/brak_zdjecia.png";
         }
 
         $this->view('admin/edit_item_admin', ['siteLinks'=>$siteLink,'items'=>$items, 'attributes' => $attributes, 'categories'=>$categories, 
@@ -2680,13 +2734,13 @@ class Admin extends Controller
             $result->execute();
 
             if(!empty($_FILES['formFile']['name'])){
-                $imagePathCheck = PHOTOSPATH . "/baner.png";
+                $imagePathCheck = PHOTOSPATH . "/upload/baner.png";
                 if(file_exists($imagePathCheck)) unlink($imagePathCheck);
                 $path = $_FILES['formFile']['name'];
                 $ext = pathinfo($path, PATHINFO_EXTENSION);
                 $imagename = "baner." . $ext;
                 $tmpname = $_FILES['formFile']['tmp_name'];
-                if (!move_uploaded_file($tmpname, PHOTOSPATH . "/" . $imagename)) {
+                if (!move_uploaded_file($tmpname, PHOTOSPATH . "/upload/" . $imagename)) {
                     $_SESSION['error_page'] = "list_of_items";
                     header("Location:" . ROOT . "/admin/error_page/3");
                 }  
@@ -2724,12 +2778,22 @@ class Admin extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
 
         $siteLink = $this->getFooter($db);
-
+        $imagePath = MAINPATH . "/resources/shopPhotos/siteicon.png";
         if(isset($_POST['informationsEditSubmit'])){
             $query="UPDATE siteinfo SET sitename=:sitename";
             $result = $db->prepare($query);
             $result->bindParam(':sitename', $_POST['siteName']);
             $result->execute();
+
+            if(!empty($_FILES['formFile']['name'])){
+                $imagePathCheck = MAINPATHLOC . "/resources/shopPhotos/siteicon.png";
+                if(file_exists($imagePathCheck)) unlink($imagePathCheck); 
+                $tmpname = $_FILES['formFile']['tmp_name'];
+                if (!move_uploaded_file($tmpname, MAINPATHLOC . "/resources/shopPhotos/siteicon.png")) {
+                    $_SESSION['error_page'] = "edit_informations";
+                    header("Location:" . ROOT . "/admin/error_page/3");
+                }
+            }
             $_SESSION['success_page'] = "edit_informations";
             header("Location:" . ROOT . "/admin/success_page/2");
         }
@@ -2739,7 +2803,7 @@ class Admin extends Controller
         $result->execute();
         $result=$result->fetch(PDO::FETCH_ASSOC);
 
-        $this->view('admin/edit_informations', ['result' => $result, 'siteLinks'=>$siteLink]);
+        $this->view('admin/edit_informations', ['result' => $result, 'siteLinks'=>$siteLink, 'imagePath' => $imagePath]);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////

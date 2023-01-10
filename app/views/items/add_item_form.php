@@ -413,6 +413,19 @@
         btn.prop('disabled', !isValid);
     }
 
+    $(document).on('change mouseenter mouseleave paste', '.desctitle', function(e){ 
+            $(this).attr('style', 'height:auto; resize:none; font-size: 18px; overflow:hidden;');
+            var sch = $(this).prop('scrollHeight');
+            $(this).attr('style', `height:${sch}px; resize:none; font-size: 18px; overflow:hidden;`);
+            enableDescSubmit();
+        });
+        $(document).on('change mouseenter mouseleave paste', '.desc', function(e){ 
+            $(this).attr('style', 'height:auto; resize:none; font-size: 18px; overflow:hidden;');
+            var sch = $(this).prop('scrollHeight');
+            $(this).attr('style', `height:${sch}px; resize:none; font-size: 18px; overflow:hidden;`);
+            enableDescSubmit();
+        });
+
     $(window).resize(function() {
         let inputs = document.getElementsByClassName('desc');
         console.log(inputs.length);
