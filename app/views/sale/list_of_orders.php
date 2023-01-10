@@ -97,9 +97,12 @@
 
             <div class="form-floating">
                 <select class="form-select" id="orderstate" name="orderstate">
-                    <option value="1">One</option>
-                    <option value="W dostawie"> W dostawie</option>
-                    <option value="3">Three</option>
+                    <option value="Do akceptacji"> Do akceptacji</option>
+                    <option value="W realizacji"> W realizacji</option>
+                    <option value="Spakowany"> Spakowany</option>
+                    <option value="Wysłany"> Wysłany</option>
+                    <option value="Dostarczony"> Dostarczony</option>
+                    <option value="Anulowany"> Anulowany</option>
                 </select>
                 <label >Status zamówienia</label>
             </div>
