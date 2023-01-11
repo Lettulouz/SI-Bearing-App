@@ -62,6 +62,10 @@
                                     <td colspan="2">Wysyłka <strong id='orderPrice'><?=$data['orderInfo']['shippingPrice'] ?> zł</strong></td>
                                     <td class="text-end"></td>
                                 </tr>
+                                <tr>
+                                    <td colspan="2">Prowizja formy płatności <strong id='orderPrice'><?=$data['orderInfo']['paymentFee'] ?> zł</strong></td>
+                                    <td class="text-end"></td>
+                                </tr>
                                 <tr class="fw-bold">
                                     <input type='hidden' id='totalOrderPriceH' value='<?php echo $data['totalOrderPrice'] ?>'>
                                     <td colspan="2">Razem <strong id='totalOrderPrice'> <?php echo $data['totalOrderPrice'] ?> zł</strong></td>
@@ -83,43 +87,70 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-12">
-                                <h3 class="h6 mt-2">Dane dostawy</h3>
-                                <div class='row'>
-                                    <div class="col-12 col-md-6 p-1">
-                                        <input class="form-control form-control-sm" type="text" name="name" placeholder="Imię" value="<?=$data['orderInfo']['ordername'] ?>" readonly>
+                            <?php if($data['orderInfo']['needAddress'] == 1) {?>
+                                <div class="col-lg-12">
+                                    <h3 class="h6 mt-2">Dane dostawy</h3>
+                                    <div class='row'>
+                                        <div class="col-12 col-md-6 p-1">
+                                            <input class="form-control form-control-sm" type="text" name="name" placeholder="Imię" value="<?=$data['orderInfo']['ordername'] ?>" readonly>
+                                        </div>
+                                        <div class="col-12 col-md-6 p-1">
+                                            <input class="form-control form-control-sm" type="text" name="surname" placeholder="Nazwisko" value="<?=$data['orderInfo']['orderlastname'] ?>" readonly>
+                                        </div>
                                     </div>
-                                    <div class="col-12 col-md-6 p-1">
-                                        <input class="form-control form-control-sm" type="text" name="surname" placeholder="Nazwisko" value="<?=$data['orderInfo']['orderlastname'] ?>" readonly>
+                                    <div class='row'>
+                                        <div class="col-12 col-md-6 p-1">
+                                            <input class="form-control form-control-sm" type="text" name="city" placeholder="Miasto" value="<?=$data['orderInfo']['ordercity'] ?>" readonly>
+                                        </div>
+                                        <div class="col-12 col-md-6 p-1">
+                                            <input class="form-control form-control-sm" type="text" name="postcode" placeholder="Kod pocztowy" value="<?=$data['orderInfo']['orderpostcode'] ?>" readonly>
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class="col-12 col-md-6 p-1">
+                                            <input class="form-control form-control-sm" type="text" name="street" placeholder="Ulica" value="<?=$data['orderInfo']['orderstreet'] ?>" readonly>
+                                        </div>
+                                        <div class="col-12 col-md-6 p-1">
+                                            <input class="form-control form-control-sm" type="number" name="housenumber" placeholder="Numer" value="<?=$data['orderInfo']['orderhomenumber'] ?>" readonly>
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class="col-12 col-md-6 p-1">
+                                            <input class="form-control form-control-sm" type="text" name="country" placeholder="Kraj" value="<?=$data['orderInfo']['ordercountry'] ?>" readonly>
+                                        </div>
+                                        <div class="col-12 col-md-6 p-1">
+                                            <input class="form-control form-control-sm" type="text" name="voivoden" placeholder="Województwo" value="<?=$data['orderInfo']['ordervoivodeship'] ?>" readonly>
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class="col-12 p-1">
+                                            <input class="form-control form-control-sm" type="tel" name="phonenumber" placeholder="Numer telefonu" value="<?=$data['orderInfo']['orderphonenumber'] ?>" readonly>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class='row'>
-                                    <div class="col-12 col-md-6 p-1">
-                                        <input class="form-control form-control-sm" type="text" name="city" placeholder="Miasto" value="<?=$data['orderInfo']['ordercity'] ?>" readonly>
+                            <?php }else{?>
+                                <div class="col-lg-12">
+                                    <h3 class="h6 mt-2">Dane dostawy</h3>
+                                    <div class='row'>
+                                        <div class="col-12 col-md-6 p-1">
+                                            <input class="form-control form-control-sm" type="text" name="name" placeholder="Imię" value="<?=$data['orderInfo']['ordername'] ?>" readonly>
+                                        </div>
+                                        <div class="col-12 col-md-6 p-1">
+                                            <input class="form-control form-control-sm" type="text" name="surname" placeholder="Nazwisko" value="<?=$data['orderInfo']['orderlastname'] ?>" readonly>
+                                        </div>
                                     </div>
-                                    <div class="col-12 col-md-6 p-1">
-                                        <input class="form-control form-control-sm" type="text" name="postcode" placeholder="Kod pocztowy" value="<?=$data['orderInfo']['orderpostcode'] ?>" readonly>
-                                    </div>
-                                </div>
-                                <div class='row'>
-                                    <div class="col-12 col-md-6 p-1">
-                                        <input class="form-control form-control-sm" type="text" name="street" placeholder="Ulica" value="<?=$data['orderInfo']['orderstreet'] ?>" readonly>
-                                    </div>
-                                    <div class="col-12 col-md-6 p-1">
-                                        <input class="form-control form-control-sm" type="number" name="housenumber" placeholder="Numer" value="<?=$data['orderInfo']['orderhomenumber'] ?>" readonly>
-                                    </div>
-                                </div>
-                                <div class='row'>
-                                    <div class="col-12 col-md-6 p-1">
-                                        <input class="form-control form-control-sm" type="text" name="country" placeholder="Kraj" value="<?=$data['orderInfo']['ordercountry'] ?>" readonly>
-                                    </div>
-                                    <div class="col-12 col-md-6 p-1">
-                                        <input class="form-control form-control-sm" type="text" name="voivoden" placeholder="Województwo" value="<?=$data['orderInfo']['ordervoivodeship'] ?>" readonly>
+                                    <div class='row'>
+                                        <div class="col-12 p-1">
+                                            <input class="form-control form-control-sm" type="tel" name="phonenumber" placeholder="Numer telefonu" value="<?=$data['orderInfo']['orderphonenumber'] ?>" readonly>
+                                        </div>
                                     </div>
                                 </div>
+                            <?php }?>
+                            <div class="col-lg-12 mt-3">
+                                <h3 class="h6">Płatność</h3>
                                 <div class='row'>
                                     <div class="col-12 p-1">
-                                        <input class="form-control form-control-sm" type="tel" name="phonenumber" placeholder="Numer telefonu" value="<?=$data['orderInfo']['orderphonenumber'] ?>" readonly>
+                                        <input class="form-control form-control-sm" type="text" name="name" placeholder="Dostawa" value="<?=$data['orderInfo']['paymentName'] ?>" readonly>
                                     </div>
                                 </div>
                             </div>

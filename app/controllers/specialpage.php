@@ -8,6 +8,7 @@ class SpecialPage extends Controller
         }
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteFooter = $this->getFooter($db);
+        $siteName = $this->getSiteName($db);
 
         $query="SELECT content FROM pages WHERE id=$id";
         $result = $db->prepare($query);
@@ -15,7 +16,7 @@ class SpecialPage extends Controller
         $pageContent = $result->fetch(PDO::FETCH_ASSOC);
         !empty($pageContent) ? $pageContent = $pageContent['content'] : $pageContent = "";    
 
-        $this->view("specialpage", ['siteFooter' => $siteFooter, 'pageContent' => $pageContent]);
+        $this->view("specialpage", ['siteFooter' => $siteFooter, 'pageContent' => $pageContent, 'siteName' => $siteName]);
     }
 
     private function getFooter($db){
@@ -26,6 +27,18 @@ class SpecialPage extends Controller
             $result = $db->query($query);
             $result = $result->fetch(PDO::FETCH_ASSOC);
             $_SESSION['siteFooter'] = $result;
+        }
+        return $result;
+    }
+
+    private function getSiteName($db){
+        if(isset($_SESSION['siteName'])){
+            $result = $_SESSION['siteName'];
+        }else{
+            $query = "SELECT sitename FROM siteinfo LIMIT 1";
+            $result = $db->query($query);
+            $result = $result->fetch(PDO::FETCH_ASSOC);
+            $_SESSION['siteName'] = $result;
         }
         return $result;
     }

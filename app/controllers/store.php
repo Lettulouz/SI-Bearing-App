@@ -588,7 +588,7 @@ class Store extends Controller
                 INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
                 INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
                 WHERE i.id IN (".rtrim($_COOKIE['itemsInCart'],',').") AND active=1";
-                
+
             $itemsInCart = $db->query($query);
             $itemsInCart = $itemsInCart->fetchAll(PDO::FETCH_ASSOC);
             
@@ -664,11 +664,13 @@ class Store extends Controller
         $itemsInOrder->execute();
         $itemsInOrder = $itemsInOrder->fetchAll(PDO::FETCH_ASSOC);
 
-        $query="SELECT o.orderdate as orderDate, sm.name as shippingName, sm.price as shippingPrice, o.price as orderPrice, o.*
+        $query="SELECT o.orderdate as orderDate, sm.name as shippingName, sm.price as shippingPrice, sm.needAddress as needAddress,
+        pm.name as paymentName, pm.fee as paymentFee, o.price as orderPrice, o.*
         FROM orders o 
         INNER JOIN itemsinorder iio ON o.id=iio.id_order 
         INNER JOIN items i ON iio.id_item=i.id
         INNER JOIN shippingmethods sm ON o.id_shippingmethod=sm.id
+        INNER JOIN paymentmethods pm ON o.id_paymentmethod=pm.id
         WHERE o.id=:id_order AND id_user=:id_user";
 
         $result = $db->prepare($query);
@@ -677,7 +679,7 @@ class Store extends Controller
         $result->execute();
         $result = $result->fetch(PDO::FETCH_ASSOC);
 
-        $totalOrderPrice = $result['orderPrice'] +  $result['shippingPrice'];
+        $totalOrderPrice = $result['orderPrice'] +  $result['shippingPrice'] + $result['paymentFee'];
 
         if(empty($itemsInOrder) || empty($result)){
             header("Location:" . ROOT . "/store");
