@@ -571,6 +571,12 @@ class Store extends Controller
                 $db->query($query);
               }
 
+            unset($_SESSION['idOfItems']);
+            unset($_SESSION['numberOfItems']);
+            unset($_SESSION['totalItemPrice']);
+
+
+
             header("Location:" . ROOT . "/home");
         }
 
