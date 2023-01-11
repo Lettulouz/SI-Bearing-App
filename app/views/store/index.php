@@ -263,7 +263,7 @@
 
                                             <b> Cena: {$item['price']} zł </b>
                                                 <input type='hidden' value=" . $item['itemID'] . " name='itemID'>
-                                                <button type='submit' class='btn btn-danger float-end ' 
+                                                <button type='submit' class='btn btn-danger float-end addItemToCartButton' 
                                                 id='" . $item['itemID'] . "-" . $item['itemPrice'] . "-" . $item['amount'] . "-" . $item['isDouble'] . "' name='addToCart'>
                                                     <i class='bi bi-basket2'></i>
                                                 </button>
@@ -295,10 +295,19 @@
 <?php } ?>
 
 
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
 <script>
     var temp;
     $(document).ready(function() {
+        
+        $(".addItemToCartButton").click(function(){
+            $(this).addClass('animated bounce');
+            setTimeout(function(){
+                $('.addItemToCartButton').removeClass('animated bounce');
+            },1000);
+        });
+
+
         if ($('#pageInside').val() <= 1) {
             $('[name="lft"]').addClass('btn btn-outline-secondary disabled');
         }
@@ -313,11 +322,7 @@
             $('.sidebar').offcanvas('show')
         }
 
-        document.querySelector(".attrpart").addEventListener("keypress", function(evt) {
-            if (evt.which != 8 && evt.which != 0 && evt.which != 46 && evt.which != 44 && evt.which < 48 || evt.which > 57) {
-                evt.preventDefault();
-            }
-        });
+        
 
         $(".attrpart").on('input', function() {
             var part1;

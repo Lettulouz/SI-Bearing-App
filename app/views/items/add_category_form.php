@@ -8,7 +8,7 @@
                 <div class="row m-2">
                     <div class="col-12">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="heightInput" name="category" placeholder="20" value=<?=$data['category']?> maxlength="75">
+                            <input type="text" class="form-control" id="heightInput" name="category" placeholder="20" value="<?=$data['category']?>" maxlength="75">
                             <label class="form-control-lg lg-custom" for="heightInput">Dodaj kategorie</label>
                         </div>
                     </div>

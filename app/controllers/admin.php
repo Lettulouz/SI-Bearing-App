@@ -25,7 +25,7 @@ class Admin extends Controller
                 $secondLine = "pomyślnie!";
             }
             $this->view('success_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
-            header("Refresh: 2; url=" . ROOT . "/admin/" . $path);
+            header("Refresh: 0.75; url=" . ROOT . "/admin/" . $path);
         }
         else header("Location:" . ROOT . "");
     }
@@ -1015,7 +1015,7 @@ class Admin extends Controller
                 }else{
                     $query = "UPDATE `attributes` 
                         SET name = '$tekst2',
-                        unit='$attributeUnit',
+                        unit='$attributeUnit'
                         WHERE id = '$id_a';";
                     $result = $db->prepare($query);
                     $result->execute();
@@ -1365,7 +1365,8 @@ class Admin extends Controller
         c.name AS  mnfCountry FROM items i 
         INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
         INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-        INNER JOIN countries c ON mc.id_country=c.id";
+        INNER JOIN countries c ON mc.id_country=c.id
+        WHERE i.active=1";
         $result = $db->prepare($query);
         $result->execute();
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -1444,7 +1445,8 @@ class Admin extends Controller
         FROM items i
         INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
         INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-        INNER JOIN countries c ON mc.id_country=c.id";
+        INNER JOIN countries c ON mc.id_country=c.id 
+        WHERE i.active=1";
         $resultIt = $db->prepare($queryIt);
         $resultIt->execute();
         $items = $resultIt->fetchAll(PDO::FETCH_ASSOC);
@@ -1792,7 +1794,7 @@ class Admin extends Controller
 
         if(isset($id_manuf)){
             require_once dirname(__FILE__,2) . '/core/database.php';
-            $query="DELETE FROM manufacturers WHERE id=:id_manuf";
+            $query="UPDATE manufacturers SET active=0 WHERE id=:id_manuf";
             $result = $db->prepare($query);
             $result->bindParam(':id_manuf', $id_manuf);
             $result->execute();
@@ -1828,8 +1830,8 @@ class Admin extends Controller
                 $itemManufacturer = $_POST['manufacturer'];
                 $selCategories = $_POST['selCategories'];
 
-                $query="INSERT INTO items (id_manufacturercountry, name, amount, price) 
-                VALUES (:id_manufacturercountry, :item_name, :item_quantity, :item_price)";
+                $query="INSERT INTO items (id_manufacturercountry, name, amount, price, active) 
+                VALUES (:id_manufacturercountry, :item_name, :item_quantity, :item_price, 1)";
 
                 $result = $db->prepare($query);
                 $result->bindParam(':id_manufacturercountry',$itemManufacturer);
@@ -1938,7 +1940,8 @@ class Admin extends Controller
         $query="SELECT mc.id as id, m.name as mname,c.name as cname
         FROM manufacturercountries mc 
         INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-        INNER JOIN countries c ON mc.id_country=c.id";
+        INNER JOIN countries c ON mc.id_country=c.id
+        WHERE m.active=1";
         $result = $db->prepare($query);
         $result->execute();
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -2428,7 +2431,8 @@ class Admin extends Controller
             INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
             INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
             INNER JOIN countries c ON mc.id_country=c.id
-            WHERE id_category IS NULL";
+            WHERE id_category IS NULL
+            AND i.active=1";
         $result = $db->query($query);
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -2437,13 +2441,15 @@ class Admin extends Controller
         FROM items i 
         INNER JOIN itemsincatalog ic ON i.id=ic.id_item
         INNER JOIN catalog c ON ic.id_catalog=c.id
-        WHERE i.id=:iid";
+        WHERE i.id=:iid
+        AND i.active=1";
 
         $queryAttr="SELECT a.name AS attrname, ai.value AS aval
         FROM items i 
         INNER JOIN attributesofitems ai ON i.id=ai.id_item
         INNER JOIN attributes a ON ai.id_attribute=a.id
-        WHERE i.id=:iid";
+        WHERE i.id=:iid
+        AND i.active=1";
 
         $catalogArray=array();
         $attrArray=array();
