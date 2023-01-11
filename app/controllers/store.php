@@ -1,6 +1,9 @@
 <?php
 class Store extends Controller
 {
+    /** This function display information, if order was succesful added to the database
+     * @param {int} is the id of message
+     */
     public function success_page($sid){     
         if(isset($_SESSION['success_page'])){
             $path = $_SESSION['success_page'];
@@ -15,6 +18,9 @@ class Store extends Controller
         else header("Location:" . ROOT . "");
     }
 
+    /** Main page of store
+     * 
+     */
     public function index(){
         if(isset($_POST['itemID'])){
             if(!isset($_SESSION['cartItems']))
@@ -415,6 +421,8 @@ class Store extends Controller
             
     }
 
+    /** This function view items in card for a logged user
+     */
     public function cart(){
         isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
@@ -439,6 +447,9 @@ class Store extends Controller
         $this->view('store/cart', ['siteFooter' => $siteFooter, 'siteName' => $siteName, 'itemsArray'=>$itemsInCart, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
     }
 
+    /** This function get footer elements from the database
+     * 
+     */
     private function getFooter($db){
         if(isset($_SESSION['siteFooter'])){
             $result = $_SESSION['siteFooter'];
@@ -451,6 +462,7 @@ class Store extends Controller
         return $result;
     }
 
+    // this funtcion get store name from the database
     private function getSiteName($db){
         if(isset($_SESSION['siteName'])){
             $result = $_SESSION['siteName'];
@@ -463,6 +475,9 @@ class Store extends Controller
         return $result;
     }
 
+    /** This function show detalis about item from the database
+     * @param {int} is the id of item
+     */
     public function item($id){
         isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
@@ -507,6 +522,9 @@ class Store extends Controller
         'itemDescrs' => $itemDescrs, 'itemAttrs' => $itemAttrs]);
     }
 
+
+    /** This function show order history for a logged user. Orders are in database
+     */
     public function order_history(){
         isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
@@ -528,6 +546,10 @@ class Store extends Controller
         'siteFooter' => $siteFooter, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
     }
 
+    /** Thus functon show order summary
+     * it allows the user to confirm order
+     * oredr will be insert into database
+     */
     public function summary(){
         isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
@@ -647,6 +669,9 @@ class Store extends Controller
         'itemsArray'=>$itemsInCart, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name,]);
     }
 
+    /** This function views details about order  from the database
+     * @param {int} is the id of order
+     */
     public function orderview($order_id){
         isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
