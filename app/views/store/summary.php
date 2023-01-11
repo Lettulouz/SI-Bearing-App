@@ -174,7 +174,7 @@
                   </div>
                   <div class=\"row\" >
                     <div class=\"col-12 p-1\" >
-                      <select class=\"form-select form-select-sm delivery\" name=\"payment\" >
+                      <select class=\"form-select form-select-sm delivery\" name=\"delivery\" >
                         <option value=\"1\" > Dostawa </option>
                         ${options}
                       </select>
