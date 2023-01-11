@@ -25,21 +25,21 @@
 
                     <div class="forms-inputs mb-4"> 
                         <span style="color:<?php if($data['errorSurname']) echo "grb(255, 0, 0)"; else echo""?>" id="surnameSpan">Nazwisko</span> 
-                        <input style="border:<?php if($data['errorSurname']) echo "2px solid rgb(255, 0, 0)"; else echo ""?>" type="text" name="surname" id="surname" value="<?=$data['surnameInput']?>" required maxlength="75"> 
+                        <input style="border:<?php if($data['errorSurname']) echo "2px solid rgb(255, 0, 0)"; else echo ""?>" type="text" name="surname" id="surname" value="<?=$data['surnameInput']?>" required> 
                         <i id="blinkingSurname" class='bx bxs-error-circle bx-flip-horizontal bx-burst' style='color:#de1f1f; <?php if($data['serverError']) echo "display: default;"; else echo "display:none;"?>'></i>
                         <label id="errorSurname"><?=$data['errorSurname']?></label>
                     </div>
 
                     <div class="forms-inputs mb-4"> 
                         <span style="color:<?php if($data['errorLogin']) echo "grb(255, 0, 0)"; else echo""?>" id="loginSpan">Login</span> 
-                        <input style="border:<?php if($data['errorLogin']) echo "2px solid rgb(255, 0, 0)"; else echo ""?>" type="text" name="login" id="login" value="<?=$data['loginInput']?>" required maxlength="30"> 
+                        <input style="border:<?php if($data['errorLogin']) echo "2px solid rgb(255, 0, 0)"; else echo ""?>" type="text" name="login" id="login" value="<?=$data['loginInput']?>" required> 
                         <i id="blinkingLogin" class='bx bxs-error-circle bx-flip-horizontal bx-burst' style='color:#de1f1f; <?php if($data['serverError']) echo "display: default;"; else echo "display:none;"?>'></i>
                         <label id="errorLogin"><?=$data['errorLogin']?></label>
                     </div>
 
                     <div class="forms-inputs mb-4"> 
                         <span style="color:<?php if($data['errorPassword']) echo "grb(255, 0, 0)"; else echo""?>" id="passwordSpan">Hasło</span> 
-                        <input style="border:<?php if($data['errorPassword']) echo "2px solid rgb(255, 0, 0)"; else echo ""?>" type="password" name="password" id="password" value="<?=$data['passwordInput']?>" required maxlength="25">
+                        <input style="border:<?php if($data['errorPassword']) echo "2px solid rgb(255, 0, 0)"; else echo ""?>" type="password" name="password" id="password" value="<?=$data['passwordInput']?>" required>
                         <i id="blinkingPassword" class='bx bxs-error-circle bx-flip-horizontal bx-burst' style='color:#de1f1f; <?php if($data['serverError']) echo "display: default;"; else echo "display:none;"?>'></i>
                         <label id="errorPassword"><?=$data['errorPassword']?></label>
                     </div>

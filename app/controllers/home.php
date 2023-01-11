@@ -60,6 +60,7 @@ class Home extends Controller
         }
         return $result;
     }
+    
     private function getSiteName($db){
         if(isset($_SESSION['siteName'])){
             $result = $_SESSION['siteName'];
