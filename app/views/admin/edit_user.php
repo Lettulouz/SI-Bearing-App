@@ -98,7 +98,7 @@ $id = $data['id'];
                             id="userActivated" name="userActivated">
                         </div>
                     <div class="float-end">
-                        <button type="button" class="btn btn-primary btn-lg float-end" onclick="registerButton()">Zapisz zmiany</button>
+                        <button type="button" class="btn btn-primary btn-lg float-end" style="margin-right: 20px" onclick="registerButton()">Zapisz zmiany</button>
                         <button type="submit" id="senduser" class="btn btn-primary btn-lg float-end" name="senduser" style="display:none"></button>
                     </div>
                 </div>
