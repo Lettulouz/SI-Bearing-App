@@ -522,12 +522,61 @@ class Store extends Controller
         $siteFooter = $this->getFooter($db);   
         $siteName = $this->getSiteName($db);
 
+        if(isset($_POST['orderSubmit'])){
+            if(!empty($_POST['country'])){
+            $query="INSERT INTO orders (id_user, id_shippingmethod, id_paymentmethod, orderstate, trackingnumber, 
+            ordercountry, ordervoivodeship, ordercity, orderpostcode, orderstreet, orderhomenumber, 
+            orderphonenumber, ordername, orderlastname, price)
+            VALUES ('".$_SESSION['idLoggedUser']."', '".$_POST['delivery']."', '".$_POST['payment']."',
+             'Zaraz Bedzie', '123456789', :country, :voivodeship, :city, :postcode, :street, :homeNumber, :phoneNumber, 
+             :orderName, :orderLastname, '".$_SESSION['totalOrderPrice']."')";
+            
+            $order = $db->prepare($query);
+            $order->bindParam(':country', $_POST['country']);
+            $order->bindParam(':voivodeship', $_POST['voivoden']);
+            $order->bindParam(':city', $_POST['city']);
+            $order->bindParam(':postcode', $_POST['postcode']);
+            $order->bindParam(':street', $_POST['street']);
+            $order->bindParam(':homeNumber', $_POST['housenumber']);
+            $order->bindParam(':phoneNumber', $_POST['phonenumber']);
+            $order->bindParam(':orderName', $_POST['name']);
+            $order->bindParam(':orderLastname', $_POST['surname']);
+            $order -> execute();
+            }
+            else{
+                $query="INSERT INTO orders (id_user, id_shippingmethod, id_paymentmethod, orderstate, price)
+                VALUES ('".$_SESSION['idLoggedUser']."', '".$_POST['delivery']."', '".$_POST['payment']."',
+                 'Zaraz Bedzie', '".$_SESSION['totalOrderPrice']."')";
+                $db->query($query);
+            }
+
+            $query="SELECT id FROM orders ORDER BY id DESC LIMIT 1";
+            $lastOrder = $db->query($query);
+            $lastOrder = $lastOrder->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach($_SESSION['idOfItems'] as $j => $itemId) {
+                $query="INSERT INTO itemsinorder (id_item, id_order, amount)
+                VALUES ('$itemId', '{$lastOrder[0]['id']}', '{$_SESSION['numberOfItems'][$j]}')";
+
+                $query2 = "UPDATE items SET amount = amount-{$_SESSION['numberOfItems'][$j]}
+                            WHERE id='$itemId'";
+                echo $query2." ";
+                $db->query($query2);
+                $db->query($query);
+              }
+
+            header("Location:" . ROOT . "/home");
+        }
+
         $itemsInCart = NULL;
-        $numberOfItems = array();
-        $totalItemPrice = array();
-        $totalOrderPrice = 0;
+        if(!isset($_SESSION['numberOfItems'])){
+            $_SESSION['numberOfItems'] = array();
+            $_SESSION['totalItemPrice'] = array();
+            $_SESSION['idOfItems'] = array();
+        }
         
         if(isset($_COOKIE['itemsInCart']) && $_COOKIE['itemsInCart'] != ''){
+            $_SESSION['totalOrderPrice'] = 0;
             $query="SELECT d.title, d.description, i.name, i.id as itemID, m.name as 'name2', i.price as itemPrice
                 FROM items i 
                 LEFT JOIN descriptions d ON d.id_item=i.id
@@ -535,15 +584,36 @@ class Store extends Controller
                 INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
                 WHERE i.id IN (".rtrim($_COOKIE['itemsInCart'],',').")";
 
-
             $itemsInCart = $db->query($query);
             $itemsInCart = $itemsInCart->fetchAll(PDO::FETCH_ASSOC);
+            
+
+            $query2="SELECT paymentmethods.id as methodId, paymenttypes.name as typeName, paymentmethods.name as methodName, fee
+                    FROM paymentmethods 
+                    LEFT JOIN paymenttypes 
+                    ON paymentmethods.id_type = paymenttypes.id
+                    WHERE active=1";
+
+            $paymentmethods = $db->query($query2);
+            $paymentmethods = $paymentmethods->fetchAll(PDO::FETCH_ASSOC);
+
+            $query3="SELECT id, name, price, needaddress
+                    FROM shippingmethods WHERE active=1";
+
+            $shippingmethods = $db->query($query3);
+            $shippingmethods = $shippingmethods->fetchAll(PDO::FETCH_ASSOC);
+            
             $i = 0;
             foreach($_POST as $key => $value){
-                array_push($numberOfItems, $value);
-                array_push($totalItemPrice, $itemsInCart[$i]['itemPrice'] * $value);
-                $totalOrderPrice += $totalItemPrice[$i];
-                $i++;
+                if(is_numeric($key)){
+                    $_SESSION['idOfItems'][$i] = $key;
+                    $_SESSION['numberOfItems'][$i] = $value;
+                    $_SESSION['totalItemPrice'][$i] = $itemsInCart[$i]['itemPrice'] * $value;
+                    $i++;
+                }
+            }
+            foreach($_SESSION['totalItemPrice'] as $i => $value){
+                $_SESSION['totalOrderPrice'] += $value;
             }
 
         }else{
@@ -553,10 +623,9 @@ class Store extends Controller
 
 
 
-        $this->view('store/summary', ['siteFooter' => $siteFooter, 'siteName' => $siteName, 'totalItemPrice' => $totalItemPrice,
-        'itemsArray'=>$itemsInCart, 'isLogged' => $isLogged, 'totalOrderPrice' => $totalOrderPrice,
-        'loggedUser_name' => $loggedUser_name, 'numberOfItems' => $numberOfItems]);
- 
+        $this->view('store/summary', ['siteFooter' => $siteFooter, 'siteName' => $siteName, 
+        'paymentmethods' => $paymentmethods, 'shippingmethods' => $shippingmethods, 
+        'itemsArray'=>$itemsInCart, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name,]);
     }
 
     public function orderview($order_id){

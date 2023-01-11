@@ -152,8 +152,6 @@
         Object.keys(sessionStorage).forEach(function(key, value) {
             if (!Number.isNaN(Number.parseInt(key)))
                 newCookie += key + ', ';
-            if (!Number.isNaN(Number.parseInt(key)))
-                sessionStorage(sessionStorage.getItem(key));
         });
         var today = new Date();
         var expire = new Date();
