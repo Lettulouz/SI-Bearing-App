@@ -224,7 +224,7 @@ class Store extends Controller
         
         $attrQuery = ' ';
 
-        if (isset($_POST['checkBoxVarAttributes']) && isset($_POST['arrayOfAttrVal'])) 
+        if (!empty($_POST['checkBoxVarAttributes']) && !empty($_POST['arrayOfAttrVal'])) 
         {
             $tableAttr = $_POST['checkBoxVarAttributes']; 
             $tableAttrValues = $_POST['arrayOfAttrVal'];
@@ -310,6 +310,7 @@ class Store extends Controller
             . $sortValueQuery .
             " LIMIT :limit1, 32";
         }
+
         $itemsArr = $db->prepare($query);
         
         if (isset($_POST['checkBoxVarAttributes']) && isset($_POST['arrayOfAttrVal'])) 
