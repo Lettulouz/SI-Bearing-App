@@ -1673,13 +1673,27 @@ class Admin extends Controller
             header("Location:" . ROOT . "/login");
         }
 
+        $manufacturersOnlyActive = 1;
+        if(isset($_POST['onlyActiveSubmit'])){
+            if(!isset($_POST['onlyActive']))
+                $manufacturersOnlyActive = 0;
+        }
+
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
-
-        $query="SELECT m.id as m_id, m.name as mnf,COUNT(mc.id_manufacturer) as mnfctsam 
-        FROM manufacturers m 
-        LEFT JOIN manufacturercountries mc ON m.id=mc.id_manufacturer 
-        GROUP BY m.id";
+        if($manufacturersOnlyActive==1){
+            $query="SELECT m.id as m_id, m.name as mnf,COUNT(mc.id_manufacturer) as mnfctsam , m.active
+            FROM manufacturers m 
+            LEFT JOIN manufacturercountries mc ON m.id=mc.id_manufacturer
+            WHERE m.active=1 
+            GROUP BY m.id";
+        }else{
+            $query="SELECT m.id as m_id, m.name as mnf,COUNT(mc.id_manufacturer) as mnfctsam, m.active 
+            FROM manufacturers m 
+            LEFT JOIN manufacturercountries mc ON m.id=mc.id_manufacturer
+            WHERE m.active=0 
+            GROUP BY m.id";
+        }
         $result = $db->prepare($query);
         $result->execute();
         $manufacturers = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -1707,9 +1721,10 @@ class Admin extends Controller
             isset($_POST['countrymnf']) ? $countrymnf=$_POST['countrymnf'] : $countrymnf=array();
             isset($_POST['mnfname']) ? $mnfname=$_POST['mnfname'] : $mnfname="";
             isset($_POST['mnfid']) ? $mnfid=$_POST['mnfid'] : $mnfid="";
+            isset($_POST['isActive']) ? $isActive=1 : $isActive=0;
 
             if(!empty($_POST['mnfname'])){
-                $query="UPDATE manufacturers SET name=:mnfname WHERE id=:mnfid";
+                $query="UPDATE manufacturers SET name=:mnfname, active=$isActive WHERE id=:mnfid";
                 $result = $db->prepare($query);
                 $result->bindParam(':mnfid', $mnfid);
                 $result->bindParam(':mnfname', $mnfname);
@@ -1771,10 +1786,9 @@ class Admin extends Controller
         }
 
         $rmPath=ROOT."/admin/remove_manufacturer";
-        //$editPath=ROOT."/admin/edit_category";
 
         $this->view('admin/list_of_manufacturers',['siteLinks'=>$siteLink,'mnfArray'=> $manufacturers, 'mnfCts'=> $mnfCountries,
-         'rmpath'=> $rmPath, 'countries'=>$resultCnt]);
+         'rmpath'=> $rmPath, 'countries'=>$resultCnt, 'manufacturersOnlyActive' => $manufacturersOnlyActive]);
 
     }
 
@@ -2322,7 +2336,7 @@ class Admin extends Controller
             FROM items i 
                 INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
                 INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-                INNER JOIN countries c ON mc.id_country=c.id WHERE i.active=1";
+                INNER JOIN countries c ON mc.id_country=c.id WHERE i.active=1 AND m.active=1";
             $result = $db->query($query);
             $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -2349,7 +2363,7 @@ class Admin extends Controller
             FROM items i 
                 INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
                 INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-                INNER JOIN countries c ON mc.id_country=c.id WHERE i.active=0";
+                INNER JOIN countries c ON mc.id_country=c.id WHERE i.active=0 OR m.active=0";
             $result = $db->query($query);
             $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -2794,7 +2808,7 @@ class Admin extends Controller
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }else{
-            $query="SELECT id, name, price, needaddress, active FROM shippingmethods";
+            $query="SELECT id, name, price, needaddress, active FROM shippingmethods WHERE active=0";
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }

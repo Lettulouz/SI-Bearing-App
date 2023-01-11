@@ -15,6 +15,24 @@
                             </button>
                 <span class="input-group-text"><i class="bi bi-search"></i></span>
             </div>
+
+            <form method="post" action="">
+                <div class="row d-flex">
+                    <div class="col-8">
+                        <div class="form-check">
+                            <label class="form-check-label" 
+                            style="margin-top: 9px; margin-left: 10px; font-weight: bold; font-size:18px" 
+                            for="onlyActive">Aktywne</label>
+                            <input type="checkbox" class="form-check-input mt-2" id="onlyActive" name="onlyActive" 
+                            style="height:30px; width:30px;" <?php if($data['manufacturersOnlyActive']==1) echo "checked"?>>          
+                        </div>
+                    </div>
+                    <div class="col-4 d-flex justify-content-end">
+                        <input type="submit" class="btn btn-primary mt-2 d-block" id="onlyActiveSubmit" 
+                        name="onlyActiveSubmit" value="Potwierdź">
+                    </div>
+                </div>   
+            </form>
         </div>
 
         <?php if($data['mnfArray']) {?>
@@ -45,12 +63,13 @@
             data-bs-toggle='collapse' data-bs-target='#row".$i."' aria-expanded='false'>
             <i class='eye bi bi-eye-fill'></i>
             </button>
-            <button type='button' class='btn btn-dark d-inline btn-sm mx-1 editBtn' data-bs-toggle='modal' data-bs-target='#editModal' value='{$mnf['m_id']}'>
+            <button type='button' class='btn btn-dark d-inline btn-sm mx-1 editBtn' sampleAttr='" . $i . "' data-bs-toggle='modal' data-bs-target='#editModal' value='{$mnf['m_id']}'>
             <i class='bi bi-gear-fill'></i>
             </button>
             <a href='".$rmPath."/".$mnf['m_id']."' type='button' data-toggle='collapse' class='btn btn-danger d-inline btn-sm mx-1 tabBtn'>
             <i class='bi bi-trash-fill'></i>
             </a>
+            <input type='hidden' id='mnfActive" . $i . "' value='{$mnf['active']}' >
             </td>
             </tr>
 
@@ -97,10 +116,19 @@
             <form action="" method="POST">
                 <div class="modal-body">
                 <input type='hidden' id="mnfid" name="mnfid" class="form-control"> 
-                            <div class="form-floating my-2">
+                    <div class="row">
+                            <div class="col-9 form-floating my-2">
                                 <input type="text" class="form-control" id="manufacturerName" name="mnfname">
-                                <label for="manufacturerNameInput">Producent</label>
+                                <label style="margin-left:7px;" for="manufacturerNameInput">Producent</label>
                             </div>
+                            <div class="col-3 align-self-center">
+                                <label class='form-check-label d-none d-sm-inline-block' 
+                                style='margin-top: 5px; margin-right: 5px;  font-weight: bold; font-size:18px' 
+                                for='isActive'>Aktywny</label>
+                                <input class='form-check-input' style='height:30px; width:60px;' type='checkbox' 
+                                id='isActive' name='isActive' >
+                            </div>
+                    </div>
                             <hr>
                                 <select class="select2 form-select-lg my-2"  multiple="multiple" id="country" name="countrymnf[]" aria-label="example-xl"  aria-autocomplete="TRUE">
                                         <?php
@@ -146,6 +174,13 @@
         var mnfcountries=$('.countryName'+$(this).attr('value')).map(function() {
             return this.className.split(' ')[1];
             }).get();
+        var isActive1 = $(this).attr('sampleAttr');
+        var isActive2 = $('#mnfActive'+isActive1).val();
+        if(isActive2==0){
+            $('#isActive').attr('checked');
+        }else{
+            $('#isActive').attr('checked', 'false');
+        }
         $('#country').val(mnfcountries);
         $('#country').trigger('change');
         $('#mnfid').val($(this).attr('value'));
