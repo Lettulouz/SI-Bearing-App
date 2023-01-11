@@ -599,6 +599,12 @@ class Admin extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
 
+        $this->serverError = false;
+        $this->inputError = false;
+        $this->check = true;
+        $this->ifUserExist = "";
+        $sendpassword="";
+
         $query="SELECT id, name, lastName, email, login, password, role FROM users WHERE id=:id";
         $result = $db->prepare($query);
         $result->bindParam(':id', $id);
@@ -610,8 +616,10 @@ class Admin extends Controller
         $login = $result["login"];
         $password = '';
         $role = $result["role"];
+
         if(isset($_POST['senduser']))
         {
+
             $query = "SELECT id FROM users ORDER BY id DESC LIMIT 1";
             $result = $db->prepare($query);
             $result->execute();
@@ -623,8 +631,6 @@ class Admin extends Controller
             $login = strtolower($_POST['login']);
             $password = $_POST['pass'];
             $role = $_POST['role'];
-            $temporary = 1;
-            $authhash = hash('sha256',$name . $lastName . $email . $login . $role . $result['id']);
             $hashedPassword = hash('sha256', $password);
 
             if(empty($password)){                
@@ -635,10 +641,12 @@ class Admin extends Controller
                     'email' => $email,
                     'login' => $login,
                     'role' => $role,
-                    'temporary' => $temporary,
-                    'authhash' => $authhash
                 ];
             }else{
+                if(($this->check = $this->verifyPassword($password)) == false){
+                    $this->errorDuringValidation("*Zła długość hasła");
+                    $this->errorPassword = $this->errorMessage;
+                }
                 $userdata = [
                     'id' => $id,
                     'name' => $name,
@@ -647,15 +655,57 @@ class Admin extends Controller
                     'login' => $login,
                     'password' => $hashedPassword,
                     'role' => $role,
-                    'temporary' => $temporary,
-                    'authhash' => $authhash
                 ];
             }
-            if(empty($name) || empty($lastName) || empty($login)){
-                $_SESSION['error_page'] = "edit_user/".$id."";
-                header("Location:" . ROOT . "/admin/error_page/1");
-            }else if(empty($password)){
-                $query = "UPDATE users SET name=:name, lastname=:lastname, email=:email, login=:login, role=:role, temporary=:temporary, authhash=:authhash 
+
+            if(($this->check = $this->verifyName($name)) == false){
+                $this->errorDuringValidation("*Nieprawidłowe imie");
+                $this->errorName = $this->errorMessage;
+            }
+
+            if(($this->check = $this->verifyName($lastName)) == false){
+                $this->errorDuringValidation("*Nieprawidłowe nazwisko");
+                $this->errorSurname = $this->errorMessage;
+            }
+
+            if(($this->check = $this->verifyLogin($login)) == false){
+                $this->errorDuringValidation("*Nieprawidłowy login");
+                $this->errorLogin = $this->errorMessage;
+            }
+
+            if(($this->verifyEmail($email) == false)){
+                $this->errorDuringValidation("*Nieprawidłowy Email");
+                $this->errorEmail = $this->errorMessage;
+                $this->check=false;
+            }
+
+            $query="SELECT id, COUNT(id) AS amount FROM users WHERE login=:login";
+            $result = $db->prepare($query);
+            $result->bindParam(':login', $login);
+            $result->execute();
+            $checkLogin = $result->fetch(PDO::FETCH_ASSOC);
+
+            $query = "SELECT id, COUNT(id) AS amount FROM users WHERE email=:email";
+            $result2 = $db->prepare($query);
+            $result2->bindParam(':email', $email);
+            $result2->execute();
+            $checkEmail = $result2->fetch(PDO::FETCH_ASSOC);
+
+            if($checkLogin['amount']>0&& $checkLogin['id']!=$id){
+                $this->errorDuringValidation("*Użytkownik o takim loginie już istnieje");
+                $this->errorLogin = $this->errorMessage;
+                $this->check=false;
+            }
+
+            if($checkEmail['amount']>0 && $checkEmail['id']!=$id){
+                $this->errorDuringValidation("*Użytkownik o takim emailu już istnieje");
+                 $this->errorEmail = $this->errorMessage;
+                $this->check=false;
+            }
+
+        if($this->check==true){
+          if(empty($password)){
+                $query = "UPDATE users SET name=:name, lastname=:lastname, email=:email, login=:login, role=:role 
                 WHERE id=:id;";
                 $result = $db->prepare($query);
                 $result->bindParam(':name', $name);
@@ -663,12 +713,11 @@ class Admin extends Controller
                 $result->bindParam(':email', $email);
                 $result->bindParam(':login', $login);
                 $result->bindParam(':role', $role);
-                $result->bindParam(':temporary', $temporary);
-                $result->bindParam(':authhash', $authhash);
-                $result->execute($userdata);                     
+                $result->execute($userdata);  
+                $sendpassword="dane niezmienione";                   
                     
             }else{
-                $query = "UPDATE users SET name=:name, lastname=:lastname, email=:email, login=:login, password=:password, role=:role, temporary=:temporary, authhash=:authhash 
+                $query = "UPDATE users SET name=:name, lastname=:lastname, email=:email, login=:login, password=:password, role=:role 
                 WHERE id=:id;";
                 $result = $db->prepare($query);
                 $result->bindParam(':name', $name);
@@ -677,10 +726,50 @@ class Admin extends Controller
                 $result->bindParam(':login', $login);
                 $result->bindParam(':password', $hashedPassword);
                 $result->bindParam(':role', $role);
-                $result->bindParam(':temporary', $temporary);
-                $result->bindParam(':authhash', $authhash);
                 $result->execute($userdata);
+                $sendpassword=$password;
             }
+
+            $path = PUBLICPATH;
+            try{
+            $config = require_once dirname(__FILE__,2) . '/core/mailerconfig.php';
+            $mail = new PHPMailer(true);
+
+            $mail->isSMTP();
+
+            $mail->Host = $config['host'];
+            $mail->Port = $config['port'];
+            $mail->SMTPSecure =   PHPMailer::ENCRYPTION_SMTPS;
+            $mail->SMTPAuth = true;
+
+            $mail->Username = $config['username'];
+            $mail->Password = $config['password'];
+
+            $mail->CharSet = 'UTF-8';
+            $mail->setFrom($config['username'], 'Grontsmar');
+            $mail->addAddress($email);
+            $mail->addReplyTo($config['username'], 'Grontsmar');
+
+            $mail->isHTML(true);
+            $mail->Subject = 'Edycja danych konta w sklepie Grontsmar';
+            $mail->Body = "<html>
+            <head>
+            <title> Edycja danych konta w sklepie Grontsmar </title>
+            </head>
+            <body>
+            <h1> Dzień dobry! </h1>
+            <p> Dane konta utworzonego na ten adres email zostały zmienione. Oto dane: </p>
+            <p> Login: $login </p>
+            <p> Hasło: $sendpassword </p>
+            </body>
+            </html>"; 
+                
+            $mail->send();
+        
+        } catch(Exception $e){
+                echo "<script>alert('Błąd wysyłania maila!')</script>";
+            }
+                
 
             switch($role){
                 case "user": $c="users";
@@ -692,9 +781,14 @@ class Admin extends Controller
                 case "shopservice": $c="service_accounts";
             }
             $_SESSION['success_page'] = "list_of_".$c."";
-            header("Location:" . ROOT . "/admin/success_page/1");            
+            header("Location:" . ROOT . "/admin/success_page/2");            
             }
-        $this->view('admin/edit_user', ['siteLinks'=>$siteLink,'name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'role'=>$role, 'adminId'=>$adminId, 'id'=>$id]);
+        }
+        $this->view('admin/edit_user', ['siteLinks'=>$siteLink,'name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'role'=>$role, 'adminId'=>$adminId, 'id'=>$id,
+        'errorPassword' => $this->errorPassword,'errorLogin' => $this->errorLogin, 
+        'errorEmail' => $this->errorEmail, 'emailInput' => $this->emailInput, 'nameInput' => $this->nameInput, 
+        'surnameInput' => $this->surnameInput, 'loginInput' => $this->loginInput, 'passwordInput' => $this->passwordInput, 
+        'serverError' => $this->serverError, 'errorName' => '', 'errorSurname' => '']);
     }
 
     public function add_user(){
