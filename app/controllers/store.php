@@ -611,7 +611,11 @@ class Store extends Controller
     /** This function show detalis about item from the database
      * @param {int} is the id of item
      */
-    public function item($id){
+    public function item($id=NULL){
+        if($id==NULL){
+            header("Location:" . ROOT . "/store");
+            return;
+        }
         isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
         require_once dirname(__FILE__,2) . '/core/database.php';
@@ -620,10 +624,9 @@ class Store extends Controller
 
         $query="SELECT i.price as price, i.name as name, i.amount as amount, m.name as manname, i.amountComma as isDouble
         FROM items i
-        INNER JOIN manufacturercountries mc on i.id_manufacturercountry-mc.id_manufacturer
-        INNER JOIN manufacturers m on mc.id_manufacturer=m.id
+        INNER JOIN manufacturercountries mc on i.id_manufacturercountry=mc.id
+        INNER JOIN manufacturers m on m.id=mc.id_manufacturer
         WHERE i.id=:id";
-
 
         $itemParams = $db->prepare($query);
         $itemParams -> bindParam(':id',$id);
