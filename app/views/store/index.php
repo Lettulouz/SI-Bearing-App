@@ -299,7 +299,7 @@
 <script>
     var temp;
     $(document).ready(function() {
-        
+
         $(".addItemToCartButton").click(function(){
             $(this).addClass('animated bounce');
             setTimeout(function(){
@@ -321,6 +321,20 @@
         if ($(window).width() > 1880 && $('.sidebar').find(':checkbox:checked').length > 0) {
             $('.sidebar').offcanvas('show')
         }
+
+        document.querySelector("#pricepartstart").addEventListener("keypress", function(evt) {
+            console.log('test');
+            if (evt.which != 8 && evt.which != 0 && evt.which != 46 && evt.which != 44 && evt.which < 48 || evt.which > 57) {
+                evt.preventDefault();
+            }
+        });
+
+        document.querySelector("#pricepartend").addEventListener("keypress", function(evt) {
+            console.log('test2');
+            if (evt.which != 8 && evt.which != 0 && evt.which != 46 && evt.which != 44 && evt.which < 48 || evt.which > 57) {
+                evt.preventDefault();
+            }
+        });
 
         
 
@@ -544,7 +558,7 @@
             $(toDelete).remove();
         }
 
-        document.querySelector(".attrpart").addEventListener("keypress", function(evt) {
+        $(".attrpart").keypress(function(evt) {
             if (evt.which != 8 && evt.which != 0 && evt.which != 46 && evt.which != 44 && evt.which < 48 || evt.which > 57) {
                 evt.preventDefault();
             }
@@ -587,11 +601,15 @@
             }
 
             if (part1 != "") {
+                if(part1[0]=="-")
+                    part1=part1.substring(1);
                 part1AsFl = (Math.round(parseFloat(part1) * 100) / 100);
                 part1AsStr = parseFloat(part1).toFixed(2);
             }
 
             if (part2 != "") {
+                if(part1[0]=="-")
+                    part1=part1.substring(1);
                 part2AsFl = (Math.round(parseFloat(part2) * 100) / 100);
                 part2AsStr = parseFloat(part2).toFixed(2);
             }
