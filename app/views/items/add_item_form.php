@@ -24,7 +24,7 @@
                 <div class="row m-2">
                     <div class="col">
                         <div class="form-floating ">
-                            <input type="text" class="form-control" id="nameInput" name="name" placeholder="Nazwa" required>
+                            <input type="text" class="form-control" id="nameInput" name="name" placeholder="Nazwa" required maxlength="150">
                             <label class="form-control-lg lg-custom" for="nameInput">Nazwa</label>
                         </div>
                     </div>

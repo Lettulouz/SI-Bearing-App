@@ -5,9 +5,7 @@
     <div class="container-fluid d-flex">
         <div class="row vw-100 w-25 mb-5">
             <div class="col-sm-12 px-0 dominik-test d-sm-block" style="height: 300px; background-image:url(<?= APPPATH . "/resources/upload/baner.png"?>)">
-              
-
-
+            
             </div>
         </div>
     </div>
