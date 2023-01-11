@@ -1853,11 +1853,11 @@ class Manager extends Controller
         $siteLink = $this->getFooter($db);
 
         if($shippingOnlyActive==1){        
-            $query="SELECT id, name, price, active FROM shippingmethods WHERE active=1";
+            $query="SELECT id, name, price, needaddress active FROM shippingmethods WHERE active=1";
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }else{
-            $query="SELECT id, name, price, active FROM shippingmethods";
+            $query="SELECT id, name, price, needaddress active FROM shippingmethods";
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -1888,9 +1888,10 @@ class Manager extends Controller
 
         require_once dirname(__FILE__,2) . '/core/database.php';
         isset($_POST['methActive']) ? $methActive = 1 : $methActive=0;
+        isset($_POST['needAddress']) ? $needAddress = 1 : $needAddress=0;
 
         $query = "UPDATE `shippingmethods` 
-            SET active='$methActive'
+            SET active='$methActive', needaddress='$needAddress'
             WHERE id = '$id_m';";
         $result = $db->prepare($query);
         $result->execute();
@@ -1902,7 +1903,8 @@ class Manager extends Controller
         }
     }
 
-    /** This function add payment method to the database
+    /** 
+     * This function add payment method to the database
      */
     public function add_payment_method(){
         if(isset($_SESSION['loggedUser'])){
@@ -1917,11 +1919,14 @@ class Manager extends Controller
         $methodName = "";
         $methodFee = "";
         $methodActive = "";
+        $needAddress = "";
         if(isset($_SESSION['successOrErrorResponse'])){
             if($_SESSION['successOrErrorResponse'] == "add_shipping_method"){
                 if(isset($_SESSION['methodName'])) {$methodName = $_SESSION['paymentMethodName']; unset($_SESSION['paymentMethodName']);} 
                 if(isset($_SESSION['methodFee'])) {$methodFee = $_SESSION['methodFee']; unset($_SESSION['methodFee']);} 
-                if(isset($_SESSION['methodActive'])) {$methodActive = $_SESSION['paymentMethodActive']; unset($_SESSION['paymentMethodActive']);} 
+                if(isset($_SESSION['methActive'])) {$methActive = $_SESSION['paymentMethodActive']; unset($_SESSION['paymentMethodActive']);} 
+                if(isset($_SESSION['needAddress'])) 
+                {$needAddress = $_SESSION['needAddress']; unset($_SESSION['needAddress']);}
             }
             unset($_SESSION['successOrErrorResponse']);
         }
@@ -1933,13 +1938,15 @@ class Manager extends Controller
         if(isset($_POST['addpaymeth'])){
             if(isset($_POST['methodName'])) $_SESSION['paymentMethodName'] = $_POST['methodName'];
             if(isset($_POST['methodFee'])) $_SESSION['methodFee'] = $_POST['methodFee'];
-            if(isset($_POST['methodActive'])) $_SESSION['paymentMethodActive'] = $_POST['methodActive'];
+            if(isset($_POST['methActive'])) $_SESSION['paymentMethodActive'] = $_POST['methActive'];
+            if(isset($_POST['needAddress'])) $_SESSION['needAddress'] = $_POST['needAddress'];
 
             if(!empty($_POST['methodName'])){
             
                 $methodName = $_POST['methodName'];
                 isset($_POST['methodFee']) ? $methodFee = $_POST['methodFee'] : $methodFee="";
-                isset($_POST['methodActive']) ? $methodActive = 1 : $methodActive = 0;
+                isset($_POST['methActive']) ? $methodActive = 1 : $methodActive = 0;
+                isset($_POST['needAddress']) ? $needAddress = 1 : $needAddress = 0;
 
                 $query="SELECT COUNT(id) as amount
                 FROM paymentmethods WHERE name=:name";
@@ -1952,7 +1959,8 @@ class Manager extends Controller
                     $_SESSION['paymentMethodName'] = $methodName;
                     header("Location:" . ROOT . "/manager/error_page/2");
                 }else{
-                    $query = "INSERT INTO paymentmethods (name, fee, active) VALUES ('$methodName', '$methodFee', '$methodActive');";
+                    $query = "INSERT INTO paymentmethods (name, fee, needaddress ,active) 
+                    VALUES ('$methodName', '$methodFee', '$needAddress' ,'$methodActive');";
                     $result = $db->prepare($query);
                     $result->execute();
                     $_SESSION['success_page'] = "add_payment_method";

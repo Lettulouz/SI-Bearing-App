@@ -2518,11 +2518,17 @@ class Admin extends Controller
         $methodName = "";
         $methodPrice = "";
         $methodActive = "";
+        $needAddress = "";
         if(isset($_SESSION['successOrErrorResponse'])){
             if($_SESSION['successOrErrorResponse'] == "add_shipping_method"){
-                if(isset($_SESSION['methodName'])) {$methodName = $_SESSION['paymentMethodName']; unset($_SESSION['paymentMethodName']);} 
-                if(isset($_SESSION['methodPrice'])) {$methodPrice = $_SESSION['methodPrice']; unset($_SESSION['methodPrice']);} 
-                if(isset($_SESSION['methodActive'])) {$methodActive = $_SESSION['paymentMethodActive']; unset($_SESSION['paymentMethodActive']);} 
+                if(isset($_SESSION['methodName'])) 
+                {$methodName = $_SESSION['paymentMethodName']; unset($_SESSION['paymentMethodName']);} 
+                if(isset($_SESSION['methodPrice'])) 
+                {$methodPrice = $_SESSION['methodPrice']; unset($_SESSION['methodPrice']);} 
+                if(isset($_SESSION['methodActive'])) 
+                {$methodActive = $_SESSION['paymentMethodActive']; unset($_SESSION['paymentMethodActive']);} 
+                if(isset($_SESSION['needAddress'])) 
+                {$needAddress = $_SESSION['needAddress']; unset($_SESSION['needAddress']);}
             }
             unset($_SESSION['successOrErrorResponse']);
         }
@@ -2531,16 +2537,18 @@ class Admin extends Controller
 
         $siteLink = $this->getFooter($db);
 
-        if(isset($_POST['addpaymeth'])){
+        if(isset($_POST['addshipmeth'])){
             if(isset($_POST['methodName'])) $_SESSION['paymentMethodName'] = $_POST['methodName'];
             if(isset($_POST['methodPrice'])) $_SESSION['methodPrice'] = $_POST['methodPrice'];
-            if(isset($_POST['methodActive'])) $_SESSION['paymentMethodActive'] = $_POST['methodActive'];
+            if(isset($_POST['methActive'])) $_SESSION['paymentMethodActive'] = $_POST['methActive'];
+            if(isset($_POST['needAddress'])) $_SESSION['needAddress'] = $_POST['needAddress'];
 
             if(!empty($_POST['methodName'])){
             
                 $methodName = $_POST['methodName'];
                 isset($_POST['methodPrice']) ? $methodPrice = $_POST['methodPrice'] : $methodPrice="";
-                isset($_POST['methodActive']) ? $methodActive = 1 : $methodActive = 0;
+                isset($_POST['methActive']) ? $methodActive = 1 : $methodActive = 0;
+                isset($_POST['needAddress']) ? $needAddress = 1 : $needAddress = 0;
 
                 $query="SELECT COUNT(id) as amount
                 FROM shippingmethods WHERE name=:name";
@@ -2553,7 +2561,8 @@ class Admin extends Controller
                     $_SESSION['methodName'] = $methodName;
                     header("Location:" . ROOT . "/admin/error_page/2");
                 }else{
-                    $query = "INSERT INTO shippingmethods (name, price, active) VALUES ('$methodName', '$methodPrice', '$methodActive');";
+                    $query = "INSERT INTO shippingmethods (name, price, needaddress, active) 
+                    VALUES ('$methodName', '$methodPrice', '$needAddress', '$methodActive');";
                     $result = $db->prepare($query);
                     $result->execute();
                     $_SESSION['success_page'] = "shipping_method";
@@ -2589,11 +2598,11 @@ class Admin extends Controller
         $siteLink = $this->getFooter($db);
 
         if($shippingOnlyActive==1){        
-            $query="SELECT id, name, price, active FROM shippingmethods WHERE active=1";
+            $query="SELECT id, name, price, needadress, active FROM shippingmethods WHERE active=1";
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }else{
-            $query="SELECT id, name, price, active FROM shippingmethods";
+            $query="SELECT id, name, price, needadress, active FROM shippingmethods";
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -2601,8 +2610,8 @@ class Admin extends Controller
         
 
         $editMethPath=ROOT."/admin/edit_shipping_method";
-        $this->view('admin/list_of_shipping_methods_admin', ['siteLinks'=>$siteLink, 'shippingArray' => $result, 'editpath' => $editMethPath,  
-        'shippingOnlyActive' =>$shippingOnlyActive]);
+        $this->view('admin/list_of_shipping_methods_admin', ['siteLinks'=>$siteLink, 'shippingArray' => $result, 
+        'editpath' => $editMethPath,  'shippingOnlyActive' =>$shippingOnlyActive]);
     }
 
     public function edit_shipping_method($id_m=NULL){
@@ -2620,9 +2629,10 @@ class Admin extends Controller
 
         require_once dirname(__FILE__,2) . '/core/database.php';
         isset($_POST['methActive']) ? $methActive = 1 : $methActive=0;
+        isset($_POST['needAddress']) ? $needAddress = 1 : $needAddress=0;
 
         $query = "UPDATE `shippingmethods` 
-            SET active='$methActive'
+            SET active='$methActive', needaddress='$needAddress'
             WHERE id = '$id_m';";
         $result = $db->prepare($query);
         $result->execute();

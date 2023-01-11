@@ -65,7 +65,11 @@
                                 <dd class="text-right text-dark b ml-3"><strong id='totalCost'>0.00 zł</strong></dd>
                             </dl>
                             <hr>
+                            <?php if($data['isLogged']==1){ ?>
                             <button type='submit' class="btn btn-out btn-primary btn-square btn-main" data-abc="true" <?php if (empty($data['itemsArray'])) echo "disabled" ?>> Dokonaj zakupu </button>
+                            <?php } else {?> 
+                                <a href="<?php echo ROOT . "/login" ?>" class="btn btn-out btn-primary btn-square btn-main" <?php if (empty($data['itemsArray'])) echo "disabled" ?>> Dokonaj zakupu</a>
+                            <?php } ?>
                             <a href=<?php echo ROOT . "/store" ?> class="btn btn-out btn-success btn-square btn-main mt-2" data-abc="true">Kontynuuj zakupy</a>
                         </div>
                     </div>

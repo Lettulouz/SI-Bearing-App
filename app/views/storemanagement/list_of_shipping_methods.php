@@ -78,6 +78,17 @@
                             }
                             echo">
                             </div>
+                            <div class='form-check form-switch me-3'>
+                            <label class='form-check-label d-none d-sm-inline-block' 
+                            style='margin-top: 5px; margin-left: 5px; margin-right: 10px; font-weight: bold; font-size:18px' 
+                            for='needAddress'>Adres</label>
+                            <input class='form-check-input needAddress' style='height:30px; width:60px;' type='checkbox' 
+                            id='needAddress' name='needAddres' ";
+                            if($method['meedadress']==1){
+                              echo 'checked';
+                            }
+                            echo">
+                            </div>
                         <input type='submit' class='btn btn-primary  p-1' value='Edytuj' />
                             </div>
                             </div>

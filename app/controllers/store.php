@@ -417,12 +417,12 @@ class Store extends Controller
 
         $itemsInCart = NULL;
         if(isset($_COOKIE['itemsInCart']) && $_COOKIE['itemsInCart'] != ''){
-            $query="SELECT d.title, d.description, i.name, i.id as itemID, m.name as 'name2', i.price as itemPrice
+            $query="SELECT i.name, i.id as itemID, m.name as 'name2', i.price as itemPrice
                 FROM items i 
-                LEFT JOIN descriptions d ON d.id_item=i.id
                 INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
                 INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
-                WHERE i.id IN (".rtrim($_COOKIE['itemsInCart'],',').")";
+                WHERE i.id IN (".rtrim($_COOKIE['itemsInCart'],',').")
+                AND active=1";
 
 
             $itemsInCart = $db->query($query);
@@ -583,13 +583,12 @@ class Store extends Controller
         
         if(isset($_COOKIE['itemsInCart']) && $_COOKIE['itemsInCart'] != ''){
             $_SESSION['totalOrderPrice'] = 0;
-            $query="SELECT d.title, d.description, i.name, i.id as itemID, m.name as 'name2', i.price as itemPrice
+            $query="SELECT i.name, i.id as itemID, m.name as 'name2', i.price as itemPrice
                 FROM items i 
-                LEFT JOIN descriptions d ON d.id_item=i.id
                 INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
                 INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
-                WHERE i.id IN (".rtrim($_COOKIE['itemsInCart'],',').")";
-
+                WHERE i.id IN (".rtrim($_COOKIE['itemsInCart'],',').") AND active=1";
+                
             $itemsInCart = $db->query($query);
             $itemsInCart = $itemsInCart->fetchAll(PDO::FETCH_ASSOC);
             
@@ -608,6 +607,7 @@ class Store extends Controller
 
             $shippingmethods = $db->query($query3);
             $shippingmethods = $shippingmethods->fetchAll(PDO::FETCH_ASSOC);
+
             
             $i = 0;
             foreach($_POST as $key => $value){

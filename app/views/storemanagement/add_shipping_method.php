@@ -27,13 +27,22 @@
                     </div>
                 </div>
                 <div class="row m-2">
-                    <div class="col-12">
+                    <div class="col-6">
                         <div class="form-check form-switch">
                             <label class="form-check-label" 
                             style="margin-top: 5px; margin-left: 10px; font-weight: bold; font-size:18px" 
                             for="methActive">Aktywna</label>
                             <input class="form-check-input" style="height:30px; width:60px;" type="checkbox" 
                             id="methActive" name="methActive" checked>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-check form-switch">
+                            <label class="form-check-label" 
+                            style="margin-top: 5px; margin-left: 10px; font-weight: bold; font-size:18px" 
+                            for="needAddress">Adres</label>
+                            <input class="form-check-input" style="height:30px; width:60px;" type="checkbox" 
+                            id="needAddress" name="needAddress" checked>
                         </div>
                     </div>
                 </div>
