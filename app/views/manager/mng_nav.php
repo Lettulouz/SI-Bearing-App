@@ -148,62 +148,9 @@
               </a>
             </div>
           </li>
-          <li class="my-3">
-            <hr class="dropdown divider">
-          </li>
-          <li>
-            <a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link " data-bs-toggle="collapse" id="pages_collapse_btn" href="#pages_collapse" role="button" aria-expanded="false" aria-controls="pages_collapse">Podstrony
-              <span class="bi bi-chevron-right right-icon ms-auto"></span>
-            </a>
-            <div class="collapse" id="pages_collapse">
-              <a href="<?php echo ROOT . "/manager/edit_page/1" ?>" id="editpage1" class="nav-link text-muted">
-                <?= !empty($data['siteLinks']['c1r1']) ? $data['siteLinks']['c1r1'] : 'Strona 1' ?>
-              </a>
-              <a href="<?php echo ROOT . "/manager/edit_page/2" ?>" id="editpage2" class="nav-link text-muted">
-                <?= !empty($data['siteLinks']['c1r2']) ? $data['siteLinks']['c1r2'] : 'Strona 2' ?>
-              </a>
-              <a href="<?php echo ROOT . "/manager/edit_page/3" ?>" id="editpage3" class="nav-link text-muted">
-                <?= !empty($data['siteLinks']['c1r3']) ? $data['siteLinks']['c1r3'] : 'Strona 3' ?>
-              </a>
-              <a href="<?php echo ROOT . "/manager/edit_page/4" ?>" id="editpage4" class="nav-link text-muted">
-                <?= !empty($data['siteLinks']['c1r4']) ? $data['siteLinks']['c1r4'] : 'Strona 4' ?>
-              </a>
-              <a href="<?php echo ROOT . "/manager/edit_page/5" ?>" id="editpage5" class="nav-link text-muted">
-                <?= !empty($data['siteLinks']['c2r1']) ? $data['siteLinks']['c2r1'] : 'Strona 5' ?>
-              </a>
-              <a href="<?php echo ROOT . "/manager/edit_page/6" ?>" id="editpage6" class="nav-link text-muted">
-                <?= !empty($data['siteLinks']['c2r2']) ? $data['siteLinks']['c2r2'] : 'Strona 6' ?>
-              </a>
-              <a href="<?php echo ROOT . "/manager/edit_page/7" ?>" id="editpage7" class="nav-link text-muted">
-                <?= !empty($data['siteLinks']['c2r3']) ? $data['siteLinks']['c2r3'] : 'Strona 7' ?>
-              </a>
-              <a href="<?php echo ROOT . "/manager/edit_page/8" ?>" id="editpage8" class="nav-link text-muted">
-                <?= !empty($data['siteLinks']['c2r4']) ? $data['siteLinks']['c2r4'] : 'Strona 8' ?>
-              </a>
-              <a href="<?php echo ROOT . "/manager/edit_page/9" ?>" id="editpage9" class="nav-link text-muted">
-                Dolny tekst
-              </a>
-            </div>
-          </li>
-          <li class="my-3">
-            <hr class="dropdown divider">
-          </li>
-          <li>
-            <a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link " data-bs-toggle="collapse" id="settings_collapse_btn" href="#settings_collapse" role="button" aria-expanded="false" aria-controls="settings_collapse">Ustawienia
-              <span class="bi bi-chevron-right right-icon ms-auto"></span>
-            </a>
-            <div class="collapse" id="settings_collapse">
-              <a href="<?php echo ROOT . "/manager/edit_home" ?>" id="homeedit" class="nav-link text-muted">
-                Strona główna
-              </a>
-              <a href="<?php echo ROOT . "/manager/edit_informations" ?>" id="infoedit" class="nav-link text-muted">
-                Informacje
-              </a>
-              <a href="<?php echo ROOT . "/manager/edit_footer" ?>" id="footedit" class="nav-link text-muted">
-                Stopka
-              </a>
-            </div>
-          </li>
+
+          
+  
         </ul>
       </nav>
     </div>
