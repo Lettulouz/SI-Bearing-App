@@ -1,6 +1,8 @@
 <?php
 include 'srv_nav.php';
 
+include dirname(__FILE__,2) . "/sale/list_of_orders.php";
+
 ?>
 
 <script>
