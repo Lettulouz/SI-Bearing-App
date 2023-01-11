@@ -1,5 +1,5 @@
 
-<h1 class="text-muted headers-padding">Lista metod wysyłki</h1>
+<h1 class="text-muted headers-padding">Lista metod dostawy</h1>
     <hr class="divider mt-0 ">
     <div class="headers-padding" style="padding-right: 15px;">
         <div class="col-12 col-md-6 col-lg-4">

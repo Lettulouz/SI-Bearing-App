@@ -100,7 +100,7 @@
         ?>
         </tbody>
         </table>
-        <?php } else {echo "Brak dodanych katalogów.";}?>
+        <?php } else {echo "Brak dodanych producentów.";}?>
     </div>
 
 

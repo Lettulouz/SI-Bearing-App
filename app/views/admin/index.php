@@ -358,18 +358,18 @@ include 'adm_nav.php';
                 <div class="col-12 col-sm-6 col-xl-4 mb-3">
                     <div class="card text-white bg-custom-19 h-100">
                         <div class="card-header">
-                            <i class="bi bi-truck"></i>&nbspMetody wysyłki
+                            <i class="bi bi-truck"></i>&nbspMetody dostawy
                             <a style='float:right;' class="text-white" href="<?php echo ROOT."/admin/add_shipping_method"?>" >
                                 <i class="bi bi-plus-lg"></i>
                             </a>
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title text-truncate">Dodanych metod wysyłki: <?=$data['shippingMethodsCount']?></h5>
+                            <h5 class="card-title text-truncate">Dodanych metod dostawy: <?=$data['shippingMethodsCount']?></h5>
                             <p class="card-text text-truncate"><?=$data['shippingMethodsString']?></p>
                         </div>
                         <a href=<?php echo ROOT."/admin/list_of_shipping_methods"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
-                                Edytuj metody wysyłki
+                                Edytuj metody dostawy
                             </div>
                         </a>
                     </div>
