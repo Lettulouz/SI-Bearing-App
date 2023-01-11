@@ -618,7 +618,8 @@ class Store extends Controller
         $siteFooter = $this->getFooter($db);    
         $siteName = $this->getSiteName($db);
 
-        $query="SELECT i.price as price, i.name as name, i.amount as amount, m.name as manname FROM items i
+        $query="SELECT i.price as price, i.name as name, i.amount as amount, m.name as manname, i.amountComma as isDouble
+        FROM items i
         INNER JOIN manufacturercountries mc on i.id_manufacturercountry-mc.id_manufacturer
         INNER JOIN manufacturers m on mc.id_manufacturer=m.id
         WHERE i.id=:id";

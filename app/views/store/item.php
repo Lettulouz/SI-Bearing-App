@@ -24,8 +24,8 @@
                 <h4 class="text-wrap text fw-light">Producent: <?= $data['itemParams']['manname'] ?></h3>
                     <h6 class="text-wrap text"><?= $data['itemParams']['price'] ?> zł</h6>
                     <div class="col-sm-6 d-flex flex-column justify-content-center align-items-center">
-                        <a href="#" class="btn btn-success py-2 px-4 mt-4">Dodaj do koszyka</a>
-
+                        <a href="#" class="btn btn-success py-2 px-4 mt-4" id='<?php echo $data['id']."-".$data['itemParams']['price'].
+                        "-".$data['itemParams']['amount']."-".$data['itemParams']['isDouble']?>' name='addToCart'>Dodaj do koszyka</a>    
                     </div>
             </div>
         </div>
@@ -82,3 +82,29 @@
 
 
 <?php include dirname(__FILE__, 2) . "/footer.php"; ?>
+
+<script>
+    $('[name="addToCart"]').click(function() {
+        let idValueAmount = jQuery(this).attr("id").split("-");
+
+        if (!sessionStorage.getItem(idValueAmount[0]))
+            sessionStorage.setItem(idValueAmount[0], '1' + '-' + idValueAmount[1] + '-' + idValueAmount[2] + '-' + idValueAmount[3]);
+        else {
+            let valueAndAmount = sessionStorage.getItem(idValueAmount[0]).split("-");
+            if (valueAndAmount[2] >= valueAndAmount[0] + 1) {
+                var newValue = parseFloat(valueAndAmount[0]) + 1;
+                sessionStorage.setItem(idValueAmount[0], newValue + '-' + idValueAmount[1] + '-' + idValueAmount[2] + '-' + idValueAmount[3]);
+            }
+        }
+        var newCookie = "";
+
+        Object.keys(sessionStorage).forEach(function(key, value) {
+            if (!Number.isNaN(Number.parseInt(key)))
+                newCookie += key + ', ';
+        });
+        var today = new Date();
+        var expire = new Date();
+        expire.setTime(today.getTime() + 3600000 * 24 * 7);
+        document.cookie = 'itemsInCart =' + newCookie + ';3600, expires=' + expire.toGMTString() + '; path=/';
+    });
+</script>
