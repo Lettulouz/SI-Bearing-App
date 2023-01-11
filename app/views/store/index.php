@@ -608,8 +608,8 @@
             }
 
             if (part2 != "") {
-                if(part1[0]=="-")
-                    part1=part1.substring(1);
+                if(part2[0]=="-")
+                    part2=part2.substring(1);
                 part2AsFl = (Math.round(parseFloat(part2) * 100) / 100);
                 part2AsStr = parseFloat(part2).toFixed(2);
             }
