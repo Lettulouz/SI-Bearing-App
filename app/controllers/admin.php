@@ -554,9 +554,14 @@ class Admin extends Controller
 
     }
 
-    public function edit_user($id){
+    public function edit_user($id=NULL){
+        if(is_null($id) == true){
+            header("Location:" . ROOT . "/admin/index");
+        }
+        $adminId = NULL;
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
+                $adminId = $_SESSION['idLoggedUser'];                
                 unset($_SESSION['successOrErrorResponse']);
             }
             else{
@@ -565,7 +570,7 @@ class Admin extends Controller
         }
         else{
             header("Location:" . ROOT . "/login");
-        }
+        }        
         
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
@@ -665,7 +670,7 @@ class Admin extends Controller
             $_SESSION['success_page'] = "list_of_".$c."";
             header("Location:" . ROOT . "/admin/success_page/1");            
             }
-        $this->view('admin/edit_user', ['siteLinks'=>$siteLink,'name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'role'=>$role]);
+        $this->view('admin/edit_user', ['siteLinks'=>$siteLink,'name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'role'=>$role, 'adminId'=>$adminId, 'id'=>$id]);
     }
 
     public function add_user(){

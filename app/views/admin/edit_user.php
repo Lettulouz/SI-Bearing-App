@@ -1,5 +1,7 @@
 <?php
 include 'adm_nav.php';
+$adminId = $data['adminId'];
+$id = $data['id'];
 ?>
 <h1 class="text-muted headers-padding">Edycja użytkownika</h1>
     <hr class="divider mt-0">
@@ -48,7 +50,7 @@ include 'adm_nav.php';
                 <div class="row m-2">
                     <div class="col-12">
                         <div class="form-floating ">
-                            <select class="form-select" id="roleInput" name="role" required>                             
+                            <select class="form-select" id="roleInput" name="role" <?php if ($id==$adminId) echo "disabled";?> required>                             
                                 <option hidden></option>
                                 <option <?php if ($data['role']=="user") echo "selected " ?>value="user">Użytkownik</option>
                                 <option <?php if ($data['role']=="shopservice") echo "selected " ?>value="shopservice">Obsługa sklepu</option>
