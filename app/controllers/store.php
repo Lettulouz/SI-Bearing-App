@@ -224,6 +224,7 @@ class Store extends Controller
         
         $attrQuery = ' ';
 
+        print_r($attributes);
         if (!empty($_POST['checkBoxVarAttributes']) && !empty($_POST['arrayOfAttrVal'])) 
         {
             $tableAttr = $_POST['checkBoxVarAttributes']; 
@@ -266,152 +267,156 @@ class Store extends Controller
                 }
             }
         }
-        if($querySwitch){
-            $query="SELECT i.name, i.id as itemID, price, m.name as 'name2', i.amount, i.price as itemPrice, i.amountComma as isDouble
-            FROM items i 
-            INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
-            INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
-            INNER JOIN categoriesofitem coi ON i.id = coi.id_item
-            INNER JOIN categories categ ON coi.id_category = categ.id
-            LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
-            LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
-            LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
-            LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
-            WHERE i.name LIKE CONCAT('%', :search, '%')
-            AND i.amount>0
-            AND i.active=1
-            AND m.id IN ($id_manufacturer)
-            AND categ.id IN ($id_category) "
-            . $querypricestartend  
-            . $attrQuery .
-            " GROUP BY i.id"
-            . $sortValueQuery .
-            " LIMIT :limit1, 32";
-        }else{
-            $query="SELECT i.name, i.id as itemID, price, m.name as 'name2', i.amount, i.price as itemPrice, i.amountComma as isDouble
-            FROM items i 
-            INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
-            INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
-            INNER JOIN categoriesofitem coi ON i.id = coi.id_item
-            INNER JOIN categories categ ON coi.id_category = categ.id
-            LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
-            LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
-            LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
-            LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
-            WHERE i.name LIKE CONCAT('%', :search, '%')
-            AND i.amount>0
-            AND i.active=1
-            AND m.id IN ($id_manufacturer)
-            AND categ.id IN ($id_category)
-            AND catal.id IN ($id_catalog) "
-            . $querypricestartend 
-            . $attrQuery .
-            " GROUP BY i.id"
-            . $sortValueQuery .
-            " LIMIT :limit1, 32";
-        }
+        $itemsArr = array();
+        if(!empty($attributes)){
+            if($querySwitch){
+                $query="SELECT i.name, i.id as itemID, price, m.name as 'name2', i.amount, i.price as itemPrice, i.amountComma as isDouble
+                FROM items i 
+                INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
+                INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
+                INNER JOIN categoriesofitem coi ON i.id = coi.id_item
+                INNER JOIN categories categ ON coi.id_category = categ.id
+                LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
+                LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
+                LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
+                LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
+                WHERE i.name LIKE CONCAT('%', :search, '%')
+                AND i.amount>0
+                AND i.active=1
+                AND m.id IN ($id_manufacturer)
+                AND categ.id IN ($id_category) "
+                . $querypricestartend  
+                . $attrQuery .
+                " GROUP BY i.id"
+                . $sortValueQuery .
+                " LIMIT :limit1, 32";
+            }else{
+                $query="SELECT i.name, i.id as itemID, price, m.name as 'name2', i.amount, i.price as itemPrice, i.amountComma as isDouble
+                FROM items i 
+                INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
+                INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
+                INNER JOIN categoriesofitem coi ON i.id = coi.id_item
+                INNER JOIN categories categ ON coi.id_category = categ.id
+                LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
+                LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
+                LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
+                LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
+                WHERE i.name LIKE CONCAT('%', :search, '%')
+                AND i.amount>0
+                AND i.active=1
+                AND m.id IN ($id_manufacturer)
+                AND categ.id IN ($id_category)
+                AND catal.id IN ($id_catalog) "
+                . $querypricestartend 
+                . $attrQuery .
+                " GROUP BY i.id"
+                . $sortValueQuery .
+                " LIMIT :limit1, 32";
+            }
 
-        $itemsArr = $db->prepare($query);
-        
-        if (isset($_POST['checkBoxVarAttributes']) && isset($_POST['arrayOfAttrVal'])) 
-        {
-            $k=0;
-            for($j = 0; $j < count($attributes); $j++)
+            $itemsArr = $db->prepare($query);
+            
+            if (isset($_POST['checkBoxVarAttributes']) && isset($_POST['arrayOfAttrVal'])) 
             {
-                if(!isset($tableAttr[$k]))
-                    break;
-                if($tableAttr[$k]==$attributes[$j]['id']){
-                    if($isItRange[$j] == 0){
-                        $attrIdLoc = $tableAttr[$k];
-                        $tblAttrValue = $tableAttrValues[$k];
-                        if($tblAttrValue != ""){
-                            $itemsArr->bindParam(':tblAttrValue' . $attrIdLoc,$tblAttrValue);
+                $k=0;
+                for($j = 0; $j < count($attributes); $j++)
+                {
+                    if(!isset($tableAttr[$k]))
+                        break;
+                    if($tableAttr[$k]==$attributes[$j]['id']){
+                        if($isItRange[$j] == 0){
+                            $attrIdLoc = $tableAttr[$k];
+                            $tblAttrValue = $tableAttrValues[$k];
+                            if($tblAttrValue != ""){
+                                $itemsArr->bindParam(':tblAttrValue' . $attrIdLoc,$tblAttrValue);
+                            }
                         }
+                        $k++; 
                     }
-                    $k++; 
                 }
             }
-        }
 
-        $itemsArr->bindParam(':limit1',$limit1);
-        $itemsArr->bindParam(':search',$search);
-        
-        $itemsArr -> execute();
-  
-        $itemsArr = $itemsArr->fetchAll(PDO::FETCH_ASSOC);
-   
-        if($querySwitch){
-            $query="SELECT COUNT(i.id) as c
-            FROM items i 
-            INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
-            INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
-            INNER JOIN categoriesofitem coi ON i.id = coi.id_item
-            INNER JOIN categories categ ON coi.id_category = categ.id
-            LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
-            LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
-            LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
-            LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
-            WHERE i.name LIKE CONCAT('%', :search, '%')
-            AND i.amount>0
-            AND i.active=1
-            AND m.id IN ($id_manufacturer)
-            AND categ.id IN ($id_category) " 
-            . $querypricestartend 
-            . $attrQuery .
-            " GROUP BY i.id"
-            . $sortValueQuery;
-        }else{
-            $query="SELECT COUNT(i.id) as c
-            FROM items i 
-            INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
-            INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
-            INNER JOIN categoriesofitem coi ON i.id = coi.id_item
-            INNER JOIN categories categ ON coi.id_category = categ.id
-            LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
-            LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
-            LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
-            LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
-            WHERE i.name LIKE CONCAT('%', :search, '%')
-            AND i.amount>0
-            AND i.active=1
-            AND m.id IN ($id_manufacturer)
-            AND categ.id IN ($id_category)
-            AND catal.id IN ($id_catalog) "
-            . $attrQuery .
-            " GROUP BY i.id"
-            . $sortValueQuery;
-        }
-        
-        $numberOfItems = $db->prepare($query);
+            $itemsArr->bindParam(':limit1',$limit1);
+            $itemsArr->bindParam(':search',$search);
+            
+            $itemsArr -> execute();
+    
+            $itemsArr = $itemsArr->fetchAll(PDO::FETCH_ASSOC);
+    
+            if($querySwitch){
+                $query="SELECT COUNT(i.id) as c
+                FROM items i 
+                INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
+                INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
+                INNER JOIN categoriesofitem coi ON i.id = coi.id_item
+                INNER JOIN categories categ ON coi.id_category = categ.id
+                LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
+                LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
+                LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
+                LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
+                WHERE i.name LIKE CONCAT('%', :search, '%')
+                AND i.amount>0
+                AND i.active=1
+                AND m.id IN ($id_manufacturer)
+                AND categ.id IN ($id_category) " 
+                . $querypricestartend 
+                . $attrQuery .
+                " GROUP BY i.id"
+                . $sortValueQuery;
+            }else{
+                $query="SELECT COUNT(i.id) as c
+                FROM items i 
+                INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
+                INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
+                INNER JOIN categoriesofitem coi ON i.id = coi.id_item
+                INNER JOIN categories categ ON coi.id_category = categ.id
+                LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
+                LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
+                LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
+                LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
+                WHERE i.name LIKE CONCAT('%', :search, '%')
+                AND i.amount>0
+                AND i.active=1
+                AND m.id IN ($id_manufacturer)
+                AND categ.id IN ($id_category)
+                AND catal.id IN ($id_catalog) "
+                . $attrQuery .
+                " GROUP BY i.id"
+                . $sortValueQuery;
+            }
+         
+            $numberOfItems = $db->prepare($query);
 
-        if (isset($_POST['checkBoxVarAttributes']) && isset($_POST['arrayOfAttrVal'])) 
-        {
-            $k=0;
-            for($j = 0; $j < count($attributes); $j++)
+            if (isset($_POST['checkBoxVarAttributes']) && isset($_POST['arrayOfAttrVal'])) 
             {
-                if(!isset($tableAttr[$k]))
-                    break;
-                if($tableAttr[$k]==$attributes[$j]['id']){
-                    if($isItRange[$j] == 0){
-                        $attrIdLoc = $tableAttr[$k];
-                        $tblAttrValue = $tableAttrValues[$k];
-                        if($tblAttrValue != ""){
-                            $numberOfItems->bindParam(':tblAttrValue' . $attrIdLoc,$tblAttrValue);
+                $k=0;
+                for($j = 0; $j < count($attributes); $j++)
+                {
+                    if(!isset($tableAttr[$k]))
+                        break;
+                    if($tableAttr[$k]==$attributes[$j]['id']){
+                        if($isItRange[$j] == 0){
+                            $attrIdLoc = $tableAttr[$k];
+                            $tblAttrValue = $tableAttrValues[$k];
+                            if($tblAttrValue != ""){
+                                $numberOfItems->bindParam(':tblAttrValue' . $attrIdLoc,$tblAttrValue);
+                            }
                         }
+                        $k++; 
                     }
-                    $k++; 
                 }
             }
+
+            $numberOfItems->bindParam(':search',$search);
+
+            $numberOfItems -> execute();
+            $numberOfItems = $numberOfItems->fetch(PDO::FETCH_ASSOC);
+            if(!empty($numberOfItems))
+                $numberOfItems = $numberOfItems['c'];
+            if(!empty($numberOfItems))
+                $numberOfPages = intdiv($numberOfItems, 32) + 1;
+        
         }
-
-        $numberOfItems->bindParam(':search',$search);
-
-        $numberOfItems -> execute();
-        $numberOfItems = $numberOfItems->fetch(PDO::FETCH_ASSOC);
-        if(!empty($numberOfItems))
-            $numberOfItems = $numberOfItems['c'];
-        if(!empty($numberOfItems))
-            $numberOfPages = intdiv($numberOfItems, 32) + 1;
         
         $this->view('store/index', ['itemsArray'=>$itemsArr, 'search' => $search, 'limit1' => $page, 
             'manufacturersArray' => $manufacturers, 'last'=> $endofitems,
