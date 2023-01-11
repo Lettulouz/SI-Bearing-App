@@ -325,12 +325,15 @@ include 'adm_nav.php';
                     <div class="card text-white bg-custom-18 h-100">
                         <div class="card-header">
                             <i class="bi bi-credit-card"></i>&nbspMetody płatności
+                            <a style='float:right;' class="text-white" href="<?php echo ROOT."/admin/add_payment_method"?>" >
+                                <i class="bi bi-plus-lg"></i>
+                            </a>
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">Dodanych metod płatności: <?=$data['paymentMethodsCount']?></h5>
                             <p class="card-text text-truncate"><?=$data['paymentMethodsString']?></p>
                         </div>
-                        <a href=<?php echo ROOT."/admin/list_of_orders"?> id="orders_lists" class="nav-link text-white p-0">
+                        <a href=<?php echo ROOT."/admin/list_of_payment_methods"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
                                 Edytuj metody płatności
                             </div>
@@ -341,12 +344,15 @@ include 'adm_nav.php';
                     <div class="card text-white bg-custom-19 h-100">
                         <div class="card-header">
                             <i class="bi bi-truck"></i>&nbspMetody wysyłki
+                            <a style='float:right;' class="text-white" href="<?php echo ROOT."/admin/add_shipping_method"?>" >
+                                <i class="bi bi-plus-lg"></i>
+                            </a>
                         </div>
                         <div class="card-body">
                             <h5 class="card-title text-truncate">Dodanych metod wysyłki: <?=$data['shippingMethodsCount']?></h5>
                             <p class="card-text text-truncate"><?=$data['shippingMethodsString']?></p>
                         </div>
-                        <a href=<?php echo ROOT."/admin/list_of_orders"?> id="orders_lists" class="nav-link text-white p-0">
+                        <a href=<?php echo ROOT."/admin/list_of_shipping_methods"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
                                 Edytuj metody wysyłki
                             </div>

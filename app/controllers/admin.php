@@ -486,7 +486,7 @@ class Admin extends Controller
                 }
             }
 
-            $_SESSION['success_page'] = "'$a'";
+            $_SESSION['success_page'] = "$a";
             header("Location:" . ROOT . "/admin/success_page/1");
         }  
                 
