@@ -2788,6 +2788,12 @@ class Admin extends Controller
 
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
+
+        $imagePathCheck =RESOURCEPATH."/upload/baner.png";
+        if(!file_exists($imagePathCheck))
+            $imagePath = APPPATH."/resources/itemsPhotos/brak_zdjecia.png";
+        else    
+            $imagePath = APPPATH . "/resources/upload/baner.png";
         
         if(isset($_POST['homeEditSubmit'])){
 
@@ -2834,7 +2840,7 @@ class Admin extends Controller
         $result=$result->fetch(PDO::FETCH_ASSOC);
 
 
-        $this->view('admin/edit_home', ['result'=>$result, 'siteLinks'=>$siteLink]);
+        $this->view('admin/edit_home', ['result'=>$result, 'siteLinks'=>$siteLink, 'imagePath'=> $imagePath]);
     }
     //////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////INFO////////////////////////////////////////////////////////

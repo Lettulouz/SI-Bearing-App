@@ -26,7 +26,7 @@ include 'adm_nav.php';
                 </div>
             </div>
             <div class="text-center">
-                <img id="output" class="img-thumbnail mt-3" style="display:none; object-fit:cover"/>
+                <img id="output" class="img-thumbnail mt-3" src="<?=$data['imagePath']?>" style="display:default; object-fit:cover"/>
             </div>
         </div>
     </div>
@@ -140,7 +140,7 @@ include 'adm_nav.php';
         <a href="https://icons.getbootstrap.com/" target="_blank" style="color:darkgray">bootstrapa</a></label>
     </div>
 
-    <div class="row m-2">
+    <div class="row m-2 mb-5">
         <div class="col px-4">
             <div class="form-floating">
                 <input type="text" class="form-control" id="video" name="video" max="300" placeholder="yt"
