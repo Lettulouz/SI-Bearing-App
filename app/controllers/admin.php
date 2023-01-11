@@ -2800,13 +2800,13 @@ class Admin extends Controller
             $result->execute();
 
             if(!empty($_FILES['formFile']['name'])){
-                $imagePathCheck = PHOTOSPATH . "/upload/baner.png";
+                $imagePathCheck =RESOURCEPATH."/upload/baner.png";
                 if(file_exists($imagePathCheck)) unlink($imagePathCheck);
                 $path = $_FILES['formFile']['name'];
                 $ext = pathinfo($path, PATHINFO_EXTENSION);
                 $imagename = "baner." . $ext;
                 $tmpname = $_FILES['formFile']['tmp_name'];
-                if (!move_uploaded_file($tmpname, PHOTOSPATH . "/upload/" . $imagename)) {
+                if (!move_uploaded_file($tmpname, RESOURCEPATH. "/upload/" . $imagename)) {
                     $_SESSION['error_page'] = "list_of_items";
                     header("Location:" . ROOT . "/admin/error_page/3");
                 }  
