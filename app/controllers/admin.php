@@ -1026,8 +1026,77 @@ class Admin extends Controller
             $OrderItems[$id['id']]= $result;
         }
 
+        $orderpath="/admin/";
 
-        $this->view('admin/list_of_orders', ['siteLinks'=>$siteLink, 'orders'=>$orders, 'orderItems'=>$OrderItems]);
+        $this->view('admin/list_of_orders', ['siteLinks'=>$siteLink, 'orders'=>$orders, 'orderItems'=>$OrderItems, 'orderpath'=>$orderpath]);
+    }
+
+
+    public function orderview($order_id=NULL){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }else{
+                header("Location:" . ROOT . "/home");
+            }
+        }else{
+            header("Location:" . ROOT . "/login");
+        }
+
+        if($order_id==NULL){
+            header("Location:" . ROOT . "/admin");
+        }
+
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteFooter = $this->getFooter($db);   
+
+        $itemsInOrder = NULL;
+
+        $o_id = $order_id;
+
+        if(!is_numeric($order_id))
+            $o_id  = 0;
+        
+        
+        $query="SELECT i.id as itemID, iio.amount as itemAmount, i.price as itemPrice, i.name as itemName, m.name as itemManName
+        FROM orders o 
+        INNER JOIN itemsinorder iio ON o.id=iio.id_order 
+        INNER JOIN items i ON iio.id_item=i.id
+        INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
+        INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
+        WHERE o.id=:id_order";
+
+        $itemsInOrder = $db->prepare($query);
+        $itemsInOrder->bindParam(':id_order', $o_id);
+        $itemsInOrder->execute();
+        $itemsInOrder = $itemsInOrder->fetchAll(PDO::FETCH_ASSOC);
+
+        $query="SELECT o.orderdate as orderDate, sm.name as shippingName, sm.price as shippingPrice, sm.needAddress as needAddress,
+        pm.name as paymentName, pm.fee as paymentFee, o.price as orderPrice, o.*
+        FROM orders o 
+        INNER JOIN itemsinorder iio ON o.id=iio.id_order 
+        INNER JOIN items i ON iio.id_item=i.id
+        INNER JOIN shippingmethods sm ON o.id_shippingmethod=sm.id
+        INNER JOIN paymentmethods pm ON o.id_paymentmethod=pm.id
+        WHERE o.id=:id_order";
+
+        $result = $db->prepare($query);
+        $result->bindParam(':id_order', $o_id);
+        $result->execute();
+        $result = $result->fetch(PDO::FETCH_ASSOC);
+
+        $totalOrderPrice = $result['orderPrice'] +  $result['shippingPrice'] + $result['paymentFee'];
+
+        if(empty($itemsInOrder) || empty($result)){
+            header("Location:" . ROOT . "/admin/list_of_orders");
+            return;
+        }
+
+        $orderpath="/admin/";
+
+        $this->view('admin/orderview', ['siteLinks' => $siteFooter,
+        'itemsArray'=>$itemsInOrder, 'orderInfo' => $result, 'totalOrderPrice'=>$totalOrderPrice, 'orderpath'=>$orderpath]);
+ 
     }
 
     /** Function that add attributes

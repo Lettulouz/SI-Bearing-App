@@ -19,20 +19,27 @@
                     echo "
                         <div class='m-0 p-0 order_row'>
                         <div class='row'>
+                            <a class='text-decoration-none text-dark' href=' " . ROOT . $data['orderpath']."orderview/". $order['id'] ."'>
                             <div class='col-12 col-xl-1 text-center align-self-center d-block'><i class='bi bi-basket2 img-thumbnail' style='font-size:75px;'></i>
+                            </a>
                             </div>
                             <div class='col-12 col-xl-10 ms-1 ms-md-2'>
                                 <div class='row'>
-                                    <div class='col-md-4'>
-                                        <span><strong>Stan zamówienia: " . $order['orderstate'] . "</strong></span> <br />
-                                        Kwota: " . $order['price'] . " zł<br />
-                                        Forma dostawy: " . $order['smName'] . " <br />
-                                        Numer paczki: " . $order['trackingnumber'] . " <br />
-                                        <input type='hidden' id='idd".$i."' value='".$order['id']."'>
-                                        <input type='hidden' id='state".$i."' value='".$order['orderstate']."'>
-                                        <input type='hidden' id='tracking".$i."' value='".$order['trackingnumber']."'>
-                                    </div>
+                
+                                        <div class='col-md-4'>
+                                          <a class='text-decoration-none text-dark'  href=' " . ROOT . $data['orderpath']."orderview/". $order['id'] ."'>
+                                            <span><strong>Stan zamówienia: " . $order['orderstate'] . "</strong></span> <br />
+                                            Kwota: " . $order['price'] . " zł<br />
+                                            Forma dostawy: " . $order['smName'] . " <br />
+                                            Numer paczki: " . $order['trackingnumber'] . " <br />
+                                            <input type='hidden' id='idd".$i."' value='".$order['id']."'>
+                                            <input type='hidden' id='state".$i."' value='".$order['orderstate']."'>
+                                            <input type='hidden' id='tracking".$i."' value='".$order['trackingnumber']."'>
+                                          </a>
+                                        </div>
+                                
                                     <div class='col-md-6'>
+                                      <a class='text-decoration-none text-dark' href=' " . ROOT . $data['orderpath']."orderview/". $order['id'] ."'>
                                         Dane: " . $order['ordername']  . " " . $order['orderlastname'] . " <br/>
                                         Adres email: " . $order['email'] . " <br />
                                         Numer telefonu: " . $order['orderphonenumber'] . " <br />
@@ -41,6 +48,7 @@
                                         " . $order['orderpostcode'] . ", " . $order['ordercity'] . " ul. " . $order['orderstreet'] . " " . $order['orderhomenumber'] ."
                                         <br/> Data złożenia zamówienia: " . $order['orderdate'] . "
                                         </div>
+                                      </a>
                                     </div>
                                     <div class='col-md-2 align-self-center d-block'>
                                     <button type='button' class='btn btn-dark editBtn'
