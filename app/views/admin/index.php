@@ -44,7 +44,7 @@ include 'adm_nav.php';
                 <div class="col-12 col-sm-6 col-xl-4 mb-3">
                     <div class="card text-white bg-warning  h-100" >
                         <div class="card-header"><i class="bi bi-person-fill-gear"></i>&nbspMenadżerowie contentu
-                            <a style='float:right;' class="text-white" href="#" >
+                            <a style='float:right;' class="text-white" href="<?php echo ROOT."/admin/add_manager"?>" >
                                 <i class="bi bi-plus-lg"></i>
                             </a>
                         </div>
@@ -75,7 +75,7 @@ include 'adm_nav.php';
                     <div class="card text-white bg-danger h-100" >
                         <div class="card-header">
                             <i class="bi bi-person-vcard"></i>&nbspAdministratorzy
-                            <a style='float:right;' class="text-white" href="#" >
+                            <a style='float:right;' class="text-white" href="<?php echo ROOT."/admin/add_admin"?>" >
                                 <i class="bi bi-plus-lg"></i>
                             </a>
                         </div>
@@ -106,7 +106,7 @@ include 'adm_nav.php';
                     <div class="card text-white bg-custom-17 h-100" >
                         <div class="card-header">
                             <i class="bi bi-people-fill"></i>&nbspObsługa sklepu
-                            <a style='float:right;' class="text-white" href="#" >
+                            <a style='float:right;' class="text-white" href="<?php echo ROOT."/admin/add_shop_service"?>" >
                                 <i class="bi bi-plus-lg"></i>
                             </a>
                         </div>
@@ -299,7 +299,7 @@ include 'adm_nav.php';
     <!-- Third row on xl -->
         <p class="mb-0">
             <a class="text-muted small fw-bold text-uppercase text-decoration-none dash-list"
-                data-bs-toggle="collapse" href="#dashcollapse3" role="button" aria-expanded="true" aria-controls="dashcollapse3">Podstrony
+                data-bs-toggle="collapse" href="#dashcollapse3" role="button" aria-expanded="true" aria-controls="dashcollapse3">Sklep
                 <span class="bi bi-chevron-down right-icon ms-auto"></span>
             </a>
         </p>
@@ -324,11 +324,11 @@ include 'adm_nav.php';
                 <div class="col-12 col-sm-6 col-xl-4 mb-3">
                     <div class="card text-white bg-custom-18 h-100">
                         <div class="card-header">
-                            <i class="bi bi-cart4"></i>&nbspMetody płatności
+                            <i class="bi bi-credit-card"></i>&nbspMetody płatności
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">Dodanych metod płatności: [ilość]</h5>
-                            <p class="card-text text-truncate">ciąg rekordów</p>
+                            <h5 class="card-title">Dodanych metod płatności: <?=$data['paymentMethodsCount']?></h5>
+                            <p class="card-text text-truncate"><?=$data['paymentMethodsString']?></p>
                         </div>
                         <a href=<?php echo ROOT."/admin/list_of_orders"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
@@ -340,10 +340,11 @@ include 'adm_nav.php';
                 <div class="col-12 col-sm-6 col-xl-4 mb-3">
                     <div class="card text-white bg-custom-19 h-100">
                         <div class="card-header">
-                            <i class="bi bi-cart4"></i>&nbspMetody wysyłki
+                            <i class="bi bi-truck"></i>&nbspMetody wysyłki
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title text-truncate">Dodanych metod wysyłki: [ilość]</h5>
+                            <h5 class="card-title text-truncate">Dodanych metod wysyłki: <?=$data['shippingMethodsCount']?></h5>
+                            <p class="card-text text-truncate"><?=$data['shippingMethodsString']?></p>
                         </div>
                         <a href=<?php echo ROOT."/admin/list_of_orders"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
@@ -459,8 +460,17 @@ include 'adm_nav.php';
         <div class="collapse collapse show" id="dashcollapse5">
             <div class="row">
                 <div class="col-12 col-sm-6 col-xl-4 mb-3">
+                    <div class="card text-white bg-custom-3 h-100" >
+                        <a href=<?php echo ROOT."/admin/edit_home"?> id="orders_lists" class="nav-link text-white p-0">
+                            <div class="card-footer p-3">
+                                Edytuj stronę główną
+                            </div>
+                        </a>
+                    </div>    
+                </div>  
+                <div class="col-12 col-sm-6 col-xl-4 mb-3">
                     <div class="card text-white bg-custom-15 h-100" >
-                        <a href=<?php echo ROOT."/admin/edit_page/8"?> id="orders_lists" class="nav-link text-white p-0">
+                        <a href=<?php echo ROOT."/admin/edit_informations"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
                                 Edytuj informacje
                             </div>

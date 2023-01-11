@@ -37,7 +37,7 @@ include 'adm_nav.php';
                             </div>
                         </div>
                         <div class="text-center">
-                            <img id="output" class="img-thumbnail mt-3" style="display:none; object-fit:cover"/>
+                            <img id="output" class="img-thumbnail mt-3" src="<?=$data['imagePath']?>" style="display:default; object-fit:cover"/>
                         </div>
                         <label style="color:darkgray">*Dodawany obraz musi mieć proporcje 1:1, aby wyświetlał się poprawnie</label>
                     </div>
@@ -59,6 +59,21 @@ include 'adm_nav.php';
     });
 </script>
 
+
+<script>
+    function preview() {
+        var frame = document.getElementById('output');
+        document.getElementById('output').setAttribute('style', 'display:default');
+        document.getElementById('deleteImageBtn').setAttribute('style', 'display:default');
+        frame.src = URL.createObjectURL(event.target.files[0]);
+    }
+    function clearImage() {
+        document.getElementById('formFile').value = null;
+        document.getElementById('output').setAttribute('style', 'display:none');
+        document.getElementById('deleteImageBtn').setAttribute('style', 'display:none');
+        frame.src = "";
+    }
+</script>
 <?php
 include 'adm_feet.php';
 

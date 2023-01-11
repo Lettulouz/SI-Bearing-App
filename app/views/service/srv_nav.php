@@ -63,13 +63,19 @@
           <hr class="dropdown divider">
         </li>
         <li>
-          <a href="" id="ord_list" class="nav-link text-muted">
+          <a class="text-muted small fw-bold text-uppercase text-decoration-none sidebar-link "
+            data-bs-toggle="collapse" id="store_collapse_btn" href="#store_collapse" role="button" 
+            aria-expanded="false" aria-controls="store_collapse">Sklep
+            <span class="bi bi-chevron-right right-icon ms-auto"></span>
+          </a>
+        <div class="collapse" id="store_collapse">
+          <a href="<?php echo ROOT."/service/list_of_orders"?>" id="ord_list" class="nav-link text-muted">
             Zamówienia
           </a>
-          <a href="" id="sales_report" class="nav-link text-muted">
+          <a href="<?php echo ROOT."/service/sales_report"?>" id="sales_report" class="nav-link text-muted">
             Raporty sprzedaży
           </a>
-          
+        </div>  
 
         </li>
       </ul>

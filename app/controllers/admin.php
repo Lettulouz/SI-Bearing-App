@@ -20,6 +20,10 @@ class Admin extends Controller
                 $firstLine = "Usunięto rekord";
                 $secondLine = "pomyślnie!";
             }
+            else if($sid==4){
+                $firstLine = "Zmieniono status";
+                $secondLine = "pomyślnie!";
+            }
             $this->view('success_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
             header("Refresh: 2; url=" . ROOT . "/admin/" . $path);
         }
@@ -119,37 +123,37 @@ class Admin extends Controller
 
         //////////users info////////////////////
         $query="SELECT Count(login)
-        FROM `users` WHERE role='user'";
+        FROM `users` WHERE role='user' AND active=1";
         $result = $db->query($query);
         $usersCount = $result->fetchAll(PDO::FETCH_ASSOC);
         $usersCount= $usersCount[0]['Count(login)'];
 
         $query="SELECT login
-        FROM `users` WHERE role='user'
+        FROM `users` WHERE role='user' AND active=1
         LIMIT 5";
         $result = $db->query($query);
         $users = $result->fetchAll(PDO::FETCH_ASSOC);
 
         $query="SELECT Count(login)
-        FROM `users` WHERE role='contentmanager'";
+        FROM `users` WHERE role='contentmanager' AND active=1";
         $result = $db->query($query);
         $managersCount = $result->fetchAll(PDO::FETCH_ASSOC);
         $managersCount= $managersCount[0]['Count(login)'];
 
         $query="SELECT login
-        FROM `users` WHERE role='contentmanager'
+        FROM `users` WHERE role='contentmanager' AND active=1
         LIMIT 5";
         $result = $db->query($query);
         $managers = $result->fetchAll(PDO::FETCH_ASSOC);
 
         $query="SELECT Count(login)
-        FROM `users` WHERE role='admin'";
+        FROM `users` WHERE role='admin' AND active=1";
         $result = $db->query($query);
         $adminsCount = $result->fetchAll(PDO::FETCH_ASSOC);
         $adminsCount= $adminsCount[0]['Count(login)'];
 
         $query="SELECT login
-        FROM `users` WHERE role='admin'
+        FROM `users` WHERE role='admin' AND active=1
         LIMIT 5";
         $result = $db->query($query);
         $admins = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -159,12 +163,13 @@ class Admin extends Controller
         $query="SELECT i.name AS item, m.name AS manufacturer
         FROM items i 
             INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
-            INNER JOIN manufacturers m ON m.id=mc.id_manufacturer LIMIT 5";
+            INNER JOIN manufacturers m ON m.id=mc.id_manufacturer
+            WHERE i.active=1 LIMIT 5";
         $result = $db->query($query);
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
         $query="SELECT Count(name)
-        FROM `items`";
+        FROM `items` WHERE active=1";
         $result = $db->query($query);
         
         $itemsCount = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -219,10 +224,38 @@ class Admin extends Controller
         $categoriesCount = $result->fetchAll(PDO::FETCH_ASSOC);
         $categoriesCount = $categoriesCount[0]['Count(name)'];
 
-        $this->view('admin/index', ['siteLinks'=>$siteLink ,'items'=>$items, 'itemsCount'=>$itemsCount, 'catalogs'=>$catalogs, 'catalogsCount'=>$catalogsCount,
-        'attributes'=>$attributes, 'attributesCount'=>$attributesCount, 'manufacturers'=>$manufacturers, 
+        $query="SELECT GROUP_CONCAT(name SEPARATOR ', ') as shippingMethodsString FROM shippingmethods WHERE active=1";
+        $result = $db->query($query);
+        
+        $shippingMethodsString = $result->fetch(PDO::FETCH_ASSOC);
+        $shippingMethodsString = $shippingMethodsString['shippingMethodsString'];
+        
+        $query="SELECT Count(name) as c
+        FROM shippingmethods WHERE active=1";
+        $result = $db->query($query);
+        
+        $shippingMethodsCount = $result->fetch(PDO::FETCH_ASSOC);
+        $shippingMethodsCount = $shippingMethodsCount['c'];
+
+        $query="SELECT GROUP_CONCAT(name SEPARATOR ', ') as paymentMethodsString FROM paymentmethods WHERE active=1";
+        $result = $db->query($query);
+        
+        $paymentMethodsString = $result->fetch(PDO::FETCH_ASSOC);
+        $paymentMethodsString = $paymentMethodsString['paymentMethodsString'];
+        
+        $query="SELECT Count(name) as c
+        FROM paymentmethods WHERE active=1";
+        $result = $db->query($query);
+        
+        $paymentMethodsCount = $result->fetch(PDO::FETCH_ASSOC);
+        $paymentMethodsCount = $paymentMethodsCount['c'];
+
+        $this->view('admin/index', ['siteLinks'=>$siteLink ,'items'=>$items, 'itemsCount'=>$itemsCount, 'catalogs'=>$catalogs, 
+        'catalogsCount'=>$catalogsCount, 'attributes'=>$attributes, 'attributesCount'=>$attributesCount, 'manufacturers'=>$manufacturers, 
         'manufacturersCount'=>$manufacturersCount,'categories'=>$categories, 'categoriesCount'=>$categoriesCount,
-        'usersCount'=>$usersCount,'users'=>$users, 'managersCount'=>$managersCount,'managers'=>$managers, 'adminsCount'=>$adminsCount,'admins'=>$admins]);
+        'usersCount'=>$usersCount,'users'=>$users, 'managersCount'=>$managersCount,'managers'=>$managers, 'adminsCount'=>$adminsCount,
+        'admins'=>$admins, 'shippingMethodsString' => $shippingMethodsString, 'shippingMethodsCount' => $shippingMethodsCount, 
+        'paymentMethodsCount' => $paymentMethodsCount,'paymentMethodsString' => $paymentMethodsString]);
     }
 
 
@@ -489,7 +522,8 @@ class Admin extends Controller
         
         if(isset($id)){
             require_once dirname(__FILE__,2) . '/core/database.php';
-            $query="DELETE FROM users WHERE id=:id";
+            $query="UPDATE users SET login='kontousuniete', password='', name='Konto usunięte', lastname='', 
+            role='none', active=0, email='', temporary='0', authhash='' WHERE id=:id";
             $result = $db->prepare($query);
             $result->bindParam(':id', $id);
             $result->execute();
@@ -512,7 +546,7 @@ class Admin extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
 
-        $query="SELECT id, name, lastName, email, login, password FROM users WHERE role='user' ORDER BY id";
+        $query="SELECT id, name, lastName, email, login, password FROM users WHERE role='user' AND active=1 ORDER BY id";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -522,9 +556,14 @@ class Admin extends Controller
 
     }
 
-    public function edit_user($id){
+    public function edit_user($id=NULL){
+        if(is_null($id) == true){
+            header("Location:" . ROOT . "/admin/index");
+        }
+        $adminId = NULL;
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
+                $adminId = $_SESSION['idLoggedUser'];                
                 unset($_SESSION['successOrErrorResponse']);
             }
             else{
@@ -533,7 +572,7 @@ class Admin extends Controller
         }
         else{
             header("Location:" . ROOT . "/login");
-        }
+        }        
         
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
@@ -561,60 +600,79 @@ class Admin extends Controller
             $email = $_POST['mail'];
             $login = strtolower($_POST['login']);
             $password = $_POST['pass'];
-            $role = "user";
+            $role = $_POST['role'];
             $temporary = 1;
             $authhash = hash('sha256',$name . $lastName . $email . $login . $role . $result['id']);
+            $hashedPassword = hash('sha256', $password);
 
-            if(empty($password)){
-                $length = 10;
-                $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                $charactersLength = strlen($characters);
-                for ($i = 0; $i < $length; $i++) {
-                    $password.= $characters[rand(0, $charactersLength - 1)];
-                }
-            }
-            if(empty($name) || empty($lastName) || empty($email) || empty($login)){
-                $_SESSION['error_page'] = "edit_user";
-                header("Location:" . ROOT . "/admin/error_page/1");
+            if(empty($password)){                
+                $userdata = [
+                    'id' => $id,
+                    'name' => $name,
+                    'lastname' => $lastName,
+                    'email' => $email,
+                    'login' => $login,
+                    'role' => $role,
+                    'temporary' => $temporary,
+                    'authhash' => $authhash
+                ];
             }else{
-                $hashedPassword = hash('sha256', $password);
-
-                $query = "SELECT COUNT(id) AS amount FROM users WHERE login=:login";
-                $result = $db->prepare($query);
-                $result->bindParam(':login', $login);
-                $result->execute();
-                $result = $result->fetch(PDO::FETCH_ASSOC);
-                
-                $query = "SELECT COUNT(id) AS amount FROM users WHERE email=:email";
-                $result2 = $db->prepare($query);
-                $result2->bindParam(':email', $email);
-                $result2->execute();
-                $result2 = $result2->fetch(PDO::FETCH_ASSOC);
-                
-                if($result['amount']>0 || $result2['amount']>0){
-                    $_SESSION['error_page'] = "edit_user";
-                    header("Location:" . ROOT . "/admin/error_page/2");
-                }
-                else{
-                    $query = "INSERT INTO `users` (name, lastname, email, login, password, role, temporary, authhash) 
-                    VALUES (:name, :lastname, :email, :login, :password, :role, :temporary, :authhash);";
-                    $result = $db->prepare($query);
-                    $result->bindParam(':name', $name);
-                    $result->bindParam(':lastname', $lastName);
-                    $result->bindParam(':email', $email);
-                    $result->bindParam(':login', $login);
-                    $result->bindParam(':password', $hashedPassword);
-                    $result->bindParam(':role', $role);
-                    $result->bindParam(':temporary', $temporary);
-                    $result->bindParam(':authhash', $authhash);
-                    $result->execute();
-                     
-                    $_SESSION['success_page'] = "edit_user";
-                    header("Location:" . ROOT . "/admin/success_page/1");
-                }            
+                $userdata = [
+                    'id' => $id,
+                    'name' => $name,
+                    'lastname' => $lastName,
+                    'email' => $email,
+                    'login' => $login,
+                    'password' => $hashedPassword,
+                    'role' => $role,
+                    'temporary' => $temporary,
+                    'authhash' => $authhash
+                ];
             }
-        }
-        $this->view('admin/edit_user', ['siteLinks'=>$siteLink,'name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'role'=>$role]);
+            if(empty($name) || empty($lastName) || empty($login)){
+                $_SESSION['error_page'] = "edit_user/".$id."";
+                header("Location:" . ROOT . "/admin/error_page/1");
+            }else if(empty($password)){
+                $query = "UPDATE users SET name=:name, lastname=:lastname, email=:email, login=:login, role=:role, temporary=:temporary, authhash=:authhash 
+                WHERE id=:id;";
+                $result = $db->prepare($query);
+                $result->bindParam(':name', $name);
+                $result->bindParam(':lastname', $lastName);
+                $result->bindParam(':email', $email);
+                $result->bindParam(':login', $login);
+                $result->bindParam(':role', $role);
+                $result->bindParam(':temporary', $temporary);
+                $result->bindParam(':authhash', $authhash);
+                $result->execute($userdata);                     
+                    
+            }else{
+                $query = "UPDATE users SET name=:name, lastname=:lastname, email=:email, login=:login, password=:password, role=:role, temporary=:temporary, authhash=:authhash 
+                WHERE id=:id;";
+                $result = $db->prepare($query);
+                $result->bindParam(':name', $name);
+                $result->bindParam(':lastname', $lastName);
+                $result->bindParam(':email', $email);
+                $result->bindParam(':login', $login);
+                $result->bindParam(':password', $hashedPassword);
+                $result->bindParam(':role', $role);
+                $result->bindParam(':temporary', $temporary);
+                $result->bindParam(':authhash', $authhash);
+                $result->execute($userdata);
+            }
+
+            switch($role){
+                case "user": $c="users";
+                break;
+                case "contentmanager": $c="content_managers";
+                break;
+                case "admin": $c="admins";
+                break;
+                case "shopservice": $c="service_accounts";
+            }
+            $_SESSION['success_page'] = "list_of_".$c."";
+            header("Location:" . ROOT . "/admin/success_page/1");            
+            }
+        $this->view('admin/edit_user', ['siteLinks'=>$siteLink,'name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'role'=>$role, 'adminId'=>$adminId, 'id'=>$id]);
     }
 
     public function add_user(){
@@ -622,7 +680,6 @@ class Admin extends Controller
         $b = "user";
         $this->add($a, $b);
     }
-
 
     /** Function that checks if given password meets the conditions
      * @return Returns boolean, password meets the conditions - true, else - false
@@ -881,7 +938,7 @@ class Admin extends Controller
 
         if(isset($id_a)){
             require_once dirname(__FILE__,2) . '/core/database.php';
-            $query="DELETE FROM items WHERE id=:id_a";
+            $query="UPDATE items SET active=0 WHERE id=:id_a";
             $result = $db->prepare($query);
             $result->bindParam(':id_a', $id_a);
             $result->execute();
@@ -906,7 +963,56 @@ class Admin extends Controller
         }
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
-        $this->view('admin/list_of_orders', ['siteLinks'=>$siteLink]);
+
+        if(isset($_POST['stateSubmit'])){
+           if(!empty($_POST['orderid'])){
+                $query="UPDATE orders SET trackingnumber=:trackingnumber, orderstate=:orderstate
+                WHERE id=:id";
+                $result = $db->prepare($query);
+                $result->bindParam(':trackingnumber',$_POST['trackingnumber']);
+                $result->bindParam(':orderstate',$_POST['orderstate']);
+                $result->bindParam(':id',$_POST['orderid']);
+                $result->execute();
+                $_SESSION['success_page'] = "list_of_orders";
+                header("Location:" . ROOT . "/admin/success_page/4");
+           }else{
+            $_SESSION['error_page'] = "list_of_orders";
+            header("Location:" . ROOT . "/admin/error_page/1");
+           }
+
+      }
+
+
+        $query="SELECT o.*, sm.name AS smName, u.name AS user, u.email FROM orders o
+        INNER JOIN shippingmethods sm ON o.id_shippingmethod=sm.id
+        INNER JOIN users u ON u.id=o.id_user
+        ORDER BY orderdate DESC";
+        $orders = $db->prepare($query);
+        $orders->execute();
+        $orders = $orders->fetchAll(PDO::FETCH_ASSOC);
+
+        $queryItems="SELECT i.name AS item, m.name AS mnf,
+        c.name AS country, iio.amount AS amount, i.price AS price
+        FROM orders o 
+        INNER JOIN itemsinorder iio ON o.id=iio.id_order
+        INNER JOIN items i ON i.id=iio.id_item
+        INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
+        INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
+        INNER JOIN countries c ON mc.id_country=c.id 
+        WHERE o.id=:iid";
+
+        $OrderItems=array();
+
+        foreach($orders as $id){
+            $result = $db->prepare($queryItems);
+            $result->bindParam(':iid', $id['id']);
+            $result->execute();
+            $result =  $result->fetchAll(PDO::FETCH_ASSOC);
+            $OrderItems[$id['id']]= $result;
+        }
+
+
+        $this->view('admin/list_of_orders', ['siteLinks'=>$siteLink, 'orders'=>$orders, 'orderItems'=>$OrderItems]);
     }
 
     /** Function that add attributes
@@ -924,6 +1030,7 @@ class Admin extends Controller
         } 
 
         require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
 
         $attributeName = "";
         $attributeUnit = "";
@@ -1894,15 +2001,16 @@ class Admin extends Controller
                 }
 
                 $imagePathCheck = PHOTOSPATH . "/[" . $item_id. "].png";
-
-                if(file_exists($imagePathCheck)) unlink($imagePathCheck);
-                $path = $_FILES['formFile']['name'];
-                $ext = pathinfo($path, PATHINFO_EXTENSION);
-                $imagename = "[" . $item_id . "]." . $ext;    
-                $tmpname = $_FILES['formFile']['tmp_name'];
-                if (!move_uploaded_file($tmpname, PHOTOSPATH . "/" . $imagename)) {
-                    $_SESSION['error_page'] = "list_of_items";
-                    header("Location:" . ROOT . "/admin/error_page/3");
+                if(!empty($_FILES['formFile']['name'])){
+                    if(file_exists($imagePathCheck)) unlink($imagePathCheck);
+                    $path = $_FILES['formFile']['name'];
+                    $ext = pathinfo($path, PATHINFO_EXTENSION);
+                    $imagename = "[" . $item_id . "]." . $ext;    
+                    $tmpname = $_FILES['formFile']['tmp_name'];
+                    if (!move_uploaded_file($tmpname, PHOTOSPATH . "/" . $imagename)) {
+                        $_SESSION['error_page'] = "list_of_items";
+                        header("Location:" . ROOT . "/admin/error_page/3");
+                    }
                 }
                 
                 $_SESSION['success_page'] = "list_of_items";
@@ -1978,11 +2086,11 @@ class Admin extends Controller
         $result->execute();
         $prevDesc = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $imagePath = APPPATH . "/resources/[" . $editId . "].png";
+        $imagePath = APPPATH . "/resources/itemsPhotos/[" . $editId . "].png";
         $imagePathCheck = PHOTOSPATH . "/[" . $editId . "].png";
 
         if(!file_exists($imagePathCheck)){
-            $imagePath = APPPATH . "/resources/brak_zdjecia.png";
+            $imagePath = APPPATH . "/resources/itemsPhotos/brak_zdjecia.png";
         }
 
         $this->view('admin/edit_item_admin', ['siteLinks'=>$siteLink,'items'=>$items, 'attributes' => $attributes, 'categories'=>$categories, 
@@ -2005,32 +2113,63 @@ class Admin extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
 
-        $query="SELECT i.id AS iid, i.name AS itemName, m.name AS manufacturerName, 
-        c.name AS manufacturerCountry, i.amount AS amount, i.price AS price
-        FROM items i 
-            INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
-            INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-            INNER JOIN countries c ON mc.id_country=c.id";
-        $result = $db->query($query);
-        $items = $result->fetchAll(PDO::FETCH_ASSOC);
+        isset($_POST['onlyActive']) ? $historyItems = 1 : $historyItems = 0;
 
-        $queryCateg="SELECT c.name AS categname
-        FROM items i 
-        INNER JOIN categoriesofitem coi ON i.id=coi.id_item
-        INNER JOIN categories c ON coi.id_category=c.id
-        WHERE i.id=:iid";
+        if($historyItems==0){
+            $query="SELECT i.id AS iid, i.name AS itemName, m.name AS manufacturerName, 
+            c.name AS manufacturerCountry, i.amount AS amount, i.price AS price
+            FROM items i 
+                INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
+                INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
+                INNER JOIN countries c ON mc.id_country=c.id WHERE i.active=1";
+            $result = $db->query($query);
+            $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $queryCat="SELECT c.name AS catname
-        FROM items i 
-        INNER JOIN itemsincatalog ic ON i.id=ic.id_item
-        INNER JOIN catalog c ON ic.id_catalog=c.id
-        WHERE i.id=:iid";
+            $queryCateg="SELECT c.name AS categname
+            FROM items i 
+            INNER JOIN categoriesofitem coi ON i.id=coi.id_item
+            INNER JOIN categories c ON coi.id_category=c.id
+            WHERE i.id=:iid AND i.active=1";
 
-        $queryAttr="SELECT a.name AS attrname, ai.value AS aval
-        FROM items i 
-        INNER JOIN attributesofitems ai ON i.id=ai.id_item
-        INNER JOIN attributes a ON ai.id_attribute=a.id
-        WHERE i.id=:iid";
+            $queryCat="SELECT c.name AS catname
+            FROM items i 
+            INNER JOIN itemsincatalog ic ON i.id=ic.id_item
+            INNER JOIN catalog c ON ic.id_catalog=c.id
+            WHERE i.id=:iid  AND i.active=1";
+
+            $queryAttr="SELECT a.name AS attrname, ai.value AS aval
+            FROM items i 
+            INNER JOIN attributesofitems ai ON i.id=ai.id_item
+            INNER JOIN attributes a ON ai.id_attribute=a.id
+            WHERE i.id=:iid AND i.active=1";
+        }else{
+            $query="SELECT i.id AS iid, i.name AS itemName, m.name AS manufacturerName, 
+            c.name AS manufacturerCountry, i.amount AS amount, i.price AS price
+            FROM items i 
+                INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
+                INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
+                INNER JOIN countries c ON mc.id_country=c.id WHERE i.active=0";
+            $result = $db->query($query);
+            $items = $result->fetchAll(PDO::FETCH_ASSOC);
+
+            $queryCateg="SELECT c.name AS categname
+            FROM items i 
+            INNER JOIN categoriesofitem coi ON i.id=coi.id_item
+            INNER JOIN categories c ON coi.id_category=c.id
+            WHERE i.id=:iid AND i.active=0";
+
+            $queryCat="SELECT c.name AS catname
+            FROM items i 
+            INNER JOIN itemsincatalog ic ON i.id=ic.id_item
+            INNER JOIN catalog c ON ic.id_catalog=c.id
+            WHERE i.id=:iid  AND i.active=0";
+
+            $queryAttr="SELECT a.name AS attrname, ai.value AS aval
+            FROM items i 
+            INNER JOIN attributesofitems ai ON i.id=ai.id_item
+            INNER JOIN attributes a ON ai.id_attribute=a.id
+            WHERE i.id=:iid AND i.active=0";
+        }
 
         $categoriesArray=array();
         $catalogArray=array();
@@ -2055,12 +2194,16 @@ class Admin extends Controller
             $result =  $result->fetchAll(PDO::FETCH_ASSOC);
             $attrArray[$id['iid']]= $result;
         }
+
+
+
         
         $editItemPath=ROOT."/admin/edit_item";
         $removeItemPath=ROOT."/admin/remove_item";
         
-        $this->view('admin/list_of_items', ['siteLinks'=>$siteLink,'itemsArray' => $items, 'categoriesArray' => $categoriesArray, 
-        'catalogArray' => $catalogArray, 'attrArray' => $attrArray, 'editItemPath' => $editItemPath, 'removeItemPath' => $removeItemPath]);
+        $this->view('admin/list_of_items', ['siteLinks'=>$siteLink,'itemsArray' => $items, 
+        'categoriesArray' => $categoriesArray, 'catalogArray' => $catalogArray, 'attrArray' => $attrArray, 
+        'editItemPath' => $editItemPath, 'removeItemPath' => $removeItemPath, 'historyItems' => $historyItems]);
     }
 
 
@@ -2662,13 +2805,13 @@ class Admin extends Controller
             $result->execute();
 
             if(!empty($_FILES['formFile']['name'])){
-                $imagePathCheck = PHOTOSPATH . "/baner.png";
+                $imagePathCheck =RESOURCEPATH."/upload/baner.png";
                 if(file_exists($imagePathCheck)) unlink($imagePathCheck);
                 $path = $_FILES['formFile']['name'];
                 $ext = pathinfo($path, PATHINFO_EXTENSION);
                 $imagename = "baner." . $ext;
                 $tmpname = $_FILES['formFile']['tmp_name'];
-                if (!move_uploaded_file($tmpname, PHOTOSPATH . "/" . $imagename)) {
+                if (!move_uploaded_file($tmpname, RESOURCEPATH. "/upload/" . $imagename)) {
                     $_SESSION['error_page'] = "list_of_items";
                     header("Location:" . ROOT . "/admin/error_page/3");
                 }  
@@ -2706,12 +2849,22 @@ class Admin extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
 
         $siteLink = $this->getFooter($db);
-
+        $imagePath = MAINPATH . "/resources/shopPhotos/siteicon.png";
         if(isset($_POST['informationsEditSubmit'])){
             $query="UPDATE siteinfo SET sitename=:sitename";
             $result = $db->prepare($query);
             $result->bindParam(':sitename', $_POST['siteName']);
             $result->execute();
+
+            if(!empty($_FILES['formFile']['name'])){
+                $imagePathCheck = MAINPATHLOC . "/resources/shopPhotos/siteicon.png";
+                if(file_exists($imagePathCheck)) unlink($imagePathCheck); 
+                $tmpname = $_FILES['formFile']['tmp_name'];
+                if (!move_uploaded_file($tmpname, MAINPATHLOC . "/resources/shopPhotos/siteicon.png")) {
+                    $_SESSION['error_page'] = "edit_informations";
+                    header("Location:" . ROOT . "/admin/error_page/3");
+                }
+            }
             $_SESSION['success_page'] = "edit_informations";
             header("Location:" . ROOT . "/admin/success_page/2");
         }
@@ -2721,7 +2874,7 @@ class Admin extends Controller
         $result->execute();
         $result=$result->fetch(PDO::FETCH_ASSOC);
 
-        $this->view('admin/edit_informations', ['result' => $result, 'siteLinks'=>$siteLink]);
+        $this->view('admin/edit_informations', ['result' => $result, 'siteLinks'=>$siteLink, 'imagePath' => $imagePath]);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////

@@ -6,6 +6,17 @@ include 'adm_nav.php';
 <h1 class="text-muted headers-padding">Lista użytkowników</h1>
     <hr class="divider mt-0">
     <div class="headers-padding" style="padding-right: 15px;">
+
+    <div class="col-12 col-md-6 col-lg-4">
+            <div class="input-group">
+                <input type="text" class="form-control" id="searchBox" placeholder="Wyszukaj użytkownika">
+                <button type="button" class="btn bg-transparent clrBtn" style="margin-left: -40px; z-index: 100;">
+                    <i class="bi bi-x"></i>
+                </button>
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+            </div>
+        </div>
+
         <?php if($data['usersArray']) {?>
         <table class="table text-center">
         <thead>
@@ -26,7 +37,7 @@ include 'adm_nav.php';
         foreach($users as $i => $user) 
         {
             echo 
-            "<tr>
+            "<tr class='tabrow'>
             <td>".$i+'1'."</td>
             <td>{$user['login']}</td>
             <td>{$user['name']}</td>
@@ -53,6 +64,24 @@ include 'adm_nav.php';
     document.getElementById('users_collapse_btn').setAttribute( 'aria-expanded', 'true' );
     document.getElementById('users_collapse_btn').setAttribute( 'style', 'color:white !important' );
     document.getElementById('user_lists').setAttribute( 'style', 'color:white !important' );
+
+    $(document).ready(function(){
+  $("#searchBox").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $(".tabrow").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+
+
+$('.clrBtn').click(function(){
+        $('#searchBox').val('');
+        $(".tabrow").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf('') > -1)
+    });
+    })    
+
 </script>
 
 <?php

@@ -258,14 +258,16 @@ class Login extends Controller
     private function checkIfUserExists($email, $db){
         $_SESSION['emailOrLoginInput'] =  $this->emailOrLoginInput;
         $email 
-        ? $userQuery = $db->prepare('SELECT id, name, password, role, temporary FROM users WHERE email = :emailorlogin') 
-        : $userQuery = $db->prepare('SELECT id, name, password, role, temporary FROM users WHERE login = :emailorlogin');
+        ? $userQuery = $db->prepare('SELECT id, name, password, role, temporary, active FROM users WHERE email = :emailorlogin') 
+        : $userQuery = $db->prepare('SELECT id, name, password, role, temporary, active FROM users WHERE login = :emailorlogin');
         $userQuery->bindValue(':emailorlogin', $this->emailOrLoginInput, PDO::PARAM_STR);
         $userQuery->execute();
 
         $this->ifUserExist = $userQuery->fetch(PDO::FETCH_ASSOC);
         if(!empty($this->ifUserExist)){
             if($this->ifUserExist['temporary'] == true) $this->errorDuringValidation("*Konto nie zostało aktywowane, sprawdź maila celem jego aktywacji");
+            if($this->ifUserExist['role'] == 'none') $this->errorDuringValidation("*Błąd");
+            if($this->ifUserExist['active'] == 0) $this->errorDuringValidation("*Błąd");
             if($this->ifUserExist) $_SESSION['loggedUser_name'] = $this->ifUserExist['name'];
             if($this->ifUserExist) $_SESSION['loggedUser_id'] = $this->ifUserExist['id'];
             if($this->ifUserExist) {
