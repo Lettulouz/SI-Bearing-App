@@ -151,6 +151,14 @@ function verifyLogin(login){
         return false;  
     }  
 
+    if(login.length > 25) {  
+        document.getElementById('errorPassword').innerText = "*Login nie może być dłuższy niż 25 znaków";  
+        document.getElementById('password').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingPassword').style = "display: default; color:#de1f1f";
+        document.getElementById('passwordSpan').style.color = "rgb(255, 0, 0)";
+        return false;  
+    } 
+
     let cond1 = checkIfOnlyAcceptedChars(login, 1);
     let cond2 = containsAnyLetters(login);
 

@@ -250,12 +250,27 @@ class Admin extends Controller
         $paymentMethodsCount = $result->fetch(PDO::FETCH_ASSOC);
         $paymentMethodsCount = $paymentMethodsCount['c'];
 
+        $query="SELECT COUNT(id) as c FROM orders WHERE orderdate > (SELECT NOW()- interval 7 DAY)";
+        $result = $db->query($query);
+        
+        $ordersLast7Count = $result->fetch(PDO::FETCH_ASSOC);
+        $ordersLast7Count = $ordersLast7Count['c'];
+
+        $query="SELECT COUNT(id) as c FROM orders";
+
+        $result = $db->query($query);
+        
+        $ordersTotalCount = $result->fetch(PDO::FETCH_ASSOC);
+        $ordersTotalCount = $ordersTotalCount['c'];
+
         $this->view('admin/index', ['siteLinks'=>$siteLink ,'items'=>$items, 'itemsCount'=>$itemsCount, 'catalogs'=>$catalogs, 
-        'catalogsCount'=>$catalogsCount, 'attributes'=>$attributes, 'attributesCount'=>$attributesCount, 'manufacturers'=>$manufacturers, 
-        'manufacturersCount'=>$manufacturersCount,'categories'=>$categories, 'categoriesCount'=>$categoriesCount,
-        'usersCount'=>$usersCount,'users'=>$users, 'managersCount'=>$managersCount,'managers'=>$managers, 'adminsCount'=>$adminsCount,
-        'admins'=>$admins, 'shippingMethodsString' => $shippingMethodsString, 'shippingMethodsCount' => $shippingMethodsCount, 
-        'paymentMethodsCount' => $paymentMethodsCount,'paymentMethodsString' => $paymentMethodsString]);
+        'catalogsCount'=>$catalogsCount, 'attributes'=>$attributes, 'attributesCount'=>$attributesCount, 
+        'manufacturers'=>$manufacturers, 'manufacturersCount'=>$manufacturersCount,'categories'=>$categories, 
+        'categoriesCount'=>$categoriesCount, 'usersCount'=>$usersCount,'users'=>$users, 'managersCount'=>$managersCount,
+        'managers'=>$managers, 'adminsCount'=>$adminsCount,'admins'=>$admins, 'shippingMethodsString' => $shippingMethodsString, 
+        'shippingMethodsCount' => $shippingMethodsCount, 'paymentMethodsCount' => $paymentMethodsCount,
+        'paymentMethodsString' => $paymentMethodsString, 'ordersLast7Count' => $ordersLast7Count, 
+        'ordersTotalCount' => $ordersTotalCount]);
     }
 
 
@@ -308,172 +323,179 @@ class Admin extends Controller
         $this->surnameInput = "";
         $this->loginInput = "";
 
+        $adminPass = 0;
+
+        $query = "SELECT id FROM users ORDER BY id DESC LIMIT 1";
+        $result = $db->prepare($query);
+        $result->execute();
+        $result = $result->fetch(PDO::FETCH_ASSOC);
+        
+        
+        if(empty($_POST['name']) || empty($_POST['surname']) || empty($_POST['login']) || (empty($_POST['mail']) && !isset($_POST['userActivated'])) ){
+            $this->view('admin/'.$a.'', ['errorPassword' => $this->errorMessage,'errorLogin' => $this->errorMessage, 
+            'errorEmail' => $this->errorMessage, 'emailInput' => $this->emailInput, 'nameInput' => $this->nameInput, 
+            'surnameInput' => $this->surnameInput, 'loginInput' => $this->loginInput, 'passwordInput' => $this->passwordInput, 
+            'serverError' => $this->serverError, 'errorName' => '', 'errorSurname' => '', 'siteLinks'=>$siteLink 
+            ,'name'=>$this->nameInput, 'surname'=>$this->surnameInput, 'mail'=>$this->emailInput, 'login'=>$this->loginInput]);
+            return;
+        }
+
+        $this->nameInput = ucfirst(strtolower($_POST['name']));
+        $this->surnameInput = ucfirst(strtolower($_POST['surname']));
+        $this->emailInput = $_POST['mail'];
+        $this->loginInput = strtolower($_POST['login']);
+        $password = $_POST['pass'];
+        
+        $role = "$b";
+        
+        if(isset($_POST['userActivated'])){
+            $temporary = 0;
+            $authhash = NULL;
+            $adminPass = 1;
+        }else{
             $adminPass = 0;
+            $temporary = 1;
+            $authhash = hash('sha256',$this->nameInput . $this->surnameInput . $this->emailInput . $this->loginInput . $role . $result['id']);
+        }
 
-            $query = "SELECT id FROM users ORDER BY id DESC LIMIT 1";
-            $result = $db->prepare($query);
-            $result->execute();
-            $result = $result->fetch(PDO::FETCH_ASSOC);
-            
-            
-            if(empty($_POST['name']) || empty($_POST['surname']) || empty($_POST['login']) || (empty($_POST['mail']) && !isset($_POST['userActivated'])) ){
-                $this->view('admin/'.$a.'', ['errorPassword' => $this->errorMessage,'errorLogin' => $this->errorMessage, 
-                'errorEmail' => $this->errorMessage, 'emailInput' => $this->emailInput, 'nameInput' => $this->nameInput, 
-                'surnameInput' => $this->surnameInput, 'loginInput' => $this->loginInput, 'passwordInput' => $this->passwordInput, 
-                'serverError' => $this->serverError, 'errorName' => '', 'errorSurname' => '', 'siteLinks'=>$siteLink 
-                ,'name'=>$this->nameInput, 'surname'=>$this->surnameInput, 'mail'=>$this->emailInput, 'login'=>$this->loginInput]);
-                return;
+        if(empty($password)){
+            $length = 10;
+            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $charactersLength = strlen($characters);
+            for ($i = 0; $i < $length; $i++) {
+                $password.= $characters[rand(0, $charactersLength - 1)];
             }
-
-            $this->nameInput = ucfirst(strtolower($_POST['name']));
-            $this->surnameInput = ucfirst(strtolower($_POST['surname']));
-            $this->emailInput = $_POST['mail'];
-            $this->loginInput = strtolower($_POST['login']);
-            $password = $_POST['pass'];
-            
-            $role = "$b";
-         
-            if(isset($_POST['userActivated'])){
-                $temporary = 0;
-                $authhash = NULL;
-                $adminPass = 1;
-            }else{
-                $adminPass = 0;
-                $temporary = 1;
-                $authhash = hash('sha256',$this->nameInput . $this->surnameInput . $this->emailInput . $this->loginInput . $role . $result['id']);
+        }else{
+            if(($this->check = $this->verifyPassword($password)) == false){
+                $this->errorDuringValidation("*Zła długość hasła");
+                $this->errorPassword = $this->errorMessage;
             }
+        }
 
-            if(empty($password)){
-                $length = 10;
-                $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                $charactersLength = strlen($characters);
-                for ($i = 0; $i < $length; $i++) {
-                    $password.= $characters[rand(0, $charactersLength - 1)];
-                }
-            }else{
-                if(($this->check = $this->verifyPassword($password)) == false){
-                    $this->errorDuringValidation("*Zła długość hasła");
-                    $this->errorPassword = $this->errorMessage;
-                }
-            }
-
+        if($this->check == true){
             if(($this->check = $this->verifyName($this->nameInput)) == false){
                 $this->errorDuringValidation("*Nieprawidłowe imie");
                 $this->errorName = $this->errorMessage;
             }
+        }
 
+        if($this->check == true){
             if(($this->check = $this->verifyName($this->surnameInput)) == false){
                 $this->errorDuringValidation("*Nieprawidłowe nazwisko");
                 $this->errorSurname = $this->errorMessage;
             }
+        }
 
+        if($this->check == true){
             if(($this->check = $this->verifyLogin($this->loginInput)) == false){
                 $this->errorDuringValidation("*Nieprawidłowy login");
                 $this->errorLogin = $this->errorMessage;
             }
-
+        }
+        if($this->check == true){
             if(($this->verifyEmail($this->emailInput) == false)&&!isset($_POST['userActivated'])){
                 $this->errorDuringValidation("*Nieprawidłowy Email");
                 $this->errorEmail = $this->errorMessage;
                 $this->check=false;
             }
-    
-                $hashedPassword = hash('sha256', $password);
+        }
 
-                $query = "SELECT COUNT(id) AS amount FROM users WHERE login=:login";
-                $result = $db->prepare($query);
-                $result->bindParam(':login', $this->loginInput);
-                $result->execute();
-                $result = $result->fetch(PDO::FETCH_ASSOC);
+        $hashedPassword = hash('sha256', $password);
+
+        $query = "SELECT COUNT(id) AS amount FROM users WHERE login=:login";
+        $result = $db->prepare($query);
+        $result->bindParam(':login', $this->loginInput);
+        $result->execute();
+        $result = $result->fetch(PDO::FETCH_ASSOC);
+        
+        $query = "SELECT COUNT(id) AS amount FROM users WHERE email=:email";
+        $result2 = $db->prepare($query);
+        $result2->bindParam(':email', $this->emailInput);
+        $result2->execute();
+        $result2 = $result2->fetch(PDO::FETCH_ASSOC);
+        
+        if($result['amount']>0){
+            $this->errorDuringValidation("*Użytkownik o takim loginie już istnieje");
+            $this->errorLogin = $this->errorMessage;
+            $this->check=false;
+        }
+
+        if($result2['amount']>0 && $this->emailInput!=""){
+            $this->errorDuringValidation("*Użytkownik o takim emailu już istnieje");
+                $this->errorEmail = $this->errorMessage;
+            $this->check=false;
+        }
+
+        if($this->check==true){
+            $query = "INSERT INTO `users` (name, lastname, email, login, password, role, temporary, authhash) 
+            VALUES (:name, :lastname, :email, :login, :password, :role, :temporary, :authhash);";
+            $result = $db->prepare($query);
+            $result->bindParam(':name', $this->nameInput);
+            $result->bindParam(':lastname', $this->surnameInput);
+            $result->bindParam(':email', $this->emailInput);
+            $result->bindParam(':login', $this->loginInput);
+            $result->bindParam(':password', $hashedPassword);
+            $result->bindParam(':role', $role);
+            $result->bindParam(':temporary', $temporary);
+            $result->bindParam(':authhash', $authhash);
+            $result->execute();
+            if($adminPass == 0){
+                $path = PUBLICPATH;
+                try{
+                    $config = require_once dirname(__FILE__,2) . '/core/mailerconfig.php';
+                    $mail = new PHPMailer(true);
+
+                    $mail->isSMTP();
+
+                    $mail->Host = $config['host'];
+                    $mail->Port = $config['port'];
+                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+                    $mail->SMTPAuth = true;
+
+                    $mail->Username = $config['username'];
+                    $mail->Password = $config['password'];
+
+                    $mail->CharSet = 'UTF-8';
+                    $mail->setFrom($config['username'], 'Grontsmar');
+                    $mail->addAddress($this->emailInput);
+                    $mail->addReplyTo($config['username'], 'Grontsmar');
+
+                    $mail->isHTML(true);
+                    $mail->Subject = 'Założone konto w sklepie Grontsmar';
+                    $mail->Body = "<html>
+                    <head>
+                    <title> Założone konto w sklepie Grontsmar </title>
+                    </head>
+                    <body>
+                    <h1> Dzień dobry! </h1>
+                    <p> Na ten email zostało utworzone konto w sklepie Grontsmar. Oto dane: </p>
+                    <p> Login: $this->loginInput </p>
+                    <p> Hasło: $password </p>
+                    <a href='$path/userverify/$authhash'>Link aktywacyjny</a>
+                    <br>
+                    <br>
+                    <p> Masz 48h na aktywację konta, po tym czasie konto zostanie usunięte. </p>
+                    </body>
+                    </html>";
+                        
+                    $mail->send();
+
+
+                } catch(Exception $e){
+                    echo "<script>alert('Błąd wysyłania maila!')</script>";
+                }
+            }
+
+            $_SESSION['success_page'] = "$a";
+            header("Location:" . ROOT . "/admin/success_page/1");
+        }  
                 
-                $query = "SELECT COUNT(id) AS amount FROM users WHERE email=:email";
-                $result2 = $db->prepare($query);
-                $result2->bindParam(':email', $this->emailInput);
-                $result2->execute();
-                $result2 = $result2->fetch(PDO::FETCH_ASSOC);
-                
-                if($result['amount']>0){
-                    $this->errorDuringValidation("*Użytkownik o takim loginie już istnieje");
-                    $this->errorLogin = $this->errorMessage;
-                    $this->check=false;
-                }
-
-                if($result2['amount']>0 && $this->emailInput!=""){
-                    $this->errorDuringValidation("*Użytkownik o takim emailu już istnieje");
-                     $this->errorEmail = $this->errorMessage;
-                    $this->check=false;
-                }
-
-                    if($this->check==true){
-                    $query = "INSERT INTO `users` (name, lastname, email, login, password, role, temporary, authhash) 
-                    VALUES (:name, :lastname, :email, :login, :password, :role, :temporary, :authhash);";
-                    $result = $db->prepare($query);
-                    $result->bindParam(':name', $this->nameInput);
-                    $result->bindParam(':lastname', $this->surnameInput);
-                    $result->bindParam(':email', $this->emailInput);
-                    $result->bindParam(':login', $this->loginInput);
-                    $result->bindParam(':password', $hashedPassword);
-                    $result->bindParam(':role', $role);
-                    $result->bindParam(':temporary', $temporary);
-                    $result->bindParam(':authhash', $authhash);
-                    $result->execute();
-                    if($adminPass == 0){
-                        $path = PUBLICPATH;
-                        try{
-                        $config = require_once dirname(__FILE__,2) . '/core/mailerconfig.php';
-                        $mail = new PHPMailer(true);
-        
-                        $mail->isSMTP();
-        
-                        $mail->Host = $config['host'];
-                        $mail->Port = $config['port'];
-                        $mail->SMTPSecure =   PHPMailer::ENCRYPTION_SMTPS;
-                        $mail->SMTPAuth = true;
-        
-                        $mail->Username = $config['username'];
-                        $mail->Password = $config['password'];
-        
-                        $mail->CharSet = 'UTF-8';
-                        $mail->setFrom($config['username'], 'Grontsmar');
-                        $mail->addAddress($this->emailInput);
-                        $mail->addReplyTo($config['username'], 'Grontsmar');
-        
-                        $mail->isHTML(true);
-                        $mail->Subject = 'Założone konto w sklepie Grontsmar';
-                        $mail->Body = "<html>
-                        <head>
-                        <title> Założone konto w sklepie Grontsmar </title>
-                        </head>
-                        <body>
-                        <h1> Dzień dobry! </h1>
-                        <p> Na ten email zostało utworzone konto w sklepie Grontsmar. Oto dane: </p>
-                        <p> Login: $this->loginInput </p>
-                        <p> Hasło: $password </p>
-                        <a href='$path/userverify/$authhash'>Link aktywacyjny</a>
-                        <br>
-                        <br>
-                        <p> Masz 48h na aktywację konta, po tym czasie konto zostanie usunięte. </p>
-                        </body>
-                        </html>";
-                            
-                        $mail->send();
-
-
-                    } catch(Exception $e){
-                        echo "<script>alert('Błąd wysyłania maila!')</script>";
-                    }
-
-                }
-
-                    $_SESSION['success_page'] = "'$a'";
-                    header("Location:" . ROOT . "/admin/success_page/1");
-                }            
 
         $this->view('admin/'.$a.'', ['errorPassword' => $this->errorPassword,'errorLogin' => $this->errorLogin, 
         'errorEmail' => $this->errorEmail, 'emailInput' => $this->emailInput, 'nameInput' => $this->nameInput, 
         'surnameInput' => $this->surnameInput, 'loginInput' => $this->loginInput, 'passwordInput' => $this->passwordInput, 
-        'serverError' => $this->serverError, 'errorName' => '', 'errorSurname' => '', 'siteLinks'=>$siteLink 
-        ,'name'=>$this->nameInput, 'surname'=>$this->surnameInput, 'mail'=>$this->emailInput, 'login'=>$this->loginInput]);
+        'serverError' => $this->serverError, 'errorName' => '', 'errorSurname' => '', 'siteLinks'=>$siteLink ,
+        'name'=>$this->nameInput, 'surname'=>$this->surnameInput, 'mail'=>$this->emailInput, 'login'=>$this->loginInput]);
     }
 
     public function add_shop_service(){
@@ -577,6 +599,12 @@ class Admin extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
 
+        $this->serverError = false;
+        $this->inputError = false;
+        $this->check = true;
+        $this->ifUserExist = "";
+        $sendpassword="";
+
         $query="SELECT id, name, lastName, email, login, password, role FROM users WHERE id=:id";
         $result = $db->prepare($query);
         $result->bindParam(':id', $id);
@@ -588,8 +616,10 @@ class Admin extends Controller
         $login = $result["login"];
         $password = '';
         $role = $result["role"];
+
         if(isset($_POST['senduser']))
         {
+
             $query = "SELECT id FROM users ORDER BY id DESC LIMIT 1";
             $result = $db->prepare($query);
             $result->execute();
@@ -601,8 +631,6 @@ class Admin extends Controller
             $login = strtolower($_POST['login']);
             $password = $_POST['pass'];
             $role = $_POST['role'];
-            $temporary = 1;
-            $authhash = hash('sha256',$name . $lastName . $email . $login . $role . $result['id']);
             $hashedPassword = hash('sha256', $password);
 
             if(empty($password)){                
@@ -613,10 +641,12 @@ class Admin extends Controller
                     'email' => $email,
                     'login' => $login,
                     'role' => $role,
-                    'temporary' => $temporary,
-                    'authhash' => $authhash
                 ];
             }else{
+                if(($this->check = $this->verifyPassword($password)) == false){
+                    $this->errorDuringValidation("*Zła długość hasła");
+                    $this->errorPassword = $this->errorMessage;
+                }
                 $userdata = [
                     'id' => $id,
                     'name' => $name,
@@ -625,15 +655,57 @@ class Admin extends Controller
                     'login' => $login,
                     'password' => $hashedPassword,
                     'role' => $role,
-                    'temporary' => $temporary,
-                    'authhash' => $authhash
                 ];
             }
-            if(empty($name) || empty($lastName) || empty($login)){
-                $_SESSION['error_page'] = "edit_user/".$id."";
-                header("Location:" . ROOT . "/admin/error_page/1");
-            }else if(empty($password)){
-                $query = "UPDATE users SET name=:name, lastname=:lastname, email=:email, login=:login, role=:role, temporary=:temporary, authhash=:authhash 
+
+            if(($this->check = $this->verifyName($name)) == false){
+                $this->errorDuringValidation("*Nieprawidłowe imie");
+                $this->errorName = $this->errorMessage;
+            }
+
+            if(($this->check = $this->verifyName($lastName)) == false){
+                $this->errorDuringValidation("*Nieprawidłowe nazwisko");
+                $this->errorSurname = $this->errorMessage;
+            }
+
+            if(($this->check = $this->verifyLogin($login)) == false){
+                $this->errorDuringValidation("*Nieprawidłowy login");
+                $this->errorLogin = $this->errorMessage;
+            }
+
+            if(($this->verifyEmail($email) == false)){
+                $this->errorDuringValidation("*Nieprawidłowy Email");
+                $this->errorEmail = $this->errorMessage;
+                $this->check=false;
+            }
+
+            $query="SELECT id, COUNT(id) AS amount FROM users WHERE login=:login";
+            $result = $db->prepare($query);
+            $result->bindParam(':login', $login);
+            $result->execute();
+            $checkLogin = $result->fetch(PDO::FETCH_ASSOC);
+
+            $query = "SELECT id, COUNT(id) AS amount FROM users WHERE email=:email";
+            $result2 = $db->prepare($query);
+            $result2->bindParam(':email', $email);
+            $result2->execute();
+            $checkEmail = $result2->fetch(PDO::FETCH_ASSOC);
+
+            if($checkLogin['amount']>0&& $checkLogin['id']!=$id){
+                $this->errorDuringValidation("*Użytkownik o takim loginie już istnieje");
+                $this->errorLogin = $this->errorMessage;
+                $this->check=false;
+            }
+
+            if($checkEmail['amount']>0 && $checkEmail['id']!=$id){
+                $this->errorDuringValidation("*Użytkownik o takim emailu już istnieje");
+                 $this->errorEmail = $this->errorMessage;
+                $this->check=false;
+            }
+
+        if($this->check==true){
+          if(empty($password)){
+                $query = "UPDATE users SET name=:name, lastname=:lastname, email=:email, login=:login, role=:role 
                 WHERE id=:id;";
                 $result = $db->prepare($query);
                 $result->bindParam(':name', $name);
@@ -641,12 +713,11 @@ class Admin extends Controller
                 $result->bindParam(':email', $email);
                 $result->bindParam(':login', $login);
                 $result->bindParam(':role', $role);
-                $result->bindParam(':temporary', $temporary);
-                $result->bindParam(':authhash', $authhash);
-                $result->execute($userdata);                     
+                $result->execute($userdata);  
+                $sendpassword="dane niezmienione";                   
                     
             }else{
-                $query = "UPDATE users SET name=:name, lastname=:lastname, email=:email, login=:login, password=:password, role=:role, temporary=:temporary, authhash=:authhash 
+                $query = "UPDATE users SET name=:name, lastname=:lastname, email=:email, login=:login, password=:password, role=:role 
                 WHERE id=:id;";
                 $result = $db->prepare($query);
                 $result->bindParam(':name', $name);
@@ -655,10 +726,50 @@ class Admin extends Controller
                 $result->bindParam(':login', $login);
                 $result->bindParam(':password', $hashedPassword);
                 $result->bindParam(':role', $role);
-                $result->bindParam(':temporary', $temporary);
-                $result->bindParam(':authhash', $authhash);
                 $result->execute($userdata);
+                $sendpassword=$password;
             }
+
+            $path = PUBLICPATH;
+            try{
+            $config = require_once dirname(__FILE__,2) . '/core/mailerconfig.php';
+            $mail = new PHPMailer(true);
+
+            $mail->isSMTP();
+
+            $mail->Host = $config['host'];
+            $mail->Port = $config['port'];
+            $mail->SMTPSecure =   PHPMailer::ENCRYPTION_SMTPS;
+            $mail->SMTPAuth = true;
+
+            $mail->Username = $config['username'];
+            $mail->Password = $config['password'];
+
+            $mail->CharSet = 'UTF-8';
+            $mail->setFrom($config['username'], 'Grontsmar');
+            $mail->addAddress($email);
+            $mail->addReplyTo($config['username'], 'Grontsmar');
+
+            $mail->isHTML(true);
+            $mail->Subject = 'Edycja danych konta w sklepie Grontsmar';
+            $mail->Body = "<html>
+            <head>
+            <title> Edycja danych konta w sklepie Grontsmar </title>
+            </head>
+            <body>
+            <h1> Dzień dobry! </h1>
+            <p> Dane konta utworzonego na ten adres email zostały zmienione. Oto dane: </p>
+            <p> Login: $login </p>
+            <p> Hasło: $sendpassword </p>
+            </body>
+            </html>"; 
+                
+            $mail->send();
+        
+        } catch(Exception $e){
+                echo "<script>alert('Błąd wysyłania maila!')</script>";
+            }
+                
 
             switch($role){
                 case "user": $c="users";
@@ -670,9 +781,14 @@ class Admin extends Controller
                 case "shopservice": $c="service_accounts";
             }
             $_SESSION['success_page'] = "list_of_".$c."";
-            header("Location:" . ROOT . "/admin/success_page/1");            
+            header("Location:" . ROOT . "/admin/success_page/2");            
             }
-        $this->view('admin/edit_user', ['siteLinks'=>$siteLink,'name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'role'=>$role, 'adminId'=>$adminId, 'id'=>$id]);
+        }
+        $this->view('admin/edit_user', ['siteLinks'=>$siteLink,'name'=>$name, 'surname'=>$lastName, 'mail'=>$email, 'login'=>$login, 'role'=>$role, 'adminId'=>$adminId, 'id'=>$id,
+        'errorPassword' => $this->errorPassword,'errorLogin' => $this->errorLogin, 
+        'errorEmail' => $this->errorEmail, 'emailInput' => $this->emailInput, 'nameInput' => $this->nameInput, 
+        'surnameInput' => $this->surnameInput, 'loginInput' => $this->loginInput, 'passwordInput' => $this->passwordInput, 
+        'serverError' => $this->serverError, 'errorName' => '', 'errorSurname' => '']);
     }
 
     public function add_user(){
@@ -983,7 +1099,7 @@ class Admin extends Controller
       }
 
 
-        $query="SELECT o.*, sm.name AS smName, u.name AS user, u.email FROM orders o
+        $query="SELECT o.*, sm.name AS smName, u.login AS user, u.email FROM orders o
         INNER JOIN shippingmethods sm ON o.id_shippingmethod=sm.id
         INNER JOIN users u ON u.id=o.id_user
         ORDER BY orderdate DESC";
@@ -1011,8 +1127,77 @@ class Admin extends Controller
             $OrderItems[$id['id']]= $result;
         }
 
+        $orderpath="/admin/";
 
-        $this->view('admin/list_of_orders', ['siteLinks'=>$siteLink, 'orders'=>$orders, 'orderItems'=>$OrderItems]);
+        $this->view('admin/list_of_orders', ['siteLinks'=>$siteLink, 'orders'=>$orders, 'orderItems'=>$OrderItems, 'orderpath'=>$orderpath]);
+    }
+
+
+    public function orderview($order_id=NULL){
+        if(isset($_SESSION['loggedUser'])){
+            if($_SESSION['loggedUser'] == "admin"){
+                unset($_SESSION['successOrErrorResponse']);
+            }else{
+                header("Location:" . ROOT . "/home");
+            }
+        }else{
+            header("Location:" . ROOT . "/login");
+        }
+
+        if($order_id==NULL){
+            header("Location:" . ROOT . "/admin");
+        }
+
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteFooter = $this->getFooter($db);   
+
+        $itemsInOrder = NULL;
+
+        $o_id = $order_id;
+
+        if(!is_numeric($order_id))
+            $o_id  = 0;
+        
+        
+        $query="SELECT i.id as itemID, iio.amount as itemAmount, i.price as itemPrice, i.name as itemName, m.name as itemManName
+        FROM orders o 
+        INNER JOIN itemsinorder iio ON o.id=iio.id_order 
+        INNER JOIN items i ON iio.id_item=i.id
+        INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
+        INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
+        WHERE o.id=:id_order";
+
+        $itemsInOrder = $db->prepare($query);
+        $itemsInOrder->bindParam(':id_order', $o_id);
+        $itemsInOrder->execute();
+        $itemsInOrder = $itemsInOrder->fetchAll(PDO::FETCH_ASSOC);
+
+        $query="SELECT o.orderdate as orderDate, sm.name as shippingName, sm.price as shippingPrice, sm.needAddress as needAddress,
+        pm.name as paymentName, pm.fee as paymentFee, o.price as orderPrice, o.*
+        FROM orders o 
+        INNER JOIN itemsinorder iio ON o.id=iio.id_order 
+        INNER JOIN items i ON iio.id_item=i.id
+        INNER JOIN shippingmethods sm ON o.id_shippingmethod=sm.id
+        INNER JOIN paymentmethods pm ON o.id_paymentmethod=pm.id
+        WHERE o.id=:id_order";
+
+        $result = $db->prepare($query);
+        $result->bindParam(':id_order', $o_id);
+        $result->execute();
+        $result = $result->fetch(PDO::FETCH_ASSOC);
+
+        $totalOrderPrice = $result['orderPrice'] +  $result['shippingPrice'] + $result['paymentFee'];
+
+        if(empty($itemsInOrder) || empty($result)){
+            header("Location:" . ROOT . "/admin/list_of_orders");
+            return;
+        }
+
+        $orderpath="/admin/";
+
+        $this->view('admin/orderview', ['siteLinks' => $siteFooter,
+        'itemsArray'=>$itemsInOrder, 'orderInfo' => $result, 'totalOrderPrice'=>$totalOrderPrice, 'orderpath'=>$orderpath]);
+ 
     }
 
     /** Function that add attributes
@@ -2586,11 +2771,11 @@ class Admin extends Controller
         $siteLink = $this->getFooter($db);
 
         if($shippingOnlyActive==1){        
-            $query="SELECT id, name, price, needadress, active FROM shippingmethods WHERE active=1";
+            $query="SELECT id, name, price, needaddress, active FROM shippingmethods WHERE active=1";
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }else{
-            $query="SELECT id, name, price, needadress, active FROM shippingmethods";
+            $query="SELECT id, name, price, needaddress, active FROM shippingmethods";
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -2773,6 +2958,12 @@ class Admin extends Controller
 
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
+
+        $imagePathCheck =RESOURCEPATH."/upload/baner.png";
+        if(!file_exists($imagePathCheck))
+            $imagePath = APPPATH."/resources/itemsPhotos/brak_zdjecia.png";
+        else    
+            $imagePath = APPPATH . "/resources/upload/baner.png";
         
         if(isset($_POST['homeEditSubmit'])){
 
@@ -2819,7 +3010,7 @@ class Admin extends Controller
         $result=$result->fetch(PDO::FETCH_ASSOC);
 
 
-        $this->view('admin/edit_home', ['result'=>$result, 'siteLinks'=>$siteLink]);
+        $this->view('admin/edit_home', ['result'=>$result, 'siteLinks'=>$siteLink, 'imagePath'=> $imagePath]);
     }
     //////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////INFO////////////////////////////////////////////////////////

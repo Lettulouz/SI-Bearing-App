@@ -84,7 +84,7 @@
                             for='needAddress'>Adres</label>
                             <input class='form-check-input needAddress' style='height:30px; width:60px;' type='checkbox' 
                             id='needAddress' name='needAddres' ";
-                            if($method['meedadress']==1){
+                            if($method['needaddress']==1){
                               echo 'checked';
                             }
                             echo">

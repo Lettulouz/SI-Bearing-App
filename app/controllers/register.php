@@ -34,7 +34,7 @@ class Register extends Controller
                 $secondLine = "pomyślnie!";
             }
             $this->view('success_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
-            header("Refresh: 2; url=" . ROOT );
+            header("Refresh: 2; url=" . ROOT . "/login/" . $path);
         }
         else header("Location:" . ROOT . "");
     }
@@ -59,7 +59,8 @@ class Register extends Controller
             $this->view('register/index', ['errorPassword' => $this->errorMessage, 'errorLogin' => $this->errorMessage, 
             'errorEmail' => $this->errorMessage, 'emailInput' => $this->emailInput, 'nameInput' => $this->nameInput, 
             'surnameInput' => $this->surnameInput, 'loginInput' => $this->loginInput, 'passwordInput' => $this->passwordInput, 
-            'serverError' => $this->serverError, 'errorName' => '', 'errorSurname' => '', 'siteFooter' => $siteFooter]);
+            'serverError' => $this->serverError, 'errorName' => '', 'errorSurname' => '', 'siteFooter' => $siteFooter,
+            'siteName' => $siteName,]);
             return;
         }
 
@@ -79,24 +80,32 @@ class Register extends Controller
             $this->errorName = $this->errorMessage;
         }
 
-        if(($this->check = $this->verifyName($this->surnameInput)) == false){
-            $this->errorDuringValidation("*Nieprawidłowe nazwisko");
-            $this->errorSurname = $this->errorMessage;
+        if($this->check==true){
+            if(($this->check = $this->verifyName($this->surnameInput)) == false){
+                $this->errorDuringValidation("*Nieprawidłowe nazwisko");
+                $this->errorSurname = $this->errorMessage;
+            }
         }
-            
-        if(($this->check = $this->verifyLogin($this->loginInput)) == false){
-            $this->errorDuringValidation("*Nieprawidłowy login");
-            $this->errorLogin = $this->errorMessage;
+        
+        if($this->check==true){
+            if(($this->check = $this->verifyLogin($this->loginInput)) == false){
+                $this->errorDuringValidation("*Nieprawidłowy login");
+                $this->errorLogin = $this->errorMessage;
+            }
         }
 
-        if(($this->check = $this->verifyEmail($this->emailInput)) == false){
-            $this->errorDuringValidation("*Nieprawidłowy login");
-            $this->errorEmail = $this->errorMessage;
+        if($this->check==true){
+            if(($this->check = $this->verifyEmail($this->emailInput)) == false){
+                $this->errorDuringValidation("*Nieprawidłowy login");
+                $this->errorEmail = $this->errorMessage;
+            }
         }
 
-        if(($this->check = $this->verifyPassword()) == false){
-            $this->errorDuringValidation("*Zła długość hasła");
-            $this->errorPassword = $this->errorMessage;
+        if($this->check==true){
+            if(($this->check = $this->verifyPassword()) == false){
+                $this->errorDuringValidation("*Zła długość hasła");
+                $this->errorPassword = $this->errorMessage;
+            }
         }
 
         require_once dirname(__FILE__,2) . '/core/database.php';
@@ -115,6 +124,7 @@ class Register extends Controller
             $this->insertUser($db);
             $_SESSION['success_page'] = "validate";
             header("Location:" . ROOT . "/admin/success_page/1");
+            return;
         }
         
         $this->view('register/index', ['errorPassword' => $this->errorPassword, 'errorLogin' => $this->errorLogin, 
@@ -185,7 +195,8 @@ class Register extends Controller
      */
     private function verifyLogin($login){
         $regex  = '/^[a-z0-9]+$/';
-        if(preg_match($regex, $login) && strlen($login)>=8){
+
+        if(preg_match($regex, $login) && strlen($login)>=8 && strlen($login)<=25){
             return true;
         }
         else return false;
@@ -218,10 +229,14 @@ class Register extends Controller
         $result = $db->prepare($query);
         $result->execute();
         $result = $result->fetch(PDO::FETCH_ASSOC);
+        $authhash = hash('sha256',$this->nameInput . $this->surnameInput . $this->emailInput . $this->loginInput . "user" . $result['id']);
         $path = PUBLICPATH;
+        $query="UPDATE users SET authhash=:authhash WHERE id=:id";
+        $result2 = $db->prepare($query);
+        $result2->bindParam(':id',$result['id']);
+        $result2->bindParam(':authhash',$authhash);
+        $result2->execute();
         try{
-            $authhash = hash('sha256',$this->nameInput . $this->surnameInput . $this->emailInput . $this->loginInput . "user" . $result['id']);
-
             $config = require_once dirname(__FILE__,2) . '/core/mailerconfig.php';
             $mail = new PHPMailer();
 
@@ -273,6 +288,18 @@ class Register extends Controller
             $result = $db->query($query);
             $result = $result->fetch(PDO::FETCH_ASSOC);
             $_SESSION['siteFooter'] = $result;
+        }
+        return $result;
+    }
+
+    private function getSiteName($db){
+        if(isset($_SESSION['siteName'])){
+            $result = $_SESSION['siteName'];
+        }else{
+            $query = "SELECT sitename FROM siteinfo LIMIT 1";
+            $result = $db->query($query);
+            $result = $result->fetch(PDO::FETCH_ASSOC);
+            $_SESSION['siteName'] = $result;
         }
         return $result;
     }

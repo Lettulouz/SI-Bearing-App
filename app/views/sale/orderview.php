@@ -1,14 +1,10 @@
-<?php include "header.php"; ?>
-<?php include "navbar_top.php"; ?>
-
-<div class="container-fluid">
-    <div class="container">
+<div class="container">
         <!-- Title -->
         <div class="d-flex justify-content-between align-items-center py-3">
             <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Zamówienie </h2>
         </div>
 
-        <a href="<?=ROOT?>/store/order_history" class="text-dark ms-2" style="font-size:18px;">
+        <a href="<?=ROOT.$data['orderpath']?>list_of_orders" class="text-dark ms-2" style="font-size:18px;">
             <i class="bi bi-backspace" style="font-size:18px"></i> Powrót
         </a>
 
@@ -160,6 +156,3 @@
             </div>
         </div>
     </div>
-</div>
-
-<?php include dirname(__FILE__, 2) . "/footer.php"; ?>

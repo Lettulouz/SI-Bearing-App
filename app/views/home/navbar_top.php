@@ -48,7 +48,7 @@
                                     </li>
                                 <?php } ?>
                                 <li>
-                                    <a class="dropdown-item" href="<?=ROOT?>/logout"><i class="bi bi-box-arrow-left"></i> Wyloguj</a>
+                                    <a class="dropdown-item mt-1" href="<?=ROOT?>/logout"><i class="bi bi-box-arrow-left"></i> Wyloguj</a>
                                 </li>
                             </ul>
                         </li>
