@@ -1,12 +1,19 @@
 <?php
 class Store extends Controller
 {
-    /*
-    public function index(){
-        $message = "Witaj świecie";
-        $this->view('home/index', ['message' => $message]);
+    public function success_page($sid){     
+        if(isset($_SESSION['success_page'])){
+            $path = $_SESSION['success_page'];
+            unset($_SESSION['success_page']);
+            if($sid==1){
+                $firstLine = "Złożono zamówienie";
+                $secondLine = "pomyślnie!";
+            }
+            $this->view('success_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
+            header("Refresh: 2; url=" . ROOT . "/store/" . $path);
+        }
+        else header("Location:" . ROOT . "");
     }
-    */
 
     public function index(){
         if(isset($_POST['itemID'])){
@@ -528,7 +535,7 @@ class Store extends Controller
         $siteFooter = $this->getFooter($db);   
         $siteName = $this->getSiteName($db);
 
-        if(isset($_POST['orderSubmit'])){
+        if(!empty($_POST['payment'])){
             if(!empty($_POST['country'])){
             $query="INSERT INTO orders (id_user, id_shippingmethod, id_paymentmethod, orderstate, trackingnumber, 
             ordercountry, ordervoivodeship, ordercity, orderpostcode, orderstreet, orderhomenumber, 
@@ -566,12 +573,18 @@ class Store extends Controller
 
                 $query2 = "UPDATE items SET amount = amount-{$_SESSION['numberOfItems'][$j]}
                             WHERE id='$itemId'";
-                echo $query2." ";
+
                 $db->query($query2);
                 $db->query($query);
               }
 
-            header("Location:" . ROOT . "/home");
+            unset($_SESSION['idOfItems']);
+            unset($_SESSION['numberOfItems']);
+            unset($_SESSION['totalItemPrice']);
+
+            $_SESSION['success_page'] = "index";
+            header("Location:" . ROOT . "/store/success_page/1");
+            return;
         }
 
         $itemsInCart = NULL;
@@ -691,6 +704,8 @@ class Store extends Controller
         'loggedUser_name' => $loggedUser_name, 'orderInfo' => $result, 'totalOrderPrice'=>$totalOrderPrice]);
  
     }
+
+
 }
 
 ?>

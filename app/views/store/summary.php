@@ -59,7 +59,11 @@
                 <td class="text-end"></td>
               </tr>
               <tr>
-                <td colspan="2">Wysyłka <strong id='orderPrice'></strong></td>
+                <td colspan="2">Prowyizja formy platności <strong id='paymentFee'></strong></td>
+                <td class="text-end"></td>
+              </tr>
+              <tr>
+                <td colspan="2">Wysyłka <strong id='shippingPrice'></strong></td>
                 <td class="text-end"></td>
               </tr>
               <tr class="fw-bold">
@@ -71,7 +75,7 @@
         </div>
       </div>
       <!-- Payment -->
-      <form class='m-0 p-0' action='' method='POST'>
+      <form class='m-0 p-0' action='' method='POST' id='formOrderSubmit' onsubmit="event.preventDefault(); clearStorage();">
         <div class="card mb-4">
           <div class="card-body"> 
             <div class="row">
@@ -140,8 +144,8 @@
                     </div>
                   </div>`);
 
-                  $("#paymentPriceH").val(Math.trunc(paymentMethod['fee']*100)/100);
-          $('#orderPrice').html(Math.trunc(paymentMethod['fee']*100)/100+' zł');
+          $("#paymentPriceH").val(Math.trunc(paymentMethod['fee']*100)/100);
+          $('#paymentFee').html(Math.trunc(paymentMethod['fee']*100)/100+' zł');
           $('#totalOrderPrice').html(Math.trunc((parseFloat(paymentMethod['fee'])+parseFloat($("#totalOrderPriceH").val()))*100)/100+' zł');
 
           $("#paymentMethod").append(html);
@@ -178,8 +182,8 @@
                   </div>`
                 );
 
-                $("#paymentPriceH").val(Math.trunc(paymentMethod['fee']*100)/100);
-          $('#orderPrice').html(Math.trunc(paymentMethod['fee']*100)/100+' zł');
+          $("#paymentPriceH").val(Math.trunc(paymentMethod['fee']*100)/100);
+          $('#paymentFee').html(Math.trunc(paymentMethod['fee']*100)/100+' zł');
           $('#totalOrderPrice').html(Math.trunc((parseFloat(paymentMethod['fee'])+parseFloat($("#totalOrderPriceH").val()))*100)/100+' zł');
 
           $("#paymentMethod").append(html);
@@ -195,7 +199,7 @@
                   </div>`);
   
           $("#paymentPriceH").val(Math.trunc(paymentMethod['fee']*100)/100);
-          $('#orderPrice').html(Math.trunc(paymentMethod['fee']*100)/100+' zł');
+          $('#paymentFee').html(Math.trunc(paymentMethod['fee']*100)/100+' zł');
           $('#totalOrderPrice').html(Math.trunc((parseFloat(paymentMethod['fee'])+parseFloat($("#totalOrderPriceH").val()))*100)/100+' zł');
           
           $("#paymentMethod").append(html);
@@ -212,12 +216,11 @@
       for(var shippingMethod of shippingMethods){
         if($(this).val() == shippingMethod['id'] && !shippingMethod['needaddress']){
           html = $(`<div class="col-3 p-1 ">
-              <input name='orderSubmit' type="submit"  class="btn btn-primary btn-sm w-100">
+              <input name='orderSubmit' type="submit" id="orderSubmit"  class="btn btn-primary btn-sm w-100">
             </div>`
           )
           
-          $('#orderPrice').html(Math.trunc((parseFloat($("#paymentPriceH").val())+
-          parseFloat(parseFloat(shippingMethod['price'])))* 100)/100+' zł');
+          $('#shippingPrice').html(Math.trunc(parseFloat(shippingMethod['price'])* 100)/100+' zł');
           $('#totalOrderPrice').html(Math.trunc((parseFloat($("#paymentPriceH").val())+parseFloat($("#totalOrderPriceH").val())
           +parseFloat(shippingMethod['price']))*100)/100+' zł');
 
@@ -263,18 +266,31 @@
                   </div>
                   
                   <div class="col-3 p-1 ">
-                    <input name='orderSubmit' type="submit"  class="btn btn-primary btn-sm w-100">
+                    <input name='orderSubmit' type="submit" id="orderSubmit" class="btn btn-primary btn-sm w-100">
                   </div>
                 </div>`
             )
               
-          $('#orderPrice').html(Math.trunc((parseFloat($("#paymentPriceH").val())+
-          parseFloat(parseFloat(shippingMethod['price'])))* 100)/100+' zł');
+          $('#shippingPrice').html(Math.trunc(parseFloat(shippingMethod['price'])* 100)/100+' zł');
           $('#totalOrderPrice').html(Math.trunc((parseFloat($("#paymentPriceH").val())+parseFloat($("#totalOrderPriceH").val())
           +parseFloat(shippingMethod['price']))*100)/100+' zł');
 
           $("#payment").append(html);
         }
-      }  
+      }
     });
+
+    function clearStorage(){
+      var newCookie = '';
+        Object.keys(sessionStorage).forEach(function(key, value) {
+            if (!Number.isNaN(Number.parseInt(key)))
+              sessionStorage.removeItem(key);
+        });
+        var today = new Date();
+        var expire = new Date();
+        expire.setTime(today.getTime() + 3600000 * 24 * 7);
+        document.cookie = 'itemsInCart =;3600, expires=' + expire.toGMTString() + '; path=/';
+        
+        document.getElementById("formOrderSubmit").submit();
+    }
 </script>
