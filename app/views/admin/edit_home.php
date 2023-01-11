@@ -145,7 +145,7 @@ include 'adm_nav.php';
             <div class="form-floating">
                 <input type="text" class="form-control" id="video" name="video" max="300" placeholder="yt"
                 value="<?=$data['result']['youtubeUrl']?>">
-                <label for="video" style="color:darkgray">video</label>
+                <label for="video" style="color:darkgray">Link do filmu</label>
             </div>
         </div>
     </div>

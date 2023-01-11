@@ -8,7 +8,7 @@
             <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Zamówienie </h2>
         </div>
 
-        <a href="<?=ROOT?>/store/order_history" class="text-dark ms-2" style="font-size:18px">
+        <a href="<?=ROOT?>/store/order_history" class="text-dark ms-2" style="font-size:18px;">
             <i class="bi bi-backspace" style="font-size:18px"></i> Powrót
         </a>
 

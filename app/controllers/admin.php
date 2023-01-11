@@ -250,12 +250,27 @@ class Admin extends Controller
         $paymentMethodsCount = $result->fetch(PDO::FETCH_ASSOC);
         $paymentMethodsCount = $paymentMethodsCount['c'];
 
+        $query="SELECT COUNT(id) as c FROM orders WHERE orderdate > (SELECT NOW()- interval 7 DAY)";
+        $result = $db->query($query);
+        
+        $ordersLast7Count = $result->fetch(PDO::FETCH_ASSOC);
+        $ordersLast7Count = $ordersLast7Count['c'];
+
+        $query="SELECT COUNT(id) as c FROM orders";
+
+        $result = $db->query($query);
+        
+        $ordersTotalCount = $result->fetch(PDO::FETCH_ASSOC);
+        $ordersTotalCount = $ordersTotalCount['c'];
+
         $this->view('admin/index', ['siteLinks'=>$siteLink ,'items'=>$items, 'itemsCount'=>$itemsCount, 'catalogs'=>$catalogs, 
-        'catalogsCount'=>$catalogsCount, 'attributes'=>$attributes, 'attributesCount'=>$attributesCount, 'manufacturers'=>$manufacturers, 
-        'manufacturersCount'=>$manufacturersCount,'categories'=>$categories, 'categoriesCount'=>$categoriesCount,
-        'usersCount'=>$usersCount,'users'=>$users, 'managersCount'=>$managersCount,'managers'=>$managers, 'adminsCount'=>$adminsCount,
-        'admins'=>$admins, 'shippingMethodsString' => $shippingMethodsString, 'shippingMethodsCount' => $shippingMethodsCount, 
-        'paymentMethodsCount' => $paymentMethodsCount,'paymentMethodsString' => $paymentMethodsString]);
+        'catalogsCount'=>$catalogsCount, 'attributes'=>$attributes, 'attributesCount'=>$attributesCount, 
+        'manufacturers'=>$manufacturers, 'manufacturersCount'=>$manufacturersCount,'categories'=>$categories, 
+        'categoriesCount'=>$categoriesCount, 'usersCount'=>$usersCount,'users'=>$users, 'managersCount'=>$managersCount,
+        'managers'=>$managers, 'adminsCount'=>$adminsCount,'admins'=>$admins, 'shippingMethodsString' => $shippingMethodsString, 
+        'shippingMethodsCount' => $shippingMethodsCount, 'paymentMethodsCount' => $paymentMethodsCount,
+        'paymentMethodsString' => $paymentMethodsString, 'ordersLast7Count' => $ordersLast7Count, 
+        'ordersTotalCount' => $ordersTotalCount]);
     }
 
 
@@ -983,7 +998,7 @@ class Admin extends Controller
       }
 
 
-        $query="SELECT o.*, sm.name AS smName, u.name AS user, u.email FROM orders o
+        $query="SELECT o.*, sm.name AS smName, u.login AS user, u.email FROM orders o
         INNER JOIN shippingmethods sm ON o.id_shippingmethod=sm.id
         INNER JOIN users u ON u.id=o.id_user
         ORDER BY orderdate DESC";
@@ -2586,11 +2601,11 @@ class Admin extends Controller
         $siteLink = $this->getFooter($db);
 
         if($shippingOnlyActive==1){        
-            $query="SELECT id, name, price, needadress, active FROM shippingmethods WHERE active=1";
+            $query="SELECT id, name, price, needaddress, active FROM shippingmethods WHERE active=1";
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }else{
-            $query="SELECT id, name, price, needadress, active FROM shippingmethods";
+            $query="SELECT id, name, price, needaddress, active FROM shippingmethods";
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }

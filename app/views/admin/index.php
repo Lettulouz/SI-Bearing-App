@@ -311,8 +311,8 @@ include 'adm_nav.php';
                             <i class="bi bi-cart4"></i>&nbspZamówienia
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">Zamówień: [ilość]</h5>
-                            <p class="card-text">Zamówień w ciągu ostanich 7 dni: </p>
+                            <h5 class="card-title">Zamówień: <?=$data['ordersTotalCount']?></h5>
+                            <p class="card-text">Zamówień w ciągu ostanich 7 dni: <?=$data['ordersLast7Count']?></p>
                         </div>
                         <a href=<?php echo ROOT."/admin/list_of_orders"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
@@ -349,6 +349,21 @@ include 'adm_nav.php';
                         <a href=<?php echo ROOT."/admin/list_of_orders"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
                                 Edytuj metody wysyłki
+                            </div>
+                        </a>
+                    </div>
+                </div>              
+                <div class="col-12 col-sm-6 col-xl-4 mb-3">
+                    <div class="card text-white bg-custom-20 h-100">
+                        <div class="card-header">
+                            <i class="bi bi-graph-up-arrow"></i></i>&nbspRaporty sprzedaży
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text text-truncate">Zakładka generująca raport sprzedaży</p>
+                        </div>
+                        <a href=<?php echo ROOT."/admin/sales_report"?> id="orders_lists" class="nav-link text-white p-0 align-text-bottom">
+                            <div class="card-footer p-3">
+                                Generuj raport
                             </div>
                         </a>
                     </div>
@@ -460,7 +475,7 @@ include 'adm_nav.php';
         <div class="collapse collapse show" id="dashcollapse5">
             <div class="row">
                 <div class="col-12 col-sm-6 col-xl-4 mb-3">
-                    <div class="card text-white bg-custom-3 h-100" >
+                    <div class="card text-white bg-custom-21 h-100" >
                         <a href=<?php echo ROOT."/admin/edit_home"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
                                 Edytuj stronę główną

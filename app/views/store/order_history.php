@@ -34,8 +34,8 @@
                         <a href=' " . ROOT . "/store/orderview/". $order['id'] ."' class='text-dark'>
                         <div class='row'>
                             
-                            <div class='col-md-1'><i class='bi bi-basket2 img-thumbnail' style='font-size:75px'></i></div>
-                            <div class='col-md-11'>
+                            <div class='col-12 col-xl-1'><i class='bi bi-basket2 img-thumbnail' style='font-size:75px'></i></div>
+                            <div class='col-12 col-xl-11'>
                                 <div class='row'>
                                     <div class='col-md-12'>
                                         <span><strong>Stan zamówienia: " . $order['orderstate'] . "</strong></span> <br />

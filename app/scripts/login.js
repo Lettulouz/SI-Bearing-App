@@ -92,8 +92,6 @@ function verifyLogin(login){
     let result = login.toLowerCase();
     document.getElementById('emailOrLogin').value = result;
     login = result;
-
-
     
     if(login == "") {  
         document.getElementById('errorEmailOrLogin').innerText = "*Należy uzupelnić email lub login";  

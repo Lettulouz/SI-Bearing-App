@@ -19,9 +19,9 @@
                     echo "
                         <div class='m-0 p-0 order_row'>
                         <div class='row'>
-                            <div class='col-md-1 me-1'><i class='bi bi-basket2 img-thumbnail' style='font-size:75px'></i>
+                            <div class='col-12 col-xl-1 text-center align-self-center d-block'><i class='bi bi-basket2 img-thumbnail' style='font-size:75px;'></i>
                             </div>
-                            <div class='col-md-10 ms-1'>
+                            <div class='col-12 col-xl-10 ms-1 ms-md-2'>
                                 <div class='row'>
                                     <div class='col-md-4'>
                                         <span><strong>Stan zamówienia: " . $order['orderstate'] . "</strong></span> <br />
@@ -32,8 +32,9 @@
                                         <input type='hidden' id='state".$i."' value='".$order['orderstate']."'>
                                         <input type='hidden' id='tracking".$i."' value='".$order['trackingnumber']."'>
                                     </div>
-                                    <div class='col-md-4'>
-                                    Adres Email: " . $order['email'] . " <br />
+                                    <div class='col-md-6'>
+                                        Dane: " . $order['ordername']  . " " . $order['orderlastname'] . " <br/>
+                                        Adres email: " . $order['email'] . " <br />
                                         Numer telefonu: " . $order['orderphonenumber'] . " <br />
                                         Kupujący: " . $order['user'] . " <br/>
                                         <div class='col-md-12'>Adres dostawy: " . $order['ordercountry'] . ", woj. " . $order['ordervoivodeship'] . ", 
@@ -41,7 +42,7 @@
                                         <br/> Data złożenia zamówienia: " . $order['orderdate'] . "
                                         </div>
                                     </div>
-                                    <div col-md-4>
+                                    <div class='col-md-2 align-self-center d-block'>
                                     <button type='button' class='btn btn-dark editBtn'
                                     data-bs-toggle='modal' order='".$i."'  data-bs-target='#orderModal'><i class='bi bi-pencil'></i></button>
 
