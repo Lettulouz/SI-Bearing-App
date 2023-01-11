@@ -140,8 +140,9 @@
                     </div>
                   </div>`);
 
-          $("#paymentPriceH").val(paymentMethod['fee']);
-          $('#totalOrderPrice').html(parseFloat(paymentMethod['fee'])+parseFloat($("#totalOrderPriceH").val())+' zł');
+                  $("#paymentPriceH").val(Math.trunc(paymentMethod['fee']*100)/100);
+          $('#orderPrice').html(Math.trunc(paymentMethod['fee']*100)/100+' zł');
+          $('#totalOrderPrice').html(Math.trunc((parseFloat(paymentMethod['fee'])+parseFloat($("#totalOrderPriceH").val()))*100)/100+' zł');
 
           $("#paymentMethod").append(html);
         }
@@ -177,8 +178,9 @@
                   </div>`
                 );
 
-          $("#paymentPriceH").val(paymentMethod['fee']);
-          $('#totalOrderPrice').html(parseFloat(paymentMethod['fee'])+parseFloat($("#totalOrderPriceH").val())+' zł');
+                $("#paymentPriceH").val(Math.trunc(paymentMethod['fee']*100)/100);
+          $('#orderPrice').html(Math.trunc(paymentMethod['fee']*100)/100+' zł');
+          $('#totalOrderPrice').html(Math.trunc((parseFloat(paymentMethod['fee'])+parseFloat($("#totalOrderPriceH").val()))*100)/100+' zł');
 
           $("#paymentMethod").append(html);
         }
@@ -192,8 +194,9 @@
                     </div>
                   </div>`);
   
-          $("#paymentPriceH").val(paymentMethod['fee']);
-          $('#totalOrderPrice').html(parseFloat(paymentMethod['fee'])+parseFloat($("#totalOrderPriceH").val())+' zł');
+          $("#paymentPriceH").val(Math.trunc(paymentMethod['fee']*100)/100);
+          $('#orderPrice').html(Math.trunc(paymentMethod['fee']*100)/100+' zł');
+          $('#totalOrderPrice').html(Math.trunc((parseFloat(paymentMethod['fee'])+parseFloat($("#totalOrderPriceH").val()))*100)/100+' zł');
           
           $("#paymentMethod").append(html);
         }
@@ -213,8 +216,10 @@
             </div>`
           )
           
-          $('#totalOrderPrice').html(parseFloat($("#paymentPriceH").val())+parseFloat($("#totalOrderPriceH").val())
-          +parseFloat(shippingMethod['price'])+' zł');
+          $('#orderPrice').html(Math.trunc((parseFloat($("#paymentPriceH").val())+
+          parseFloat(parseFloat(shippingMethod['price'])))* 100)/100+' zł');
+          $('#totalOrderPrice').html(Math.trunc((parseFloat($("#paymentPriceH").val())+parseFloat($("#totalOrderPriceH").val())
+          +parseFloat(shippingMethod['price']))*100)/100+' zł');
 
           $("#payment").append(html);
         }
@@ -262,9 +267,11 @@
                   </div>
                 </div>`
             )
-
-          $('#totalOrderPrice').html(parseFloat($("#paymentPriceH").val())+parseFloat($("#totalOrderPriceH").val())
-          +parseFloat(shippingMethod['price'])+' zł');
+              
+          $('#orderPrice').html(Math.trunc((parseFloat($("#paymentPriceH").val())+
+          parseFloat(parseFloat(shippingMethod['price'])))* 100)/100+' zł');
+          $('#totalOrderPrice').html(Math.trunc((parseFloat($("#paymentPriceH").val())+parseFloat($("#totalOrderPriceH").val())
+          +parseFloat(shippingMethod['price']))*100)/100+' zł');
 
           $("#payment").append(html);
         }
