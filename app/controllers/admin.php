@@ -2336,6 +2336,8 @@ class Admin extends Controller
             FROM items i 
                 INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
                 INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
+                INNER JOIN categoriesofitem coi ON i.id=coi.id_item
+                INNER JOIN categories cat ON cat.id=coi.id_category
                 INNER JOIN countries c ON mc.id_country=c.id WHERE i.active=1 AND m.active=1";
             $result = $db->query($query);
             $items = $result->fetchAll(PDO::FETCH_ASSOC);
