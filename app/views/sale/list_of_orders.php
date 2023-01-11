@@ -1,12 +1,23 @@
 <h1 class="text-muted headers-padding">Lista zamówień</h1>
     <hr class="divider mt-0">
     <div class="headers-padding container-fluid" style="padding-right: 15px;">
+
+    <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="input-group">
+            <input type="text" class="form-control" id="searchBox" placeholder="Wyszukaj zamówienie">
+            <button type="button" class="btn bg-transparent clrBtn" style="margin-left: -40px; z-index: 100;">
+                            <i class="bi bi-x"></i>
+                            </button>
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+            </div>
+        </div>
         <?php if(!empty($data['orders'])){
                 $ordersArray = $data['orders'];
                 $itemsInOrder = $data['orderItems'];
                 $i=1;
                 foreach ($ordersArray as $order){
                     echo "
+                        <div class='m-0 p-0 order_row'>
                         <div class='row'>
                             <div class='col-md-1 me-1'><i class='bi bi-basket2 img-thumbnail' style='font-size:75px'></i>
                             </div>
@@ -35,12 +46,12 @@
                                     data-bs-toggle='modal' order='".$i."'  data-bs-target='#orderModal'><i class='bi bi-pencil'></i></button>
 
                                     <button type='button' class='btn btn-dark tabBtn'
-                                    data-bs-toggle='collapse' href='#orderItems".$i."' aria-expanded='false'><i class='bi bi-eye-fill'></i></i></button>
+                                    data-bs-toggle='collapse' href='#orderItems".$i."' aria-expanded='false'><i class='bi bi-eye-fill eye'></i></i></button>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class='collapse mt-3' id='orderItems".$i."'>
+                            <div class='collapse mt-3 hidTab' id='orderItems".$i."'>
                             <table class='table table-active coltab m-0'>
                             <thead>
                                 <tr>
@@ -74,7 +85,8 @@
                               echo  "</tbody>
                         </table>
                           </div>
-                        </div><hr class='divider mt-3'>";
+                        </div><hr class='divider mt-3'>
+                        </div>";
                         $i++;
                 }}else{echo "Brak zamówień.";}?>
     </div>
@@ -147,4 +159,27 @@
         $(this).find('i').addClass('bi-eye-fill');
      }   
     });
+
+    $(document).ready(function(){
+  $("#searchBox").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $(".order_row").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      $('.hidTab').collapse('hide');
+      $(this).find('.eye').removeClass('bi-eye-slash-fill');
+      $(this).find('.eye').addClass('bi-eye-fill');
+    });
+  });
+});
+
+$('.clrBtn').click(function(){
+        $('#searchBox').val('');
+        $(".order_row").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf('') > -1)
+      $('.hidTab').collapse('hide');
+      $(this).find('.eye').removeClass('bi-eye-slash-fill');
+      $(this).find('.eye').addClass('bi-eye-fill');
+    });
+    })
+
 </script>
