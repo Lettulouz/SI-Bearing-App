@@ -2867,14 +2867,14 @@ class Admin extends Controller
         if(isset($_POST['addpaymeth'])){
             if(isset($_POST['methodName'])) $_SESSION['paymentMethodName'] = $_POST['methodName'];
             if(isset($_POST['methodFee'])) $_SESSION['methodFee'] = $_POST['methodFee'];
-            if(isset($_POST['methodActive'])) $_SESSION['paymentMethodActive'] = $_POST['methodActive'];
+            if(isset($_POST['methActive'])) $_SESSION['paymentMethodActive'] = $_POST['methActive'];
             if(isset($_POST['typeOfPayment'])) $_SESSION['typeOfPayment'] = $_POST['typeOfPayment'];
 
             if(!empty($_POST['methodName'])){
             
                 $methodName = $_POST['methodName'];
                 isset($_POST['methodFee']) ? $methodFee = $_POST['methodFee'] : $methodFee="";
-                isset($_POST['methodActive']) ? $methodActive = 1 : $methodActive = 0;
+                isset($_POST['methActive']) ? $methodActive = 1 : $methodActive = 0;
                 isset($_POST['typeOfPayment']) ? $typeOfPayment = $_POST['typeOfPayment'] : $typeOfPayment=1;
    
                 $query = "INSERT INTO paymentmethods (name, id_type, fee, active) 
@@ -2905,7 +2905,7 @@ class Admin extends Controller
 
         $paymentOnlyActive = 1;
         if(isset($_POST['onlyActiveSubmit'])){
-            if(isset($_POST['onlyActive']))
+            if(!isset($_POST['onlyActive']))
                 $paymentOnlyActive = 0;
         }
         require_once dirname(__FILE__,2) . '/core/database.php';
@@ -2917,7 +2917,7 @@ class Admin extends Controller
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }else{
-            $query="SELECT id, name, fee, active FROM paymentmethods";
+            $query="SELECT id, name, fee, active FROM paymentmethods WHERE active=0";
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -2946,7 +2946,7 @@ class Admin extends Controller
     
            
             $query = "UPDATE `paymentmethods` 
-                SET name = 
+                SET  
                 active='$methActive'
                 WHERE id = '$id_p';";
             $result = $db->prepare($query);
