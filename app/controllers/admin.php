@@ -1366,7 +1366,7 @@ class Admin extends Controller
         INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
         INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
         INNER JOIN countries c ON mc.id_country=c.id
-        WHERE i.active=1";
+        WHERE i.active=1 AND m.active=1";
         $result = $db->prepare($query);
         $result->execute();
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -1446,7 +1446,7 @@ class Admin extends Controller
         INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
         INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
         INNER JOIN countries c ON mc.id_country=c.id 
-        WHERE i.active=1";
+        WHERE i.active=1 AND m.active=1";
         $resultIt = $db->prepare($queryIt);
         $resultIt->execute();
         $items = $resultIt->fetchAll(PDO::FETCH_ASSOC);
@@ -1640,7 +1640,7 @@ class Admin extends Controller
         $result->execute();
         $countries = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $query="SELECT * FROM `manufacturers`";
+        $query="SELECT * FROM `manufacturers` WHERE active=1";
         $result = $db->query($query);
         $manufacturers = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -2241,7 +2241,8 @@ class Admin extends Controller
         $query="SELECT mc.id as id, m.name as mname,c.name as cname
         FROM manufacturercountries mc 
         INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-        INNER JOIN countries c ON mc.id_country=c.id";
+        INNER JOIN countries c ON mc.id_country=c.id 
+        WHERE m.active=1";
         $result = $db->prepare($query);
         $result->execute();
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -2448,7 +2449,7 @@ class Admin extends Controller
             INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
             INNER JOIN countries c ON mc.id_country=c.id
             WHERE id_category IS NULL
-            AND i.active=1";
+            AND i.active=1 AND m.active=1";
         $result = $db->query($query);
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -2774,10 +2775,10 @@ class Admin extends Controller
                 VALUES ('$methodName', '$methodPrice', '$needAddress', '$methodActive');";
                 $result = $db->prepare($query);
                 $result->execute();
-                $_SESSION['success_page'] = "shipping_method";
+                $_SESSION['success_page'] = "add_shipping_method";
                 header("Location:" . ROOT . "/admin/success_page/1");      
             }else{
-                $_SESSION['error_page'] = "shipping_method";
+                $_SESSION['error_page'] = "add_shipping_method";
                 header("Location:" . ROOT . "/admin/error_page/1");
             }
         }else{
@@ -2972,7 +2973,7 @@ class Admin extends Controller
             
          
         }else{
-            header("Location:" . ROOT . "/admin/list_of_attributes");
+            header("Location:" . ROOT . "/admin/list_of_payment_methods");
         }
     }
     //////////////////////////////////////////////////////////////////////////////////////

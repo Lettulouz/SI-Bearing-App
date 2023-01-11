@@ -65,7 +65,7 @@
         ?>
         </tbody>
         </table>
-        <?php } else {echo "Brak dodanych atrybutów.";}?>
+        <?php } else {echo "Brak dodanych kategorii.";}?>
         
     </div>
 

@@ -473,7 +473,7 @@ class Manager extends Controller
         INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
         INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
         INNER JOIN countries c ON mc.id_country=c.id
-        WHERE active=1";
+        WHERE i.active=1 AND m.active=1";
         $result = $db->prepare($query);
         $result->execute();
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -555,7 +555,7 @@ class Manager extends Controller
         INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
         INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
         INNER JOIN countries c ON mc.id_country=c.id
-        WHERE active=1";
+        WHERE i.active=1 AND m.active=1";
         $resultIt = $db->prepare($queryIt);
         $resultIt->execute();
         $items = $resultIt->fetchAll(PDO::FETCH_ASSOC);
@@ -756,7 +756,7 @@ class Manager extends Controller
         $result->execute();
         $countries = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $query="SELECT * FROM `manufacturers`";
+        $query="SELECT * FROM `manufacturers` WHERE active=1";
         $result = $db->query($query);
         $manufacturers = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -791,13 +791,27 @@ class Manager extends Controller
             header("Location:" . ROOT . "/login");
         }
 
+        $manufacturersOnlyActive = 1;
+        if(isset($_POST['onlyActiveSubmit'])){
+            if(!isset($_POST['onlyActive']))
+                $manufacturersOnlyActive = 0;
+        }
+
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
-
-        $query="SELECT m.id as m_id, m.name as mnf,COUNT(mc.id_manufacturer) as mnfctsam 
-        FROM manufacturers m 
-        LEFT JOIN manufacturercountries mc ON m.id=mc.id_manufacturer 
-        GROUP BY m.id";
+        if($manufacturersOnlyActive==1){
+            $query="SELECT m.id as m_id, m.name as mnf,COUNT(mc.id_manufacturer) as mnfctsam , m.active
+            FROM manufacturers m 
+            LEFT JOIN manufacturercountries mc ON m.id=mc.id_manufacturer
+            WHERE m.active=1 
+            GROUP BY m.id";
+        }else{
+            $query="SELECT m.id as m_id, m.name as mnf,COUNT(mc.id_manufacturer) as mnfctsam, m.active 
+            FROM manufacturers m 
+            LEFT JOIN manufacturercountries mc ON m.id=mc.id_manufacturer
+            WHERE m.active=0 
+            GROUP BY m.id";
+        }
         $result = $db->prepare($query);
         $result->execute();
         $manufacturers = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -825,9 +839,10 @@ class Manager extends Controller
             isset($_POST['countrymnf']) ? $countrymnf=$_POST['countrymnf'] : $countrymnf=array();
             isset($_POST['mnfname']) ? $mnfname=$_POST['mnfname'] : $mnfname="";
             isset($_POST['mnfid']) ? $mnfid=$_POST['mnfid'] : $mnfid="";
+            isset($_POST['isActive']) ? $isActive=1 : $isActive=0;
 
             if(!empty($_POST['mnfname'])){
-                $query="UPDATE manufacturers SET name=:mnfname WHERE id=:mnfid";
+                $query="UPDATE manufacturers SET name=:mnfname, active=$isActive WHERE id=:mnfid";
                 $result = $db->prepare($query);
                 $result->bindParam(':mnfid', $mnfid);
                 $result->bindParam(':mnfname', $mnfname);
@@ -891,7 +906,7 @@ class Manager extends Controller
         $rmPath=ROOT."/manager/remove_manufacturer";
 
         $this->view('manager/list_of_manufacturers_manager',['siteLinks'=>$siteLink,'mnfArray'=> $manufacturers, 'mnfCts'=> $mnfCountries,
-         'rmpath'=> $rmPath, 'countries'=>$resultCnt]);
+         'rmpath'=> $rmPath, 'countries'=>$resultCnt, 'manufacturersOnlyActive' => $manufacturersOnlyActive]);
 
     }
 
@@ -913,7 +928,7 @@ class Manager extends Controller
 
         if(isset($id_manuf)){
             require_once dirname(__FILE__,2) . '/core/database.php';
-            $query="DELETE FROM manufacturers WHERE id=:id_manuf";
+            $query="UPDATE manufacturers SET active=0 WHERE id=:id_manuf";
             $result = $db->prepare($query);
             $result->bindParam(':id_manuf', $id_manuf);
             $result->execute();
@@ -1062,7 +1077,8 @@ class Manager extends Controller
         $query="SELECT mc.id as id, m.name as mname,c.name as cname
         FROM manufacturercountries mc 
         INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-        INNER JOIN countries c ON mc.id_country=c.id";
+        INNER JOIN countries c ON mc.id_country=c.id
+        WHERE m.active=1";
         $result = $db->prepare($query);
         $result->execute();
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -1350,7 +1366,8 @@ class Manager extends Controller
         $query="SELECT mc.id as id, m.name as mname,c.name as cname
         FROM manufacturercountries mc 
         INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-        INNER JOIN countries c ON mc.id_country=c.id";
+        INNER JOIN countries c ON mc.id_country=c.id
+        WHERE m.active=1";
         $result = $db->prepare($query);
         $result->execute();
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -1447,7 +1464,9 @@ class Manager extends Controller
             FROM items i 
                 INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
                 INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-                INNER JOIN countries c ON mc.id_country=c.id WHERE i.active=1";
+                INNER JOIN categoriesofitem coi ON i.id=coi.id_item
+                INNER JOIN categories cat ON cat.id=coi.id_category
+                INNER JOIN countries c ON mc.id_country=c.id WHERE i.active=1 AND m.active=1";
             $result = $db->query($query);
             $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -1474,7 +1493,7 @@ class Manager extends Controller
             FROM items i 
                 INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
                 INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-                INNER JOIN countries c ON mc.id_country=c.id WHERE i.active=0";
+                INNER JOIN countries c ON mc.id_country=c.id WHERE i.active=0 OR m.active=0";
             $result = $db->query($query);
             $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -1557,7 +1576,7 @@ class Manager extends Controller
             INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
             INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
             INNER JOIN countries c ON mc.id_country=c.id
-            WHERE id_category IS NULL AND i.active=1";
+            WHERE id_category IS NULL AND i.active=1 AND m.active=1";
         $result = $db->query($query);
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -1811,10 +1830,10 @@ class Manager extends Controller
                 VALUES ('$methodName', '$methodPrice', '$needAddress', '$methodActive');";
                 $result = $db->prepare($query);
                 $result->execute();
-                $_SESSION['success_page'] = "shipping_method";
+                $_SESSION['success_page'] = "add_shipping_method";
                 header("Location:" . ROOT . "/manager/success_page/1");      
             }else{
-                $_SESSION['error_page'] = "shipping_method";
+                $_SESSION['error_page'] = "add_shipping_method";
                 header("Location:" . ROOT . "/manager/error_page/1");
             }
         }else{
@@ -1849,7 +1868,7 @@ class Manager extends Controller
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }else{
-            $query="SELECT id, name, price, needaddress, active FROM shippingmethods";
+            $query="SELECT id, name, price, needaddress, active FROM shippingmethods WHERE active=0";
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -1857,10 +1876,9 @@ class Manager extends Controller
         
 
         $editMethPath=ROOT."/manager/edit_shipping_method";
-        $this->view('manager/list_of_shipping_methods_manager', ['siteLinks'=>$siteLink, 'shippingArray' => $result, 'editpath' => $editMethPath,  
-        'shippingOnlyActive' =>$shippingOnlyActive]);
+        $this->view('manager/list_of_shipping_methods_manager', ['siteLinks'=>$siteLink, 'shippingArray' => $result, 
+        'editpath' => $editMethPath,  'shippingOnlyActive' =>$shippingOnlyActive]);
     }
-
 
     /** This function edit shipping method in the database
      * @param {int} is the id of shipping method
@@ -1878,22 +1896,22 @@ class Manager extends Controller
         
         if(isset($id_m)){
 
-        require_once dirname(__FILE__,2) . '/core/database.php';
-        isset($_POST['methActive']) ? $methActive = 1 : $methActive=0;
-        isset($_POST['needAddress']) ? $needAddress = 1 : $needAddress=0;
-
-        $query = "UPDATE `shippingmethods` 
-            SET active='$methActive', needaddress='$needAddress'
-            WHERE id = '$id_m';";
-        $result = $db->prepare($query);
-        $result->execute();
-        $_SESSION['success_page'] = "list_of_shipping_methods";
-        header("Location:" . ROOT . "/manager/success_page/2");
-        
-        }else{
-            header("Location:" . ROOT . "/manager/list_of_attributes");
+            require_once dirname(__FILE__,2) . '/core/database.php';
+            isset($_POST['methActive']) ? $methActive = 1 : $methActive=0;
+            isset($_POST['needAddress']) ? $needAddress = 1 : $needAddress=0;
+    
+            $query = "UPDATE `shippingmethods` 
+                SET active='$methActive', needaddress='$needAddress'
+                WHERE id = '$id_m';";
+            $result = $db->prepare($query);
+            $result->execute();
+            $_SESSION['success_page'] = "list_of_shipping_methods";
+            header("Location:" . ROOT . "/manager/success_page/2");
+            
+            }else{
+                header("Location:" . ROOT . "/manager/list_of_attributes");
+            }
         }
-    }
 
     /** 
      * This function add payment method to the database
@@ -1913,10 +1931,10 @@ class Manager extends Controller
         $methodActive = "";
         $typeOfPayment = "";
         if(isset($_SESSION['successOrErrorResponse'])){
-            if($_SESSION['successOrErrorResponse'] == "add_payment_method"){
+            if($_SESSION['successOrErrorResponse'] == "add_shipping_method"){
                 if(isset($_SESSION['methodName'])) {$methodName = $_SESSION['paymentMethodName']; unset($_SESSION['paymentMethodName']);} 
                 if(isset($_SESSION['methodFee'])) {$methodFee = $_SESSION['methodFee']; unset($_SESSION['methodFee']);} 
-                if(isset($_SESSION['methActive'])) {$methodActive = $_SESSION['paymentMethodActive']; unset($_SESSION['paymentMethodActive']);} 
+                if(isset($_SESSION['methodActive'])) {$methodActive = $_SESSION['paymentMethodActive']; unset($_SESSION['paymentMethodActive']);} 
                 if(isset($_SESSION['typeOfPayment'])) {$typeOfPayment= $_SESSION['typeOfPayment']; unset($_SESSION['typeOfPayment']);}
             }
             unset($_SESSION['successOrErrorResponse']);
@@ -1938,13 +1956,13 @@ class Manager extends Controller
                 isset($_POST['methodFee']) ? $methodFee = $_POST['methodFee'] : $methodFee="";
                 isset($_POST['methActive']) ? $methodActive = 1 : $methodActive = 0;
                 isset($_POST['typeOfPayment']) ? $typeOfPayment = $_POST['typeOfPayment'] : $typeOfPayment=1;
-
-                $query = "INSERT INTO paymentmethods (name, id_type, fee ,active) 
-                VALUES ('$methodName', '$typeOfPayment' '$methodFee','$methodActive');";
+   
+                $query = "INSERT INTO paymentmethods (name, id_type, fee, active) 
+                VALUES ('$methodName', '$typeOfPayment' ,'$methodFee', '$methodActive');";
                 $result = $db->prepare($query);
                 $result->execute();
                 $_SESSION['success_page'] = "add_payment_method";
-                header("Location:" . ROOT . "/manager/success_page/1");               
+                header("Location:" . ROOT . "/manager/success_page/1");
             }else{
                 $_SESSION['error_page'] = "add_payment_method";
                 header("Location:" . ROOT . "/manager/error_page/1");
@@ -1969,7 +1987,7 @@ class Manager extends Controller
 
         $paymentOnlyActive = 1;
         if(isset($_POST['onlyActiveSubmit'])){
-            if(isset($_POST['onlyActive']))
+            if(!isset($_POST['onlyActive']))
                 $paymentOnlyActive = 0;
         }
         require_once dirname(__FILE__,2) . '/core/database.php';
@@ -1981,7 +1999,7 @@ class Manager extends Controller
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }else{
-            $query="SELECT id, name, fee, active FROM paymentmethods";
+            $query="SELECT id, name, fee, active FROM paymentmethods WHERE active=0";
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -2013,7 +2031,7 @@ class Manager extends Controller
     
            
             $query = "UPDATE `paymentmethods` 
-                SET name = 
+                SET  
                 active='$methActive'
                 WHERE id = '$id_p';";
             $result = $db->prepare($query);
@@ -2023,7 +2041,7 @@ class Manager extends Controller
             
          
         }else{
-            header("Location:" . ROOT . "/manager/list_of_attributes");
+            header("Location:" . ROOT . "/manager/list_of_payment_methods");
         }
     }
 
