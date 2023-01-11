@@ -2549,25 +2549,13 @@ class Admin extends Controller
                 isset($_POST['methodPrice']) ? $methodPrice = $_POST['methodPrice'] : $methodPrice="";
                 isset($_POST['methActive']) ? $methodActive = 1 : $methodActive = 0;
                 isset($_POST['needAddress']) ? $needAddress = 1 : $needAddress = 0;
-
-                $query="SELECT COUNT(id) as amount
-                FROM shippingmethods WHERE name=:name AND active=1";
+    
+                $query = "INSERT INTO shippingmethods (name, price, needaddress, active) 
+                VALUES ('$methodName', '$methodPrice', '$needAddress', '$methodActive');";
                 $result = $db->prepare($query);
-                $result->bindParam(':name', $methodName);
-                $result->execute(); 
-                $result = $result->fetch(PDO::FETCH_ASSOC);
-                if($result['amount']>0){
-                    $_SESSION['error_page'] = "shipping_method";
-                    $_SESSION['methodName'] = $methodName;
-                    header("Location:" . ROOT . "/admin/error_page/2");
-                }else{
-                    $query = "INSERT INTO shippingmethods (name, price, needaddress, active) 
-                    VALUES ('$methodName', '$methodPrice', '$needAddress', '$methodActive');";
-                    $result = $db->prepare($query);
-                    $result->execute();
-                    $_SESSION['success_page'] = "shipping_method";
-                    header("Location:" . ROOT . "/admin/success_page/1");
-                }
+                $result->execute();
+                $_SESSION['success_page'] = "shipping_method";
+                header("Location:" . ROOT . "/admin/success_page/1");      
             }else{
                 $_SESSION['error_page'] = "shipping_method";
                 header("Location:" . ROOT . "/admin/error_page/1");
@@ -2684,25 +2672,13 @@ class Admin extends Controller
                 isset($_POST['methodFee']) ? $methodFee = $_POST['methodFee'] : $methodFee="";
                 isset($_POST['methodActive']) ? $methodActive = 1 : $methodActive = 0;
                 isset($_POST['typeOfPayment']) ? $typeOfPayment = $_POST['typeOfPayment'] : $typeOfPayment=1;
-
-                $query="SELECT COUNT(id) as amount
-                FROM paymentmethods WHERE name=:name AND active=1";
+   
+                $query = "INSERT INTO paymentmethods (name, id_type, fee, active) 
+                VALUES ('$methodName', '$typeOfPayment' ,'$methodFee', '$methodActive');";
                 $result = $db->prepare($query);
-                $result->bindParam(':name', $methodName);
-                $result->execute(); 
-                $result = $result->fetch(PDO::FETCH_ASSOC);
-                if($result['amount']>0){
-                    $_SESSION['error_page'] = "add_payment_method";
-                    $_SESSION['paymentMethodName'] = $methodName;
-                    header("Location:" . ROOT . "/admin/error_page/2");
-                }else{
-                    $query = "INSERT INTO paymentmethods (name, id_type, fee, active) 
-                    VALUES ('$methodName', '$typeOfPayment' ,'$methodFee', '$methodActive');";
-                    $result = $db->prepare($query);
-                    $result->execute();
-                    $_SESSION['success_page'] = "add_payment_method";
-                    header("Location:" . ROOT . "/admin/success_page/1");
-                }
+                $result->execute();
+                $_SESSION['success_page'] = "add_payment_method";
+                header("Location:" . ROOT . "/admin/success_page/1");
             }else{
                 $_SESSION['error_page'] = "add_payment_method";
                 header("Location:" . ROOT . "/admin/error_page/1");
