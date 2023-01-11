@@ -85,7 +85,7 @@ class Service extends Controller
                 $amount=0;
             }
 
-            $query="SELECT SUM(iio.amount*price) FROM itemsinorder iio
+            $query="SELECT SUM(iio.amount*i.price) FROM itemsinorder iio
             INNER JOIN orders o on o.id=iio.id_order
             INNER JOIN items i on i.id=iio.id_item
             WHERE orderdate BETWEEN :dateFrom AND :dateTo";
@@ -94,7 +94,7 @@ class Service extends Controller
             $result->bindParam(':dateTo', $_POST['dateTo']);
             $result->execute();
             $earnings=$result->fetchAll(PDO::FETCH_ASSOC);
-            $earnings= $earnings[0]['SUM(iio.amount*price)'];
+            $earnings= $earnings[0]['SUM(iio.amount*i.price)'];
             if(empty( $earnings)){
                 $earnings=0;
             }
