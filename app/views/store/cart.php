@@ -39,7 +39,7 @@
                                                         </figure>
                                                     </td>
                                                     <td> 
-                                                        <input class='form-control' name='{$item['itemID']}' step='0.01' type='number' value=1>
+                                                        <input class='form-control numberInput' name='{$item['itemID']}' step='0.01' type='number' value=1>
                                                     </td>
                                                     <td>
                                                         <div class='price-wrap'> <var class='price' id='{$item['itemID']}'></var> <small class='text-muted'>{$item['itemPrice']} zł każdy </small> </div>
@@ -79,42 +79,27 @@
     </div>
 </div>
 <?php include dirname(__FILE__, 2) . "/footer.php"; ?>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.js"></script>
 <script>
-    $(".form-control").on("change paste keyup", function() {
-        var number = parseFloat($(this).val());
 
-        if (!Number.isNaN(sessionStorage.getItem(jQuery(this).attr("name")))) {
-
-            let valueAndAmount = sessionStorage.getItem(jQuery(this).attr("name")).split("-");
-
-            if (valueAndAmount[2] > number)
-                sessionStorage.setItem(jQuery(this).attr("name"), number + '-' + valueAndAmount[1] + '-' + valueAndAmount[2] + '-' + valueAndAmount[3]);
-            else if (valueAndAmount[2] <= number)
-                sessionStorage.setItem(jQuery(this).attr("name"), valueAndAmount[2] + '-' + valueAndAmount[1] + '-' + valueAndAmount[2] + '-' + valueAndAmount[3]);
-            else
-                sessionStorage.setItem(jQuery(this).attr("name"), 'NaN' + '-' + valueAndAmount[1] + '-' + valueAndAmount[2] + '-' + valueAndAmount[3]);
-        }
-        calculateTotalPrice();
-
-    })
+    $('.numberInput').mask('09999.99');
 
     $(document).ready(function() {
+        
         calculateTotalPrice();
     })
 
-    $(".form-control").on("focusout", function() {
+    $(".numberInput").on("focusout", function() {
         var number = parseFloat($(this).val());
         let valueAndAmount = sessionStorage.getItem(jQuery(this).attr("name")).split("-");
 
-        if (valueAndAmount[3] == '1' && number % 1 > 0)
-            number = Math.trunc(number * 100) / 100;
-        else
+        if (valueAndAmount[3] != '1' || number % 1 <= 0)
             number = Math.trunc(number - number % 1);
 
-        if (number >= 1)
+        if (number > 0)
             sessionStorage.setItem(jQuery(this).attr("name"), number + '-' + valueAndAmount[1] + '-' + valueAndAmount[2] + '-' + valueAndAmount[3]);
-        else if (valueAndAmount[2] > number)
+        else if (valueAndAmount[2] < number)
             sessionStorage.setItem(jQuery(this).attr("name"), valueAndAmount[2] + '-' + valueAndAmount[1] + '-' + valueAndAmount[2] + '-' + valueAndAmount[3]);
         else
             sessionStorage.setItem(jQuery(this).attr("name"), 1 + '-' + valueAndAmount[1] + '-' + valueAndAmount[2] + '-' + valueAndAmount[3]);
@@ -137,17 +122,24 @@
             if (!Number.isNaN(id)) {
                 let valueAndAmount = sessionStorage.getItem(key).split("-");
                 var itemPrice = 0;
-                if (valueAndAmount[0] >= 1) {
+                if (valueAndAmount[0] > 0) {
                     var itemPrice = parseFloat(valueAndAmount[0]) * parseFloat(valueAndAmount[1])
-                    $('[name=' + key + ']').val(parseFloat(valueAndAmount[0]));
+                    if(valueAndAmount[3] == '1')
+                        $('[name=' + key + ']').val(parseFloat(valueAndAmount[0]).toFixed(2));
+                    else
+                        $('[name=' + key + ']').val(parseFloat(valueAndAmount[0]));
                 } else if (Number.isNaN(valueAndAmount[0])) {
-                    $('[name=' + key + ']').val(parseFloat(0));
+                    if(valueAndAmount[3] == '1')
+                        $('[name=' + key + ']').val(parseFloat(0).toFixed(2));
+                    else
+                        $('[name=' + key + ']').val(parseFloat(0));    
                 }
-                document.getElementById(key).innerHTML = itemPrice.toFixed(2) + ' zł';
+
+                document.getElementById(key).innerHTML = (Math.trunc(itemPrice*100)/100).toFixed(2) + ' zł';
                 totalPrice += itemPrice;
             }
         });
-        document.getElementById('totalCost').innerHTML = '&nbsp' + totalPrice.toFixed(2) + ' zł';
+        document.getElementById('totalCost').innerHTML = '&nbsp' + (Math.trunc(totalPrice*100)/100).toFixed(2)  + ' zł';
     }
 
     $('.remove').click(function() {
@@ -163,4 +155,7 @@
         document.cookie = 'itemsInCart =' + newCookie + ';3600, expires=' + expire.toGMTString() + '; path=/';
         location.reload();
     })
+
+    
 </script>
+
