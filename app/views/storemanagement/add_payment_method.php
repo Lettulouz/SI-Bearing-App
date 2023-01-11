@@ -26,6 +26,37 @@
                         </div>    
                     </div>
                 </div>
+                <hr class="divider mt-4">
+                <div class="row m-2 mt-3 justify-content-between">
+                    <div class="col-3 ms-4">
+                        <div class="form-check">
+                            <input class="form-check-input" style="font-size:35px" type="radio" 
+                            name="typeOfPayment" id="typeOfPayment1" value="1" checked>
+                            <label class="form-check-label" style="font-size:18px; margin-top:12px;" for="typeOfPayment1">
+                                Gotówka
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-3 ms-4">
+                        <div class="form-check">
+                            <input class="form-check-input" style="font-size:35px" type="radio" 
+                            name="typeOfPayment" id="typeOfPayment2" value="2">
+                            <label class="form-check-label" style="font-size:18px; margin-top:12px;" for="typeOfPayment2">
+                                Karta
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-3 me-5">
+                        <div class="form-check">
+                            <input class="form-check-input" style="font-size:35px" type="radio" 
+                            name="typeOfPayment" id="typeOfPayment3" value="3">
+                            <label class="form-check-label" style="font-size:18px; margin-top:12px;" for="typeOfPayment3">
+                                Zewnętrzne
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <hr class="divider mt-4">
                 <div class="row m-2">
                     <div class="col-12">
                         <div class="form-check form-switch">

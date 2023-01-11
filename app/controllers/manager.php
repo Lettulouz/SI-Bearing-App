@@ -1805,7 +1805,7 @@ class Manager extends Controller
                 isset($_POST['methodActive']) ? $methodActive = 1 : $methodActive = 0;
 
                 $query="SELECT COUNT(id) as amount
-                FROM shippingmethods WHERE name=:name";
+                FROM shippingmethods WHERE name=:name AND active=1";
                 $result = $db->prepare($query);
                 $result->bindParam(':name', $methodName);
                 $result->execute(); 
@@ -1921,10 +1921,10 @@ class Manager extends Controller
         $methodActive = "";
         $needAddress = "";
         if(isset($_SESSION['successOrErrorResponse'])){
-            if($_SESSION['successOrErrorResponse'] == "add_shipping_method"){
+            if($_SESSION['successOrErrorResponse'] == "add_payment_method"){
                 if(isset($_SESSION['methodName'])) {$methodName = $_SESSION['paymentMethodName']; unset($_SESSION['paymentMethodName']);} 
                 if(isset($_SESSION['methodFee'])) {$methodFee = $_SESSION['methodFee']; unset($_SESSION['methodFee']);} 
-                if(isset($_SESSION['methActive'])) {$methActive = $_SESSION['paymentMethodActive']; unset($_SESSION['paymentMethodActive']);} 
+                if(isset($_SESSION['methActive'])) {$methodActive = $_SESSION['paymentMethodActive']; unset($_SESSION['paymentMethodActive']);} 
                 if(isset($_SESSION['needAddress'])) 
                 {$needAddress = $_SESSION['needAddress']; unset($_SESSION['needAddress']);}
             }
@@ -1949,7 +1949,7 @@ class Manager extends Controller
                 isset($_POST['needAddress']) ? $needAddress = 1 : $needAddress = 0;
 
                 $query="SELECT COUNT(id) as amount
-                FROM paymentmethods WHERE name=:name";
+                FROM paymentmethods WHERE name=:name AND active=1";
                 $result = $db->prepare($query);
                 $result->bindParam(':name', $methodName);
                 $result->execute(); 

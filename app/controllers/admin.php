@@ -2551,7 +2551,7 @@ class Admin extends Controller
                 isset($_POST['needAddress']) ? $needAddress = 1 : $needAddress = 0;
 
                 $query="SELECT COUNT(id) as amount
-                FROM shippingmethods WHERE name=:name";
+                FROM shippingmethods WHERE name=:name AND active=1";
                 $result = $db->prepare($query);
                 $result->bindParam(':name', $methodName);
                 $result->execute(); 
@@ -2657,11 +2657,13 @@ class Admin extends Controller
         $methodName = "";
         $methodFee = "";
         $methodActive = "";
+        $typeOfPayment = "";
         if(isset($_SESSION['successOrErrorResponse'])){
             if($_SESSION['successOrErrorResponse'] == "add_shipping_method"){
                 if(isset($_SESSION['methodName'])) {$methodName = $_SESSION['paymentMethodName']; unset($_SESSION['paymentMethodName']);} 
                 if(isset($_SESSION['methodFee'])) {$methodFee = $_SESSION['methodFee']; unset($_SESSION['methodFee']);} 
                 if(isset($_SESSION['methodActive'])) {$methodActive = $_SESSION['paymentMethodActive']; unset($_SESSION['paymentMethodActive']);} 
+                if(isset($_SESSION['typeOfPayment'])) {$typeOfPayment= $_SESSION['typeOfPayment']; unset($_SESSION['typeOfPayment']);}
             }
             unset($_SESSION['successOrErrorResponse']);
         }
@@ -2674,15 +2676,17 @@ class Admin extends Controller
             if(isset($_POST['methodName'])) $_SESSION['paymentMethodName'] = $_POST['methodName'];
             if(isset($_POST['methodFee'])) $_SESSION['methodFee'] = $_POST['methodFee'];
             if(isset($_POST['methodActive'])) $_SESSION['paymentMethodActive'] = $_POST['methodActive'];
+            if(isset($_POST['typeOfPayment'])) $_SESSION['typeOfPayment'] = $_POST['typeOfPayment'];
 
             if(!empty($_POST['methodName'])){
             
                 $methodName = $_POST['methodName'];
                 isset($_POST['methodFee']) ? $methodFee = $_POST['methodFee'] : $methodFee="";
                 isset($_POST['methodActive']) ? $methodActive = 1 : $methodActive = 0;
+                isset($_POST['typeOfPayment']) ? $typeOfPayment = $_POST['typeOfPayment'] : $typeOfPayment=1;
 
                 $query="SELECT COUNT(id) as amount
-                FROM paymentmethods WHERE name=:name";
+                FROM paymentmethods WHERE name=:name AND active=1";
                 $result = $db->prepare($query);
                 $result->bindParam(':name', $methodName);
                 $result->execute(); 
@@ -2692,7 +2696,8 @@ class Admin extends Controller
                     $_SESSION['paymentMethodName'] = $methodName;
                     header("Location:" . ROOT . "/admin/error_page/2");
                 }else{
-                    $query = "INSERT INTO paymentmethods (name, fee, active) VALUES ('$methodName', '$methodFee', '$methodActive');";
+                    $query = "INSERT INTO paymentmethods (name, id_type, fee, active) 
+                    VALUES ('$methodName', '$typeOfPayment' ,'$methodFee', '$methodActive');";
                     $result = $db->prepare($query);
                     $result->execute();
                     $_SESSION['success_page'] = "add_payment_method";
