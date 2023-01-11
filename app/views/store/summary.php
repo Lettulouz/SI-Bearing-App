@@ -169,7 +169,7 @@
                             <input class="form-control form-control-sm" type="text" name="expires" pattern="(0[1-9]|1[0-2])\/?([0-9]{2})" placeholder="Data wygaśnięcia" required>
                           </div>
                           <div class="col-12 col-md-6 p-1">
-                            <input class="form-control form-control-sm" type="text" name="cvv" pattern='[0-9]{3, 4}' placeholder="CVV" required>
+                            <input class="form-control form-control-sm" type="text" name="cvv" pattern='[0-9]{3, 4}' placeholder="CVV" min-length="3" required>
                           </div>
                   </div>
                   <div class=\"row\" >
@@ -230,23 +230,23 @@
           html = $(`<h3 class="h6 mt-2">Dane dostawy</h3>
                 <div class='row'>
                   <div class="col-12 col-md-6 p-1">
-                    <input class="form-control form-control-sm" type="text" name="name" placeholder="Imię" required>
+                    <input class="form-control form-control-sm" type="text" name="name" placeholder="Imię" required maxlength="100">
                   </div>
                   <div class="col-12 col-md-6 p-1">
-                    <input class="form-control form-control-sm" type="text" name="surname" placeholder="Nazwisko" required>
-                  </div>
-                </div>
-                <div class='row'>
-                  <div class="col-12 col-md-6 p-1">
-                    <input class="form-control form-control-sm" type="text" name="city" placeholder="Miasto" required>
-                  </div>
-                  <div class="col-12 col-md-6 p-1">
-                    <input class="form-control form-control-sm" type="text" name="postcode" placeholder="Kod pocztowy" required>
+                    <input class="form-control form-control-sm" type="text" name="surname" placeholder="Nazwisko" required maxlength="100">
                   </div>
                 </div>
                 <div class='row'>
                   <div class="col-12 col-md-6 p-1">
-                    <input class="form-control form-control-sm" type="text" name="street" placeholder="Ulica" required>
+                    <input class="form-control form-control-sm" type="text" name="city" placeholder="Miasto" required maxlength="35">
+                  </div>
+                  <div class="col-12 col-md-6 p-1">
+                    <input class="form-control form-control-sm" type="text" name="postcode" placeholder="Kod pocztowy" required maxlength="10">
+                  </div>
+                </div>
+                <div class='row'>
+                  <div class="col-12 col-md-6 p-1">
+                    <input class="form-control form-control-sm" type="text" name="street" placeholder="Ulica" required maxlength="100">
                   </div>
                   <div class="col-12 col-md-6 p-1">
                     <input class="form-control form-control-sm" type="number" name="housenumber" placeholder="Numer" required>
@@ -254,15 +254,15 @@
                 </div>
                 <div class='row'>
                   <div class="col-12 col-md-6 p-1">
-                    <input class="form-control form-control-sm" type="text" name="country" placeholder="Kraj" required>
+                    <input class="form-control form-control-sm" type="text" name="country" placeholder="Kraj" required maxlength="75">
                   </div>
                   <div class="col-12 col-md-6 p-1">
-                    <input class="form-control form-control-sm" type="text" name="voivoden" placeholder="Województwo" required>
+                    <input class="form-control form-control-sm" type="text" name="voivoden" placeholder="Województwo" required maxlength="25">
                   </div>
                 </div>
                 <div class='row'>
                   <div class="col-9 p-1">
-                    <input class="form-control form-control-sm" type="tel" name="phonenumber" placeholder="Numer telefonu" required>
+                    <input class="form-control form-control-sm" type="tel" name="phonenumber" placeholder="Numer telefonu" required maxlength="20"> 
                   </div>
                   
                   <div class="col-3 p-1 ">

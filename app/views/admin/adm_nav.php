@@ -41,13 +41,13 @@
                             <ul class="dropdown-menu dropdown-menu-end">
 
                                 <li>
-                                    <a class="dropdown-item" href="<?=ROOT?>/home">
+                                    <a class="dropdown-item mt-1" href="<?=ROOT?>/home">
                                         <i class="bi bi-house"></i> Strona główna
                                     </a>
-                                    <a class="dropdown-item" href="<?=ROOT?>/store">
+                                    <a class="dropdown-item mt-1" href="<?=ROOT?>/store">
                                         <i class="bi bi-shop"></i></i> Sklep
                                     </a>
-                                    <a class="dropdown-item" href="<?=ROOT?>/admin/logout">
+                                    <a class="dropdown-item mt-1" href="<?=ROOT?>/admin/logout">
                                         <i class="bi bi-box-arrow-left"></i> Wyloguj
                                     </a>
                                 </li>

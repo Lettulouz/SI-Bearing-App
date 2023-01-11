@@ -1,6 +1,9 @@
 <?php
 class Store extends Controller
 {
+    /** This function display information, if order was succesful added to the database
+     * @param {int} is the id of message
+     */
     public function success_page($sid){     
         if(isset($_SESSION['success_page'])){
             $path = $_SESSION['success_page'];
@@ -15,6 +18,9 @@ class Store extends Controller
         else header("Location:" . ROOT . "");
     }
 
+    /** Main page of store
+     * 
+     */
     public function index(){
         if(isset($_POST['itemID'])){
             if(!isset($_SESSION['cartItems']))
@@ -218,7 +224,8 @@ class Store extends Controller
         
         $attrQuery = ' ';
 
-        if (isset($_POST['checkBoxVarAttributes']) && isset($_POST['arrayOfAttrVal'])) 
+        print_r($attributes);
+        if (!empty($_POST['checkBoxVarAttributes']) && !empty($_POST['arrayOfAttrVal'])) 
         {
             $tableAttr = $_POST['checkBoxVarAttributes']; 
             $tableAttrValues = $_POST['arrayOfAttrVal'];
@@ -260,151 +267,156 @@ class Store extends Controller
                 }
             }
         }
-        if($querySwitch){
-            $query="SELECT i.name, i.id as itemID, price, m.name as 'name2', i.amount, i.price as itemPrice, i.amountComma as isDouble
-            FROM items i 
-            INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
-            INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
-            INNER JOIN categoriesofitem coi ON i.id = coi.id_item
-            INNER JOIN categories categ ON coi.id_category = categ.id
-            LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
-            LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
-            LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
-            LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
-            WHERE i.name LIKE CONCAT('%', :search, '%')
-            AND i.amount>0
-            AND i.active=1
-            AND m.id IN ($id_manufacturer)
-            AND categ.id IN ($id_category) "
-            . $querypricestartend  
-            . $attrQuery .
-            " GROUP BY i.id"
-            . $sortValueQuery .
-            " LIMIT :limit1, 32";
-        }else{
-            $query="SELECT i.name, i.id as itemID, price, m.name as 'name2', i.amount, i.price as itemPrice, i.amountComma as isDouble
-            FROM items i 
-            INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
-            INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
-            INNER JOIN categoriesofitem coi ON i.id = coi.id_item
-            INNER JOIN categories categ ON coi.id_category = categ.id
-            LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
-            LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
-            LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
-            LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
-            WHERE i.name LIKE CONCAT('%', :search, '%')
-            AND i.amount>0
-            AND i.active=1
-            AND m.id IN ($id_manufacturer)
-            AND categ.id IN ($id_category)
-            AND catal.id IN ($id_catalog) "
-            . $querypricestartend 
-            . $attrQuery .
-            " GROUP BY i.id"
-            . $sortValueQuery .
-            " LIMIT :limit1, 32";
-        }
-        $itemsArr = $db->prepare($query);
-        
-        if (isset($_POST['checkBoxVarAttributes']) && isset($_POST['arrayOfAttrVal'])) 
-        {
-            $k=0;
-            for($j = 0; $j < count($attributes); $j++)
+        $itemsArr = array();
+        if(!empty($attributes)){
+            if($querySwitch){
+                $query="SELECT i.name, i.id as itemID, price, m.name as 'name2', i.amount, i.price as itemPrice, i.amountComma as isDouble
+                FROM items i 
+                INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
+                INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
+                INNER JOIN categoriesofitem coi ON i.id = coi.id_item
+                INNER JOIN categories categ ON coi.id_category = categ.id
+                LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
+                LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
+                LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
+                LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
+                WHERE i.name LIKE CONCAT('%', :search, '%')
+                AND i.amount>0
+                AND i.active=1
+                AND m.id IN ($id_manufacturer)
+                AND categ.id IN ($id_category) "
+                . $querypricestartend  
+                . $attrQuery .
+                " GROUP BY i.id"
+                . $sortValueQuery .
+                " LIMIT :limit1, 32";
+            }else{
+                $query="SELECT i.name, i.id as itemID, price, m.name as 'name2', i.amount, i.price as itemPrice, i.amountComma as isDouble
+                FROM items i 
+                INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
+                INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
+                INNER JOIN categoriesofitem coi ON i.id = coi.id_item
+                INNER JOIN categories categ ON coi.id_category = categ.id
+                LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
+                LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
+                LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
+                LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
+                WHERE i.name LIKE CONCAT('%', :search, '%')
+                AND i.amount>0
+                AND i.active=1
+                AND m.id IN ($id_manufacturer)
+                AND categ.id IN ($id_category)
+                AND catal.id IN ($id_catalog) "
+                . $querypricestartend 
+                . $attrQuery .
+                " GROUP BY i.id"
+                . $sortValueQuery .
+                " LIMIT :limit1, 32";
+            }
+
+            $itemsArr = $db->prepare($query);
+            
+            if (isset($_POST['checkBoxVarAttributes']) && isset($_POST['arrayOfAttrVal'])) 
             {
-                if(!isset($tableAttr[$k]))
-                    break;
-                if($tableAttr[$k]==$attributes[$j]['id']){
-                    if($isItRange[$j] == 0){
-                        $attrIdLoc = $tableAttr[$k];
-                        $tblAttrValue = $tableAttrValues[$k];
-                        if($tblAttrValue != ""){
-                            $itemsArr->bindParam(':tblAttrValue' . $attrIdLoc,$tblAttrValue);
+                $k=0;
+                for($j = 0; $j < count($attributes); $j++)
+                {
+                    if(!isset($tableAttr[$k]))
+                        break;
+                    if($tableAttr[$k]==$attributes[$j]['id']){
+                        if($isItRange[$j] == 0){
+                            $attrIdLoc = $tableAttr[$k];
+                            $tblAttrValue = $tableAttrValues[$k];
+                            if($tblAttrValue != ""){
+                                $itemsArr->bindParam(':tblAttrValue' . $attrIdLoc,$tblAttrValue);
+                            }
                         }
+                        $k++; 
                     }
-                    $k++; 
                 }
             }
-        }
 
-        $itemsArr->bindParam(':limit1',$limit1);
-        $itemsArr->bindParam(':search',$search);
-        
-        $itemsArr -> execute();
-  
-        $itemsArr = $itemsArr->fetchAll(PDO::FETCH_ASSOC);
-   
-        if($querySwitch){
-            $query="SELECT COUNT(i.id) as c
-            FROM items i 
-            INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
-            INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
-            INNER JOIN categoriesofitem coi ON i.id = coi.id_item
-            INNER JOIN categories categ ON coi.id_category = categ.id
-            LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
-            LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
-            LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
-            LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
-            WHERE i.name LIKE CONCAT('%', :search, '%')
-            AND i.amount>0
-            AND i.active=1
-            AND m.id IN ($id_manufacturer)
-            AND categ.id IN ($id_category) " 
-            . $querypricestartend 
-            . $attrQuery .
-            " GROUP BY i.id"
-            . $sortValueQuery;
-        }else{
-            $query="SELECT COUNT(i.id) as c
-            FROM items i 
-            INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
-            INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
-            INNER JOIN categoriesofitem coi ON i.id = coi.id_item
-            INNER JOIN categories categ ON coi.id_category = categ.id
-            LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
-            LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
-            LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
-            LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
-            WHERE i.name LIKE CONCAT('%', :search, '%')
-            AND i.amount>0
-            AND i.active=1
-            AND m.id IN ($id_manufacturer)
-            AND categ.id IN ($id_category)
-            AND catal.id IN ($id_catalog) "
-            . $attrQuery .
-            " GROUP BY i.id"
-            . $sortValueQuery;
-        }
-        
-        $numberOfItems = $db->prepare($query);
+            $itemsArr->bindParam(':limit1',$limit1);
+            $itemsArr->bindParam(':search',$search);
+            
+            $itemsArr -> execute();
+    
+            $itemsArr = $itemsArr->fetchAll(PDO::FETCH_ASSOC);
+    
+            if($querySwitch){
+                $query="SELECT COUNT(i.id) as c
+                FROM items i 
+                INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
+                INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
+                INNER JOIN categoriesofitem coi ON i.id = coi.id_item
+                INNER JOIN categories categ ON coi.id_category = categ.id
+                LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
+                LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
+                LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
+                LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
+                WHERE i.name LIKE CONCAT('%', :search, '%')
+                AND i.amount>0
+                AND i.active=1
+                AND m.id IN ($id_manufacturer)
+                AND categ.id IN ($id_category) " 
+                . $querypricestartend 
+                . $attrQuery .
+                " GROUP BY i.id"
+                . $sortValueQuery;
+            }else{
+                $query="SELECT COUNT(i.id) as c
+                FROM items i 
+                INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
+                INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
+                INNER JOIN categoriesofitem coi ON i.id = coi.id_item
+                INNER JOIN categories categ ON coi.id_category = categ.id
+                LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
+                LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
+                LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
+                LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
+                WHERE i.name LIKE CONCAT('%', :search, '%')
+                AND i.amount>0
+                AND i.active=1
+                AND m.id IN ($id_manufacturer)
+                AND categ.id IN ($id_category)
+                AND catal.id IN ($id_catalog) "
+                . $attrQuery .
+                " GROUP BY i.id"
+                . $sortValueQuery;
+            }
+         
+            $numberOfItems = $db->prepare($query);
 
-        if (isset($_POST['checkBoxVarAttributes']) && isset($_POST['arrayOfAttrVal'])) 
-        {
-            $k=0;
-            for($j = 0; $j < count($attributes); $j++)
+            if (isset($_POST['checkBoxVarAttributes']) && isset($_POST['arrayOfAttrVal'])) 
             {
-                if(!isset($tableAttr[$k]))
-                    break;
-                if($tableAttr[$k]==$attributes[$j]['id']){
-                    if($isItRange[$j] == 0){
-                        $attrIdLoc = $tableAttr[$k];
-                        $tblAttrValue = $tableAttrValues[$k];
-                        if($tblAttrValue != ""){
-                            $numberOfItems->bindParam(':tblAttrValue' . $attrIdLoc,$tblAttrValue);
+                $k=0;
+                for($j = 0; $j < count($attributes); $j++)
+                {
+                    if(!isset($tableAttr[$k]))
+                        break;
+                    if($tableAttr[$k]==$attributes[$j]['id']){
+                        if($isItRange[$j] == 0){
+                            $attrIdLoc = $tableAttr[$k];
+                            $tblAttrValue = $tableAttrValues[$k];
+                            if($tblAttrValue != ""){
+                                $numberOfItems->bindParam(':tblAttrValue' . $attrIdLoc,$tblAttrValue);
+                            }
                         }
+                        $k++; 
                     }
-                    $k++; 
                 }
             }
+
+            $numberOfItems->bindParam(':search',$search);
+
+            $numberOfItems -> execute();
+            $numberOfItems = $numberOfItems->fetch(PDO::FETCH_ASSOC);
+            if(!empty($numberOfItems))
+                $numberOfItems = $numberOfItems['c'];
+            if(!empty($numberOfItems))
+                $numberOfPages = intdiv($numberOfItems, 32) + 1;
+        
         }
-
-        $numberOfItems->bindParam(':search',$search);
-
-        $numberOfItems -> execute();
-        $numberOfItems = $numberOfItems->fetch(PDO::FETCH_ASSOC);
-        if(!empty($numberOfItems))
-            $numberOfItems = $numberOfItems['c'];
-        if(!empty($numberOfItems))
-            $numberOfPages = intdiv($numberOfItems, 32) + 1;
         
         $this->view('store/index', ['itemsArray'=>$itemsArr, 'search' => $search, 'limit1' => $page, 
             'manufacturersArray' => $manufacturers, 'last'=> $endofitems,
@@ -415,6 +427,8 @@ class Store extends Controller
             
     }
 
+    /** This function view items in card for a logged user
+     */
     public function cart(){
         isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
@@ -439,6 +453,9 @@ class Store extends Controller
         $this->view('store/cart', ['siteFooter' => $siteFooter, 'siteName' => $siteName, 'itemsArray'=>$itemsInCart, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
     }
 
+    /** This function get footer elements from the database
+     * 
+     */
     private function getFooter($db){
         if(isset($_SESSION['siteFooter'])){
             $result = $_SESSION['siteFooter'];
@@ -451,6 +468,7 @@ class Store extends Controller
         return $result;
     }
 
+    // this funtcion get store name from the database
     private function getSiteName($db){
         if(isset($_SESSION['siteName'])){
             $result = $_SESSION['siteName'];
@@ -463,6 +481,9 @@ class Store extends Controller
         return $result;
     }
 
+    /** This function show detalis about item from the database
+     * @param {int} is the id of item
+     */
     public function item($id){
         isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
@@ -507,6 +528,9 @@ class Store extends Controller
         'itemDescrs' => $itemDescrs, 'itemAttrs' => $itemAttrs]);
     }
 
+
+    /** This function show order history for a logged user. Orders are in database
+     */
     public function order_history(){
         isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
@@ -528,6 +552,10 @@ class Store extends Controller
         'siteFooter' => $siteFooter, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
     }
 
+    /** Thus functon show order summary
+     * it allows the user to confirm order
+     * oredr will be insert into database
+     */
     public function summary(){
         isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
@@ -647,6 +675,9 @@ class Store extends Controller
         'itemsArray'=>$itemsInCart, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name,]);
     }
 
+    /** This function views details about order  from the database
+     * @param {int} is the id of order
+     */
     public function orderview($order_id){
         isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";

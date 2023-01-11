@@ -17,7 +17,8 @@
                         id="name" 
                         autocomplete="on" 
                         value="<?=$data['nameInput']?>"
-                        required>
+                        required
+                        maxlength="25">
                         <i id="blinkingName" class='bx bxs-error-circle bx-flip-horizontal bx-burst' style='color:#de1f1f; <?php if($data['serverError']) echo "display: default;"; else echo "display:none;"?>'></i>
                         <label id="errorName"><?=$data['errorName']?></label>
                     </div>
@@ -45,7 +46,7 @@
 
                     <div class="forms-inputs mb-4"> 
                         <span style="color:<?php if($data['errorEmail']) echo "grb(255, 0, 0)"; else echo""?>" id="emailSpan">Email</span> 
-                        <input style="border:<?php if($data['errorEmail']) echo "2px solid rgb(255, 0, 0)"; else echo ""?>" type="text" name="email" id="email" value="<?=$data['emailInput']?>"  required> 
+                        <input style="border:<?php if($data['errorEmail']) echo "2px solid rgb(255, 0, 0)"; else echo ""?>" type="text" name="email" id="email" value="<?=$data['emailInput']?>" required maxlength="50"> 
                         <i id="blinkingEmail" class='bx bxs-error-circle bx-flip-horizontal bx-burst' style='color:#de1f1f; <?php if($data['serverError']) echo "display: default;"; else echo "display:none;"?>'></i>
                         <label id="errorEmail"><?=$data['errorEmail']?></label>
                     </div>

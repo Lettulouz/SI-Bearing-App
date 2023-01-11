@@ -44,7 +44,7 @@
           </a>
           <ul class="dropdown-menu dropdown-menu-end">
 
-            <li><a class="dropdown-item" href="<?=ROOT?>/service/logout">Wyloguj</a></li>
+            <li><a class="dropdown-item mt-1" href="<?=ROOT?>/service/logout">Wyloguj</a></li>
           </ul>
         </li>
       </ul>

@@ -95,7 +95,7 @@
                 echo "checked";
             }
             echo ">
-                          <label style='margin-top:1px' for='catalogs" . $k . "''>" . $catalog['id'] . "</label>
+                          <label style='margin-top:1px' for='catalogs" . $k . "''>" . $catalog['name'] . "</label>
                         </div>";
             $k++;
         }

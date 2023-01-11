@@ -21,23 +21,26 @@ class Home extends Controller
         $result = $db->query($query);
         $allItems = $result->fetchAll(PDO::FETCH_ASSOC);
 
+        $selectedItems=0;
 
-        $inQuery = "(";
+        if($itemsInDb>0){
+            $inQuery = "(";
 
-        for($i=0;$i<4;$i++){
-            $inQuery .= $allItems[$randNumbers[$i]]['id'] . ",";
+            for($i=0;$i<4;$i++){
+                $inQuery .= $allItems[$randNumbers[$i]]['id'] . ",";
+            }
+            $inQuery = rtrim($inQuery, ",");
+            $inQuery .= ")";
+
+            $query= "SELECT i.id, i.name as name, price, m.name as manname
+            FROM items i 
+            INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
+            INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
+            WHERE i.id IN " . $inQuery;
+            $result = $db->query($query);
+            
+            $selectedItems = $result->fetchAll(PDO::FETCH_ASSOC);
         }
-        $inQuery = rtrim($inQuery, ",");
-        $inQuery .= ")";
-
-        $query= "SELECT i.id, i.name as name, price, m.name as manname
-        FROM items i 
-        INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
-        INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
-        WHERE i.id IN " . $inQuery;
-        $result = $db->query($query);
-        
-        $selectedItems = $result->fetchAll(PDO::FETCH_ASSOC);
     
         $query="SELECT * FROM homepageinfo LIMIT 1";
         $result = $db->prepare($query);
@@ -60,6 +63,7 @@ class Home extends Controller
         }
         return $result;
     }
+    
     private function getSiteName($db){
         if(isset($_SESSION['siteName'])){
             $result = $_SESSION['siteName'];
