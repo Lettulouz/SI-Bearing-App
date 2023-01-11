@@ -4,6 +4,10 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class Manager extends Controller
 {
+
+    /** This function display information, if element was succesful added to the database
+     * @param {int} is the id of message
+     */
     public function success_page($sid){     
         if(isset($_SESSION['success_page'])){
             $path = $_SESSION['success_page'];
@@ -26,6 +30,9 @@ class Manager extends Controller
         else header("Location:" . ROOT . "");
     }
 
+    /** This function display information, if element was not succesful added to the database
+     * @param {int} is the id of message
+     */
     public function error_page($sid){     
         if(isset($_SESSION['error_page'])){
             $path = $_SESSION['error_page'];
@@ -102,6 +109,10 @@ class Manager extends Controller
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////MAIN///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /** Main page of manager panel
+     * 
+     */
     public function index(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
@@ -219,6 +230,8 @@ class Manager extends Controller
     ////////////////////////////////////ATTRIBUTES////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /** This function viev atributes form the database
+     */
     public function list_of_attributes()
     {
         if(isset($_SESSION['loggedUser'])){
@@ -243,6 +256,9 @@ class Manager extends Controller
         $this->view('manager/list_of_attributes', ['siteLinks'=>$siteLink,'attributesArray'=>$result, 'rmpath'=> $rmAttrPath, 'editpath'=> $editAttrPath]);
     }
 
+    /** This function edit attribute from the database
+     * @param {int} is the id of attribute
+     */
     public function edit_attribute($id_a=NULL){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
@@ -291,6 +307,9 @@ class Manager extends Controller
         }
     }
 
+    /** This function remove attribute from the database
+     * @param {int} is the id of attribute
+     */
     public function remove_attribute($id_a=NULL){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
@@ -313,6 +332,9 @@ class Manager extends Controller
         header("Location:" . ROOT . "/manager/list_of_attributes");
     }
 
+    /** This function remove item from the database
+     * @param {int} is the id of item
+     */
     public function remove_item($id_a=NULL){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
@@ -339,9 +361,8 @@ class Manager extends Controller
         header("Location:" . ROOT . "/manager/list_of_items");
     }
 
-    /** Function that add attributes
-    * @author Ur_mum
-    */
+    /** This function add attribute to the database
+     */
     public function add_attribute(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
@@ -412,6 +433,8 @@ class Manager extends Controller
     ////////////////////////////////////CATALOGS//////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /** This function add catalog to the database
+     */
     public function add_catalog(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
@@ -498,6 +521,8 @@ class Manager extends Controller
         $this->view('manager/add_catalog_manager', ['siteLinks'=>$siteLink,'items'=>$items, 'msg_color' => $return_msg_color , 'msg' => $return_msg, 'catname' => $catname, 'itemcat'=> $itemstocat]);
     }
 
+    /** This function view catalogs from the database
+     */
     public function list_of_catalogs(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
@@ -599,6 +624,9 @@ class Manager extends Controller
         $this->view('manager/list_of_catalogs', ['siteLinks'=>$siteLink,'catalogsArray'=>$result, 'catalogsItems'=>$itemsInCat,'items'=>$items ,'rmpath'=> $rmCatPath]);
     }
 
+    /** This function remove catalog from the database
+     * @param {int} is the id of catalog
+     */
     public function remove_catalog($cid=NULL){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
@@ -624,6 +652,8 @@ class Manager extends Controller
 ////////////////////////////////////MANUFACTURERS/////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /** This function add manufacturer to the database
+     */
     public function add_manufacturer(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
@@ -675,6 +705,8 @@ class Manager extends Controller
         }
     }
 
+    /** This function add countries to manufacturer in the database
+     */
     public function add_countries_to_manufacturer(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
@@ -783,6 +815,8 @@ class Manager extends Controller
         'msg' => $return_msg, 'manufacturername' => $manufacturername, 'selCountries'=> $selCountries, 'mnf_countries'=>$mnfCountries]);
     }
 
+    /** This function viev manufacturers form the database
+     */
     public function list_of_manufacturers(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
@@ -900,7 +934,9 @@ class Manager extends Controller
 
     }
 
-
+    /** This function remove manufacturer from the database
+     * @param {int} is the id of manufacturer
+     */
     public function remove_manufacturer($id_manuf=NULL){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "manager"){
@@ -928,6 +964,9 @@ class Manager extends Controller
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////ITEMS/////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /** This function add item to the database
+     */
     public function add_item(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
@@ -1084,6 +1123,9 @@ class Manager extends Controller
         
     }
 
+    /** This function edit item in the database
+     * @param {int} is the id of item
+     */
     public function edit_item($editId){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
@@ -1421,6 +1463,8 @@ class Manager extends Controller
         
     }
 
+    /** This function view items from the database
+     */
     public function list_of_items(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
@@ -1494,7 +1538,8 @@ class Manager extends Controller
     }
 
 
-
+    /** This function view items from the database, that do not belong to any catalog
+     */
     public function list_of_uncategorized_items(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
@@ -1564,6 +1609,8 @@ class Manager extends Controller
 ////////////////////////////////////CATEGORIES////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  
+    /** This function add catalog to the database
+     */
     public function add_category(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
@@ -1618,6 +1665,8 @@ class Manager extends Controller
     }
 
 
+    /** This function view categories from the database
+     */
     public function list_of_categories()
     {
         if(isset($_SESSION['loggedUser'])){
@@ -1641,7 +1690,9 @@ class Manager extends Controller
         $this->view('manager/list_of_categories', ['siteLinks'=>$siteLink,'categoriesArray'=>$result, 'rmpath'=> $rmCatPath, 'editpath'=> $editCatPath]);
     }
 
-
+    /** This function edit category in the database
+     * @param {int} is the id of catgory
+     */
     public function edit_category($id_categ=NULL){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
@@ -1687,6 +1738,10 @@ class Manager extends Controller
         }
     }
 
+
+    /** This function remove category from the database
+     * @param {int} is the id of category
+     */
     public function remove_category($id_categ=NULL){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
@@ -1709,6 +1764,9 @@ class Manager extends Controller
         header("Location:" . ROOT . "/manager/list_of_categories");
     }
 
+
+    /** This function add shipping method to the database
+     */
     public function add_shipping_method(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
@@ -1772,6 +1830,8 @@ class Manager extends Controller
         }
     }
 
+    /** This function view shipping methods from the database
+     */
     public function list_of_shipping_methods(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
@@ -1809,6 +1869,10 @@ class Manager extends Controller
         'shippingOnlyActive' =>$shippingOnlyActive]);
     }
 
+
+    /** This function edit shipping method in the database
+     * @param {int} is the id of shipping method
+     */
     public function edit_shipping_method($id_m=NULL){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
@@ -1838,6 +1902,8 @@ class Manager extends Controller
         }
     }
 
+    /** This function add payment method to the database
+     */
     public function add_payment_method(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
@@ -1901,6 +1967,8 @@ class Manager extends Controller
         }
     }
 
+    /** This function view payment methods from the database
+     */
     public function list_of_payment_methods(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "contentmanager"){
@@ -1936,6 +2004,9 @@ class Manager extends Controller
         'paymentOnlyActive' =>$paymentOnlyActive]);
     }
 
+    /** This function edit payment method in the database
+     * @param {int} is the id of payment method
+     */
     public function edit_payment_method($id_p=NULL){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "manager"){
@@ -2166,7 +2237,8 @@ class Manager extends Controller
 
     
 
-
+    /** This function logout the user
+     */
     public function logout(){
         unset($_SESSION['loggedUser']);
         header("Location:" . ROOT . "/login");
