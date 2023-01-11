@@ -158,6 +158,18 @@ class Admin extends Controller
         $result = $db->query($query);
         $admins = $result->fetchAll(PDO::FETCH_ASSOC);
 
+        $query="SELECT Count(login)
+        FROM `users` WHERE role='shopservice' AND active=1";
+        $result = $db->query($query);
+        $shopServiceAccountsCount = $result->fetchAll(PDO::FETCH_ASSOC);
+        $shopServiceAccountsCount= $shopServiceAccountsCount[0]['Count(login)'];
+
+        $query="SELECT login
+        FROM `users` WHERE role='shopservice' AND active=1
+        LIMIT 5";
+        $result = $db->query($query);
+        $shopServiceAccounts = $result->fetchAll(PDO::FETCH_ASSOC);
+
         ///////////////////////////////////
 
         $query="SELECT i.name AS item, m.name AS manufacturer
@@ -270,7 +282,8 @@ class Admin extends Controller
         'managers'=>$managers, 'adminsCount'=>$adminsCount,'admins'=>$admins, 'shippingMethodsString' => $shippingMethodsString, 
         'shippingMethodsCount' => $shippingMethodsCount, 'paymentMethodsCount' => $paymentMethodsCount,
         'paymentMethodsString' => $paymentMethodsString, 'ordersLast7Count' => $ordersLast7Count, 
-        'ordersTotalCount' => $ordersTotalCount]);
+        'ordersTotalCount' => $ordersTotalCount, 'shopServiceAccounts' => $shopServiceAccounts, 
+        'shopServiceAccountsCount' => $shopServiceAccountsCount]);
     }
 
 

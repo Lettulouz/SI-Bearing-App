@@ -35,8 +35,7 @@ include 'adm_nav.php';
                         </div>
                         <a href=<?php echo ROOT."/admin/list_of_users"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
-                                Przeglądaj użytkowników
-                                
+                                Przeglądaj użytkowników           
                             </div>
                         </a>
                     </div>
@@ -63,6 +62,7 @@ include 'adm_nav.php';
                                         echo "...";                                    
                                 }
                                 ?>
+                            </p>
                         </div>
                         <a href=<?php echo ROOT."/admin/list_of_content_managers"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
@@ -94,6 +94,7 @@ include 'adm_nav.php';
                                         echo "...";                                    
                                 }
                                 ?>
+                            </p>
                         </div>
                         <a href=<?php echo ROOT."/admin/list_of_administrators"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
@@ -111,9 +112,23 @@ include 'adm_nav.php';
                             </a>
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">Osób obsługi sklepu: 0</h5>
+                            <h5 class="card-title">Osób obsługi sklepu: <?php echo $data['shopServiceAccountsCount']?></h5>
+                            <p class="card-text">
+                                <?php
+                                $i = 0;
+                                foreach($data['shopServiceAccounts'] as $shopServiceAccounts){
+                                    $i++;
+                                    if($i<5)
+                                        echo $shopServiceAccounts['login']."<br>";
+                                    else if(($i==5 && $data['shopServiceAccountsCount']<=5))
+                                        echo $shopServiceAccounts['login'];
+                                    else if($i==5 && $data['shopServiceAccountsCount']>5)
+                                        echo "...";                                    
+                                }
+                                ?>
+                            </p>
                         </div>
-                        <a href=<?php echo ROOT."/admin/list_of_administrators"?> id="orders_lists" class="nav-link text-white p-0">
+                        <a href=<?php echo ROOT."/admin/list_of_service_accounts"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
                                 Przeglądaj obsługę sklepu
                             </div>
