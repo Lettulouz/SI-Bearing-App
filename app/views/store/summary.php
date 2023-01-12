@@ -11,7 +11,7 @@
 
   <!-- Main content -->
   <div class="row">
-    <div class="col-lg-8">
+    <div class="col-lg-12">
       <!-- Details -->
       <div class="card mb-4">
         <div class="card-body">
@@ -104,8 +104,8 @@
                 <fieldset id="paymentMethod"></fieldset>
               
               </div>
-              <div class="col-lg-6">
-                <fieldset id="payment"></fieldset>
+              <div class="col-lg-6 p-0 ps-2">
+                <fieldset id="payment" class="px-2"></fieldset>
               </div>
             </div>
           </div>
@@ -120,9 +120,8 @@
   </div>
   <?php include dirname(__FILE__,2) . "/footer.php"; ?>
 
+  <script src="<?=MAINPATH?>/node_modules/jquery-mask-plugin/src/jquery.mask.js"></script>
   <script>
-
-
     $( ".payment" ).change(function() {
       var html;
       var options = '';
@@ -154,8 +153,7 @@
           $("#paymentMethod").append(html);
         }
         else if($(this).val() == paymentMethod['methodId'] && paymentMethod['typeName'] == 'card'){
-          html = $(`
-                  
+          html = $(`    
                   <div class=\"row\" >
                     <div class=\"col-12 p-1\" >
                       <select class=\"form-select form-select-sm delivery\" name=\"delivery\" >
@@ -166,13 +164,13 @@
                   </div>
                   <div class='row'>
                       <div class="col-12 p-1">
-                        <input class="form-control form-control-sm" type="text" name="cardname" placeholder="Właściciel karty" required>
+                        <input class="form-control form-control-sm" type="text" name="cardname" min='1' placeholder="Właściciel karty" required>
                       </div>
                   </div>
 
                   <div class='row'>
                       <div class="col-12 p-1">
-                        <input class="form-control form-control-sm py-0" type="number" name="cardnumber" pattern="[0-9]{12}" placeholder="Numer karty" required>
+                        <input class="form-control form-control-sm py-0" type="text" name="cardnumber" id="cardnumber" minlength='16'  placeholder="Numer karty" required>
                       </div>
                   </div>
 
@@ -181,7 +179,7 @@
                             <input class="form-control form-control-sm" type="text" name="expires" pattern="(0[1-9]|1[0-2])\/?([0-9]{2})" placeholder="Data wygaśnięcia" required>
                           </div>
                           <div class="col-12 col-md-6 p-1">
-                            <input class="form-control form-control-sm" type="text" name="cvv" pattern='[0-9]{3, 4}' placeholder="CVV" min-length="3" required>
+                            <input class="form-control form-control-sm" type="text" id='cvv' name="cvv" pattern='[0-9]{3, 4}' minlength='3' placeholder="CVV" min-length="3" required>
                           </div>
                   </div>`
                 );
@@ -191,6 +189,8 @@
           $('#totalOrderPrice').html(Math.trunc((parseFloat(paymentMethod['fee'])+parseFloat($("#totalOrderPriceH").val()))*100)/100+' zł');
 
           $("#paymentMethod").append(html);
+          $('#cardnumber').mask('0000000000000000');
+          $('#cvv').mask('000');
         }
         else if($(this).val() == paymentMethod['methodId'] && paymentMethod['typeName'] == 'external'){
           html = $(`
@@ -220,9 +220,24 @@
       var options = '';
       for(var shippingMethod of shippingMethods){
         if($(this).val() == shippingMethod['id'] && !shippingMethod['needaddress']){
-          html = $(`<div class="col-3 p-1 mt-5 ms-5">
-              <input name='orderSubmit' type="submit" id="orderSubmit"  class="btn btn-primary btn-sm w-100 mt-2 ms-5">
-            </div>`
+          html = $(`<h3 class="h6 mt-2">Dane klienta</h3>
+                    <div class='row'>
+                      <div class="col-12 col-md-6 p-1">
+                        <input class="form-control form-control-sm" type="text" name="name" placeholder="Imię" required maxlength="100">
+                      </div>
+                      <div class="col-12 col-md-6 p-1">
+                        <input class="form-control form-control-sm" type="text" name="surname" placeholder="Nazwisko" required maxlength="100">
+                      </div>
+                    </div>
+                    <div class='row'>
+                      <div class="col-9 p-1">
+                        <input class="form-control form-control-sm" type="text" id="phonenumber" name="phonenumber" placeholder="Numer telefonu" required maxlength="20" minlength="9"> 
+                      </div>
+                      
+                      <div class="col-3 p-1 ">
+                        <input name='orderSubmit' type="submit" id="orderSubmit" class="btn btn-primary btn-sm w-100">
+                      </div>
+                    </div>`
           )
           
           $('#shippingPrice').html(Math.trunc(parseFloat(shippingMethod['price'])* 100)/100+' zł');
@@ -230,6 +245,7 @@
           +parseFloat(shippingMethod['price']))*100)/100+' zł');
 
           $("#payment").append(html);
+          $('#phonenumber').mask('00000000000000000000');
         }
         else if($(this).val() == shippingMethod['id'] && shippingMethod['needaddress']){
           html = $(`<h3 class="h6 mt-2">Dane dostawy</h3>
@@ -266,9 +282,9 @@
                   </div>
                 </div>
                 <div class='row'>
-                  <div class="col-9 p-1">
-                    <input class="form-control form-control-sm" type="tel" name="phonenumber" placeholder="Numer telefonu" required maxlength="20"> 
-                  </div>
+                <div class="col-9 p-1">
+                  <input class="form-control form-control-sm" type="text" id="phonenumber" name="phonenumber" placeholder="Numer telefonu" required maxlength="20" minlength="9"> 
+                </div>
                   
                   <div class="col-3 p-1 ">
                     <input name='orderSubmit' type="submit" id="orderSubmit" class="btn btn-primary btn-sm w-100">
@@ -281,6 +297,7 @@
           +parseFloat(shippingMethod['price']))*100)/100+' zł');
 
           $("#payment").append(html);
+          $('#phonenumber').mask('00000000000000000000');
         }
       }
     });
@@ -298,4 +315,6 @@
         
         document.getElementById("formOrderSubmit").submit();
     }
+
+
 </script>
