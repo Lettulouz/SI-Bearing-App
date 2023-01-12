@@ -64,7 +64,7 @@
                                     </li>
                                 <?php }else if($_SESSION['loggedUser']=="shopservice"){?>
                                     <li>
-                                        <a class="dropdown-item mt-1" href="<?=PUBLICPATH?>/shopservice">
+                                        <a class="dropdown-item mt-1" href="<?=PUBLICPATH?>/service">
                                             <i class="bi bi-grid-3x3-gap-fill"></i> Panel
                                         </a>
                                     </li>

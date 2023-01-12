@@ -4,6 +4,52 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class Service extends Controller
 {
+    public function success_page($sid){     
+        if(isset($_SESSION['success_page'])){
+            $path = $_SESSION['success_page'];
+            unset($_SESSION['success_page']);
+            if($sid==1){
+                $firstLine = "Dodano rekord";
+                $secondLine = "pomyślnie!";
+            }
+            else if($sid==2){
+                $firstLine = "Edytowano rekord";
+                $secondLine = "pomyślnie!";
+            }
+            else if($sid==3){
+                $firstLine = "Usunięto rekord";
+                $secondLine = "pomyślnie!";
+            }
+            else if($sid==4){
+                $firstLine = "Zmieniono status";
+                $secondLine = "pomyślnie!";
+            }
+            $this->view('success_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
+            header("Refresh: 0.75; url=" . ROOT . "/service/" . $path);
+        }
+        else header("Location:" . ROOT . "");
+    }
+
+    public function error_page($sid){     
+        if(isset($_SESSION['error_page'])){
+            $path = $_SESSION['error_page'];
+            unset($_SESSION['error_page']);
+            if($sid==1){
+                $firstLine = "Nie podano wszystkich wymaganych wartości";
+                $secondLine = "";
+            }
+            else if($sid==2){
+                $firstLine = "Taki rekord już istnieje";
+                $secondLine = "";
+            }
+            $this->view('error_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
+            $_SESSION['successOrErrorResponse'] = $path;
+            header("Refresh: 0.75; url=" . ROOT . "/service/" . $path);
+
+        }
+        else header("Location:" . ROOT . "");
+    }
+
     public function index(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "shopservice"){

@@ -46,7 +46,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
               <a class="dropdown-item mt-1" href="<?= ROOT ?>/home">
-                <li>
+                
                   <i class="bi bi-house"></i> Strona główna
               </a>
               <a class="dropdown-item mt-1" href="<?= ROOT ?>/store">
