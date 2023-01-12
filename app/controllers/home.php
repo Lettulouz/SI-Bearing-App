@@ -39,7 +39,7 @@ class Home extends Controller
             FROM items i 
             INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
             INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
-            WHERE i.id IN " . $inQuery;
+            WHERE i.id IN " . $inQuery . " AND i.active=1 AND m.active=1";
             $result = $db->query($query);
             
             $selectedItems = $result->fetchAll(PDO::FETCH_ASSOC);
