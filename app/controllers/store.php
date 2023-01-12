@@ -18,6 +18,34 @@ class Store extends Controller
         else header("Location:" . ROOT . "");
     }
 
+    public function error_page($sid){     
+        if(isset($_SESSION['error_page'])){
+            $path = $_SESSION['error_page'];
+            unset($_SESSION['error_page']);
+            if($sid==1){
+                $firstLine = "Nie podano wszystkich wymaganych wartości";
+                $secondLine = "";
+            }
+            else if($sid==2){
+                $firstLine = "Taki rekord już istnieje";
+                $secondLine = "";
+            }
+            else if($sid==3){
+                $firstLine = "Błąd dodawania zdjęcia";
+                $secondLine = "";
+            }
+            else if($sid==4){
+                $firstLine = "Błąd bazy danych";
+                $secondLine = "";
+            }
+            $this->view('error_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
+            $_SESSION['successOrErrorResponse'] = $path;
+            header("Refresh: 0.75; url=" . ROOT . "/store/" . $path);
+
+        }
+        else header("Location:" . ROOT . "");
+    }
+
     /** Main page of store
      * 
      */
@@ -699,61 +727,72 @@ class Store extends Controller
         $siteFooter = $this->getFooter($db);   
         $siteName = $this->getSiteName($db);
 
+        
         if(!empty($_POST['payment'])){
-            if(!empty($_POST['country'])){
-                $query="INSERT INTO orders (id_user, id_shippingmethod, id_paymentmethod, orderstate, trackingnumber, 
-                ordercountry, ordervoivodeship, ordercity, orderpostcode, orderstreet, orderhomenumber, 
-                orderphonenumber, ordername, orderlastname, price)
-                VALUES ('".$_SESSION['idLoggedUser']."', '".$_POST['delivery']."', '".$_POST['payment']."',
-                'Do akceptacji', '123456789', :country, :voivodeship, :city, :postcode, :street, :homeNumber, :phoneNumber, 
-                :orderName, :orderLastname, '".$_SESSION['totalOrderPrice']."')";
-                
-                $order = $db->prepare($query);
-                $order->bindParam(':country', $_POST['country']);
-                $order->bindParam(':voivodeship', $_POST['voivoden']);
-                $order->bindParam(':city', $_POST['city']);
-                $order->bindParam(':postcode', $_POST['postcode']);
-                $order->bindParam(':street', $_POST['street']);
-                $order->bindParam(':homeNumber', $_POST['housenumber']);
-                $order->bindParam(':phoneNumber', $_POST['phonenumber']);
-                $order->bindParam(':orderName', $_POST['name']);
-                $order->bindParam(':orderLastname', $_POST['surname']);
-                $order -> execute();
+            try{
+                $db->beginTransaction();
+                if(!empty($_POST['country'])){
+                    $query="INSERT INTO orders (id_user, id_shippingmethod, id_paymentmethod, orderstate, trackingnumber, 
+                    ordercountry, ordervoivodeship, ordercity, orderpostcode, orderstreet, orderhomenumber, 
+                    orderphonenumber, ordername, orderlastname, price)
+                    VALUES ('".$_SESSION['idLoggedUser']."', '".$_POST['delivery']."', '".$_POST['payment']."',
+                    'Do akceptacji', '', :country, :voivodeship, :city, :postcode, :street, :homeNumber, :phoneNumber, 
+                    :orderName, :orderLastname, '".$_SESSION['totalOrderPrice']."')";
+                    
+                    $order = $db->prepare($query);
+                    $order->bindParam(':country', $_POST['country']);
+                    $order->bindParam(':voivodeship', $_POST['voivoden']);
+                    $order->bindParam(':city', $_POST['city']);
+                    $order->bindParam(':postcode', $_POST['postcode']);
+                    $order->bindParam(':street', $_POST['street']);
+                    $order->bindParam(':homeNumber', $_POST['housenumber']);
+                    $order->bindParam(':phoneNumber', $_POST['phonenumber']);
+                    $order->bindParam(':orderName', $_POST['name']);
+                    $order->bindParam(':orderLastname', $_POST['surname']);
+                    $order -> execute();
+                }
+                else{
+                    $query="INSERT INTO orders (id_user, id_shippingmethod, id_paymentmethod, orderstate, orderphonenumber, ordername, orderlastname, price)
+                    VALUES ('".$_SESSION['idLoggedUser']."', '".$_POST['delivery']."', '".$_POST['payment']."',
+                    'Do akceptacji', :phoneNumber, :orderName, :orderLastname,'".$_SESSION['totalOrderPrice']."')";
+                    
+                    $order = $db->prepare($query);
+                    $order->bindParam(':phoneNumber', $_POST['phonenumber']);
+                    $order->bindParam(':orderName', $_POST['name']);
+                    $order->bindParam(':orderLastname', $_POST['surname']);
+                    $order -> execute();
+                }
+
+                $query="SELECT id FROM orders ORDER BY id DESC LIMIT 1";
+                $lastOrder = $db->query($query);
+                $lastOrder = $lastOrder->fetchAll(PDO::FETCH_ASSOC);
+
+                foreach($_SESSION['idOfItems'] as $j => $itemId) {
+                    $query="INSERT INTO itemsinorder (id_item, id_order, amount)
+                    VALUES ('$itemId', '{$lastOrder[0]['id']}', '{$_SESSION['numberOfItems'][$j]}')";
+
+                    $query2 = "UPDATE items SET amount = amount-{$_SESSION['numberOfItems'][$j]}
+                                WHERE id='$itemId'";
+
+                    $db->query($query2);
+                    $db->query($query);
+                }
+
+                unset($_SESSION['idOfItems']);
+                unset($_SESSION['numberOfItems']);
+                unset($_SESSION['totalItemPrice']);
+                $query2->closeCursor();
+                $db->commit();
+
+                $_SESSION['success_page'] = "index";
+                header("Location:" . ROOT . "/store/success_page/1");
+                return;
+            }catch(Exception $ex){
+                $db->rollBack();
+                $_SESSION['error_page'] = "index";
+                header("Location:" . ROOT . "/admin/error_page/4");
+                return;
             }
-            else{
-                $query="INSERT INTO orders (id_user, id_shippingmethod, id_paymentmethod, orderstate, orderphonenumber, ordername, orderlastname, price)
-                VALUES ('".$_SESSION['idLoggedUser']."', '".$_POST['delivery']."', '".$_POST['payment']."',
-                 'Do akceptacji', :phoneNumber, :orderName, :orderLastname,'".$_SESSION['totalOrderPrice']."')";
-                 
-                $order = $db->prepare($query);
-                $order->bindParam(':phoneNumber', $_POST['phonenumber']);
-                $order->bindParam(':orderName', $_POST['name']);
-                $order->bindParam(':orderLastname', $_POST['surname']);
-                $order -> execute();
-            }
-
-            $query="SELECT id FROM orders ORDER BY id DESC LIMIT 1";
-            $lastOrder = $db->query($query);
-            $lastOrder = $lastOrder->fetchAll(PDO::FETCH_ASSOC);
-
-            foreach($_SESSION['idOfItems'] as $j => $itemId) {
-                $query="INSERT INTO itemsinorder (id_item, id_order, amount)
-                VALUES ('$itemId', '{$lastOrder[0]['id']}', '{$_SESSION['numberOfItems'][$j]}')";
-
-                $query2 = "UPDATE items SET amount = amount-{$_SESSION['numberOfItems'][$j]}
-                            WHERE id='$itemId'";
-
-                $db->query($query2);
-                $db->query($query);
-              }
-
-            unset($_SESSION['idOfItems']);
-            unset($_SESSION['numberOfItems']);
-            unset($_SESSION['totalItemPrice']);
-
-            $_SESSION['success_page'] = "index";
-            header("Location:" . ROOT . "/store/success_page/1");
-            return;
         }
 
         $itemsInCart = NULL;

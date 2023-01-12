@@ -22,7 +22,7 @@
 
                 <h1 class="text-wrap fs-1 text"><?= $data['itemParams']['name'] ?></h1>
                 <h4 class="text-wrap text fw-light">Producent: <?= $data['itemParams']['manname'] ?></h3>
-                    <h6 class="text-wrap text"><?= $data['itemParams']['price'] ?> zł</h6>
+                    <h6 class="text-wrap fs-1 text"><?= $data['itemParams']['price'] ?> zł</h6>
                     <div class="col-sm-6 d-flex flex-column justify-content-center align-items-center">
                         <button class="btn btn-success py-2 px-4 mt-4 addItemToCartButton" id='<?php echo $data['id']."-".$data['itemParams']['price'].
                         "-".$data['itemParams']['amount']."-".$data['itemParams']['isDouble']?>' name='addToCart'>Dodaj do koszyka</button>    
@@ -64,7 +64,7 @@
                     $attrUnit = $attribute['attrUnit'];
                     $attrValue = $attribute['attrValue'];
                     echo "<tr>
-                    <td class='align-middle fw-bold text-end'>$attrName</td>
+                    <td class='align-middle fw-bold text-center'>$attrName</td>
                     <td class='align-middle fw-bold text-start'>$attrUnit</td>
                     <td></td>
                     <td></td>              
@@ -82,11 +82,6 @@
         </div>
     </div>
 </div>
-<?php //include "sidebar_top.php"; 
-?>
-<?php //include "sidebar_bottom.php"; 
-?>
-
 
 <?php include dirname(__FILE__, 2) . "/footer.php"; ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
