@@ -11,10 +11,10 @@
                 <li> 
                     <div class="form-check" style="margin-right:20px;">
                         <select class="form-control" name="sortValue" form='submitFilterSearchSort' style="height:40px;">
-                            <option value="1">Sortuj: cena rosnąco</option>
-                            <option value="2">cena malejąco</option>
-                            <option value="3">od najnowszych</option>
-                            <option value="4">od najstarszych</option>
+                            <option <?php if($data['sortValue']==0 || $data['sortValue']==1) echo "selected"; ?> value="1">Sortuj: od najnowszych</option>
+                            <option <?php if($data['sortValue']==2) echo "selected"; ?> value="2">od najstarszych</option>
+                            <option <?php if($data['sortValue']==3) echo "selected"; ?> value="3">cena rosnąco</option>
+                            <option <?php if($data['sortValue']==4) echo "selected"; ?> value="4">cena malejąco</option>
                         </select>
                     </div>
                 </li>

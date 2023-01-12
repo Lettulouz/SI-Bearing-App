@@ -53,21 +53,22 @@ class Store extends Controller
             $sortValue=$_POST['sortValue']; 
         }
         if($sortValue==0){
-            $sortValueQuery = " ORDER BY i.price ASC";
-        }
-        if($sortValue==1){
-            $sortValueQuery = " ORDER BY i.price ASC";
-        }
-        if($sortValue==2){
-            $sortValueQuery = " ORDER BY i.price DESC";
-        }
-        if($sortValue==3){
             $sortValueQuery = " ORDER BY i.id DESC";
         }
-        if($sortValue==4){
+        if($sortValue==1){
+            $sortValueQuery = " ORDER BY i.id DESC";
+        }
+        if($sortValue==2){
             $sortValueQuery = " ORDER BY i.id ASC";
         }
+        if($sortValue==3){
+            $sortValueQuery = " ORDER BY i.price ASC";
+        }
+        if($sortValue==4){
+            $sortValueQuery = " ORDER BY i.price DESC";
+        }
 
+       
         if($limit1 < 1)
             $limit1 = 1;
 
@@ -554,7 +555,8 @@ class Store extends Controller
             'test' => $id_manufacturer, 'siteFooter' => $siteFooter, 'isLogged' => $isLogged, 
             'loggedUser_name' => $loggedUser_name, 'categoriesArray'=>$categories, 'catalogsArray'=>$catalogs, 
             'attributesArray'=>$attributes, 'numberOfPages' => $numberOfPages, 'numberOfItems' => $numberOfItems, 
-            'pricepartstart' => $pricepartstart, 'pricepartend' => $pricepartend, 'siteName' => $siteName]); // ten 'test' to do wywalenia na koniec
+            'pricepartstart' => $pricepartstart, 'pricepartend' => $pricepartend, 'siteName' => $siteName, 
+            'sortValue' =>$sortValue]); // ten 'test' to do wywalenia na koniec
             
     }
 

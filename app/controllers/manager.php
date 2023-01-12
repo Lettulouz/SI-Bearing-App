@@ -1830,7 +1830,7 @@ class Manager extends Controller
                 VALUES ('$methodName', '$methodPrice', '$needAddress', '$methodActive');";
                 $result = $db->prepare($query);
                 $result->execute();
-                $_SESSION['success_page'] = "add_shipping_method";
+                $_SESSION['success_page'] = "list_of_shipping_methods";
                 header("Location:" . ROOT . "/manager/success_page/1");      
             }else{
                 $_SESSION['error_page'] = "add_shipping_method";
@@ -1961,7 +1961,7 @@ class Manager extends Controller
                 VALUES ('$methodName', '$typeOfPayment' ,'$methodFee', '$methodActive');";
                 $result = $db->prepare($query);
                 $result->execute();
-                $_SESSION['success_page'] = "add_payment_method";
+                $_SESSION['success_page'] = "list_of_payment_methods";
                 header("Location:" . ROOT . "/manager/success_page/1");
             }else{
                 $_SESSION['error_page'] = "add_payment_method";
