@@ -2672,7 +2672,7 @@ class Admin extends Controller
             if(!empty($_POST['dateFrom'])&&!empty($_POST['dateTo'])){
             $query="SELECT SUM(amount) FROM itemsinorder iio
             INNER JOIN orders o on o.id=iio.id_order
-            WHERE orderdate BETWEEN :dateFrom AND :dateTo";
+            WHERE NOT orderstate='Anulowany' AND orderdate BETWEEN :dateFrom AND :dateTo";
             $result=$db->prepare($query);
             $result->bindParam(':dateFrom', $_POST['dateFrom']);
             $result->bindParam(':dateTo', $_POST['dateTo']);
@@ -2686,7 +2686,7 @@ class Admin extends Controller
             $query="SELECT SUM(iio.amount*i.price) FROM itemsinorder iio
             INNER JOIN orders o on o.id=iio.id_order
             INNER JOIN items i on i.id=iio.id_item
-            WHERE orderdate BETWEEN :dateFrom AND :dateTo";
+            WHERE NOT orderstate='Anulowany' AND orderdate BETWEEN :dateFrom AND :dateTo";
             $result=$db->prepare($query);
             $result->bindParam(':dateFrom', $_POST['dateFrom']);
             $result->bindParam(':dateTo', $_POST['dateTo']);
@@ -2705,7 +2705,7 @@ class Admin extends Controller
             INNER JOIN manufacturercountries mc on mc.id=i.id_manufacturercountry
             INNER JOIN manufacturers m on m.id=mc.id_manufacturer
             INNER JOIN countries c on c.id=mc.id_country
-            WHERE orderdate BETWEEN :dateFrom AND :dateTo
+            WHERE NOT orderstate='Anulowany' AND orderdate BETWEEN :dateFrom AND :dateTo
             GROUP BY i.name
             ORDER BY SUM(iio.amount) DESC";
             $result=$db->prepare($query);
