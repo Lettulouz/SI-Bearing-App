@@ -4,7 +4,7 @@
             <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Zamówienie </h2>
         </div>
 
-        <a href="<?=ROOT.$data['orderpath']?>list_of_orders" class="text-dark ms-2" style="font-size:18px;">
+        <a href="<?=ROOT.$data['orderpath']?>list_of_orders" class="text-dark ms-2" style="font-size:18px;text-decoration:none">
             <i class="bi bi-backspace" style="font-size:18px"></i> Powrót
         </a>
 
