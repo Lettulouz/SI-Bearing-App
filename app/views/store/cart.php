@@ -24,7 +24,7 @@
                                         $items = $data['itemsArray'];
                                         foreach ($items as $j => $item) {
                                             $imagePath = APPPATH . "/resources/itemsPhotos/[" . $item['itemID'] . "].png";
-                                            $imagePathCheck = RESOURCEPATH . "/[" . $item['itemID'] . "].png";
+                                            $imagePathCheck = RESOURCEPATH . "/itemsPhotos/[" . $item['itemID'] . "].png";
                                             if (!file_exists($imagePathCheck)) {
                                                 $imagePath = APPPATH . "/resources/itemsPhotos/brak_zdjecia.png";
                                             }
