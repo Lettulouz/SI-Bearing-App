@@ -177,6 +177,7 @@
     </form> 
 </div>
 
+<script src="<?=MAINPATH?>/node_modules/jquery-mask-plugin/src/jquery.mask.js"></script>
 <script>
     var jsArr = JSON.parse($('#attributes').attr('data-attr'));
     var possibleOptions = [];
@@ -229,7 +230,7 @@
             html+='<div class="row">';
             html+='<input type="hidden" name="attrId'+attrNum+'" value="0">';
             html+='<div class="col-12 col-md-5 mb-3">';
-            html+='<select class="select2 form-control selectattr requiredattr form-select-lg" id="attribute_name' + attrNum +  '" aria-label="example-xl" onchange="updateAttrList();" required>';
+            html+='<select class="select2 form-control selectattr requiredattr form-select-lg" id="attribute_name' + attrNum +  '" aria-label="example-xl" onchange="updateAttrList(); test(this);" required>';
             html+='<option>';
             html+='</option>';
             tempPossibleOptions.forEach((name,index) => {
@@ -448,7 +449,34 @@
         
 	});
 
+    $( document ).ready(function() {
+        var attributeList = JSON.parse('<?php echo json_encode($data['prevAttr']); ?>');
+        var temp = 1;
+        for(var attribute of attributeList){   
+            if(attribute['isNotString']){
+                $('#attribute_value'+temp).mask('099999.99');
+            }
+            temp++;
+        }
+    });
 
+    function test(selectObject)
+    {
+        var value = selectObject.value;
+        var id = selectObject.id.substring(14);
+        var attributeList = JSON.parse('<?php echo json_encode($data['attributes']); ?>');
+
+        for(var attribute of attributeList){   
+            if(value == attribute['name']){
+                if(attribute['isNotString']){
+                    $('#attribute_value'+id).mask('099999.99');
+                }
+                else{
+                    $('#attribute_value'+id).unmask();
+                }
+            }
+        }
+    }
 
     function updateAttrList(){
         let tempRMV = $("#show_attr").find("select");  
@@ -586,5 +614,7 @@ $('#categories').select2({
     placeholder: 'Wybierz kategorie',
     //closeOnSelect: false,
 });
+
+
 
 </script>
