@@ -4,6 +4,10 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class Admin extends Controller
 {
+    /** The function responsible for capturing information about the success of operations
+     * on records in the database and displaying an appropriate message for the user
+     * @param {int} is an identifier corresponding to the type of operation
+     */
     public function success_page($sid){     
         if(isset($_SESSION['success_page'])){
             $path = $_SESSION['success_page'];
@@ -30,6 +34,10 @@ class Admin extends Controller
         else header("Location:" . ROOT . "");
     }
 
+    /** A function responsible for capturing information about errors occurring during operations
+     * on records in the database and displaying an appropriate message for the user
+     * @param {int} is the identifier corresponding to the error type
+     */
     public function error_page($sid){     
         if(isset($_SESSION['error_page'])){
             $path = $_SESSION['error_page'];
@@ -61,6 +69,10 @@ class Admin extends Controller
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////SPECIAL PAGES//////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /** function responsible for displaying the form for editing the page and processing data sent from this form
+     * @param {int} is the ID of the page to be edited
+     */
     public function edit_page($id=0){ 
         if($id<1 || $id>9){
             header("Location:" . ROOT . "/admin");
@@ -110,6 +122,10 @@ class Admin extends Controller
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////MAIN///////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /** function responsible for displaying the administration panel containing information about users, products, catalogs and attributes
+     * 
+     */
     public function index(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -313,6 +329,10 @@ class Admin extends Controller
     private $errorPassword = "";
     private $a = "";
 
+    /** function responsible for adding a new user to the database
+     * @param {string} is the name of the view to display
+     * @param {string} is a user role
+     */
     private function add($a, $b)
     {
         if(isset($_SESSION['loggedUser'])){
@@ -516,12 +536,18 @@ class Admin extends Controller
         'name'=>$this->nameInput, 'surname'=>$this->surnameInput, 'mail'=>$this->emailInput, 'login'=>$this->loginInput]);
     }
 
+    /** function responsible for adding a new store service to the database
+     * 
+     */
     public function add_shop_service(){
         $a = "add_shop_service";
         $b = "shopservice";
         $this->add($a, $b);
     }
 
+    /** a function responsible for displaying a list of "shopservice" type user accounts from the database on the website
+     * @return returns: If the user is not logged in or is not an administrator, it redirects them to the login page or home page, else it displays a list of shopservice user accounts and URLs for deleting and editing accounts
+     */
     public function list_of_service_accounts(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -548,6 +574,9 @@ class Admin extends Controller
 
     }
 
+    /** function that allows to remove a specific user from the database based on the provided ID
+     * @param {int} is the user ID to be deleted
+     */
     private function remove($id)
     {
         if(isset($_SESSION['loggedUser'])){
@@ -570,6 +599,9 @@ class Admin extends Controller
         }
     }
 
+    /** function responsible for displaying on the page a list of users with the "user" role that have been created in the system
+     * 
+     */
     public function list_of_users(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -596,6 +628,9 @@ class Admin extends Controller
 
     }
 
+    /** the function responsible for editing the user
+     * @param {int} is the user id to be edited
+     */
     public function edit_user($id=NULL){
         if(is_null($id) == true){
             header("Location:" . ROOT . "/admin/index");
@@ -807,6 +842,9 @@ class Admin extends Controller
         'serverError' => $this->serverError, 'errorName' => '', 'errorSurname' => '']);
     }
 
+    /** a public function that calls the private function "add()" and passes arguments to it
+     *
+     */
     public function add_user(){
         $a = "add_user";
         $b = "user";
@@ -828,12 +866,19 @@ class Admin extends Controller
         return true;
     }
 
+    /** the function sets the value of the errorMessage variable to the error message passed
+     * @param {string} contains error information
+     */
     private function errorDuringValidation($errorMessage){
         $this->errorMessage = $errorMessage;
         //$this->serverError = true;
         $this->check = false;
     }
 
+    /** Function that checks the correctness of the email address
+     * @param {string} email address to be verified
+     * @return Returns boolean, email meets the conditions - true, else - false
+     */
     private function verifyEmail($email){
         $regex = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$/';
 
@@ -843,6 +888,10 @@ class Admin extends Controller
         else return false;
     }
 
+    /** Function that checks if the given name meets the conditions
+     * @param {string} represents the name
+     * @return Returns boolean, name meets the conditions - true, else - false
+     */
     private function verifyName($name){
         $regex  = '/^[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]+$/';
         if(preg_match($regex, $name)){
@@ -862,6 +911,9 @@ class Admin extends Controller
         else return false;
     }
 
+    /** The function removes the user from the database
+     * @param {int} is used to determine which user is to be removed from the database
+     */
     public function remove_user($id=NULL){
         $this->remove($id);
         header("Location:" . ROOT . "/admin/list_of_users");
@@ -871,6 +923,9 @@ class Admin extends Controller
     ////////////////////////////////////MANAGERS//////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /** Function that retrieves and displays a list of all registered content managers in the system
+     * 
+     */
     public function list_of_content_managers(){
 
         
@@ -898,12 +953,18 @@ class Admin extends Controller
         $this->view('admin/list_of_conent_managers', ['siteLinks'=>$siteLink,'usersArray'=>$result, 'rmpath'=>$rmUserPath, 'editpath'=>$editUserPath]);
     }
 
+    /** The function calls the add method with the arguments "add_manager" and "contentmanager"
+     * 
+     */
     public function add_manager(){
         $a = "add_manager";
         $b = "contentmanager";
         $this->add($a, $b);   
     }
 
+    /** function is intended for deleting a contentmanager account
+     * @param {int} ID of the contentmanager account to be deleted
+     */
     public function remove_manager($id=NULL){
         $this->remove($id);
         header("Location:" . ROOT . "/admin/list_of_conent_managers");
@@ -913,6 +974,9 @@ class Admin extends Controller
     ////////////////////////////////////ADMINS////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /** function responsible for displaying the list of administrators in the administration panel
+     * 
+     */
     public function list_of_administrators(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -948,12 +1012,19 @@ class Admin extends Controller
         $this->view('admin/list_of_administrators', ['siteLinks'=>$siteLink,'usersArray'=>$result, 'rmpath'=>$rmUserPath, 'editpath'=>$editUserPath, 'adminId'=>$adminId]);
     }
 
+    
+    /** a function that calls a method called add with two parameters "add_admin" and "admin" respectively
+     * 
+     */
     public function add_admin(){
         $a = "add_admin";
         $b = "admin";
         $this->add($a, $b);   
     }
 
+    /** function is responsible for removing the user with the administrator role from the database
+     * @param {int} admin ID to be deleted
+     */
     public function remove_admin($id=NULL){
         $this->remove($id);
         header("Location:" . ROOT . "/admin/list_of_administrators");
@@ -963,6 +1034,9 @@ class Admin extends Controller
     ////////////////////////////////////ATTRIBUTES////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /** the function allows the administrator to view the list of attributes in the application
+     * 
+     */
     public function list_of_attributes()
     {
         if(isset($_SESSION['loggedUser'])){
@@ -987,6 +1061,9 @@ class Admin extends Controller
         $this->view('admin/list_of_attributes', ['siteLinks'=>$siteLink,'attributesArray'=>$result, 'rmpath'=> $rmAttrPath, 'editpath'=> $editAttrPath]);
     }
 
+    /** function designed to edit the attribute with the given identifier
+     * @param {int} ID of the attribute to be edited, is NULL by default
+     */
     public function edit_attribute($id_a=NULL){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -1035,6 +1112,9 @@ class Admin extends Controller
         }
     }
 
+    /** function, that allows a user with the role of "admin" to delete an attribute from a database
+     * @param {int} ID of the attribute to be removed, is NULL by default
+     */
     public function remove_attribute($id_a=NULL){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -1057,6 +1137,9 @@ class Admin extends Controller
         header("Location:" . ROOT . "/admin/list_of_attributes");
     }
 
+    /** function that allows a user with the role of "admin" to delete an item from a database
+     * @param {int} ID of the item to be removed, is NULL by default
+     */
     public function remove_item($id_a=NULL){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -1083,6 +1166,9 @@ class Admin extends Controller
         header("Location:" . ROOT . "/admin/list_of_items");
     }
 
+    /** Function that allows a user with the role of "admin" to view a list of all orders in the system
+     * 
+     */
     public function list_of_orders(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -1148,7 +1234,9 @@ class Admin extends Controller
         $this->view('admin/list_of_orders', ['siteLinks'=>$siteLink, 'orders'=>$orders, 'orderItems'=>$OrderItems, 'orderpath'=>$orderpath]);
     }
 
-
+    /** function responsible for displaying order details from the database
+     * @param {int} The ID of the order whose details are to be displayed. If not specified, redirects to the admin home page
+     */
     public function orderview($order_id=NULL){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -1217,7 +1305,7 @@ class Admin extends Controller
     }
 
     /** Function that add attributes
-    * @author Ur_mum
+    *
     */
     public function add_attribute(){
         if(isset($_SESSION['loggedUser'])){
@@ -1290,6 +1378,9 @@ class Admin extends Controller
     ////////////////////////////////////CATALOGS//////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /** function that allows a user with the role of "admin" to add a new catalog in the system and associate it with items
+     * 
+     */
     public function add_catalog(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -1388,6 +1479,9 @@ class Admin extends Controller
         $this->view('admin/add_catalog_admin', ['siteLinks'=>$siteLink,'items'=>$items, 'msg_color' => $return_msg_color , 'msg' => $return_msg, 'catname' => $catname, 'itemcat'=> $itemstocat]);
     }
 
+    /** function that allows a user with the role of "admin" to view the list of catalogs
+     * 
+     */
     public function list_of_catalogs(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -1502,6 +1596,9 @@ class Admin extends Controller
         $this->view('admin/list_of_catalogs', ['siteLinks'=>$siteLink,'catalogsArray'=>$result, 'catalogsItems'=>$itemsInCat,'items'=>$items ,'rmpath'=> $rmCatPath]);
     }
 
+    /** function that allows a user with the role of "admin" to remove a catalog
+     * @param {int} ID of the catalog to be removed, is NULL by default
+     */
     public function remove_catalog($cid=NULL){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -1527,6 +1624,9 @@ class Admin extends Controller
 ////////////////////////////////////MANUFACTURERS/////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /** function that allows a user with the role of "admin" to add a new manufacturer
+     * 
+     */
     public function add_manufacturer(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -1578,6 +1678,9 @@ class Admin extends Controller
         }
     }
 
+    /** function that allows a user with the role of "admin" to add a country to the manufacturer
+     * 
+     */
     public function add_countries_to_manufacturer(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -1696,6 +1799,9 @@ class Admin extends Controller
         'msg' => $return_msg, 'manufacturername' => $manufacturername, 'selCountries'=> $selCountries, 'mnf_countries'=>$mnfCountries]);
     }
 
+    /** function that allows a user with the role of "admin" to view the list of manufacturers
+     * 
+     */
     public function list_of_manufacturers(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -1839,7 +1945,9 @@ class Admin extends Controller
 
     }
 
-
+    /** function that allows a user with the role of "admin" to remove a manufacturer
+     * @param {int} ID of the manufacturer to be removed, is NULL by default
+     */
     public function remove_manufacturer($id_manuf=NULL){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -1867,6 +1975,10 @@ class Admin extends Controller
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////ITEMS/////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /** function that allows a user with the role of "admin" to add a new item
+     * 
+     */
     public function add_item(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -2035,6 +2147,9 @@ class Admin extends Controller
         
     }
 
+    /** function that allows a user with the role of "admin" to edit the item
+     * @param {int} ID of the item to be edited
+     */
     public function edit_item($editId){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -2383,6 +2498,9 @@ class Admin extends Controller
         
     }
 
+    /** function that allows a user with the role of "admin" to view the list of items
+     * 
+     */
     public function list_of_items(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -2492,6 +2610,9 @@ class Admin extends Controller
         'editItemPath' => $editItemPath, 'removeItemPath' => $removeItemPath, 'historyItems' => $historyItems]);
     }
 
+    /** function that allows a user with the role of "admin" to view the list of uncategorized items
+     * 
+     */
     public function list_of_uncategorized_items(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -2564,6 +2685,9 @@ class Admin extends Controller
 ////////////////////////////////////CATEGORIES////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  
+    /** function that allows a user with the role of "admin" to add a new category
+     * 
+     */
     public function add_category(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -2617,7 +2741,9 @@ class Admin extends Controller
         }
     }
 
-
+    /** function that allows a user with the role of "admin" to view the list of categories
+     * 
+     */
     public function list_of_categories()
     {
         if(isset($_SESSION['loggedUser'])){
@@ -2641,7 +2767,9 @@ class Admin extends Controller
         $this->view('admin/list_of_categories', ['siteLinks'=>$siteLink,'categoriesArray'=>$result, 'rmpath'=> $rmCatPath, 'editpath'=> $editCatPath]);
     }
 
-
+    /** function that allows a user with the role of "admin" to edit the category
+     * @param {int} ID of the category to be edited
+     */
     public function edit_category($id_categ=NULL){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -2687,6 +2815,9 @@ class Admin extends Controller
         }
     }
 
+    /** function that allows a user with the role of "admin" to remove a category
+     * @param {int} ID of the category to be removed, is NULL by default
+     */
     public function remove_category($id_categ=NULL){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -2713,6 +2844,13 @@ class Admin extends Controller
     //////////////////////////SALES REPORT////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////
 
+    /** function that generates a sales report 
+     * @param {string} the earliest date to be taken into account when generating the report
+     * @param {string} the latest date to be taken into account when generating the report
+     * @return Returns float of the total number of items sold
+     * @return Returns float of the total earnings
+     * @return Returns array of associative arrays, each representing a sold item
+    */
     public function sales_report(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -2792,6 +2930,11 @@ class Admin extends Controller
         $this->view('admin/sales_report', ['siteLinks'=>$siteLink, 'amount'=>$amount, 'earnings'=>$earnings, 'selling'=> $selling]);
     }
 
+    /** function that allows an admin user to add a new shipping method
+     * @param {string} name of shipping method
+     * @param {float} price of shipping method
+     * @param {int} Indicates if the method is active or not, if checkbox is checked the value is 1 else value is 0
+     */
     public function add_shipping_method(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -2852,6 +2995,9 @@ class Admin extends Controller
         }
     }
 
+    /** function that allows an admin user to add a new payment method
+     * 
+     */
     public function list_of_shipping_methods(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -2889,6 +3035,9 @@ class Admin extends Controller
         'editpath' => $editMethPath,  'shippingOnlyActive' =>$shippingOnlyActive]);
     }
 
+    /** function that allows an admin user to edit an existing shipping method
+     *  @param {int} ID of the shipping method to be edited
+     */
     public function edit_shipping_method($id_m=NULL){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -2919,6 +3068,9 @@ class Admin extends Controller
         }
     }
 
+    /** function that allows an admin user to add a new payment method
+     * 
+     */
     public function add_payment_method(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -2975,6 +3127,10 @@ class Admin extends Controller
         }
     }
 
+    /** function allows the admin to list the payment methods
+     * @param {int} determines whether only active payment methods should be displayed
+     * @return Returns an array of query results from the database
+     */
     public function list_of_payment_methods(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -3010,6 +3166,9 @@ class Admin extends Controller
         'paymentOnlyActive' =>$paymentOnlyActive]);
     }
 
+    /** function that edits the payment method
+     * @param {int} ID of the payment method to be edited 
+     */
     public function edit_payment_method($id_p=NULL){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -3045,6 +3204,10 @@ class Admin extends Controller
     //////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////HOME PAGE///////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////// 
+    
+    /** function is used to edit the home page
+     * 
+     */
     public function edit_home(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -3117,6 +3280,10 @@ class Admin extends Controller
     //////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////INFO////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////// 
+    
+    /** function designed to edit page information
+     * 
+     */
     public function edit_informations(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -3165,6 +3332,9 @@ class Admin extends Controller
     //////////////////////////FOOTER//////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////
 
+    /** function used to edit the footer of the website
+     * 
+     */
     public function edit_footer(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "admin"){
@@ -3232,6 +3402,10 @@ class Admin extends Controller
         $this->view('admin/edit_footer', ['result' => $result, 'siteLinks'=>$siteLink]);
     }
 
+    /** private function that returns footer information from the database
+     * @param {PDO} an object representing a database connection
+     * @return Returns array, which contains footer information
+     */
     private function getFooter($db){
         if(isset($_SESSION['siteLink'])){
             $result = $_SESSION['siteLink'];
@@ -3246,7 +3420,9 @@ class Admin extends Controller
 
     
 
-
+    /** function responsible for logging out the user
+    * 
+    */
     public function logout(){
         unset($_SESSION['loggedUser']);
         header("Location:" . ROOT . "/login");
