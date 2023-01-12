@@ -83,12 +83,12 @@
                                 </a>
 
                                 <a type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm  tabBtn' 
-                                data-bs-toggle='collapse' data-bs-target='#row".$j."2' aria-expanded='false'>
+                                data-bs-toggle='collapse' data-bs-target='#row".$j."i2' aria-expanded='false'>
                                     <i class='bi bi-journals'></i>
                                 </a>
 
                                 <a type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm  tabBtn' 
-                                data-bs-toggle='collapse' data-bs-target='#row".$j."3' aria-expanded='false'>
+                                data-bs-toggle='collapse' data-bs-target='#row".$j."i3' aria-expanded='false'>
                                     <i class='bi bi-journal-richtext'></i>
                                 </a>
                             
@@ -128,7 +128,7 @@
                             </table>
                         </div>
 
-                        <div class='hidTab collapse' id='row".$j."2'>
+                        <div class='hidTab collapse' id='row".$j."i2'>
                             <table class='table table-active coltab m-0'>
                                 <thead>
                                     <tr>
@@ -147,7 +147,7 @@
                             </table>
                         </div>
 
-                        <div class='hidTab collapse' id='row".$j."3'>
+                        <div class='hidTab collapse' id='row".$j."i3'>
                             <table class='table table-active coltab m-0'>
                                 <thead>
                                     <tr>
