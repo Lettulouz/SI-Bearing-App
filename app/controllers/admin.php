@@ -48,7 +48,7 @@ class Admin extends Controller
             }
             $this->view('error_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
             $_SESSION['successOrErrorResponse'] = $path;
-            header("Refresh: 2; url=" . ROOT . "/admin/" . $path);
+            header("Refresh: 0.75; url=" . ROOT . "/admin/" . $path);
 
         }
         else header("Location:" . ROOT . "");

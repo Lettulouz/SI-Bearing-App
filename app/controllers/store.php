@@ -13,7 +13,7 @@ class Store extends Controller
                 $secondLine = "pomyślnie!";
             }
             $this->view('success_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
-            header("Refresh: 2; url=" . ROOT . "/store/" . $path);
+            header("Refresh: 0.75; url=" . ROOT . "/store/" . $path);
         }
         else header("Location:" . ROOT . "");
     }
@@ -390,7 +390,7 @@ class Store extends Controller
             }
          
             $numberOfItems = $db->prepare($query);
-
+            
             if (isset($_POST['checkBoxVarAttributes']) && isset($_POST['arrayOfAttrVal'])) 
             {
                 $k=0;
@@ -414,9 +414,12 @@ class Store extends Controller
             $numberOfItems->bindParam(':search',$search);
 
             $numberOfItems -> execute();
-            $numberOfItems = $numberOfItems->fetch(PDO::FETCH_ASSOC);
+            $numberOfItems = $numberOfItems->fetchAll(PDO::FETCH_ASSOC);
+
+            
+
             if(!empty($numberOfItems))
-                $numberOfItems = $numberOfItems['c'];
+                $numberOfItems = sizeof($numberOfItems);
             if(!empty($numberOfItems))
                 $numberOfPages = intdiv($numberOfItems, 32) + 1;
         
@@ -538,13 +541,14 @@ class Store extends Controller
             $numberOfItems->bindParam(':search',$search);
 
             $numberOfItems -> execute();
-            $numberOfItems = $numberOfItems->fetch(PDO::FETCH_ASSOC);
+            $numberOfItems = $numberOfItems->fetchAll(PDO::FETCH_ASSOC);
             if(!empty($numberOfItems))
-                $numberOfItems = $numberOfItems['c'];
+                $numberOfItems = sizeof($numberOfItems);
             if(!empty($numberOfItems))
                 $numberOfPages = intdiv($numberOfItems, 32) + 1;
         }
-        
+
+       
         $this->view('store/index', ['itemsArray'=>$itemsArr, 'search' => $search, 'limit1' => $page, 
             'manufacturersArray' => $manufacturers, 'last'=> $endofitems,
             'test' => $id_manufacturer, 'siteFooter' => $siteFooter, 'isLogged' => $isLogged, 

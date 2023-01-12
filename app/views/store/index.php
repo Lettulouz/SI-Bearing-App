@@ -4,7 +4,7 @@
 <form method="POST" id="submitFilterSearchSort" action="">
     <input type="submit" style="display:none;" id="searchFormSubmit" name="searchFormSubmit" />
     <input type="hidden" name="search" id="searchField" />
-    <input type="hidden" name="page" id="page" />
+    <input type="hidden" name="page" id="page" max="<?= $data['numberOfPages'] ?>"/>
 </form>
 <li>
     <label class="text-muted small fw-bold text-uppercase text-decoration-none">Cena</label>
@@ -210,7 +210,7 @@
                     <button type='button' name='lft' class='btn d-inline shadow-none' style="margin-right:3px; margin-top:-2px; border:0px">
                         <i class="bi bi-arrow-left-circle" style="font-size:33px"></i>
                     </button>
-                    <input type='number' style='text-align:center; box-shadow:none; font-size:15px;max-width:75px;' id='pageInside' class='d-inline form-control px-0' value='<?= isset($data['limit1']) ? $data['limit1'] : 1 ?>' name='limit1' form='submitFilterSearchSort' />
+                    <input type='number' style='text-align:center; box-shadow:none; font-size:15px;max-width:75px;' max="<?= $data['numberOfPages'] ?>" id='pageInside1' class='d-inline form-control px-0 pageInside' value='<?= isset($data['limit1']) ? $data['limit1'] : 1 ?>' name='limit1' form='submitFilterSearchSort' />
 
                     <label class="form-control d-inline" style="border:0px;">z <?= $data['numberOfPages'] ?></label>
                     <button type='button' name='rgt' class='<?= $data['last'] == 1 ? 'btn disabled;' : 'btn ' ?> d-inline shadow-none justify-content-end' style="margin-left:-12px; margin-top:-2px; border:0px ">
@@ -282,7 +282,7 @@
                     <button type='button' name='lft' class='btn d-inline shadow-none' style="margin-right:3px; margin-top:-2px; border:0px">
                         <i class="bi bi-arrow-left-circle" style="font-size:33px"></i>
                     </button>
-                    <input type='number' style='text-align:center; box-shadow:none; font-size:15px;max-width:75px;' id='pageInside' class='d-inline form-control px-0' value='<?= isset($data['limit1']) ? $data['limit1'] : 1 ?>' name='limit1' form='submitFilterSearchSort' />
+                    <input type='number' style='text-align:center; box-shadow:none; font-size:15px;max-width:75px;' id='pageInside2' class='d-inline form-control px-0 pageInside' max="<?= $data['numberOfPages'] ?>" value='<?= isset($data['limit1']) ? $data['limit1'] : 1 ?>' name='limit1' form='submitFilterSearchSort' />
 
                     <label class="form-control d-inline" style="border:0px;">z <?= $data['numberOfPages'] ?></label>
                     <button type='button' name='rgt' class='<?= $data['last'] == 1 ? 'btn disabled;' : 'btn ' ?> d-inline shadow-none justify-content-end' style="margin-left:-12px; margin-top:-2px; border:0px ">
@@ -308,11 +308,12 @@
         });
 
 
-        if ($('#pageInside').val() <= 1) {
+        if ($('.pageInside').val() <= 1) {
             $('[name="lft"]').addClass('btn btn-outline-secondary disabled');
         }
-        if ($('#pageInside').val() >= $('#numberOfPages').val()) {
+        if ($('.pageInside').val() >= $('#numberOfPages').val()) {
             $('[name="rgt"]').addClass('btn btn-outline-secondary disabled');
+            $('.pageInside').val($('#numberOfPages').val());
         }
         temp = $('#searchBox').val();
 
@@ -410,16 +411,16 @@
     });
 
     $('[name="rgt"]').click(function() {
-        a = $('#pageInside').val();
-        $('#pageInside').val(++a);
-        $('#page').val($('#pageInside').val());
+        a = $('.pageInside').val();
+        $('.pageInside').val(++a);
+        $('#page').val($('.pageInside').val());
         $('#submitFilterSearchSort').submit();
     });
 
     $('[name="lft"]').click(function() {
-        a = $('#pageInside').val();
-        $('#pageInside').val(--a);
-        $('#page').val($('#pageInside').val());
+        a = $('.pageInside').val();
+        $('.pageInside').val(--a);
+        $('#page').val($('.pageInside').val());
         $('#submitFilterSearchSort').submit();
     });
 
@@ -441,7 +442,7 @@
         $('.attrpart').trigger('change');
         //validationCheckboxForm();
         $('#page').val(1);
-        $('#pageInside').val(1);
+        $('.pageInside').val(1);
         $('#submitFilterSearchSort').submit();
     });
 
@@ -451,7 +452,7 @@
         $('#pricepartend').val('');
         $('.checkboxvar').removeAttr('checked');
         $('#page').val(1);
-        $('#pageInside').val(1);
+        $('.pageInside').val(1);
         $('#submitFilterSearchSort').submit();
     });
 
@@ -465,15 +466,18 @@
     $('.sub').click(function() {
         if (temp != $('#searchRemote1').val()) {
             $('#page').val(1);
-            $('#pageInside').val(1);
+            $('.pageInside').val(1);
         } else if (temp != $('#searchRemote2').val()) {
             $('#page').val(1);
-            $('#pageInside').val(1);
+            $('.pageInside').val(1);
         }
     });
 
-    $('#pageInside').change(function() {
-        $('#page').val($('#pageInside').val());
+    $('.pageInside').change(function() {
+        if ($('.pageInside').val() >= $('#numberOfPages').val()) {
+            $('.pageInside').val($('#numberOfPages').val());
+        }
+        $('#page').val($('.pageInside').val());
         $('#submitFilterSearchSort').submit();
     });
 
