@@ -701,30 +701,35 @@ class Store extends Controller
 
         if(!empty($_POST['payment'])){
             if(!empty($_POST['country'])){
-            $query="INSERT INTO orders (id_user, id_shippingmethod, id_paymentmethod, orderstate, trackingnumber, 
-            ordercountry, ordervoivodeship, ordercity, orderpostcode, orderstreet, orderhomenumber, 
-            orderphonenumber, ordername, orderlastname, price)
-            VALUES ('".$_SESSION['idLoggedUser']."', '".$_POST['delivery']."', '".$_POST['payment']."',
-             'Do akceptacji', '123456789', :country, :voivodeship, :city, :postcode, :street, :homeNumber, :phoneNumber, 
-             :orderName, :orderLastname, '".$_SESSION['totalOrderPrice']."')";
-            
-            $order = $db->prepare($query);
-            $order->bindParam(':country', $_POST['country']);
-            $order->bindParam(':voivodeship', $_POST['voivoden']);
-            $order->bindParam(':city', $_POST['city']);
-            $order->bindParam(':postcode', $_POST['postcode']);
-            $order->bindParam(':street', $_POST['street']);
-            $order->bindParam(':homeNumber', $_POST['housenumber']);
-            $order->bindParam(':phoneNumber', $_POST['phonenumber']);
-            $order->bindParam(':orderName', $_POST['name']);
-            $order->bindParam(':orderLastname', $_POST['surname']);
-            $order -> execute();
+                $query="INSERT INTO orders (id_user, id_shippingmethod, id_paymentmethod, orderstate, trackingnumber, 
+                ordercountry, ordervoivodeship, ordercity, orderpostcode, orderstreet, orderhomenumber, 
+                orderphonenumber, ordername, orderlastname, price)
+                VALUES ('".$_SESSION['idLoggedUser']."', '".$_POST['delivery']."', '".$_POST['payment']."',
+                'Do akceptacji', '123456789', :country, :voivodeship, :city, :postcode, :street, :homeNumber, :phoneNumber, 
+                :orderName, :orderLastname, '".$_SESSION['totalOrderPrice']."')";
+                
+                $order = $db->prepare($query);
+                $order->bindParam(':country', $_POST['country']);
+                $order->bindParam(':voivodeship', $_POST['voivoden']);
+                $order->bindParam(':city', $_POST['city']);
+                $order->bindParam(':postcode', $_POST['postcode']);
+                $order->bindParam(':street', $_POST['street']);
+                $order->bindParam(':homeNumber', $_POST['housenumber']);
+                $order->bindParam(':phoneNumber', $_POST['phonenumber']);
+                $order->bindParam(':orderName', $_POST['name']);
+                $order->bindParam(':orderLastname', $_POST['surname']);
+                $order -> execute();
             }
             else{
-                $query="INSERT INTO orders (id_user, id_shippingmethod, id_paymentmethod, orderstate, price)
+                $query="INSERT INTO orders (id_user, id_shippingmethod, id_paymentmethod, orderstate, orderphonenumber, ordername, orderlastname, price)
                 VALUES ('".$_SESSION['idLoggedUser']."', '".$_POST['delivery']."', '".$_POST['payment']."',
-                 'Zaraz Bedzie', '".$_SESSION['totalOrderPrice']."')";
-                $db->query($query);
+                 'Do akceptacji', :phoneNumber, :orderName, :orderLastname,'".$_SESSION['totalOrderPrice']."')";
+                 
+                $order = $db->prepare($query);
+                $order->bindParam(':phoneNumber', $_POST['phonenumber']);
+                $order->bindParam(':orderName', $_POST['name']);
+                $order->bindParam(':orderLastname', $_POST['surname']);
+                $order -> execute();
             }
 
             $query="SELECT id FROM orders ORDER BY id DESC LIMIT 1";
