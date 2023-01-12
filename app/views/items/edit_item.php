@@ -186,8 +186,7 @@
         possibleOptions.push(id.name);
         possibleIds.push(id.id);
     });
-    possibleOptions.sort();
-    possibleIds.sort();
+
     var alreadyUsed = [];
     var filled = $(".selectattr");
     var lengthOfFilled = filled.length;
@@ -204,7 +203,7 @@
         $('#manufacturer').trigger('change');
         $('#idOfLastAttr').val(attrNum2);
         $('#idOfLastDesc').val(descNum);
-        updateAttrList();
+       
 
         for(var i=1; i<=attrNum2; i++){  
             inputName = '#attribute_name' + i;  
@@ -269,6 +268,7 @@
             }
             updateAttrList();
             $('#idOfLastAttr').val(attrNum2);
+            console.log(alreadyUsed)
         });
 
         $(document).on('click', '.remove_attr_btn', function(e){ 
@@ -444,7 +444,7 @@
             $("#itemSubmit").click();
         });
 
-
+        updateAttrList();
         countDesc();
         
 	});
@@ -479,6 +479,7 @@
     }
 
     function updateAttrList(){
+        alreadyUsed=[];
         let tempRMV = $("#show_attr").find("select");  
         for(var i=1;i<=tempRMV.length;i++){
             var input = '#' + $(tempRMV[i-1]).attr('id');

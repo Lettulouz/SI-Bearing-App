@@ -150,7 +150,24 @@ input.form-check-input{
   height : 20px;
 }
 
+.offcanvas-body::-webkit-scrollbar {
+  width: 10px;
+}
 
+/* Track */
+.offcanvas-body::-webkit-scrollbar-track {
+  background: #F8F9FA; 
+}
+ 
+/* Handle */
+.offcanvas-body::-webkit-scrollbar-thumb {
+  background: #F0F0F0; 
+}
+
+/* Handle on hover */
+.offcanvas-body::-webkit-scrollbar-thumb:hover {
+  background: #ebeaea; 
+}
 
 
 
