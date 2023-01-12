@@ -28,7 +28,7 @@
                   foreach($items as $j => $item) 
                   {
                       $imagePath = APPPATH . "/resources/itemsPhotos/[" . $item['itemID'] . "].png";
-                      $imagePathCheck = RESOURCEPATH . "/[" . $item['itemID'] . "].png";
+                      $imagePathCheck = RESOURCEPATH . "/itemsPhotos/[" . $item['itemID'] . "].png";
                       if(!file_exists($imagePathCheck)){
                           $imagePath = APPPATH . "/resources/itemsPhotos/brak_zdjecia.png";
                       }
@@ -81,13 +81,7 @@
             <div class="row">
               <div class="col-lg-6">
 
-              <fieldset id="cardPayment"></fieldset>
-                
-              <input type='hidden' id='totalOrderPriceH' value ='<?php echo $_SESSION['totalOrderPrice'] ?>'>
-              <input type='hidden' id='paymentPriceH' value ='0'>
-
-                
-                <fieldset id="paymentMethod"></fieldset>
+              <h3 class="h6 mt-2">Płatność i dostawa</h3>
 
                   <div class='row'>
                           <div class="col-12 p-1">
@@ -100,6 +94,14 @@
                             </select>
                           </div>
                   </div>
+
+                  <fieldset id="cardPayment"></fieldset>
+                
+              <input type='hidden' id='totalOrderPriceH' value ='<?php echo $_SESSION['totalOrderPrice'] ?>'>
+              <input type='hidden' id='paymentPriceH' value ='0'>
+
+                
+                <fieldset id="paymentMethod"></fieldset>
               
               </div>
               <div class="col-lg-6">
@@ -135,7 +137,8 @@
       }
       for(var paymentMethod of paymentMethods){
         if($(this).val() == paymentMethod['methodId'] && paymentMethod['typeName'] == 'cash'){
-          html = $(`<div class=\"row\" >
+          html = $(`
+                  <div class=\"row\" >
                     <div class=\"col-12 p-1\" >
                       <select class=\"form-select form-select-sm delivery\" name=\"delivery\" >
                         <option> Dostawa </option>
@@ -151,7 +154,16 @@
           $("#paymentMethod").append(html);
         }
         else if($(this).val() == paymentMethod['methodId'] && paymentMethod['typeName'] == 'card'){
-          html = $(`<h3 class="h6">Płatność i dostawa</h3>
+          html = $(`
+                  
+                  <div class=\"row\" >
+                    <div class=\"col-12 p-1\" >
+                      <select class=\"form-select form-select-sm delivery\" name=\"delivery\" >
+                        <option value=\"1\" > Dostawa </option>
+                        ${options}
+                      </select>
+                    </div>
+                  </div>
                   <div class='row'>
                       <div class="col-12 p-1">
                         <input class="form-control form-control-sm" type="text" name="cardname" placeholder="Właściciel karty" required>
@@ -171,14 +183,6 @@
                           <div class="col-12 col-md-6 p-1">
                             <input class="form-control form-control-sm" type="text" name="cvv" pattern='[0-9]{3, 4}' placeholder="CVV" min-length="3" required>
                           </div>
-                  </div>
-                  <div class=\"row\" >
-                    <div class=\"col-12 p-1\" >
-                      <select class=\"form-select form-select-sm delivery\" name=\"delivery\" >
-                        <option value=\"1\" > Dostawa </option>
-                        ${options}
-                      </select>
-                    </div>
                   </div>`
                 );
 
@@ -189,7 +193,8 @@
           $("#paymentMethod").append(html);
         }
         else if($(this).val() == paymentMethod['methodId'] && paymentMethod['typeName'] == 'external'){
-          html = $(`<div class=\"row\" >
+          html = $(`
+                  <div class=\"row\" >
                     <div class=\"col-12 p-1\" >
                       <select class=\"form-select form-select-sm delivery\" name=\"delivery\" >
                         <option> Dostawa </option>
@@ -215,8 +220,8 @@
       var options = '';
       for(var shippingMethod of shippingMethods){
         if($(this).val() == shippingMethod['id'] && !shippingMethod['needaddress']){
-          html = $(`<div class="col-3 p-1 ">
-              <input name='orderSubmit' type="submit" id="orderSubmit"  class="btn btn-primary btn-sm w-100">
+          html = $(`<div class="col-3 p-1 mt-5 ms-5">
+              <input name='orderSubmit' type="submit" id="orderSubmit"  class="btn btn-primary btn-sm w-100 mt-2 ms-5">
             </div>`
           )
           
