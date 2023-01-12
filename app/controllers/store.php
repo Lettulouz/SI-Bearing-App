@@ -224,7 +224,7 @@ class Store extends Controller
         
         $attrQuery = ' ';
 
-        print_r($attributes);
+
         if (!empty($_POST['checkBoxVarAttributes']) && !empty($_POST['arrayOfAttrVal'])) 
         {
             $tableAttr = $_POST['checkBoxVarAttributes']; 
@@ -268,7 +268,7 @@ class Store extends Controller
             }
         }
         $itemsArr = array();
-        if(!empty($attributes)){
+        if(!empty($manufacturers) && !empty($categories)){
             if($querySwitch){
                 $query="SELECT i.name, i.id as itemID, price, m.name as 'name2', i.amount, i.price as itemPrice, i.amountComma as isDouble
                 FROM items i 
@@ -283,6 +283,7 @@ class Store extends Controller
                 WHERE i.name LIKE CONCAT('%', :search, '%')
                 AND i.amount>0
                 AND i.active=1
+                AND m.active=1
                 AND m.id IN ($id_manufacturer)
                 AND categ.id IN ($id_category) "
                 . $querypricestartend  
@@ -304,6 +305,7 @@ class Store extends Controller
                 WHERE i.name LIKE CONCAT('%', :search, '%')
                 AND i.amount>0
                 AND i.active=1
+                AND m.active=1
                 AND m.id IN ($id_manufacturer)
                 AND categ.id IN ($id_category)
                 AND catal.id IN ($id_catalog) "
@@ -313,7 +315,7 @@ class Store extends Controller
                 . $sortValueQuery .
                 " LIMIT :limit1, 32";
             }
-
+            
             $itemsArr = $db->prepare($query);
             
             if (isset($_POST['checkBoxVarAttributes']) && isset($_POST['arrayOfAttrVal'])) 
@@ -357,6 +359,7 @@ class Store extends Controller
                 WHERE i.name LIKE CONCAT('%', :search, '%')
                 AND i.amount>0
                 AND i.active=1
+                AND m.active=1
                 AND m.id IN ($id_manufacturer)
                 AND categ.id IN ($id_category) " 
                 . $querypricestartend 
@@ -377,6 +380,7 @@ class Store extends Controller
                 WHERE i.name LIKE CONCAT('%', :search, '%')
                 AND i.amount>0
                 AND i.active=1
+                AND m.active=1
                 AND m.id IN ($id_manufacturer)
                 AND categ.id IN ($id_category)
                 AND catal.id IN ($id_catalog) "
@@ -416,6 +420,129 @@ class Store extends Controller
             if(!empty($numberOfItems))
                 $numberOfPages = intdiv($numberOfItems, 32) + 1;
         
+        }else{
+            if($querySwitch){
+                $query="SELECT i.name, i.id as itemID, price as 'name2', i.amount, i.price as itemPrice, i.amountComma as isDouble
+                FROM items i 
+                LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
+                LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
+                LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
+                LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
+                WHERE i.name LIKE CONCAT('%', :search, '%')
+                AND i.amount>0
+                AND i.active=1 "
+                . $querypricestartend  
+                . $attrQuery .
+                " GROUP BY i.id"
+                . $sortValueQuery .
+                " LIMIT :limit1, 32";
+            }else{
+                $query="SELECT i.name, i.id as itemID, price as 'name2', i.amount, i.price as itemPrice, i.amountComma as isDouble
+                FROM items i 
+                LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
+                LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
+                LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
+                LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
+                WHERE i.name LIKE CONCAT('%', :search, '%')
+                AND i.amount>0
+                AND i.active=1
+                AND catal.id IN ($id_catalog) "
+                . $querypricestartend 
+                . $attrQuery .
+                " GROUP BY i.id"
+                . $sortValueQuery .
+                " LIMIT :limit1, 32";
+            }
+
+            $itemsArr = $db->prepare($query);
+            
+            if (isset($_POST['checkBoxVarAttributes']) && isset($_POST['arrayOfAttrVal'])) 
+            {
+                $k=0;
+                for($j = 0; $j < count($attributes); $j++)
+                {
+                    if(!isset($tableAttr[$k]))
+                        break;
+                    if($tableAttr[$k]==$attributes[$j]['id']){
+                        if($isItRange[$j] == 0){
+                            $attrIdLoc = $tableAttr[$k];
+                            $tblAttrValue = $tableAttrValues[$k];
+                            if($tblAttrValue != ""){
+                                $itemsArr->bindParam(':tblAttrValue' . $attrIdLoc,$tblAttrValue);
+                            }
+                        }
+                        $k++; 
+                    }
+                }
+            }
+
+            $itemsArr->bindParam(':limit1',$limit1);
+            $itemsArr->bindParam(':search',$search);
+            
+            $itemsArr -> execute();
+    
+            $itemsArr = $itemsArr->fetchAll(PDO::FETCH_ASSOC);
+    
+            if($querySwitch){
+                $query="SELECT COUNT(i.id) as c
+                FROM items i 
+                LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
+                LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
+                LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
+                LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
+                WHERE i.name LIKE CONCAT('%', :search, '%')
+                AND i.amount>0
+                AND i.active=1 " 
+                . $querypricestartend 
+                . $attrQuery .
+                " GROUP BY i.id"
+                . $sortValueQuery;
+            }else{
+                $query="SELECT COUNT(i.id) as c
+                FROM items i 
+                LEFT OUTER JOIN attributesofitems aoi ON i.id = aoi.id_item 
+                LEFT OUTER JOIN attributes attr ON aoi.id_attribute = attr.id 
+                LEFT OUTER JOIN itemsincatalog iic ON i.id = iic.id_item
+                LEFT OUTER JOIN catalog catal ON iic.id_catalog = catal.id
+                WHERE i.name LIKE CONCAT('%', :search, '%')
+                AND i.amount>0
+                AND i.active=1
+                AND catal.id IN ($id_catalog) "
+                . $attrQuery .
+                " GROUP BY i.id"
+                . $sortValueQuery;
+            }
+         
+            $numberOfItems = $db->prepare($query);
+
+            if (isset($_POST['checkBoxVarAttributes']) && isset($_POST['arrayOfAttrVal'])) 
+            {
+                $k=0;
+                for($j = 0; $j < count($attributes); $j++)
+                {
+                    if(!isset($tableAttr[$k]))
+                        break;
+                    if($tableAttr[$k]==$attributes[$j]['id']){
+                        if($isItRange[$j] == 0){
+                            $attrIdLoc = $tableAttr[$k];
+                            $tblAttrValue = $tableAttrValues[$k];
+                            if($tblAttrValue != ""){
+                                $numberOfItems->bindParam(':tblAttrValue' . $attrIdLoc,$tblAttrValue);
+                            }
+                        }
+                        $k++; 
+                    }
+                }
+            }
+
+            $numberOfItems->bindParam(':search',$search);
+
+            $numberOfItems -> execute();
+            $numberOfItems = $numberOfItems->fetch(PDO::FETCH_ASSOC);
+            if(!empty($numberOfItems))
+                $numberOfItems = $numberOfItems['c'];
+            if(!empty($numberOfItems))
+                $numberOfPages = intdiv($numberOfItems, 32) + 1;
         }
         
         $this->view('store/index', ['itemsArray'=>$itemsArr, 'search' => $search, 'limit1' => $page, 
@@ -443,7 +570,7 @@ class Store extends Controller
                 INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
                 INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
                 WHERE i.id IN (".rtrim($_COOKIE['itemsInCart'],',').")
-                AND active=1";
+                AND i.active=1 AND m.active=1";
 
 
             $itemsInCart = $db->query($query);
@@ -484,7 +611,11 @@ class Store extends Controller
     /** This function show detalis about item from the database
      * @param {int} is the id of item
      */
-    public function item($id){
+    public function item($id=NULL){
+        if($id==NULL){
+            header("Location:" . ROOT . "/store");
+            return;
+        }
         isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
         require_once dirname(__FILE__,2) . '/core/database.php';
@@ -493,10 +624,9 @@ class Store extends Controller
 
         $query="SELECT i.price as price, i.name as name, i.amount as amount, m.name as manname, i.amountComma as isDouble
         FROM items i
-        INNER JOIN manufacturercountries mc on i.id_manufacturercountry-mc.id_manufacturer
-        INNER JOIN manufacturers m on mc.id_manufacturer=m.id
+        INNER JOIN manufacturercountries mc on i.id_manufacturercountry=mc.id
+        INNER JOIN manufacturers m on m.id=mc.id_manufacturer
         WHERE i.id=:id";
-
 
         $itemParams = $db->prepare($query);
         $itemParams -> bindParam(':id',$id);

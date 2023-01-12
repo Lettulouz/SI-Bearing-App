@@ -25,7 +25,7 @@ class Admin extends Controller
                 $secondLine = "pomyślnie!";
             }
             $this->view('success_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
-            header("Refresh: 2; url=" . ROOT . "/admin/" . $path);
+            header("Refresh: 0.75; url=" . ROOT . "/admin/" . $path);
         }
         else header("Location:" . ROOT . "");
     }
@@ -1015,7 +1015,7 @@ class Admin extends Controller
                 }else{
                     $query = "UPDATE `attributes` 
                         SET name = '$tekst2',
-                        unit='$attributeUnit',
+                        unit='$attributeUnit'
                         WHERE id = '$id_a';";
                     $result = $db->prepare($query);
                     $result->execute();
@@ -1365,7 +1365,8 @@ class Admin extends Controller
         c.name AS  mnfCountry FROM items i 
         INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
         INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-        INNER JOIN countries c ON mc.id_country=c.id";
+        INNER JOIN countries c ON mc.id_country=c.id
+        WHERE i.active=1 AND m.active=1";
         $result = $db->prepare($query);
         $result->execute();
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -1444,7 +1445,8 @@ class Admin extends Controller
         FROM items i
         INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
         INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-        INNER JOIN countries c ON mc.id_country=c.id";
+        INNER JOIN countries c ON mc.id_country=c.id 
+        WHERE i.active=1 AND m.active=1";
         $resultIt = $db->prepare($queryIt);
         $resultIt->execute();
         $items = $resultIt->fetchAll(PDO::FETCH_ASSOC);
@@ -1638,7 +1640,7 @@ class Admin extends Controller
         $result->execute();
         $countries = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $query="SELECT * FROM `manufacturers`";
+        $query="SELECT * FROM `manufacturers` WHERE active=1";
         $result = $db->query($query);
         $manufacturers = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -1671,13 +1673,27 @@ class Admin extends Controller
             header("Location:" . ROOT . "/login");
         }
 
+        $manufacturersOnlyActive = 1;
+        if(isset($_POST['onlyActiveSubmit'])){
+            if(!isset($_POST['onlyActive']))
+                $manufacturersOnlyActive = 0;
+        }
+
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
-
-        $query="SELECT m.id as m_id, m.name as mnf,COUNT(mc.id_manufacturer) as mnfctsam 
-        FROM manufacturers m 
-        LEFT JOIN manufacturercountries mc ON m.id=mc.id_manufacturer 
-        GROUP BY m.id";
+        if($manufacturersOnlyActive==1){
+            $query="SELECT m.id as m_id, m.name as mnf,COUNT(mc.id_manufacturer) as mnfctsam , m.active
+            FROM manufacturers m 
+            LEFT JOIN manufacturercountries mc ON m.id=mc.id_manufacturer
+            WHERE m.active=1 
+            GROUP BY m.id";
+        }else{
+            $query="SELECT m.id as m_id, m.name as mnf,COUNT(mc.id_manufacturer) as mnfctsam, m.active 
+            FROM manufacturers m 
+            LEFT JOIN manufacturercountries mc ON m.id=mc.id_manufacturer
+            WHERE m.active=0 
+            GROUP BY m.id";
+        }
         $result = $db->prepare($query);
         $result->execute();
         $manufacturers = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -1705,9 +1721,10 @@ class Admin extends Controller
             isset($_POST['countrymnf']) ? $countrymnf=$_POST['countrymnf'] : $countrymnf=array();
             isset($_POST['mnfname']) ? $mnfname=$_POST['mnfname'] : $mnfname="";
             isset($_POST['mnfid']) ? $mnfid=$_POST['mnfid'] : $mnfid="";
+            isset($_POST['isActive']) ? $isActive=1 : $isActive=0;
 
             if(!empty($_POST['mnfname'])){
-                $query="UPDATE manufacturers SET name=:mnfname WHERE id=:mnfid";
+                $query="UPDATE manufacturers SET name=:mnfname, active=$isActive WHERE id=:mnfid";
                 $result = $db->prepare($query);
                 $result->bindParam(':mnfid', $mnfid);
                 $result->bindParam(':mnfname', $mnfname);
@@ -1769,10 +1786,9 @@ class Admin extends Controller
         }
 
         $rmPath=ROOT."/admin/remove_manufacturer";
-        //$editPath=ROOT."/admin/edit_category";
 
         $this->view('admin/list_of_manufacturers',['siteLinks'=>$siteLink,'mnfArray'=> $manufacturers, 'mnfCts'=> $mnfCountries,
-         'rmpath'=> $rmPath, 'countries'=>$resultCnt]);
+         'rmpath'=> $rmPath, 'countries'=>$resultCnt, 'manufacturersOnlyActive' => $manufacturersOnlyActive]);
 
     }
 
@@ -1792,7 +1808,7 @@ class Admin extends Controller
 
         if(isset($id_manuf)){
             require_once dirname(__FILE__,2) . '/core/database.php';
-            $query="DELETE FROM manufacturers WHERE id=:id_manuf";
+            $query="UPDATE manufacturers SET active=0 WHERE id=:id_manuf";
             $result = $db->prepare($query);
             $result->bindParam(':id_manuf', $id_manuf);
             $result->execute();
@@ -1828,8 +1844,8 @@ class Admin extends Controller
                 $itemManufacturer = $_POST['manufacturer'];
                 $selCategories = $_POST['selCategories'];
 
-                $query="INSERT INTO items (id_manufacturercountry, name, amount, price) 
-                VALUES (:id_manufacturercountry, :item_name, :item_quantity, :item_price)";
+                $query="INSERT INTO items (id_manufacturercountry, name, amount, price, active) 
+                VALUES (:id_manufacturercountry, :item_name, :item_quantity, :item_price, 1)";
 
                 $result = $db->prepare($query);
                 $result->bindParam(':id_manufacturercountry',$itemManufacturer);
@@ -1938,7 +1954,8 @@ class Admin extends Controller
         $query="SELECT mc.id as id, m.name as mname,c.name as cname
         FROM manufacturercountries mc 
         INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-        INNER JOIN countries c ON mc.id_country=c.id";
+        INNER JOIN countries c ON mc.id_country=c.id
+        WHERE m.active=1";
         $result = $db->prepare($query);
         $result->execute();
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -2224,7 +2241,8 @@ class Admin extends Controller
         $query="SELECT mc.id as id, m.name as mname,c.name as cname
         FROM manufacturercountries mc 
         INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-        INNER JOIN countries c ON mc.id_country=c.id";
+        INNER JOIN countries c ON mc.id_country=c.id 
+        WHERE m.active=1";
         $result = $db->prepare($query);
         $result->execute();
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -2319,7 +2337,9 @@ class Admin extends Controller
             FROM items i 
                 INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
                 INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-                INNER JOIN countries c ON mc.id_country=c.id WHERE i.active=1";
+                INNER JOIN categoriesofitem coi ON i.id=coi.id_item
+                INNER JOIN categories cat ON cat.id=coi.id_category
+                INNER JOIN countries c ON mc.id_country=c.id WHERE i.active=1 AND m.active=1";
             $result = $db->query($query);
             $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -2346,7 +2366,7 @@ class Admin extends Controller
             FROM items i 
                 INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
                 INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-                INNER JOIN countries c ON mc.id_country=c.id WHERE i.active=0";
+                INNER JOIN countries c ON mc.id_country=c.id WHERE i.active=0 OR m.active=0";
             $result = $db->query($query);
             $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -2428,7 +2448,8 @@ class Admin extends Controller
             INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
             INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
             INNER JOIN countries c ON mc.id_country=c.id
-            WHERE id_category IS NULL";
+            WHERE id_category IS NULL
+            AND i.active=1 AND m.active=1";
         $result = $db->query($query);
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -2437,13 +2458,15 @@ class Admin extends Controller
         FROM items i 
         INNER JOIN itemsincatalog ic ON i.id=ic.id_item
         INNER JOIN catalog c ON ic.id_catalog=c.id
-        WHERE i.id=:iid";
+        WHERE i.id=:iid
+        AND i.active=1";
 
         $queryAttr="SELECT a.name AS attrname, ai.value AS aval
         FROM items i 
         INNER JOIN attributesofitems ai ON i.id=ai.id_item
         INNER JOIN attributes a ON ai.id_attribute=a.id
-        WHERE i.id=:iid";
+        WHERE i.id=:iid
+        AND i.active=1";
 
         $catalogArray=array();
         $attrArray=array();
@@ -2660,7 +2683,7 @@ class Admin extends Controller
                 $amount=0;
             }
 
-            $query="SELECT SUM(iio.amount*price) FROM itemsinorder iio
+            $query="SELECT SUM(iio.amount*i.price) FROM itemsinorder iio
             INNER JOIN orders o on o.id=iio.id_order
             INNER JOIN items i on i.id=iio.id_item
             WHERE orderdate BETWEEN :dateFrom AND :dateTo";
@@ -2669,7 +2692,7 @@ class Admin extends Controller
             $result->bindParam(':dateTo', $_POST['dateTo']);
             $result->execute();
             $earnings=$result->fetchAll(PDO::FETCH_ASSOC);
-            $earnings= $earnings[0]['SUM(iio.amount*price)'];
+            $earnings= $earnings[0]['SUM(iio.amount*i.price)'];
             if(empty( $earnings)){
                 $earnings=0;
             }
@@ -2752,10 +2775,10 @@ class Admin extends Controller
                 VALUES ('$methodName', '$methodPrice', '$needAddress', '$methodActive');";
                 $result = $db->prepare($query);
                 $result->execute();
-                $_SESSION['success_page'] = "shipping_method";
+                $_SESSION['success_page'] = "add_shipping_method";
                 header("Location:" . ROOT . "/admin/success_page/1");      
             }else{
-                $_SESSION['error_page'] = "shipping_method";
+                $_SESSION['error_page'] = "add_shipping_method";
                 header("Location:" . ROOT . "/admin/error_page/1");
             }
         }else{
@@ -2788,7 +2811,7 @@ class Admin extends Controller
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }else{
-            $query="SELECT id, name, price, needaddress, active FROM shippingmethods";
+            $query="SELECT id, name, price, needaddress, active FROM shippingmethods WHERE active=0";
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -2861,14 +2884,14 @@ class Admin extends Controller
         if(isset($_POST['addpaymeth'])){
             if(isset($_POST['methodName'])) $_SESSION['paymentMethodName'] = $_POST['methodName'];
             if(isset($_POST['methodFee'])) $_SESSION['methodFee'] = $_POST['methodFee'];
-            if(isset($_POST['methodActive'])) $_SESSION['paymentMethodActive'] = $_POST['methodActive'];
+            if(isset($_POST['methActive'])) $_SESSION['paymentMethodActive'] = $_POST['methActive'];
             if(isset($_POST['typeOfPayment'])) $_SESSION['typeOfPayment'] = $_POST['typeOfPayment'];
 
             if(!empty($_POST['methodName'])){
             
                 $methodName = $_POST['methodName'];
                 isset($_POST['methodFee']) ? $methodFee = $_POST['methodFee'] : $methodFee="";
-                isset($_POST['methodActive']) ? $methodActive = 1 : $methodActive = 0;
+                isset($_POST['methActive']) ? $methodActive = 1 : $methodActive = 0;
                 isset($_POST['typeOfPayment']) ? $typeOfPayment = $_POST['typeOfPayment'] : $typeOfPayment=1;
    
                 $query = "INSERT INTO paymentmethods (name, id_type, fee, active) 
@@ -2899,7 +2922,7 @@ class Admin extends Controller
 
         $paymentOnlyActive = 1;
         if(isset($_POST['onlyActiveSubmit'])){
-            if(isset($_POST['onlyActive']))
+            if(!isset($_POST['onlyActive']))
                 $paymentOnlyActive = 0;
         }
         require_once dirname(__FILE__,2) . '/core/database.php';
@@ -2911,7 +2934,7 @@ class Admin extends Controller
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }else{
-            $query="SELECT id, name, fee, active FROM paymentmethods";
+            $query="SELECT id, name, fee, active FROM paymentmethods WHERE active=0";
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -2940,7 +2963,7 @@ class Admin extends Controller
     
            
             $query = "UPDATE `paymentmethods` 
-                SET name = 
+                SET  
                 active='$methActive'
                 WHERE id = '$id_p';";
             $result = $db->prepare($query);
@@ -2950,7 +2973,7 @@ class Admin extends Controller
             
          
         }else{
-            header("Location:" . ROOT . "/admin/list_of_attributes");
+            header("Location:" . ROOT . "/admin/list_of_payment_methods");
         }
     }
     //////////////////////////////////////////////////////////////////////////////////////

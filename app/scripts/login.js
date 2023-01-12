@@ -102,18 +102,18 @@ function verifyLogin(login){
     }  
 
     if(login.length < 8) {  
-        document.getElementById('errorPassword').innerText = "*Login musi mieć długość conajmniej 8 znaków";  
-        document.getElementById('password').style.border = "2px solid rgb(255, 0, 0)";
-        document.getElementById('blinkingPassword').style = "display: default; color:#de1f1f";
-        document.getElementById('passwordSpan').style.color = "rgb(255, 0, 0)";
+        document.getElementById('errorEmailOrLogin').innerText = "*Login musi mieć długość conajmniej 8 znaków";  
+        document.getElementById('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingEmailOrLogin').style = "display: default; color:#de1f1f";
+        document.getElementById('emailOrLoginSpan').style.color = "rgb(255, 0, 0)";
         return false;  
     }  
 
     if(login.length > 25) {  
-        document.getElementById('errorPassword').innerText = "*Login nie może być dłuższy niż 25 znaków";  
-        document.getElementById('password').style.border = "2px solid rgb(255, 0, 0)";
-        document.getElementById('blinkingPassword').style = "display: default; color:#de1f1f";
-        document.getElementById('passwordSpan').style.color = "rgb(255, 0, 0)";
+        document.getElementById('errorEmailOrLogin').innerText = "*Login nie może być dłuższy niż 25 znaków";  
+        document.getElementById('emailOrLogin').style.border = "2px solid rgb(255, 0, 0)";
+        document.getElementById('blinkingEmailOrLogin').style = "display: default; color:#de1f1f";
+        document.getElementById('emailOrLoginSpan').style.color = "rgb(255, 0, 0)";
         return false;  
     }  
 

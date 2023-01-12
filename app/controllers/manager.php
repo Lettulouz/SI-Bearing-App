@@ -24,6 +24,10 @@ class Manager extends Controller
                 $firstLine = "Usunięto rekord";
                 $secondLine = "pomyślnie!";
             }
+            else if($sid==4){
+                $firstLine = "Zmieniono status";
+                $secondLine = "pomyślnie!";
+            }
             $this->view('success_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
             header("Refresh: 2; url=" . ROOT . "/manager/" . $path);
         }
@@ -55,55 +59,6 @@ class Manager extends Controller
 
         }
         else header("Location:" . ROOT . "");
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////SPECIAL PAGES//////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    public function edit_page($id=0){ 
-        if($id<1 || $id>9){
-            header("Location:" . ROOT . "/manager");
-        }
-        require_once dirname(__FILE__,2) . '/core/database.php';
-        $siteLink = $this->getFooter($db);
-        $pageNames=array();
-        $pageNames[1]=$siteLink['c1r1'];
-        $pageNames[2]=$siteLink['c1r2'];
-        $pageNames[3]=$siteLink['c1r3'];
-        $pageNames[4]=$siteLink['c1r4'];
-        $pageNames[5]=$siteLink['c2r1'];
-        $pageNames[6]=$siteLink['c2r2'];
-        $pageNames[7]=$siteLink['c2r3'];
-        $pageNames[8]=$siteLink['c2r4'];
-        $pageNames[9]="Dolny tekst";
-
-        if(isset($_POST['submitButton'])){
-            $query="SELECT EXISTS(SELECT * FROM pages WHERE id=$id) as ex";
-            $result = $db->query($query);
-            $checkIfExistsInDB = $result->fetch(PDO::FETCH_ASSOC);
-            $checkIfExistsInDB = $checkIfExistsInDB['ex'];
-            $submittedContent = $_POST['editor'];
-
-            if($checkIfExistsInDB == 1){
-                $query="UPDATE pages SET content=:content WHERE id=$id";
-                $result = $db->prepare($query);
-                $result->bindParam(':content', $submittedContent);
-                $result->execute();
-            }else{
-                $query="INSERT INTO pages (id, content) VALUES ($id,:content)";
-                $result = $db->prepare($query);
-                $result->bindParam(':content', $submittedContent);
-                $result->execute();
-            }
-        }
-
-        $query="SELECT content FROM pages WHERE id=$id";
-        $result = $db->prepare($query);
-        $result->execute();
-        $pageContent = $result->fetch(PDO::FETCH_ASSOC);
-        !empty($pageContent) ? $pageContent = $pageContent['content'] : $pageContent = "";    
-
-        $this->view('manager/edit_page', ['pageNames'=>$pageNames,'siteLinks'=>$siteLink,'editingId' => $id,'storedValue' => $pageContent]);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -253,7 +208,7 @@ class Manager extends Controller
 
         $rmAttrPath=ROOT."/manager/remove_attribute";
         $editAttrPath=ROOT."/manager/edit_attribute";
-        $this->view('manager/list_of_attributes', ['siteLinks'=>$siteLink,'attributesArray'=>$result, 'rmpath'=> $rmAttrPath, 'editpath'=> $editAttrPath]);
+        $this->view('manager/list_of_attributes_manager', ['siteLinks'=>$siteLink,'attributesArray'=>$result, 'rmpath'=> $rmAttrPath, 'editpath'=> $editAttrPath]);
     }
 
     /** This function edit attribute from the database
@@ -271,41 +226,42 @@ class Manager extends Controller
         } 
         
         if(isset($id_a)){
-        isset($_POST['edit_atr']) ? $attribute=$_POST['edit_atr'] : $attribute="";
-            if(!empty($attribute)){
-                require_once dirname(__FILE__,2) . '/core/database.php';
-                $tekst1 = strtolower($attribute);
-                $tekst2 = ucfirst($tekst1);
-                isset($_POST['attributeUnit']) ? $attributeUnit = $_POST['attributeUnit'] : $attributeUnit="";
-                
-                $query="SELECT id, COUNT(id) FROM attributes WHERE name=:attr";
-                $result = $db->prepare($query);
-                $result->bindParam(':attr', $attribute);
-                $result->execute();
-                $attr_id=$result->fetch(PDO::FETCH_ASSOC);
-                $temp = $attr_id['COUNT(id)'];
-                if($temp>0&&$attr_id['id']!=$id_a){
-                    $_SESSION['error_page'] = "list_of_attributes";
-                    header("Location:" . ROOT . "/manager/error_page/2");
-                }else{
-                    $query = "UPDATE `attributes` 
-                        SET name = '$tekst2',
-                        unit='$attributeUnit',
-                        WHERE id = '$id_a';";
+            isset($_POST['edit_atr']) ? $attribute=$_POST['edit_atr'] : $attribute="";
+                if(!empty($attribute)){
+                    require_once dirname(__FILE__,2) . '/core/database.php';
+                    $tekst1 = strtolower($attribute);
+                    $tekst2 = ucfirst($tekst1);
+                    isset($_POST['attributeUnit']) ? $attributeUnit = $_POST['attributeUnit'] : $attributeUnit="";
+                    
+                    $query="SELECT id, COUNT(id) FROM attributes WHERE name=:attr";
                     $result = $db->prepare($query);
+                    $result->bindParam(':attr', $attribute);
                     $result->execute();
-                    $_SESSION['success_page'] = "list_of_attributes";
-                    header("Location:" . ROOT . "/manager/success_page/1");
+                    $attr_id=$result->fetch(PDO::FETCH_ASSOC);
+                    $temp = $attr_id['COUNT(id)'];
+                    if($temp>0&&$attr_id['id']!=$id_a){
+                        $_SESSION['error_page'] = "list_of_attributes";
+                        header("Location:" . ROOT . "/manager/error_page/2");
+                    }else{
+                        $query = "UPDATE `attributes` 
+                            SET name = '$tekst2',
+                            unit='$attributeUnit'
+                            WHERE id = '$id_a';";
+                        $result = $db->prepare($query);
+                        $result->execute();
+                        $_SESSION['success_page'] = "list_of_attributes";
+                        header("Location:" . ROOT . "/manager/success_page/1");
+                    }
+    
+                }else{
+                    $_SESSION['error_page'] = "list_of_attributes";
+                    header("Location:" . ROOT . "/manager/error_page/1");
                 }
-
             }else{
-                $_SESSION['error_page'] = "list_of_attributes";
-                header("Location:" . ROOT . "/manager/error_page/1");
+                header("Location:" . ROOT . "/manager/list_of_attributes");
             }
-        }else{
-            header("Location:" . ROOT . "/manager/list_of_attributes");
         }
-    }
+    
 
     /** This function remove attribute from the database
      * @param {int} is the id of attribute
@@ -375,6 +331,9 @@ class Manager extends Controller
         } 
 
         require_once dirname(__FILE__,2) . '/core/database.php';
+
+        require_once dirname(__FILE__,2) . '/core/database.php';
+        $siteLink = $this->getFooter($db);
 
         $attributeName = "";
         $attributeUnit = "";
@@ -513,7 +472,8 @@ class Manager extends Controller
         c.name AS  mnfCountry FROM items i 
         INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
         INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-        INNER JOIN countries c ON mc.id_country=c.id";
+        INNER JOIN countries c ON mc.id_country=c.id
+        WHERE i.active=1 AND m.active=1";
         $result = $db->prepare($query);
         $result->execute();
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -594,7 +554,8 @@ class Manager extends Controller
         FROM items i
         INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
         INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-        INNER JOIN countries c ON mc.id_country=c.id";
+        INNER JOIN countries c ON mc.id_country=c.id
+        WHERE i.active=1 AND m.active=1";
         $resultIt = $db->prepare($queryIt);
         $resultIt->execute();
         $items = $resultIt->fetchAll(PDO::FETCH_ASSOC);
@@ -621,7 +582,7 @@ class Manager extends Controller
  
         $rmCatPath=ROOT."/manager/";
 
-        $this->view('manager/list_of_catalogs', ['siteLinks'=>$siteLink,'catalogsArray'=>$result, 'catalogsItems'=>$itemsInCat,'items'=>$items ,'rmpath'=> $rmCatPath]);
+        $this->view('manager/list_of_catalogs_manager', ['siteLinks'=>$siteLink,'catalogsArray'=>$result, 'catalogsItems'=>$itemsInCat,'items'=>$items ,'rmpath'=> $rmCatPath]);
     }
 
     /** This function remove catalog from the database
@@ -795,7 +756,7 @@ class Manager extends Controller
         $result->execute();
         $countries = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $query="SELECT * FROM `manufacturers`";
+        $query="SELECT * FROM `manufacturers` WHERE active=1";
         $result = $db->query($query);
         $manufacturers = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -830,13 +791,27 @@ class Manager extends Controller
             header("Location:" . ROOT . "/login");
         }
 
+        $manufacturersOnlyActive = 1;
+        if(isset($_POST['onlyActiveSubmit'])){
+            if(!isset($_POST['onlyActive']))
+                $manufacturersOnlyActive = 0;
+        }
+
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
-
-        $query="SELECT m.id as m_id, m.name as mnf,COUNT(mc.id_manufacturer) as mnfctsam 
-        FROM manufacturers m 
-        LEFT JOIN manufacturercountries mc ON m.id=mc.id_manufacturer 
-        GROUP BY m.id";
+        if($manufacturersOnlyActive==1){
+            $query="SELECT m.id as m_id, m.name as mnf,COUNT(mc.id_manufacturer) as mnfctsam , m.active
+            FROM manufacturers m 
+            LEFT JOIN manufacturercountries mc ON m.id=mc.id_manufacturer
+            WHERE m.active=1 
+            GROUP BY m.id";
+        }else{
+            $query="SELECT m.id as m_id, m.name as mnf,COUNT(mc.id_manufacturer) as mnfctsam, m.active 
+            FROM manufacturers m 
+            LEFT JOIN manufacturercountries mc ON m.id=mc.id_manufacturer
+            WHERE m.active=0 
+            GROUP BY m.id";
+        }
         $result = $db->prepare($query);
         $result->execute();
         $manufacturers = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -864,9 +839,10 @@ class Manager extends Controller
             isset($_POST['countrymnf']) ? $countrymnf=$_POST['countrymnf'] : $countrymnf=array();
             isset($_POST['mnfname']) ? $mnfname=$_POST['mnfname'] : $mnfname="";
             isset($_POST['mnfid']) ? $mnfid=$_POST['mnfid'] : $mnfid="";
+            isset($_POST['isActive']) ? $isActive=1 : $isActive=0;
 
             if(!empty($_POST['mnfname'])){
-                $query="UPDATE manufacturers SET name=:mnfname WHERE id=:mnfid";
+                $query="UPDATE manufacturers SET name=:mnfname, active=$isActive WHERE id=:mnfid";
                 $result = $db->prepare($query);
                 $result->bindParam(':mnfid', $mnfid);
                 $result->bindParam(':mnfname', $mnfname);
@@ -929,8 +905,8 @@ class Manager extends Controller
 
         $rmPath=ROOT."/manager/remove_manufacturer";
 
-        $this->view('manager/list_of_manufacturers',['siteLinks'=>$siteLink,'mnfArray'=> $manufacturers, 'mnfCts'=> $mnfCountries,
-         'rmpath'=> $rmPath, 'countries'=>$resultCnt]);
+        $this->view('manager/list_of_manufacturers_manager',['siteLinks'=>$siteLink,'mnfArray'=> $manufacturers, 'mnfCts'=> $mnfCountries,
+         'rmpath'=> $rmPath, 'countries'=>$resultCnt, 'manufacturersOnlyActive' => $manufacturersOnlyActive]);
 
     }
 
@@ -939,7 +915,7 @@ class Manager extends Controller
      */
     public function remove_manufacturer($id_manuf=NULL){
         if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "manager"){
+            if($_SESSION['loggedUser'] == "contentmanager"){
                 unset($_SESSION['successOrErrorResponse']);
             }
             else{
@@ -952,7 +928,7 @@ class Manager extends Controller
 
         if(isset($id_manuf)){
             require_once dirname(__FILE__,2) . '/core/database.php';
-            $query="DELETE FROM manufacturers WHERE id=:id_manuf";
+            $query="UPDATE manufacturers SET active=0 WHERE id=:id_manuf";
             $result = $db->prepare($query);
             $result->bindParam(':id_manuf', $id_manuf);
             $result->execute();
@@ -991,8 +967,8 @@ class Manager extends Controller
                 $itemManufacturer = $_POST['manufacturer'];
                 $selCategories = $_POST['selCategories'];
 
-                $query="INSERT INTO items (id_manufacturercountry, name, amount, price) 
-                VALUES (:id_manufacturercountry, :item_name, :item_quantity, :item_price)";
+                $query="INSERT INTO items (id_manufacturercountry, name, amount, price, active) 
+                VALUES (:id_manufacturercountry, :item_name, :item_quantity, :item_price, 1)";
 
                 $result = $db->prepare($query);
                 $result->bindParam(':id_manufacturercountry',$itemManufacturer);
@@ -1101,7 +1077,8 @@ class Manager extends Controller
         $query="SELECT mc.id as id, m.name as mname,c.name as cname
         FROM manufacturercountries mc 
         INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-        INNER JOIN countries c ON mc.id_country=c.id";
+        INNER JOIN countries c ON mc.id_country=c.id
+        WHERE m.active=1";
         $result = $db->prepare($query);
         $result->execute();
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -1122,7 +1099,6 @@ class Manager extends Controller
         'selCategories'=>$selCategories]);
         
     }
-
     /** This function edit item in the database
      * @param {int} is the id of item
      */
@@ -1390,7 +1366,8 @@ class Manager extends Controller
         $query="SELECT mc.id as id, m.name as mname,c.name as cname
         FROM manufacturercountries mc 
         INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-        INNER JOIN countries c ON mc.id_country=c.id";
+        INNER JOIN countries c ON mc.id_country=c.id
+        WHERE m.active=1";
         $result = $db->prepare($query);
         $result->execute();
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -1479,32 +1456,65 @@ class Manager extends Controller
         require_once dirname(__FILE__,2) . '/core/database.php';
         $siteLink = $this->getFooter($db);
 
-        $query="SELECT i.id AS iid, i.name AS itemName, m.name AS manufacturerName, 
-        c.name AS manufacturerCountry, i.amount AS amount, i.price AS price
-        FROM items i 
-            INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
-            INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
-            INNER JOIN countries c ON mc.id_country=c.id WHERE i.active=1";
-        $result = $db->query($query);
-        $items = $result->fetchAll(PDO::FETCH_ASSOC);
+        isset($_POST['onlyActive']) ? $historyItems = 1 : $historyItems = 0;
 
-        $queryCateg="SELECT c.name AS categname
-        FROM items i 
-        INNER JOIN categoriesofitem coi ON i.id=coi.id_item
-        INNER JOIN categories c ON coi.id_category=c.id
-        WHERE i.id=:iid AND i.active=1";
+        if($historyItems==0){
+            $query="SELECT i.id AS iid, i.name AS itemName, m.name AS manufacturerName, 
+            c.name AS manufacturerCountry, i.amount AS amount, i.price AS price
+            FROM items i 
+                INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
+                INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
+                INNER JOIN categoriesofitem coi ON i.id=coi.id_item
+                INNER JOIN categories cat ON cat.id=coi.id_category
+                INNER JOIN countries c ON mc.id_country=c.id WHERE i.active=1 AND m.active=1";
+            $result = $db->query($query);
+            $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        $queryCat="SELECT c.name AS catname
-        FROM items i 
-        INNER JOIN itemsincatalog ic ON i.id=ic.id_item
-        INNER JOIN catalog c ON ic.id_catalog=c.id
-        WHERE i.id=:iid AND i.active=1";
+            $queryCateg="SELECT c.name AS categname
+            FROM items i 
+            INNER JOIN categoriesofitem coi ON i.id=coi.id_item
+            INNER JOIN categories c ON coi.id_category=c.id
+            WHERE i.id=:iid AND i.active=1";
 
-        $queryAttr="SELECT a.name AS attrname, ai.value AS aval
-        FROM items i 
-        INNER JOIN attributesofitems ai ON i.id=ai.id_item
-        INNER JOIN attributes a ON ai.id_attribute=a.id
-        WHERE i.id=:iid AND i.active=1";
+            $queryCat="SELECT c.name AS catname
+            FROM items i 
+            INNER JOIN itemsincatalog ic ON i.id=ic.id_item
+            INNER JOIN catalog c ON ic.id_catalog=c.id
+            WHERE i.id=:iid  AND i.active=1";
+
+            $queryAttr="SELECT a.name AS attrname, ai.value AS aval
+            FROM items i 
+            INNER JOIN attributesofitems ai ON i.id=ai.id_item
+            INNER JOIN attributes a ON ai.id_attribute=a.id
+            WHERE i.id=:iid AND i.active=1";
+        }else{
+            $query="SELECT i.id AS iid, i.name AS itemName, m.name AS manufacturerName, 
+            c.name AS manufacturerCountry, i.amount AS amount, i.price AS price
+            FROM items i 
+                INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
+                INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
+                INNER JOIN countries c ON mc.id_country=c.id WHERE i.active=0 OR m.active=0";
+            $result = $db->query($query);
+            $items = $result->fetchAll(PDO::FETCH_ASSOC);
+
+            $queryCateg="SELECT c.name AS categname
+            FROM items i 
+            INNER JOIN categoriesofitem coi ON i.id=coi.id_item
+            INNER JOIN categories c ON coi.id_category=c.id
+            WHERE i.id=:iid AND i.active=0";
+
+            $queryCat="SELECT c.name AS catname
+            FROM items i 
+            INNER JOIN itemsincatalog ic ON i.id=ic.id_item
+            INNER JOIN catalog c ON ic.id_catalog=c.id
+            WHERE i.id=:iid  AND i.active=0";
+
+            $queryAttr="SELECT a.name AS attrname, ai.value AS aval
+            FROM items i 
+            INNER JOIN attributesofitems ai ON i.id=ai.id_item
+            INNER JOIN attributes a ON ai.id_attribute=a.id
+            WHERE i.id=:iid AND i.active=0";
+        }
 
         $categoriesArray=array();
         $catalogArray=array();
@@ -1529,12 +1539,16 @@ class Manager extends Controller
             $result =  $result->fetchAll(PDO::FETCH_ASSOC);
             $attrArray[$id['iid']]= $result;
         }
+
+
+
         
         $editItemPath=ROOT."/manager/edit_item";
         $removeItemPath=ROOT."/manager/remove_item";
         
-        $this->view('manager/list_of_items', ['siteLinks'=>$siteLink,'itemsArray' => $items, 'categoriesArray' => $categoriesArray, 
-        'catalogArray' => $catalogArray, 'attrArray' => $attrArray, 'editItemPath' => $editItemPath, 'removeItemPath' => $removeItemPath]);
+        $this->view('manager/list_of_items', ['siteLinks'=>$siteLink,'itemsArray' => $items, 
+        'categoriesArray' => $categoriesArray, 'catalogArray' => $catalogArray, 'attrArray' => $attrArray, 
+        'editItemPath' => $editItemPath, 'removeItemPath' => $removeItemPath, 'historyItems' => $historyItems]);
     }
 
 
@@ -1562,7 +1576,7 @@ class Manager extends Controller
             INNER JOIN manufacturercountries mc ON i.id_manufacturercountry=mc.id
             INNER JOIN manufacturers m ON mc.id_manufacturer=m.id
             INNER JOIN countries c ON mc.id_country=c.id
-            WHERE id_category IS NULL";
+            WHERE id_category IS NULL AND i.active=1 AND m.active=1";
         $result = $db->query($query);
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -1783,9 +1797,12 @@ class Manager extends Controller
         $needAddress = "";
         if(isset($_SESSION['successOrErrorResponse'])){
             if($_SESSION['successOrErrorResponse'] == "add_shipping_method"){
-                if(isset($_SESSION['methodName'])) {$methodName = $_SESSION['paymentMethodName']; unset($_SESSION['paymentMethodName']);} 
-                if(isset($_SESSION['methodPrice'])) {$methodPrice = $_SESSION['methodPrice']; unset($_SESSION['methodPrice']);} 
-                if(isset($_SESSION['methodActive'])) {$methodActive = $_SESSION['paymentMethodActive']; unset($_SESSION['paymentMethodActive']);} 
+                if(isset($_SESSION['methodName'])) 
+                {$methodName = $_SESSION['paymentMethodName']; unset($_SESSION['paymentMethodName']);} 
+                if(isset($_SESSION['methodPrice'])) 
+                {$methodPrice = $_SESSION['methodPrice']; unset($_SESSION['methodPrice']);} 
+                if(isset($_SESSION['methodActive'])) 
+                {$methodActive = $_SESSION['paymentMethodActive']; unset($_SESSION['paymentMethodActive']);} 
                 if(isset($_SESSION['needAddress'])) 
                 {$needAddress = $_SESSION['needAddress']; unset($_SESSION['needAddress']);}
             }
@@ -1799,24 +1816,24 @@ class Manager extends Controller
         if(isset($_POST['addshipmeth'])){
             if(isset($_POST['methodName'])) $_SESSION['paymentMethodName'] = $_POST['methodName'];
             if(isset($_POST['methodPrice'])) $_SESSION['methodPrice'] = $_POST['methodPrice'];
-            if(isset($_POST['methodActive'])) $_SESSION['paymentMethodActive'] = $_POST['methodActive'];
+            if(isset($_POST['methActive'])) $_SESSION['paymentMethodActive'] = $_POST['methActive'];
             if(isset($_POST['needAddress'])) $_SESSION['needAddress'] = $_POST['needAddress'];
-
 
             if(!empty($_POST['methodName'])){
             
                 $methodName = $_POST['methodName'];
                 isset($_POST['methodPrice']) ? $methodPrice = $_POST['methodPrice'] : $methodPrice="";
-                isset($_POST['methodActive']) ? $methodActive = 1 : $methodActive = 0;
+                isset($_POST['methActive']) ? $methodActive = 1 : $methodActive = 0;
                 isset($_POST['needAddress']) ? $needAddress = 1 : $needAddress = 0;
-      
-                $query = "INSERT INTO shippingmethods (name, price, needaddress active) VALUES ('$methodName', '$methodPrice', '$needAddress', '$methodActive');";
+    
+                $query = "INSERT INTO shippingmethods (name, price, needaddress, active) 
+                VALUES ('$methodName', '$methodPrice', '$needAddress', '$methodActive');";
                 $result = $db->prepare($query);
                 $result->execute();
-                $_SESSION['success_page'] = "shipping_method";
-                header("Location:" . ROOT . "/manager/success_page/1");             
+                $_SESSION['success_page'] = "add_shipping_method";
+                header("Location:" . ROOT . "/manager/success_page/1");      
             }else{
-                $_SESSION['error_page'] = "shipping_method";
+                $_SESSION['error_page'] = "add_shipping_method";
                 header("Location:" . ROOT . "/manager/error_page/1");
             }
         }else{
@@ -1851,7 +1868,7 @@ class Manager extends Controller
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }else{
-            $query="SELECT id, name, price, needaddress, active FROM shippingmethods";
+            $query="SELECT id, name, price, needaddress, active FROM shippingmethods WHERE active=0";
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -1859,10 +1876,9 @@ class Manager extends Controller
         
 
         $editMethPath=ROOT."/manager/edit_shipping_method";
-        $this->view('manager/list_of_shipping_methods_manager', ['siteLinks'=>$siteLink, 'shippingArray' => $result, 'editpath' => $editMethPath,  
-        'shippingOnlyActive' =>$shippingOnlyActive]);
+        $this->view('manager/list_of_shipping_methods_manager', ['siteLinks'=>$siteLink, 'shippingArray' => $result, 
+        'editpath' => $editMethPath,  'shippingOnlyActive' =>$shippingOnlyActive]);
     }
-
 
     /** This function edit shipping method in the database
      * @param {int} is the id of shipping method
@@ -1880,22 +1896,22 @@ class Manager extends Controller
         
         if(isset($id_m)){
 
-        require_once dirname(__FILE__,2) . '/core/database.php';
-        isset($_POST['methActive']) ? $methActive = 1 : $methActive=0;
-        isset($_POST['needAddress']) ? $needAddress = 1 : $needAddress=0;
-
-        $query = "UPDATE `shippingmethods` 
-            SET active='$methActive', needaddress='$needAddress'
-            WHERE id = '$id_m';";
-        $result = $db->prepare($query);
-        $result->execute();
-        $_SESSION['success_page'] = "list_of_shipping_methods";
-        header("Location:" . ROOT . "/manager/success_page/2");
-        
-        }else{
-            header("Location:" . ROOT . "/manager/list_of_attributes");
+            require_once dirname(__FILE__,2) . '/core/database.php';
+            isset($_POST['methActive']) ? $methActive = 1 : $methActive=0;
+            isset($_POST['needAddress']) ? $needAddress = 1 : $needAddress=0;
+    
+            $query = "UPDATE `shippingmethods` 
+                SET active='$methActive', needaddress='$needAddress'
+                WHERE id = '$id_m';";
+            $result = $db->prepare($query);
+            $result->execute();
+            $_SESSION['success_page'] = "list_of_shipping_methods";
+            header("Location:" . ROOT . "/manager/success_page/2");
+            
+            }else{
+                header("Location:" . ROOT . "/manager/list_of_attributes");
+            }
         }
-    }
 
     /** 
      * This function add payment method to the database
@@ -1915,10 +1931,10 @@ class Manager extends Controller
         $methodActive = "";
         $typeOfPayment = "";
         if(isset($_SESSION['successOrErrorResponse'])){
-            if($_SESSION['successOrErrorResponse'] == "add_payment_method"){
+            if($_SESSION['successOrErrorResponse'] == "add_shipping_method"){
                 if(isset($_SESSION['methodName'])) {$methodName = $_SESSION['paymentMethodName']; unset($_SESSION['paymentMethodName']);} 
                 if(isset($_SESSION['methodFee'])) {$methodFee = $_SESSION['methodFee']; unset($_SESSION['methodFee']);} 
-                if(isset($_SESSION['methActive'])) {$methodActive = $_SESSION['paymentMethodActive']; unset($_SESSION['paymentMethodActive']);} 
+                if(isset($_SESSION['methodActive'])) {$methodActive = $_SESSION['paymentMethodActive']; unset($_SESSION['paymentMethodActive']);} 
                 if(isset($_SESSION['typeOfPayment'])) {$typeOfPayment= $_SESSION['typeOfPayment']; unset($_SESSION['typeOfPayment']);}
             }
             unset($_SESSION['successOrErrorResponse']);
@@ -1940,13 +1956,13 @@ class Manager extends Controller
                 isset($_POST['methodFee']) ? $methodFee = $_POST['methodFee'] : $methodFee="";
                 isset($_POST['methActive']) ? $methodActive = 1 : $methodActive = 0;
                 isset($_POST['typeOfPayment']) ? $typeOfPayment = $_POST['typeOfPayment'] : $typeOfPayment=1;
-
-                $query = "INSERT INTO paymentmethods (name, id_type, fee ,active) 
-                VALUES ('$methodName', '$typeOfPayment' '$methodFee','$methodActive');";
+   
+                $query = "INSERT INTO paymentmethods (name, id_type, fee, active) 
+                VALUES ('$methodName', '$typeOfPayment' ,'$methodFee', '$methodActive');";
                 $result = $db->prepare($query);
                 $result->execute();
                 $_SESSION['success_page'] = "add_payment_method";
-                header("Location:" . ROOT . "/manager/success_page/1");               
+                header("Location:" . ROOT . "/manager/success_page/1");
             }else{
                 $_SESSION['error_page'] = "add_payment_method";
                 header("Location:" . ROOT . "/manager/error_page/1");
@@ -1971,7 +1987,7 @@ class Manager extends Controller
 
         $paymentOnlyActive = 1;
         if(isset($_POST['onlyActiveSubmit'])){
-            if(isset($_POST['onlyActive']))
+            if(!isset($_POST['onlyActive']))
                 $paymentOnlyActive = 0;
         }
         require_once dirname(__FILE__,2) . '/core/database.php';
@@ -1983,7 +1999,7 @@ class Manager extends Controller
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }else{
-            $query="SELECT id, name, fee, active FROM paymentmethods";
+            $query="SELECT id, name, fee, active FROM paymentmethods WHERE active=0";
             $result = $db->query($query);
             $result = $result->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -2015,7 +2031,7 @@ class Manager extends Controller
     
            
             $query = "UPDATE `paymentmethods` 
-                SET name = 
+                SET  
                 active='$methActive'
                 WHERE id = '$id_p';";
             $result = $db->prepare($query);
@@ -2025,192 +2041,13 @@ class Manager extends Controller
             
          
         }else{
-            header("Location:" . ROOT . "/manager/list_of_attributes");
+            header("Location:" . ROOT . "/manager/list_of_payment_methods");
         }
     }
-    //////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////HOME PAGE///////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////// 
-    public function edit_home(){
-        if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "contentmanager"){
-                unset($_SESSION['successOrErrorResponse']);
-            }
-            else{
-                header("Location:" . ROOT . "/home");
-            }
-        }
-        else{
-            header("Location:" . ROOT . "/login");
-        }
 
-        require_once dirname(__FILE__,2) . '/core/database.php';
-        $siteLink = $this->getFooter($db);
-        
-        if(isset($_POST['homeEditSubmit'])){
+    
 
-
-            $query="UPDATE homepageinfo SET icon1=:ico1,
-            title1=:title1, desc1=:desc1, icon2=:ico2,
-            title2=:title2, desc2=:desc2, icon3=:ico3,
-            title3=:title3, desc3=:desc3, youtubeUrl=:link";
-
-            $result= $db->prepare($query);
-            $result->bindParam(':ico1', $_POST['ico1']);
-            $result->bindParam(':title1', $_POST['title1']);
-            $result->bindParam(':desc1', $_POST['brief1']);
-            $result->bindParam(':ico2', $_POST['ico2']);
-            $result->bindParam(':title2', $_POST['title2']);
-            $result->bindParam(':desc2', $_POST['brief2']);
-            $result->bindParam(':ico3', $_POST['ico3']);
-            $result->bindParam(':title3', $_POST['title3']);
-            $result->bindParam(':desc3', $_POST['brief3']);
-            $result->bindParam(':link', $_POST['video']);
-            $result->execute();
-
-            if(!empty($_FILES['formFile']['name'])){
-                $imagePathCheck = PHOTOSPATH . "/upload/baner.png";
-                if(file_exists($imagePathCheck)) unlink($imagePathCheck);
-                $path = $_FILES['formFile']['name'];
-                $ext = pathinfo($path, PATHINFO_EXTENSION);
-                $imagename = "baner." . $ext;
-                $tmpname = $_FILES['formFile']['tmp_name'];
-                if (!move_uploaded_file($tmpname, PHOTOSPATH . "/upload/" . $imagename)) {
-                    $_SESSION['error_page'] = "list_of_items";
-                    header("Location:" . ROOT . "/manager/error_page/3");
-                }  
-            }
-
-            $_SESSION['success_page'] = "edit_home";
-            header("Location:" . ROOT . "/manager/success_page/2");
-
-        }
-
-        $query="SELECT * FROM homepageinfo LIMIT 1";
-        $result = $db->prepare($query);
-        $result->execute();
-        $result=$result->fetch(PDO::FETCH_ASSOC);
-
-
-        $this->view('manager/edit_home', ['result'=>$result, 'siteLinks'=>$siteLink]);
-    }
-    //////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////INFO////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////// 
-    public function edit_informations(){
-        if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "contentmanager"){
-                unset($_SESSION['successOrErrorResponse']);
-            }
-            else{
-                header("Location:" . ROOT . "/home");
-            }
-        }
-        else{
-            header("Location:" . ROOT . "/login");
-        }
-
-        require_once dirname(__FILE__,2) . '/core/database.php';
-
-        $siteLink = $this->getFooter($db);
-        $imagePath = MAINPATH . "/resources/shopPhotos/siteicon.png";
-        if(isset($_POST['informationsEditSubmit'])){
-            $query="UPDATE siteinfo SET sitename=:sitename";
-            $result = $db->prepare($query);
-            $result->bindParam(':sitename', $_POST['siteName']);
-            $result->execute();
-
-            if(!empty($_FILES['formFile']['name'])){
-                $imagePathCheck = MAINPATHLOC . "/resources/shopPhotos/siteicon.png";
-                if(file_exists($imagePathCheck)) unlink($imagePathCheck); 
-                $tmpname = $_FILES['formFile']['tmp_name'];
-                if (!move_uploaded_file($tmpname, MAINPATHLOC . "/resources/shopPhotos/siteicon.png")) {
-                    $_SESSION['error_page'] = "edit_informations";
-                    header("Location:" . ROOT . "/manager/error_page/3");
-                }
-            }
-            $_SESSION['success_page'] = "edit_informations";
-            header("Location:" . ROOT . "/manager/success_page/2");
-        }
-
-        $query="SELECT sitename FROM siteinfo LIMIT 1";
-        $result = $db->prepare($query);
-        $result->execute();
-        $result=$result->fetch(PDO::FETCH_ASSOC);
-
-        $this->view('manager/edit_informations', ['result' => $result, 'siteLinks'=>$siteLink, 'imagePath' => $imagePath]);
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////FOOTER//////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////
-
-    public function edit_footer(){
-        if(isset($_SESSION['loggedUser'])){
-            if($_SESSION['loggedUser'] == "manager"){
-                unset($_SESSION['successOrErrorResponse']);
-            }
-            else{
-                header("Location:" . ROOT . "/home");
-            }
-        }
-        else{
-            header("Location:" . ROOT . "/login");
-        }
-
-        require_once dirname(__FILE__,2) . '/core/database.php';
-        $siteLink = $this->getFooter($db);
-        if(isset($_POST['footerEditSubmit'])){
-            $query="UPDATE footer SET name=:name, brief=:brief, 
-            c1name=:c1name, 
-            c1r1=:c1r1, c1r2=:c1r2, c1r3=:c1r3, c1r4=:c1r4, 
-            c1r1path=:c1r1path, c1r2path=:c1r2path, c1r3path=:c1r3path, c1r4path=:c1r4path,
-            c2name=:c2name,
-            c2r1=:c2r1, c2r2=:c2r2, c2r3=:c2r3, c2r4=:c2r4,
-            c2r1path=:c2r1path, c2r2path=:c2r2path, c2r3path=:c2r3path, c2r4path=:c2r4path, 
-            c3name=:c3name,
-            c3r1=:c3r1, c3r2=:c3r2, c3r3=:c3r3, c3r4=:c3r4, 
-            bottomtext=:bottomtext, bottomtextpath=:bottomtextpath";
-            $result = $db->prepare($query);
-            $result->bindParam(':name', $_POST['companyName']);
-            $result->bindParam(':brief', $_POST['brief']);
-            $result->bindParam(':c1name', $_POST['c1name']);
-            $result->bindParam(':c1r1', $_POST['c1r1']);
-            $result->bindParam(':c1r2', $_POST['c1r2']);
-            $result->bindParam(':c1r3', $_POST['c1r3']);
-            $result->bindParam(':c1r4', $_POST['c1r4']);
-            $result->bindParam(':c1r1path', $_POST['c1r1path']);
-            $result->bindParam(':c1r2path', $_POST['c1r2path']);
-            $result->bindParam(':c1r3path', $_POST['c1r3path']);
-            $result->bindParam(':c1r4path', $_POST['c1r4path']);
-            $result->bindParam(':c2name', $_POST['c2name']);
-            $result->bindParam(':c2r1', $_POST['c2r1']);
-            $result->bindParam(':c2r2', $_POST['c2r2']);
-            $result->bindParam(':c2r3', $_POST['c2r3']);
-            $result->bindParam(':c2r4', $_POST['c2r4']);
-            $result->bindParam(':c2r1path', $_POST['c2r1path']);
-            $result->bindParam(':c2r2path', $_POST['c2r2path']);
-            $result->bindParam(':c2r3path', $_POST['c2r3path']);
-            $result->bindParam(':c2r4path', $_POST['c2r4path']);
-            $result->bindParam(':c3name', $_POST['c3name']);
-            $result->bindParam(':c3r1', $_POST['c3r1']);
-            $result->bindParam(':c3r2', $_POST['c3r2']);
-            $result->bindParam(':c3r3', $_POST['c3r3']);
-            $result->bindParam(':c3r4', $_POST['c3r4']);
-            $result->bindParam(':bottomtext', $_POST['bottomtext']);
-            $result->bindParam(':bottomtextpath', $_POST['bottomtextpath']);
-            $result->execute();
-            $_SESSION['success_page'] = "edit_footer";
-            header("Location:" . ROOT . "/manager/success_page/2");
-        }
-
-        $query="SELECT * FROM footer LIMIT 1";
-        $result = $db->prepare($query);
-        $result->execute();
-        $result=$result->fetch(PDO::FETCH_ASSOC);
-
-        $this->view('manager/edit_footer', ['result' => $result, 'siteLinks'=>$siteLink]);
-    }
+    
 
     private function getFooter($db){
         if(isset($_SESSION['siteLink'])){

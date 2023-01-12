@@ -1,5 +1,5 @@
 
-<h1 class="text-muted headers-padding">Lista metod wysyłki</h1>
+<h1 class="text-muted headers-padding">Lista metod dostawy</h1>
     <hr class="divider mt-0 ">
     <div class="headers-padding" style="padding-right: 15px;">
         <div class="col-12 col-md-6 col-lg-4">
@@ -83,7 +83,7 @@
                             style='margin-top: 5px; margin-left: 5px; margin-right: 10px; font-weight: bold; font-size:18px' 
                             for='needAddress'>Adres</label>
                             <input class='form-check-input needAddress' style='height:30px; width:60px;' type='checkbox' 
-                            id='needAddress' name='needAddres' ";
+                            id='needAddress' name='needAddress' ";
                             if($method['needaddress']==1){
                               echo 'checked';
                             }

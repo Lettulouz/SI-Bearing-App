@@ -263,7 +263,7 @@
 
                                             <b> Cena: {$item['price']} zł </b>
                                                 <input type='hidden' value=" . $item['itemID'] . " name='itemID'>
-                                                <button type='submit' class='btn btn-danger float-end ' 
+                                                <button type='submit' class='btn btn-danger float-end addItemToCartButton' 
                                                 id='" . $item['itemID'] . "-" . $item['itemPrice'] . "-" . $item['amount'] . "-" . $item['isDouble'] . "' name='addToCart'>
                                                     <i class='bi bi-basket2'></i>
                                                 </button>
@@ -295,10 +295,19 @@
 <?php } ?>
 
 
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
 <script>
     var temp;
     $(document).ready(function() {
+
+        $(".addItemToCartButton").click(function(){
+            $(this).addClass('animated bounce');
+            setTimeout(function(){
+                $('.addItemToCartButton').removeClass('animated bounce');
+            },1000);
+        });
+
+
         if ($('#pageInside').val() <= 1) {
             $('[name="lft"]').addClass('btn btn-outline-secondary disabled');
         }
@@ -313,11 +322,21 @@
             $('.sidebar').offcanvas('show')
         }
 
-        document.querySelector(".attrpart").addEventListener("keypress", function(evt) {
+        document.querySelector("#pricepartstart").addEventListener("keypress", function(evt) {
+            console.log('test');
             if (evt.which != 8 && evt.which != 0 && evt.which != 46 && evt.which != 44 && evt.which < 48 || evt.which > 57) {
                 evt.preventDefault();
             }
         });
+
+        document.querySelector("#pricepartend").addEventListener("keypress", function(evt) {
+            console.log('test2');
+            if (evt.which != 8 && evt.which != 0 && evt.which != 46 && evt.which != 44 && evt.which < 48 || evt.which > 57) {
+                evt.preventDefault();
+            }
+        });
+
+        
 
         $(".attrpart").on('input', function() {
             var part1;
@@ -486,7 +505,7 @@
             sessionStorage.setItem(idValueAmount[0], '1' + '-' + idValueAmount[1] + '-' + idValueAmount[2] + '-' + idValueAmount[3]);
         else {
             let valueAndAmount = sessionStorage.getItem(idValueAmount[0]).split("-");
-            if (valueAndAmount[2] >= valueAndAmount[0] + 1) {
+            if (parseFloat(valueAndAmount[2]) >= parseFloat(valueAndAmount[0]) + 1) {   
                 var newValue = parseFloat(valueAndAmount[0]) + 1;
                 sessionStorage.setItem(idValueAmount[0], newValue + '-' + idValueAmount[1] + '-' + idValueAmount[2] + '-' + idValueAmount[3]);
             }
@@ -539,7 +558,7 @@
             $(toDelete).remove();
         }
 
-        document.querySelector(".attrpart").addEventListener("keypress", function(evt) {
+        $(".attrpart").keypress(function(evt) {
             if (evt.which != 8 && evt.which != 0 && evt.which != 46 && evt.which != 44 && evt.which < 48 || evt.which > 57) {
                 evt.preventDefault();
             }
@@ -582,11 +601,15 @@
             }
 
             if (part1 != "") {
+                if(part1[0]=="-")
+                    part1=part1.substring(1);
                 part1AsFl = (Math.round(parseFloat(part1) * 100) / 100);
                 part1AsStr = parseFloat(part1).toFixed(2);
             }
 
             if (part2 != "") {
+                if(part2[0]=="-")
+                    part2=part2.substring(1);
                 part2AsFl = (Math.round(parseFloat(part2) * 100) / 100);
                 part2AsStr = parseFloat(part2).toFixed(2);
             }

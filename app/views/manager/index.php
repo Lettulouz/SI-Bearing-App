@@ -17,7 +17,7 @@ include 'mng_nav.php';
                     <div class="card text-white bg-primary h-100" >
                         <div class="card-header">
                             <i class="bi bi-box-seam-fill"></i>&nbspProdukty
-                            <a style='float:right;' class="text-white" href="<?php echo ROOT."/admin/add_item"?>" >
+                            <a style='float:right;' class="text-white" href="<?php echo ROOT."/manager/add_item"?>" >
                                 <i class="bi bi-plus-lg"></i>
                             </a>
                         </div>
@@ -38,7 +38,7 @@ include 'mng_nav.php';
                                 ?>
                             </p>
                         </div>
-                        <a href=<?php echo ROOT."/admin/list_of_items"?> id="orders_lists" class="nav-link text-white p-0">
+                        <a href=<?php echo ROOT."/manager/list_of_items"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
                                 Przeglądaj produkty
                             </div>
@@ -48,7 +48,7 @@ include 'mng_nav.php';
                 <div class="col-12 col-sm-6 col-xl-4 mb-3">
                     <div class="card text-white bg-custom-3 h-100" >
                         <div class="card-header"><i class="bi bi-journals"></i>&nbspKatalogi
-                            <a style='float:right;' class="text-white" href="<?php echo ROOT."/admin/add_catalog"?>" >
+                            <a style='float:right;' class="text-white" href="<?php echo ROOT."/manager/add_catalog"?>" >
                                 <i class="bi bi-plus-lg"></i>
                             </a>
                         </div>
@@ -69,7 +69,7 @@ include 'mng_nav.php';
                                 ?>
                             </p>
                         </div>
-                        <a href="<?php echo ROOT."/admin/list_of_catalogs"?>" id="orders_lists" class="nav-link text-white p-0">
+                        <a href="<?php echo ROOT."/manager/list_of_catalogs"?>" id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
                                 Przeglądaj katalogi
                             </div>
@@ -80,7 +80,7 @@ include 'mng_nav.php';
                     <div class="card text-white bg-custom-1 h-100" >
                         <div class="card-header">
                             <i class="bi bi-journal-richtext"></i>&nbspAtrybuty
-                            <a style='float:right;' class="text-white" href="<?php echo ROOT."/admin/add_attribute"?>" >
+                            <a style='float:right;' class="text-white" href="<?php echo ROOT."/manager/add_attribute"?>" >
                                 <i class="bi bi-plus-lg"></i>
                             </a>
                         </div>
@@ -101,7 +101,7 @@ include 'mng_nav.php';
                                 ?> 
                             </p>
                         </div>
-                        <a href=<?php echo ROOT."/admin/list_of_attributes"?> id="orders_lists" class="nav-link text-white p-0">
+                        <a href=<?php echo ROOT."/manager/list_of_attributes"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
                                 Przeglądaj atrybuty
                             </div>
@@ -112,11 +112,11 @@ include 'mng_nav.php';
                     <div class="card text-white bg-custom-4 h-100" >
                         <div class="card-header">                           
                             <i class="bi bi-buildings"></i>&nbspProducenci
-                            <a style='float:right;' class="text-white" href="<?php echo ROOT."/admin/add_manufacturer"?>" >
+                            <a style='float:right;' class="text-white" href="<?php echo ROOT."/manager/add_manufacturer"?>" >
                                 <i class="bi bi-plus-lg"></i>
                             </a>
                             <a style='float:right;' class="text-white me-2" 
-                            href="<?php echo ROOT."/admin/add_countries_to_manufacturer"?>" >
+                            href="<?php echo ROOT."/manager/add_countries_to_manufacturer"?>" >
                                 <i class="bi bi-globe-americas"></i>
                             </a>
                         </div>
@@ -137,7 +137,7 @@ include 'mng_nav.php';
                                 ?> 
                             </p>
                         </div>
-                        <a href=<?php echo ROOT."/admin/list_of_manufacturers"?> id="orders_lists" class="nav-link text-white p-0">
+                        <a href=<?php echo ROOT."/manager/list_of_manufacturers"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
                                 Przeglądaj producentów
                             </div>
@@ -148,7 +148,7 @@ include 'mng_nav.php';
                     <div class="card text-white bg-custom-5 h-100" >
                         <div class="card-header">
                             <i class="bi bi-bar-chart-steps"></i>&nbspKategorie
-                            <a style='float:right;' class="text-white" href="<?php echo ROOT."/admin/add_category"?>" >
+                            <a style='float:right;' class="text-white" href="<?php echo ROOT."/manager/add_category"?>" >
                                 <i class="bi bi-plus-lg"></i>
                             </a>
                         </div>
@@ -169,7 +169,7 @@ include 'mng_nav.php';
                                 ?> 
                             </p>
                         </div>
-                        <a href=<?php echo ROOT."/admin/list_of_categories"?> id="orders_lists" class="nav-link text-white p-0">
+                        <a href=<?php echo ROOT."/manager/list_of_categories"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
                                 Przeglądaj kategorie
                             </div>
@@ -192,12 +192,15 @@ include 'mng_nav.php';
                     <div class="card text-white bg-custom-18 h-100">
                         <div class="card-header">
                             <i class="bi bi-credit-card"></i>&nbspMetody płatności
+                            <a style='float:right;' class="text-white" href="<?php echo ROOT."/manager/add_payment_method"?>" >
+                                <i class="bi bi-plus-lg"></i>
+                            </a>
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">Dodanych metod płatności: <?=$data['paymentMethodsCount']?></h5>
                             <p class="card-text text-truncate"><?=$data['paymentMethodsString']?></p>
                         </div>
-                        <a href=<?php echo ROOT."/admin/list_of_orders"?> id="orders_lists" class="nav-link text-white p-0">
+                        <a href=<?php echo ROOT."/manager/list_of_payment_methods"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
                                 Edytuj metody płatności
                             </div>
@@ -207,146 +210,26 @@ include 'mng_nav.php';
                 <div class="col-12 col-sm-6 col-xl-4 mb-3">
                     <div class="card text-white bg-custom-19 h-100">
                         <div class="card-header">
-                            <i class="bi bi-truck"></i></i>&nbspMetody wysyłki
+                            <i class="bi bi-truck"></i></i>&nbspMetody dostawy
+                            <a style='float:right;' class="text-white" href="<?php echo ROOT."/manager/add_shipping_method"?>" >
+                                <i class="bi bi-plus-lg"></i>
+                            </a>
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title text-truncate">Dodanych metod wysyłki: <?=$data['shippingMethodsCount']?></h5>
+                            <h5 class="card-title text-truncate">Dodanych metod dostawy: <?=$data['shippingMethodsCount']?></h5>
                             <p class="card-text text-truncate"><?=$data['shippingMethodsString']?></p>
                         </div>
-                        <a href=<?php echo ROOT."/admin/list_of_orders"?> id="orders_lists" class="nav-link text-white p-0">
+                        <a href=<?php echo ROOT."/manager/list_of_shipping_methods"?> id="orders_lists" class="nav-link text-white p-0">
                             <div class="card-footer p-3">
-                                Edytuj metody wysyłki
+                                Edytuj metody dostawy
                             </div>
                         </a>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Third row on xl -->
-        <p class="mb-0">
-            <a class="text-muted small fw-bold text-uppercase text-decoration-none dash-list"
-                data-bs-toggle="collapse" href="#dashcollapse4" role="button" aria-expanded="true" aria-controls="dashcollapse4">Podstrony
-                <span class="bi bi-chevron-down right-icon ms-auto"></span>
-            </a>
-        </p>
-        <div class="collapse collapse show" id="dashcollapse4">
-            <div class="row">
-                <div class="col-12 col-sm-6 col-xl-4 mb-3">
-                    <div class="card text-white bg-custom-6 h-100">
-                        <a href=<?php echo ROOT."/admin/edit_page/1"?> id="orders_lists" class="nav-link text-white p-0">
-                            <div class="card-footer p-3">
-                            <?=!empty($data['siteLinks']['c1r1']) ? $data['siteLinks']['c1r1'] : 'Strona 1' ?>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-xl-4 mb-3">
-                    <div class="card text-white bg-custom-7 h-100">
-                        <a href="<?php echo ROOT."/admin/edit_page/2"?>" id="orders_lists" class="nav-link text-white p-0">
-                            <div class="card-footer p-3">
-                            <?=!empty($data['siteLinks']['c1r2']) ? $data['siteLinks']['c1r2'] : 'Strona 2' ?>
-                            </div>
-                        </a>
-                    </div>    
-                </div>
-                <div class="col-12 col-sm-6 col-xl-4 mb-3">
-                    <div class="card text-white bg-custom-8 h-100">
-                        <a href=<?php echo ROOT."/admin/edit_page/3"?> id="orders_lists" class="nav-link text-white p-0">
-                            <div class="card-footer p-3">
-                            <?=!empty($data['siteLinks']['c1r3']) ? $data['siteLinks']['c1r3'] : 'Strona 3' ?>
-                            </div>
-                        </a>
-                    </div>    
-                </div> 
-                <div class="col-12 col-sm-6 col-xl-4 mb-3">
-                    <div class="card text-white bg-custom-9 h-100" >
-                        <a href=<?php echo ROOT."/admin/edit_page/4"?> id="orders_lists" class="nav-link text-white p-0">
-                            <div class="card-footer p-3">
-                            <?=!empty($data['siteLinks']['c1r4']) ? $data['siteLinks']['c1r4'] : 'Strona 4' ?>
-                            </div>
-                        </a>
-                    </div>    
-                </div>  
-                <div class="col-12 col-sm-6 col-xl-4 mb-3">
-                    <div class="card text-white bg-custom-10 h-100" >
-                        <a href=<?php echo ROOT."/admin/edit_page/5"?> id="orders_lists" class="nav-link text-white p-0">
-                            <div class="card-footer p-3">
-                            <?=!empty($data['siteLinks']['c2r1']) ? $data['siteLinks']['c2r1'] : 'Strona 5' ?>
-                            </div>
-                        </a>
-                    </div>    
-                </div>     
-                <div class="col-12 col-sm-6 col-xl-4 mb-3">
-                    <div class="card text-white bg-custom-11 h-100" >
-                        <a href=<?php echo ROOT."/admin/edit_page/6"?> id="orders_lists" class="nav-link text-white p-0">
-                            <div class="card-footer p-3">
-                            <?=!empty($data['siteLinks']['c2r2']) ? $data['siteLinks']['c2r2'] : 'Strona 6' ?>
-                            </div>
-                        </a>
-                    </div>    
-                </div>   
-                <div class="col-12 col-sm-6 col-xl-4 mb-3">
-                    <div class="card text-white bg-custom-12 h-100" >
-                        <a href=<?php echo ROOT."/admin/edit_page/7"?> id="orders_lists" class="nav-link text-white p-0">
-                            <div class="card-footer p-3">
-                            <?=!empty($data['siteLinks']['c2r3']) ? $data['siteLinks']['c2r3'] : 'Strona 7' ?>
-                            </div>
-                        </a>
-                    </div>    
-                </div>  
-                <div class="col-12 col-sm-6 col-xl-4 mb-3">
-                    <div class="card text-white bg-custom-13 h-100" >
-                        <a href=<?php echo ROOT."/admin/edit_page/8"?> id="orders_lists" class="nav-link text-white p-0">
-                            <div class="card-footer p-3">
-                            <?=!empty($data['siteLinks']['c2r4']) ? $data['siteLinks']['c2r4'] : 'Strona 8' ?>
-                            </div>
-                        </a>
-                    </div>    
-                </div>     
-                <div class="col-12 col-sm-6 col-xl-4 mb-3">
-                    <div class="card text-white bg-custom-14 h-100" >
-                        <a href=<?php echo ROOT."/admin/edit_page/9"?> id="orders_lists" class="nav-link text-white p-0">
-                            <div class="card-footer p-3">
-                                Edytuj dolny tekst
-                            </div>
-                        </a>
-                    </div>    
-                </div>   
-            </div>
-        </div>
-          
-        <!-- Forth row on xl -->
-        <p class="mb-0">
-            <a class="text-muted small fw-bold text-uppercase text-decoration-none dash-list"
-            data-bs-toggle="collapse" href="#dashcollapse5" role="button" aria-expanded="true" 
-            aria-controls="dashcollapse5">Ustawienia
-                <span class="bi bi-chevron-down right-icon ms-auto"></span>
-            </a>
-        </p> 
-        <div class="collapse collapse show" id="dashcollapse5">
-            <div class="row">
-                <div class="col-12 col-sm-6 col-xl-4 mb-3">
-                    <div class="card text-white bg-custom-15 h-100" >
-                        <a href=<?php echo ROOT."/admin/edit_page/8"?> id="orders_lists" class="nav-link text-white p-0">
-                            <div class="card-footer p-3">
-                                Edytuj informacje
-                            </div>
-                        </a>
-                    </div>    
-                </div>  
-                <div class="col-12 col-sm-6 col-xl-4 mb-3">
-                    <div class="card text-white bg-custom-16 h-100" >
-                        <a href=<?php echo ROOT."/admin/edit_footer"?> id="orders_lists" class="nav-link text-white p-0">
-                            <div class="card-footer p-3">
-                                Edytuj stopkę
-                            </div>
-                        </a>
-                    </div>    
-                </div>  
-            </div>
-        </div>
 
-
+       
 
 
 

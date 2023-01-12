@@ -16,7 +16,7 @@ class Home extends Controller
         $randNumbers = array();
         
         $randNumbers = $this->randomGen(0,$itemsInDb-1,4);
-        
+
         $query = "SELECT id FROM items";
         $result = $db->query($query);
         $allItems = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -26,7 +26,10 @@ class Home extends Controller
         if($itemsInDb>0){
             $inQuery = "(";
 
-            for($i=0;$i<4;$i++){
+            $lengthOfItems = $itemsInDb;
+            if($lengthOfItems>4)
+                $lengthOfItems=4;
+            for($i=0;$i<$lengthOfItems;$i++){
                 $inQuery .= $allItems[$randNumbers[$i]]['id'] . ",";
             }
             $inQuery = rtrim($inQuery, ",");
@@ -36,7 +39,7 @@ class Home extends Controller
             FROM items i 
             INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
             INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
-            WHERE i.id IN " . $inQuery;
+            WHERE i.id IN " . $inQuery . " AND i.active=1 AND m.active=1";
             $result = $db->query($query);
             
             $selectedItems = $result->fetchAll(PDO::FETCH_ASSOC);
