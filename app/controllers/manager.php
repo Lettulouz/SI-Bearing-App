@@ -1082,7 +1082,7 @@ class Manager extends Controller
         $result = $db->prepare($query);
         $result->execute();
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
-        $query="SELECT CONCAT(name, ' ', unit) AS name FROM attributes";
+        $query="SELECT CONCAT(name, ' ', unit) AS name, isrange FROM attributes";
         $result2 = $db->prepare($query);
         $result2->execute();
         $result2 = $result2->fetchAll(PDO::FETCH_ASSOC);
@@ -1371,7 +1371,7 @@ class Manager extends Controller
         $result = $db->prepare($query);
         $result->execute();
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
-        $query="SELECT id, CONCAT(name, ' ', unit) AS name FROM attributes";
+        $query="SELECT id, CONCAT(name, ' ', unit) AS name, isrange AS isNotString FROM attributes";
         $result2 = $db->prepare($query);
         $result2->execute();
         $attributes = $result2->fetchAll(PDO::FETCH_ASSOC);
@@ -1408,7 +1408,7 @@ class Manager extends Controller
             array_push($prevCtg, $tempPrevCtg[$i]['categid']);
         }
 
-        $queryAttr="SELECT ai.id AS aiId, a.id AS attrId ,CONCAT(a.name, ' ', a.unit) AS attrname, ai.value AS aval
+        $queryAttr="SELECT ai.id AS aiId, a.id AS attrId ,CONCAT(a.name, ' ', a.unit) AS attrname, ai.value AS aval, a.isrange AS isNotString
         FROM items i 
         INNER JOIN attributesofitems ai ON i.id=ai.id_item
         INNER JOIN attributes a ON ai.id_attribute=a.id

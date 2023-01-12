@@ -705,7 +705,7 @@ class Store extends Controller
             ordercountry, ordervoivodeship, ordercity, orderpostcode, orderstreet, orderhomenumber, 
             orderphonenumber, ordername, orderlastname, price)
             VALUES ('".$_SESSION['idLoggedUser']."', '".$_POST['delivery']."', '".$_POST['payment']."',
-             'Zaraz Bedzie', '123456789', :country, :voivodeship, :city, :postcode, :street, :homeNumber, :phoneNumber, 
+             'Do akceptacji', '123456789', :country, :voivodeship, :city, :postcode, :street, :homeNumber, :phoneNumber, 
              :orderName, :orderLastname, '".$_SESSION['totalOrderPrice']."')";
             
             $order = $db->prepare($query);
