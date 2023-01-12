@@ -2246,7 +2246,7 @@ class Admin extends Controller
         $result = $db->prepare($query);
         $result->execute();
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
-        $query="SELECT id, name FROM attributes";
+        $query="SELECT id, name, isrange AS isNotString FROM attributes";
         $result2 = $db->prepare($query);
         $result2->execute();
         $attributes = $result2->fetchAll(PDO::FETCH_ASSOC);

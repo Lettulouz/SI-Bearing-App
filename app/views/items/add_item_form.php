@@ -143,7 +143,7 @@
             var html = '';
             html+='<div class="row">';
             html+='<div class="col-12 col-md-5 mb-3">';
-            html+='<select class="select2 form-control selectattr requiredattr form-select-lg" id="attribute_name' + attrNum +  '" aria-label="example-xl" onchange="updateAttrList(); test(this);" required>';
+            html+='<select class="select2 form-control selectattr requiredattr form-select-lg" id="attribute_name' + attrNum +  '" aria-label="example-xl" onchange="updateAttrList(); valueLimiter(this);" required>';
             html+='<option>';
             html+='</option>';
             tempPossibleOptions.forEach((id) => {
@@ -338,7 +338,7 @@
         });
 	});
 
-    function test(selectObject)
+    function valueLimiter(selectObject)
     {
         var value = selectObject.value;
         var id = selectObject.id.substring(14);

@@ -229,7 +229,7 @@
             html+='<div class="row">';
             html+='<input type="hidden" name="attrId'+attrNum+'" value="0">';
             html+='<div class="col-12 col-md-5 mb-3">';
-            html+='<select class="select2 form-control selectattr requiredattr form-select-lg" id="attribute_name' + attrNum +  '" aria-label="example-xl" onchange="updateAttrList(); test(this);" required>';
+            html+='<select class="select2 form-control selectattr requiredattr form-select-lg" id="attribute_name' + attrNum +  '" aria-label="example-xl" onchange="updateAttrList(); valueLimiter(this);" required>';
             html+='<option>';
             html+='</option>';
             tempPossibleOptions.forEach((name,index) => {
@@ -460,14 +460,14 @@
         }
     });
 
-    function test(selectObject)
+    function valueLimiter(selectObject)
     {
         var value = selectObject.value;
         var id = selectObject.id.substring(14);
         var attributeList = JSON.parse('<?php echo json_encode($data['attributes']); ?>');
 
         for(var attribute of attributeList){   
-            if(value == attribute['name']){
+            if(value == attribute['id']){
                 if(attribute['isNotString']){
                     $('#attribute_value'+id).mask('099999.99');
                 }
