@@ -46,7 +46,7 @@
             </td>
             </tr>";
             echo "<tr>
-                    <td colspan='12' class='p-0'>
+                    <td colspan='12' class='p-0 border-0'>
                             <div class='hidTab collapse container' id='row".$i."'>
                             <form  method='POST' class='form-inline row p-1' action ='".$editPath."/".$id."'>
                             <div class='d-flex justify-content-end'>
