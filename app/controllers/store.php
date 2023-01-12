@@ -551,12 +551,11 @@ class Store extends Controller
 
        
         $this->view('store/index', ['itemsArray'=>$itemsArr, 'search' => $search, 'limit1' => $page, 
-            'manufacturersArray' => $manufacturers, 'last'=> $endofitems,
-            'test' => $id_manufacturer, 'siteFooter' => $siteFooter, 'isLogged' => $isLogged, 
+            'manufacturersArray' => $manufacturers, 'last'=> $endofitems, 'siteFooter' => $siteFooter, 'isLogged' => $isLogged, 
             'loggedUser_name' => $loggedUser_name, 'categoriesArray'=>$categories, 'catalogsArray'=>$catalogs, 
             'attributesArray'=>$attributes, 'numberOfPages' => $numberOfPages, 'numberOfItems' => $numberOfItems, 
             'pricepartstart' => $pricepartstart, 'pricepartend' => $pricepartend, 'siteName' => $siteName, 
-            'sortValue' =>$sortValue]); // ten 'test' to do wywalenia na koniec
+            'sortValue' =>$sortValue]); 
             
     }
 
@@ -765,7 +764,7 @@ class Store extends Controller
                 FROM items i 
                 INNER JOIN manufacturercountries ms ON ms.id=i.id_manufacturercountry
                 INNER JOIN manufacturers m ON m.id=ms.id_manufacturer
-                WHERE i.id IN (".rtrim($_COOKIE['itemsInCart'],',').") AND active=1";
+                WHERE i.id IN (".rtrim($_COOKIE['itemsInCart'],',').") AND m.active=1 AND i.active=1";
 
             $itemsInCart = $db->query($query);
             $itemsInCart = $itemsInCart->fetchAll(PDO::FETCH_ASSOC);

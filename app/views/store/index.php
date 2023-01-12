@@ -324,14 +324,12 @@
         }
 
         document.querySelector("#pricepartstart").addEventListener("keypress", function(evt) {
-            console.log('test');
             if (evt.which != 8 && evt.which != 0 && evt.which != 46 && evt.which != 44 && evt.which < 48 || evt.which > 57) {
                 evt.preventDefault();
             }
         });
 
         document.querySelector("#pricepartend").addEventListener("keypress", function(evt) {
-            console.log('test2');
             if (evt.which != 8 && evt.which != 0 && evt.which != 46 && evt.which != 44 && evt.which < 48 || evt.which > 57) {
                 evt.preventDefault();
             }
