@@ -125,7 +125,7 @@
                 if (valueAndAmount[0] > 0) {
                     var itemPrice = parseFloat(valueAndAmount[0]) * parseFloat(valueAndAmount[1])
                     if(valueAndAmount[3] == '1')
-                        $('[name=' + key + ']').val(parseFloat(valueAndAmount[0]).toFixed(2));
+                        $('[name=' + key + ']').val(Math.trunc(parseFloat(valueAndAmount[0])*100)/100).toFixed(2);
                     else
                         $('[name=' + key + ']').val(parseFloat(valueAndAmount[0]));
                 } else if (Number.isNaN(valueAndAmount[0])) {
