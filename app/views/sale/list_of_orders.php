@@ -16,6 +16,88 @@
                 $itemsInOrder = $data['orderItems'];
                 $i=1;
                 foreach ($ordersArray as $order){
+                  if(empty($order['ordercountry']) && empty($order['ordervoivodeship']) && empty($order['orderpostcode']) 
+                    && empty($order['ordercity']) && empty($order['orderstreet']) && empty($order['orderhomenumber'])){
+                      echo "
+                        <div class='m-0 p-0 order_row'>
+                        <div class='row'>
+                            <a class='text-decoration-none text-dark' href=' " . ROOT . $data['orderpath']."orderview/". $order['id'] ."'>
+                            <div class='col-12 col-xl-1 text-center align-self-center d-block'><i class='bi bi-basket2 img-thumbnail' style='font-size:75px;'></i>
+                            </a>
+                            </div>
+                            <div class='col-12 col-xl-10 ms-1 ms-md-2'>
+                                <div class='row'>
+                
+                                        <div class='col-md-4'>
+                                          <a class='text-decoration-none text-dark'  href=' " . ROOT . $data['orderpath']."orderview/". $order['id'] ."'>
+                                            <span><strong>Stan zamówienia: " . $order['orderstate'] . "</strong></span> <br />
+                                            Kwota: " . $order['price'] . " zł<br />
+                                            Forma dostawy: " . $order['smName'] . " <br />
+                                            Numer paczki: " . $order['trackingnumber'] . " <br />
+                                            <input type='hidden' id='idd".$i."' value='".$order['id']."'>
+                                            <input type='hidden' id='state".$i."' value='".$order['orderstate']."'>
+                                            <input type='hidden' id='tracking".$i."' value='".$order['trackingnumber']."'>
+                                          </a>
+                                        </div>
+                                
+                                    <div class='col-md-6'>
+                                      <a class='text-decoration-none text-dark' href=' " . ROOT . $data['orderpath']."orderview/". $order['id'] ."'>
+                                        Dane: " . $order['ordername']  . " " . $order['orderlastname'] . " <br/>
+                                        Adres email: " . $order['email'] . " <br />
+                                        Numer telefonu: " . $order['orderphonenumber'] . " <br />
+                                        Kupujący: " . $order['user'] . " <br/>
+                                        <div class='col-md-12'>Adres dostawy: Nie dotyczy
+                                        </div>
+                                      </a>
+                                    </div>
+                                    <div class='col-md-2 align-self-center d-block'>
+                                    <button type='button' class='btn btn-dark editBtn'
+                                    data-bs-toggle='modal' order='".$i."'  data-bs-target='#orderModal'><i class='bi bi-pencil'></i></button>
+
+                                    <button type='button' class='btn btn-dark tabBtn'
+                                    data-bs-toggle='collapse' href='#orderItems".$i."' aria-expanded='false'><i class='bi bi-eye-fill eye'></i></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class='collapse mt-3 hidTab' id='orderItems".$i."'>
+                            <table class='table table-active coltab m-0'>
+                            <thead>
+                                <tr>
+                                <th>Produkt</th>
+                                <th>Producent</th>
+                                <th>Kraj</th>
+                                <th>Cena</th>		
+                                <th>Ilość</th>	
+                                </tr>
+                                </thead>	
+                                <tbody>";
+                                    foreach($itemsInOrder[$order['id']] as $item){
+                                        echo  "<tr>
+                                                <td>
+                                                    {$item['item']}
+                                                </td>
+                                                <td>
+                                                    {$item['mnf']}
+                                                </td>
+                                                <td>
+                                                    {$item['country']}
+                                                </td>
+                                                <td>
+                                                    {$item['price']}
+                                                </td>
+                                                <td>
+                                                    {$item['amount']}
+                                                </td>
+                                            </tr>";
+                                    }
+                              echo  "</tbody>
+                        </table>
+                          </div>
+                        </div><hr class='divider mt-3'>
+                        </div>";
+                        $i++;
+                    }else{
                     echo "
                         <div class='m-0 p-0 order_row'>
                         <div class='row'>
@@ -97,7 +179,9 @@
                         </div><hr class='divider mt-3'>
                         </div>";
                         $i++;
-                }}else{echo "Brak zamówień.";}?>
+                    }
+                  }
+                }else{echo "Brak zamówień.";}?>
     </div>
 
     <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
