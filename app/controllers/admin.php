@@ -1959,7 +1959,7 @@ class Admin extends Controller
         $result = $db->prepare($query);
         $result->execute();
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
-        $query="SELECT name, isrange FROM attributes";
+        $query="SELECT CONCAT(name, ' ', unit) AS name, isrange FROM attributes";
         $result2 = $db->prepare($query);
         $result2->execute();
         $result2 = $result2->fetchAll(PDO::FETCH_ASSOC);
@@ -2246,7 +2246,7 @@ class Admin extends Controller
         $result = $db->prepare($query);
         $result->execute();
         $items = $result->fetchAll(PDO::FETCH_ASSOC);
-        $query="SELECT id, name FROM attributes";
+        $query="SELECT id, CONCAT(name, ' ', unit) AS name FROM attributes";
         $result2 = $db->prepare($query);
         $result2->execute();
         $attributes = $result2->fetchAll(PDO::FETCH_ASSOC);
@@ -2283,7 +2283,7 @@ class Admin extends Controller
             array_push($prevCtg, $tempPrevCtg[$i]['categid']);
         }
 
-        $queryAttr="SELECT ai.id AS aiId, a.id AS attrId ,a.name AS attrname, ai.value AS aval, a.isrange AS isNotString
+        $queryAttr="SELECT ai.id AS aiId, a.id AS attrId ,CONCAT(a.name, ' ', a.unit) AS attrname, ai.value AS aval, a.isrange AS isNotString
         FROM items i 
         INNER JOIN attributesofitems ai ON i.id=ai.id_item
         INNER JOIN attributes a ON ai.id_attribute=a.id
