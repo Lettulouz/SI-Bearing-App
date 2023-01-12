@@ -676,7 +676,7 @@ class Store extends Controller
 
         isset($_SESSION['loggedUser_id']) ? $id_user=$_SESSION['loggedUser_id'] : $id_user = 0;
         $query="SELECT o.*, sm.name as smName FROM orders o INNER JOIN shippingmethods sm 
-        ON o.id_shippingmethod=sm.id WHERE id_user=:id_user";
+        ON o.id_shippingmethod=sm.id WHERE id_user=:id_user ORDER BY orderdate DESC";
         $orders = $db->prepare($query);
         $orders->bindParam(':id_user', $id_user);
         $orders->execute();
