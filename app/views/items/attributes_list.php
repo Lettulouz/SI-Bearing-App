@@ -18,6 +18,7 @@
         <tr>
         <th>Lp.</th>
         <th>Nazwa</th>
+        <th>Jednostka</th>
         <th></th>
         </tr>
         </thead>
@@ -35,6 +36,7 @@
             "<tr class='tabrow'>
             <td>{$i}</td>   
             <td>{$attribute['name']}</td>
+            <td>{$attribute['unit']}</td>
             <td class='px-0 mx-0'>
                 <button type='button' data-toggle='collapse' class='btn btn-dark d-inline btn-sm mx-1 tabBtn' 
                 data-bs-toggle='collapse' data-bs-target='#row".$i."' aria-expanded='false'>
