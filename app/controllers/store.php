@@ -649,7 +649,7 @@ class Store extends Controller
         $itemDescrs = $itemDescrs->fetchAll(PDO::FETCH_ASSOC);
 
 
-        $query="SELECT aoi.value as attrValue, a.name as attrName FROM items i
+        $query="SELECT aoi.value as attrValue, a.name as attrName, a.unit as attrUnit FROM items i
         INNER JOIN attributesofitems aoi ON i.id=aoi.id_item
         INNER JOIN attributes a ON a.id=aoi.id_attribute
         WHERE i.id=:id";

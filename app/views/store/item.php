@@ -61,10 +61,17 @@
                 <tbody>";
                 foreach ($attributes as $attribute) {
                     $attrName = $attribute['attrName'];
+                    $attrUnit = $attribute['attrUnit'];
                     $attrValue = $attribute['attrValue'];
                     echo "<tr>
-                    <td class='align-middle fw-bold text-center'>$attrName</td>
+                    <td class='align-middle fw-bold text-end'>$attrName</td>
+                    <td class='align-middle fw-bold text-start'>$attrUnit</td>
+                    <td></td>
+                    <td></td>              
                     <td class='align-middle text-start'>$attrValue</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                 </tr>";
                 }
                 echo "</tbody></table>";
