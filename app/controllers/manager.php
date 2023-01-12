@@ -53,6 +53,10 @@ class Manager extends Controller
                 $firstLine = "Błąd dodawania zdjęcia";
                 $secondLine = "";
             }
+            else if($sid==4){
+                $firstLine = "Błąd bazy danych";
+                $secondLine = "";
+            }
             $this->view('error_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
             $_SESSION['successOrErrorResponse'] = $path;
             header("Refresh: 0.75; url=" . ROOT . "/manager/" . $path);
@@ -440,27 +444,38 @@ class Manager extends Controller
                     $_SESSION['error_page'] = "add_catalog";
                     header("Location:" . ROOT . "/manager/error_page/2");
                 }else{
-                    $query="INSERT INTO catalog (name) VALUES (:cat_name)";
-                    $result = $db->prepare($query);
-                    $result->bindParam(':cat_name',$catname);
-                    $result->execute();
-                    //get catalog id
-                    $query="SELECT id FROM catalog WHERE name=:catname ORDER BY id DESC LIMIT 1";
-                    $result = $db->prepare($query);
-                    $result->bindParam(':catname', $catname);
-                    $result->execute();
-                    $cat_id=$result->fetch(PDO::FETCH_ASSOC);
-                    //connect items with catalog
-                    $query="INSERT INTO itemsincatalog (id_catalog,id_item) VALUES (:cat_id,:item_id)";
-                    foreach ($itemstocat as $item_id){
+                    try{
+                        $db->beginTransaction();
+                        $query="INSERT INTO catalog (name) VALUES (:cat_name)";
                         $result = $db->prepare($query);
-                        $result->bindParam(':cat_id',$cat_id['id']);
-                        $result->bindParam(':item_id',$item_id);
+                        $result->bindParam(':cat_name',$catname);
                         $result->execute();
+                        //get catalog id
+                        $query="SELECT id FROM catalog WHERE name=:catname ORDER BY id DESC LIMIT 1";
+                        $result = $db->prepare($query);
+                        $result->bindParam(':catname', $catname);
+                        $result->execute();
+                        $cat_id=$result->fetch(PDO::FETCH_ASSOC);
+                        //connect items with catalog
+                        $query="INSERT INTO itemsincatalog (id_catalog,id_item) VALUES (:cat_id,:item_id)";
+                        foreach ($itemstocat as $item_id){
+                            $result = $db->prepare($query);
+                            $result->bindParam(':cat_id',$cat_id['id']);
+                            $result->bindParam(':item_id',$item_id);
+                            $result->execute();
+                        }
+                        $result->closeCursor();
+                        $db->commit();
+                        $_SESSION['success_page'] = "add_catalog";
+                        unset($_SESSION['catname']);
+                        header("Location:" . ROOT . "/manager/success_page/1");
+                        return;
+                    }catch(Exception $ex){
+                        $db->rollBack();
+                        $_SESSION['error_page'] = "add_catalog";
+                        header("Location:" . ROOT . "/manager/error_page/4");
+                        return;
                     }
-                    $_SESSION['success_page'] = "add_catalog";
-                    unset($_SESSION['catname']);
-                    header("Location:" . ROOT . "/manager/success_page/1");
                 }
             }else{
                 $_SESSION['error_page'] = "add_catalog";
@@ -516,31 +531,43 @@ class Manager extends Controller
                         $_SESSION['error_page'] = "list_of_catalogs";
                         header("Location:" . ROOT . "/manager/error_page/2");
                     }else{
-                        $query="UPDATE catalog SET name=:catname WHERE id=:catid";
-                        $result = $db->prepare($query);
-                        $result->bindParam(':catname',$catname);
-                        $result->bindParam(':catid',$catid);
-                        $result->execute();
-
-                        //delete old items and add new to catalog
-                        $query="DELETE FROM itemsincatalog WHERE id_catalog=:catid";
-                        $result = $db->prepare($query);
-                        $result->bindParam(':catid',$catid);
-                        $result->execute();
-
-                        $query="INSERT INTO itemsincatalog (id_catalog,id_item) VALUES (:cat_id,:item_id)";
-                        foreach ($itemstocat as $item_id){
+                        try{
+                            $db->beginTransaction();
+                            $query="UPDATE catalog SET name=:catname WHERE id=:catid";
                             $result = $db->prepare($query);
-                            $result->bindParam(':cat_id',$catid);
-                            $result->bindParam(':item_id',$item_id);
+                            $result->bindParam(':catname',$catname);
+                            $result->bindParam(':catid',$catid);
                             $result->execute();
-                            }
-                        $_SESSION['success_page'] = "list_of_catalogs";
-                        header("Location:" . ROOT . "/manager/success_page/1");
+
+                            //delete old items and add new to catalog
+                            $query="DELETE FROM itemsincatalog WHERE id_catalog=:catid";
+                            $result = $db->prepare($query);
+                            $result->bindParam(':catid',$catid);
+                            $result->execute();
+
+                            $query="INSERT INTO itemsincatalog (id_catalog,id_item) VALUES (:cat_id,:item_id)";
+                            foreach ($itemstocat as $item_id){
+                                $result = $db->prepare($query);
+                                $result->bindParam(':cat_id',$catid);
+                                $result->bindParam(':item_id',$item_id);
+                                $result->execute();
+                                }
+                            $result->closeCursor();
+                            $db->commit();
+                            $_SESSION['success_page'] = "list_of_catalogs";
+                            header("Location:" . ROOT . "/manager/success_page/1");
+                            return;
+                        }catch(Exception $ex){
+                            $db->rollBack();
+                            $_SESSION['error_page'] = "list_of_catalogs";
+                            header("Location:" . ROOT . "/manager/error_page/4");
+                            return;
+                        }                       
                     }
                 }else{
                     $_SESSION['error_page'] = "list_of_catalogs";
                     header("Location:" . ROOT . "/manager/error_page/1");
+                    return;
                 }
             } 
 
@@ -705,43 +732,53 @@ class Manager extends Controller
             $countryArray = array();
 
             if(isset($_POST['selCountries'])&&!empty($_POST['manufacturerid'])){
-
-                $queryI="INSERT INTO manufacturercountries (id_manufacturer,id_country) VALUES (:mnf_id,:ctr_id)";
-                foreach ($selCountries as $country){
-                    array_push($countryArray, $country);
-                    $query="SELECT COUNT(id) FROM manufacturercountries WHERE id_manufacturer=:id_manufacturer AND id_country=:id_country";
+                try{
+                    $db->beginTransaction();
+                    $queryI="INSERT INTO manufacturercountries (id_manufacturer,id_country) VALUES (:mnf_id,:ctr_id)";
+                    foreach ($selCountries as $country){
+                        array_push($countryArray, $country);
+                        $query="SELECT COUNT(id) FROM manufacturercountries WHERE id_manufacturer=:id_manufacturer AND id_country=:id_country";
+                        $result = $db->prepare($query);
+                        $result->bindParam(':id_manufacturer',$manufacturerid);
+                        $result->bindParam(':id_country',$country);
+                        $result->execute();
+                        $mnf_id=$result->fetch(PDO::FETCH_ASSOC);
+                        if($mnf_id['COUNT(id)']>0)
+                            continue;
+                        $result = $db->prepare($queryI);
+                        $result->bindParam(':mnf_id',$manufacturerid);
+                        $result->bindParam(':ctr_id',$country);
+                        $result->execute();
+                    }
+                    $query="SELECT id, id_country FROM manufacturercountries WHERE id_manufacturer=:id_manufacturer";
                     $result = $db->prepare($query);
                     $result->bindParam(':id_manufacturer',$manufacturerid);
-                    $result->bindParam(':id_country',$country);
                     $result->execute();
-                    $mnf_id=$result->fetch(PDO::FETCH_ASSOC);
-                    if($mnf_id['COUNT(id)']>0)
-                        continue;
-                    $result = $db->prepare($queryI);
-                    $result->bindParam(':mnf_id',$manufacturerid);
-                    $result->bindParam(':ctr_id',$country);
-                    $result->execute();
+                    $arr=$result->fetchAll(PDO::FETCH_ASSOC);   
+                    $i=0;
+                    foreach($arr as $element){
+                        if(in_array(strval($element['id_country']), $countryArray)){
+                            print_r('jest');
+                        }else{
+                            $query="DELETE FROM manufacturercountries WHERE id=:id";
+                            $result = $db->prepare($query);
+                            $result->bindParam(':id',$arr[$i]['id']);
+                            $result->execute();
+                        }        
+                        $i++;
+                    } 
+                    $result->closeCursor();
+                    $db->commit();
+                    $_SESSION['success_page'] = "list_of_manufacturers";
+                    unset($_SESSION['manufacturername']);
+                    header("Location:" . ROOT . "/manager/success_page/1");
+                    return;
+                }catch(Exception $ex){
+                    $db->rollBack();
+                    $_SESSION['error_page'] = "add_countries_to_manufacturer";
+                    header("Location:" . ROOT . "/manager/error_page/4");
+                    return;
                 }
-                $query="SELECT id, id_country FROM manufacturercountries WHERE id_manufacturer=:id_manufacturer";
-                $result = $db->prepare($query);
-                $result->bindParam(':id_manufacturer',$manufacturerid);
-                $result->execute();
-                $arr=$result->fetchAll(PDO::FETCH_ASSOC);   
-                $i=0;
-                foreach($arr as $element){
-                    if(in_array(strval($element['id_country']), $countryArray)){
-                        print_r('jest');
-                    }else{
-                        $query="DELETE FROM manufacturercountries WHERE id=:id";
-                        $result = $db->prepare($query);
-                        $result->bindParam(':id',$arr[$i]['id']);
-                        $result->execute();
-                    }        
-                    $i++;
-                } 
-                $_SESSION['success_page'] = "add_manufacturer";
-                unset($_SESSION['manufacturername']);
-                header("Location:" . ROOT . "/manager/success_page/1");
                 
             }
             else{
@@ -842,60 +879,72 @@ class Manager extends Controller
             isset($_POST['isActive']) ? $isActive=1 : $isActive=0;
 
             if(!empty($_POST['mnfname'])){
-                $query="UPDATE manufacturers SET name=:mnfname, active=$isActive WHERE id=:mnfid";
-                $result = $db->prepare($query);
-                $result->bindParam(':mnfid', $mnfid);
-                $result->bindParam(':mnfname', $mnfname);
-                $result->execute();
+                try{
+                    $db->beginTransaction();
+                    $query="UPDATE manufacturers SET name=:mnfname, active=$isActive WHERE id=:mnfid";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':mnfid', $mnfid);
+                    $result->bindParam(':mnfname', $mnfname);
+                    $result->execute();
 
-                $query="SELECT id, COUNT(id) FROM manufacturers WHERE name=:mnfname";
-                $result = $db->prepare($query);
-                $result->bindParam(':mnfname', $mnfname);
-                $result->execute();
-                $mnf_id=$result->fetch(PDO::FETCH_ASSOC);
-                $temp = $mnf_id['COUNT(id)'];
-                $countryArray = array();
-                if($temp>0&&$mnf_id['id']!=$mnfid){
-                    $_SESSION['error_page'] = "list_of_manufacturers";
-                    header("Location:" . ROOT . "/manager/error_page/2");
-                }else{
-                    $queryI="INSERT INTO manufacturercountries (id_manufacturer,id_country) VALUES (:mnf_id,:ctr_id)";
-                    foreach ($countrymnf as $country){
-                        array_push($countryArray, strval($country));
-                        print_r($countryArray);
-                        $query="SELECT COUNT(id) FROM manufacturercountries WHERE id_manufacturer=:id_manufacturer AND id_country=:id_country";
+                    $query="SELECT id, COUNT(id) FROM manufacturers WHERE name=:mnfname";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':mnfname', $mnfname);
+                    $result->execute();
+                    $mnf_id=$result->fetch(PDO::FETCH_ASSOC);
+                    $temp = $mnf_id['COUNT(id)'];
+                    $countryArray = array();
+                    if($temp>0&&$mnf_id['id']!=$mnfid){
+                        $_SESSION['error_page'] = "list_of_manufacturers";
+                        header("Location:" . ROOT . "/manager/error_page/2");
+                    }else{
+                        $queryI="INSERT INTO manufacturercountries (id_manufacturer,id_country) VALUES (:mnf_id,:ctr_id)";
+                        foreach ($countrymnf as $country){
+                            array_push($countryArray, strval($country));
+                            print_r($countryArray);
+                            $query="SELECT COUNT(id) FROM manufacturercountries WHERE id_manufacturer=:id_manufacturer AND id_country=:id_country";
+                            $result = $db->prepare($query);
+                            $result->bindParam(':id_manufacturer',$mnfid);
+                            $result->bindParam(':id_country',$country);
+                            $result->execute();
+                            $mnf_id=$result->fetch(PDO::FETCH_ASSOC);
+                            if($mnf_id['COUNT(id)']>0)
+                                continue;
+                            $result = $db->prepare($queryI);
+                            $result->bindParam(':mnf_id',$mnfid);
+                            $result->bindParam(':ctr_id',$country);
+                            $result->execute();
+                        }
+                        $query="SELECT id, id_country FROM manufacturercountries WHERE id_manufacturer=:id_manufacturer";
                         $result = $db->prepare($query);
                         $result->bindParam(':id_manufacturer',$mnfid);
-                        $result->bindParam(':id_country',$country);
                         $result->execute();
-                        $mnf_id=$result->fetch(PDO::FETCH_ASSOC);
-                        if($mnf_id['COUNT(id)']>0)
-                            continue;
-                        $result = $db->prepare($queryI);
-                        $result->bindParam(':mnf_id',$mnfid);
-                        $result->bindParam(':ctr_id',$country);
-                        $result->execute();
-                    }
-                    $query="SELECT id, id_country FROM manufacturercountries WHERE id_manufacturer=:id_manufacturer";
-                    $result = $db->prepare($query);
-                    $result->bindParam(':id_manufacturer',$mnfid);
-                    $result->execute();
-                    $arr=$result->fetchAll(PDO::FETCH_ASSOC);   
-                    $i=0;
-                    foreach($arr as $element){
-                        if(in_array(strval($element['id_country']), $countryArray)){
-                            print_r('jest');
-                        }else{
-                            $query="DELETE FROM manufacturercountries WHERE id=:id";
-                            $result = $db->prepare($query);
-                            $result->bindParam(':id',$arr[$i]['id']);
-                            $result->execute();
-                        }        
-                        $i++;
-                    }
+                        $arr=$result->fetchAll(PDO::FETCH_ASSOC);   
+                        $i=0;
+                        foreach($arr as $element){
+                            if(in_array(strval($element['id_country']), $countryArray)){
+                                print_r('jest');
+                            }else{
+                                $query="DELETE FROM manufacturercountries WHERE id=:id";
+                                $result = $db->prepare($query);
+                                $result->bindParam(':id',$arr[$i]['id']);
+                                $result->execute();
+                            }        
+                            $i++;
+                        }
+                        
+                        $result->closeCursor();
+                        $db->commit();
 
-                    $_SESSION['success_page'] = "list_of_manufacturers";
-                    header("Location:" . ROOT . "/manager/success_page/1");
+                        $_SESSION['success_page'] = "list_of_manufacturers";
+                        header("Location:" . ROOT . "/manager/success_page/1");
+                        return;
+                    }
+                }catch(Exception $ex){
+                    $db->rollBack();
+                    $_SESSION['error_page'] = "add_manufacturer";
+                    header("Location:" . ROOT . "/manager/error_page/4");
+                    return;
                 }
             }else{
                 $_SESSION['error_page'] = "list_of_manufacturers";
@@ -966,108 +1015,117 @@ class Manager extends Controller
                 $itemQuantity = $_POST['quantity'];
                 $itemManufacturer = $_POST['manufacturer'];
                 $selCategories = $_POST['selCategories'];
+                try{
+                    $db->beginTransaction();
+                    $query="INSERT INTO items (id_manufacturercountry, name, amount, price, active) 
+                    VALUES (:id_manufacturercountry, :item_name, :item_quantity, :item_price, 1)";
 
-                $query="INSERT INTO items (id_manufacturercountry, name, amount, price, active) 
-                VALUES (:id_manufacturercountry, :item_name, :item_quantity, :item_price, 1)";
-
-                $result = $db->prepare($query);
-                $result->bindParam(':id_manufacturercountry',$itemManufacturer);
-                $result->bindParam(':item_name',$itemName);
-                $result->bindParam(':item_price',$itemPrice);
-                $result->bindParam(':item_quantity',$itemQuantity);
-                $result->execute();
-                
-                $query="SELECT id FROM items WHERE name=:item_name ORDER BY id DESC LIMIT 1";
-                $result = $db->prepare($query);
-                $result->bindParam(':item_name', $itemName);
-                $result->execute();
-                $item_id=$result->fetch(PDO::FETCH_ASSOC);
-                $item_id=$item_id['id'];
-
-                $path = $_FILES['formFile']['name'];
-                $ext = pathinfo($path, PATHINFO_EXTENSION);
-                $imagename = "[" . $item_id . "]." . $ext;    
-                $tmpname = $_FILES['formFile']['tmp_name'];
-                if (!move_uploaded_file($tmpname, PHOTOSPATH . "/" . $imagename)) {
-                    $_SESSION['error_page'] = "list_of_items";
-                    header("Location:" . ROOT . "/manager/error_page/3");
-                } 
-
-                foreach($selCategories as $i){
-                    $query="INSERT INTO categoriesofitem (id_category, id_item) 
-                    VALUES (:id_categ, :id_item)";
                     $result = $db->prepare($query);
-                    $result->bindParam(':id_categ',$i);
-                    $result->bindParam(':id_item',$item_id);                                                                      
+                    $result->bindParam(':id_manufacturercountry',$itemManufacturer);
+                    $result->bindParam(':item_name',$itemName);
+                    $result->bindParam(':item_price',$itemPrice);
+                    $result->bindParam(':item_quantity',$itemQuantity);
                     $result->execute();
-                }
-
-                $i = 1;
-                while(isset($_POST["attribute_name" . $i])){
-                    $query="SELECT id, isrange FROM attributes WHERE name=:attr_name";
-                    $result = $db->prepare($query);
-                    $result->bindParam(':attr_name', $_POST["attribute_name" . $i]);
-                    $result->execute();
-                    $result=$result->fetch(PDO::FETCH_ASSOC); 
-                    $attr_id=$result['id'];
-                    $attr_isrange=$result['isrange'];
                     
-                    if($attr_isrange == 0){
-                        $query="INSERT INTO attributesofitems (id_item, id_attribute, value) 
-                        VALUES (:id_item, :id_attribute, :in_value)";
-                        $result = $db->prepare($query);
-                        $result->bindParam(':id_item',$item_id);
-                        $result->bindParam(':id_attribute',$attr_id);
-                        $result->bindParam(':in_value',$_POST["attribute_value" . $i]);
-                        $result->execute();
-                    }else if($attr_isrange == 1){
-                        $attrValuePost = $_POST["attribute_value" . $i];
-                        $floatVal = floatval($attrValuePost);
+                    $query="SELECT id FROM items WHERE name=:item_name ORDER BY id DESC LIMIT 1";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':item_name', $itemName);
+                    $result->execute();
+                    $item_id=$result->fetch(PDO::FETCH_ASSOC);
+                    $item_id=$item_id['id'];
 
-                        $query="INSERT INTO attributesofitems (id_item, id_attribute, value, valuedecimal) 
-                        VALUES (:id_item, :id_attribute, :in_value, :in_valuedecimal)";
+                    $path = $_FILES['formFile']['name'];
+                    $ext = pathinfo($path, PATHINFO_EXTENSION);
+                    $imagename = "[" . $item_id . "]." . $ext;    
+                    $tmpname = $_FILES['formFile']['tmp_name'];
+                    if (!move_uploaded_file($tmpname, PHOTOSPATH . "/" . $imagename)) {
+                        $_SESSION['error_page'] = "list_of_items";
+                        header("Location:" . ROOT . "/manager/error_page/3");
+                    } 
+
+                    foreach($selCategories as $i){
+                        $query="INSERT INTO categoriesofitem (id_category, id_item) 
+                        VALUES (:id_categ, :id_item)";
                         $result = $db->prepare($query);
-                        $result->bindParam(':id_item',$item_id);
-                        $result->bindParam(':id_attribute',$attr_id);
-                        if($floatVal)
-                        {
-                            $result->bindParam(':in_valuedecimal',$attrValuePost);
-                            $result->bindParam(':in_value',$attrValuePost);
-                        }else{
-                            $attrValuePost = 0;
-                            $result->bindParam(':in_valuedecimal',$attrValuePost);
-                            $result->bindParam(':in_value',$attrValuePost);
-                        }
+                        $result->bindParam(':id_categ',$i);
+                        $result->bindParam(':id_item',$item_id);                                                                      
                         $result->execute();
                     }
 
+                    $i = 1;
+                    while(isset($_POST["attribute_name" . $i])){
+                        $query="SELECT id, isrange FROM attributes WHERE name=:attr_name";
+                        $result = $db->prepare($query);
+                        $result->bindParam(':attr_name', $_POST["attribute_name" . $i]);
+                        $result->execute();
+                        $result=$result->fetch(PDO::FETCH_ASSOC); 
+                        $attr_id=$result['id'];
+                        $attr_isrange=$result['isrange'];
+                        
+                        if($attr_isrange == 0){
+                            $query="INSERT INTO attributesofitems (id_item, id_attribute, value) 
+                            VALUES (:id_item, :id_attribute, :in_value)";
+                            $result = $db->prepare($query);
+                            $result->bindParam(':id_item',$item_id);
+                            $result->bindParam(':id_attribute',$attr_id);
+                            $result->bindParam(':in_value',$_POST["attribute_value" . $i]);
+                            $result->execute();
+                        }else if($attr_isrange == 1){
+                            $attrValuePost = $_POST["attribute_value" . $i];
+                            $floatVal = floatval($attrValuePost);
 
-                   // var_dump($_POST["attribute_name" . $i] . ", " . $_POST["attribute_value" . $i]);
-                    $i += 1;
-                }      
-                
-                $i = 1;
-                while(isset($_POST["descriptionTitle" . $i])){
-                    $query="SELECT id FROM descriptions WHERE title=:desc_title";
-                    $result = $db->prepare($query);
-                    $result->bindParam(':desc_title', $_POST["descriptionTitle" . $i]);
-                    $result->execute();
-                    $attr_id=$result->fetch(PDO::FETCH_ASSOC); 
+                            $query="INSERT INTO attributesofitems (id_item, id_attribute, value, valuedecimal) 
+                            VALUES (:id_item, :id_attribute, :in_value, :in_valuedecimal)";
+                            $result = $db->prepare($query);
+                            $result->bindParam(':id_item',$item_id);
+                            $result->bindParam(':id_attribute',$attr_id);
+                            if($floatVal)
+                            {
+                                $result->bindParam(':in_valuedecimal',$attrValuePost);
+                                $result->bindParam(':in_value',$attrValuePost);
+                            }else{
+                                $attrValuePost = 0;
+                                $result->bindParam(':in_valuedecimal',$attrValuePost);
+                                $result->bindParam(':in_value',$attrValuePost);
+                            }
+                            $result->execute();
+                        }
 
-                    $query="INSERT INTO descriptions (id_item, title, description) 
-                    VALUES (:id_item, :title, :desc)";
-                    $result = $db->prepare($query);
-                    $result->bindParam(':id_item',$item_id);
-                    $result->bindParam(':title',$_POST["descriptionTitle" . $i]);
-                    $result->bindParam(':desc',$_POST["description" . $i]);
-                    $result->execute();
 
-                    $i += 1;
-                }  
+                    // var_dump($_POST["attribute_name" . $i] . ", " . $_POST["attribute_value" . $i]);
+                        $i += 1;
+                    }      
+                    
+                    $i = 1;
+                    while(isset($_POST["descriptionTitle" . $i])){
+                        $query="SELECT id FROM descriptions WHERE title=:desc_title";
+                        $result = $db->prepare($query);
+                        $result->bindParam(':desc_title', $_POST["descriptionTitle" . $i]);
+                        $result->execute();
+                        $attr_id=$result->fetch(PDO::FETCH_ASSOC); 
 
-                $_SESSION['success_page'] = "list_of_items";
-                header("Location:" . ROOT . "/manager/success_page/1");
+                        $query="INSERT INTO descriptions (id_item, title, description) 
+                        VALUES (:id_item, :title, :desc)";
+                        $result = $db->prepare($query);
+                        $result->bindParam(':id_item',$item_id);
+                        $result->bindParam(':title',$_POST["descriptionTitle" . $i]);
+                        $result->bindParam(':desc',$_POST["description" . $i]);
+                        $result->execute();
 
+                        $i += 1;
+                    }  
+
+                    $result->closeCursor();
+                    $db->commit();
+                    $_SESSION['success_page'] = "list_of_items";
+                    header("Location:" . ROOT . "/manager/success_page/1");
+                    return;
+                }catch(Exception $ex){
+                    $db->rollBack();
+                    $_SESSION['error_page'] = "add_item";
+                    header("Location:" . ROOT . "/manager/error_page/4");
+                    return;
+                }
             }else{
                 $_SESSION['error_page'] = "list_of_items";
                 header("Location:" . ROOT . "/manager/error_page/1");
@@ -1125,237 +1183,245 @@ class Manager extends Controller
                 $itemQuantity = $_POST['quantity'];
                 $itemManufacturer = $_POST['manufacturer'];
                 $selCategories = $_POST['selCategories'];
+                try{
+                    $db->beginTransaction();
+                    $query="UPDATE items i SET id_manufacturercountry=:id_manufacturercountry, name=:item_name, amount=:item_quantity, price=:item_price
+                    WHERE i.id=:id";
 
-                $query="UPDATE items i SET id_manufacturercountry=:id_manufacturercountry, name=:item_name, amount=:item_quantity, price=:item_price
-                WHERE i.id=:id";
-
-                $result = $db->prepare($query);
-                $result->bindParam(':id_manufacturercountry',$itemManufacturer);
-                $result->bindParam(':item_name',$itemName);
-                $result->bindParam(':item_price',$itemPrice);
-                $result->bindParam(':item_quantity',$itemQuantity);
-                $result->bindParam(':id',$editId);
-                $result->execute();
-
-                $query="SELECT id FROM items WHERE name=:item_name ORDER BY id DESC LIMIT 1";
-                $result = $db->prepare($query);
-                $result->bindParam(':item_name', $itemName);
-                $result->execute();
-                $item_id=$result->fetch(PDO::FETCH_ASSOC);
-                $item_id=$item_id['id'];
-
-
-
-                //////////////////////categories//////////////////////////////////////////
-                $categArray = array();
-                $queryCateg="INSERT INTO categoriesofitem (id_category,id_item) VALUES (:id_categ,:id)";
-
-                foreach($selCategories as $i){
-                    array_push($categArray, $i);
-                    $query="SELECT COUNT(id_category) FROM categoriesofitem WHERE id_category=:id_category AND id_item=:id_item";
                     $result = $db->prepare($query);
-                    $result->bindParam(':id_category',$i);
-                    $result->bindParam(':id_item',$editId);
-                    $result->execute();
-                    $categ_id=$result->fetch(PDO::FETCH_ASSOC);
-                    if($categ_id['COUNT(id_category)']>0)
-                        continue;
-                    $result = $db->prepare($queryCateg);
-                    $result->bindParam(':id_categ',$i);
+                    $result->bindParam(':id_manufacturercountry',$itemManufacturer);
+                    $result->bindParam(':item_name',$itemName);
+                    $result->bindParam(':item_price',$itemPrice);
+                    $result->bindParam(':item_quantity',$itemQuantity);
                     $result->bindParam(':id',$editId);
                     $result->execute();
-                }
 
-                $query="SELECT id, id_category FROM categoriesofitem WHERE id_item=:id_item";
-                $result = $db->prepare($query);
-                $result->bindParam(':id_item',$editId);
-                $result->execute();
-                $arr=$result->fetchAll(PDO::FETCH_ASSOC);   
-                $i=0;
-                foreach($arr as $element){
-                    if(in_array(strval($element['id_category']), $categArray)){
+                    $query="SELECT id FROM items WHERE name=:item_name ORDER BY id DESC LIMIT 1";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':item_name', $itemName);
+                    $result->execute();
+                    $item_id=$result->fetch(PDO::FETCH_ASSOC);
+                    $item_id=$item_id['id'];
 
-                    }else{
-                        $query="DELETE FROM categoriesofitem WHERE id=:id";
+
+
+                    //////////////////////categories//////////////////////////////////////////
+                    $categArray = array();
+                    $queryCateg="INSERT INTO categoriesofitem (id_category,id_item) VALUES (:id_categ,:id)";
+
+                    foreach($selCategories as $i){
+                        array_push($categArray, $i);
+                        $query="SELECT COUNT(id_category) FROM categoriesofitem WHERE id_category=:id_category AND id_item=:id_item";
                         $result = $db->prepare($query);
-                        $result->bindParam(':id',$arr[$i]['id']);
+                        $result->bindParam(':id_category',$i);
+                        $result->bindParam(':id_item',$editId);
                         $result->execute();
-                    }        
-                    $i++;
-                } 
+                        $categ_id=$result->fetch(PDO::FETCH_ASSOC);
+                        if($categ_id['COUNT(id_category)']>0)
+                            continue;
+                        $result = $db->prepare($queryCateg);
+                        $result->bindParam(':id_categ',$i);
+                        $result->bindParam(':id',$editId);
+                        $result->execute();
+                    }
 
-                ///////////////////////////ATTR/////////////////////////////////////
+                    $query="SELECT id, id_category FROM categoriesofitem WHERE id_item=:id_item";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':id_item',$editId);
+                    $result->execute();
+                    $arr=$result->fetchAll(PDO::FETCH_ASSOC);   
+                    $i=0;
+                    foreach($arr as $element){
+                        if(in_array(strval($element['id_category']), $categArray)){
 
-                $remainingAttrID = array();
-
-                $i = 1;
-
-                for($i=1;$i<=$_POST["idOfLastAttr"];$i++){
-                    if(!isset($_POST["attribute_name" . $i]) &&!isset($_POST["attribute_value" . $i])&&!isset($_POST["attrId" . $i])){
-
-                    }else{
-                        if(!empty($_POST["attribute_name" . $i])){
-                            $query="SELECT isrange FROM attributes WHERE id=:attr_id";
+                        }else{
+                            $query="DELETE FROM categoriesofitem WHERE id=:id";
                             $result = $db->prepare($query);
-                            $result->bindParam(':attr_id', $_POST["attribute_name" . $i]);
+                            $result->bindParam(':id',$arr[$i]['id']);
                             $result->execute();
-                            $result=$result->fetch(PDO::FETCH_ASSOC); 
-                            $attr_isrange=$result['isrange'];
-                            if($_POST["attrId" . $i] != 0){       
-                                if($attr_isrange == 0){               
-                                    $query="UPDATE attributesofitems SET id_attribute=:id_attr, value=:val WHERE id=:id";
-                                    $result = $db->prepare($query);
-                                    $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
-                                    $result->bindParam(':val',$_POST["attribute_value" . $i]);
-                                    $result->bindParam(':id',$_POST["attrId" . $i]);
-                                    $result->execute();
+                        }        
+                        $i++;
+                    } 
+
+                    ///////////////////////////ATTR/////////////////////////////////////
+
+                    $remainingAttrID = array();
+
+                    $i = 1;
+
+                    for($i=1;$i<=$_POST["idOfLastAttr"];$i++){
+                        if(!isset($_POST["attribute_name" . $i]) &&!isset($_POST["attribute_value" . $i])&&!isset($_POST["attrId" . $i])){
+
+                        }else{
+                            if(!empty($_POST["attribute_name" . $i])){
+                                $query="SELECT isrange FROM attributes WHERE id=:attr_id";
+                                $result = $db->prepare($query);
+                                $result->bindParam(':attr_id', $_POST["attribute_name" . $i]);
+                                $result->execute();
+                                $result=$result->fetch(PDO::FETCH_ASSOC); 
+                                $attr_isrange=$result['isrange'];
+                                if($_POST["attrId" . $i] != 0){       
+                                    if($attr_isrange == 0){               
+                                        $query="UPDATE attributesofitems SET id_attribute=:id_attr, value=:val WHERE id=:id";
+                                        $result = $db->prepare($query);
+                                        $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
+                                        $result->bindParam(':val',$_POST["attribute_value" . $i]);
+                                        $result->bindParam(':id',$_POST["attrId" . $i]);
+                                        $result->execute();
+                                    }else{
+                                        $attrValuePost = $_POST["attribute_value" . $i];
+                                        $floatVal = floatval($attrValuePost);
+                                    
+                                        $query="UPDATE attributesofitems SET id_attribute=:id_attr, value=:val, valuedecimal=:valuedecimal WHERE id=:id";
+                                        $result = $db->prepare($query);
+                                        $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
+                                        if($floatVal){
+                                            $result->bindParam(':val',$attrValuePost);
+                                            $result->bindParam(':valuedecimal',$attrValuePost);
+                                        }else{
+                                            $attrValuePost = 0;
+                                            $result->bindParam(':val',$attrValuePost);
+                                            $result->bindParam(':valuedecimal',$attrValuePost);
+                                        }
+                                        $result->bindParam(':id',$_POST["attrId" . $i]);
+                                        $result->execute();
+
+                                    }
+                                    array_push($remainingAttrID, $_POST["attrId".$i]);
                                 }else{
-                                    $attrValuePost = $_POST["attribute_value" . $i];
-                                    $floatVal = floatval($attrValuePost);
-                                
-                                    $query="UPDATE attributesofitems SET id_attribute=:id_attr, value=:val, valuedecimal=:valuedecimal WHERE id=:id";
-                                    $result = $db->prepare($query);
-                                    $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
-                                    if($floatVal){
-                                        $result->bindParam(':val',$attrValuePost);
-                                        $result->bindParam(':valuedecimal',$attrValuePost);
-                                    }else{
-                                        $attrValuePost = 0;
-                                        $result->bindParam(':val',$attrValuePost);
-                                        $result->bindParam(':valuedecimal',$attrValuePost);
+                                    if($attr_isrange == 0){               
+                                        $query="INSERT INTO attributesofitems (id_item, id_attribute, value) VALUES (:id_item, :id_attr, :val)";
+                                        $result = $db->prepare($query);
+                                        $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
+                                        $result->bindParam(':val',$_POST["attribute_value" . $i]);
+                                        $result->bindParam(':id_item',$editId);
+                                        $result->execute();
+                                        $aId = $db->lastInsertId();
+                                        array_push($remainingAttrID, $aId);
+                                    }else if($attr_isrange == 1){
+                                        $attrValuePost = $_POST["attribute_value" . $i];
+                                        $floatVal = floatval($attrValuePost);
+
+                                        $query="INSERT INTO attributesofitems (id_item, id_attribute, value, valuedecimal) VALUES (:id_item, :id_attr, :val, :valuedecimal)";
+                                        $result = $db->prepare($query);
+                                        $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
+
+                                        if($floatVal)
+                                        {
+                                            $result->bindParam(':val',$attrValuePost);
+                                            $result->bindParam(':valuedecimal',$attrValuePost);
+                                        }else{
+                                            $attrValuePost = 0;
+                                            $result->bindParam(':val',$attrValuePost);
+                                            $result->bindParam(':valuedecimal',$attrValuePost);
+                                        }
+                                        $result->bindParam(':id_item',$editId);
+                                        $result->execute();
+                                        $aId = $db->lastInsertId();
+                                        array_push($remainingAttrID, $aId);
                                     }
-                                    $result->bindParam(':id',$_POST["attrId" . $i]);
-                                    $result->execute();
-
-                                }
-                                array_push($remainingAttrID, $_POST["attrId".$i]);
-                            }else{
-                                if($attr_isrange == 0){               
-                                    $query="INSERT INTO attributesofitems (id_item, id_attribute, value) VALUES (:id_item, :id_attr, :val)";
-                                    $result = $db->prepare($query);
-                                    $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
-                                    $result->bindParam(':val',$_POST["attribute_value" . $i]);
-                                    $result->bindParam(':id_item',$editId);
-                                    $result->execute();
-                                    $aId = $db->lastInsertId();
-                                    array_push($remainingAttrID, $aId);
-                                }else if($attr_isrange == 1){
-                                    $attrValuePost = $_POST["attribute_value" . $i];
-                                    $floatVal = floatval($attrValuePost);
-
-                                    $query="INSERT INTO attributesofitems (id_item, id_attribute, value, valuedecimal) VALUES (:id_item, :id_attr, :val, :valuedecimal)";
-                                    $result = $db->prepare($query);
-                                    $result->bindParam(':id_attr',$_POST["attribute_name" . $i]);
-
-                                    if($floatVal)
-                                    {
-                                        $result->bindParam(':val',$attrValuePost);
-                                        $result->bindParam(':valuedecimal',$attrValuePost);
-                                    }else{
-                                        $attrValuePost = 0;
-                                        $result->bindParam(':val',$attrValuePost);
-                                        $result->bindParam(':valuedecimal',$attrValuePost);
-                                    }
-                                    $result->bindParam(':id_item',$editId);
-                                    $result->execute();
-                                    $aId = $db->lastInsertId();
-                                    array_push($remainingAttrID, $aId);
                                 }
                             }
+                            else{
+                                $_SESSION['error_page'] = "list_of_items";
+                                header("Location:" . ROOT . "/manager/error_page/1");
+                            }
                         }
-                        else{
+                    }
+
+                    $AttrIdsInDatabase = array();
+
+                    $query="SELECT id FROM attributesofitems WHERE id_item=:id_item";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':id_item',$editId);
+                    $result->execute();
+                    $AttrIdsInDb=$result->fetchAll(PDO::FETCH_ASSOC); 
+
+                    foreach($AttrIdsInDb as $AidInDb){
+                        array_push($AttrIdsInDatabase, $AidInDb['id']);
+                    }
+                    $array4 = array_diff($AttrIdsInDatabase,$remainingAttrID);
+                    foreach($array4 as $element){
+                        $query = "DELETE FROM attributesofitems WHERE id=:id";
+                        $result = $db->prepare($query);
+                        $result->bindParam(':id',$element);
+                        $result->execute();
+                    }
+
+                    ///////////////////////////////DESC////////////////////////////////////////////
+
+                    $remainingDescIds = array();
+                    
+                    for($i=1;$i<=$_POST["idOfLastDesc"];$i++){
+                        if(!isset($_POST["descriptionTitle" . $i]) && !isset($_POST["description" . $i])){
+
+                        }else{
+                            if($_POST["descriptionId" . $i] != 0){
+                                $query="UPDATE descriptions SET title=:title, description=:desc WHERE id=:id";
+                                $result = $db->prepare($query);
+                                $result->bindParam(':title',$_POST["descriptionTitle" . $i]);
+                                $result->bindParam(':desc',$_POST["description" . $i]);
+                                $result->bindParam(':id',$_POST["descriptionId" . $i]);
+                                $result->execute();
+                                array_push($remainingDescIds, $_POST["descriptionId" . $i]);
+                            }
+                            else{
+                                $query="INSERT INTO descriptions (id_item, title, description) VALUES (:id_item, :title, :description)";
+                                $result = $db->prepare($query);
+                                $result->bindParam(':title',$_POST["descriptionTitle" . $i]);
+                                $result->bindParam(':description',$_POST["description" . $i]);
+                                $result->bindParam(':id_item',$editId);
+                                $result->execute();
+                                $lIId = $db->lastInsertId();
+                                array_push($remainingDescIds, $lIId);
+                            }
+                        }
+                    }      
+
+                    $idsInDatabase = array();
+
+                    $query="SELECT id FROM descriptions WHERE id_item=:id_item";
+                    $result = $db->prepare($query);
+                    $result->bindParam(':id_item',$editId);
+                    $result->execute();
+                    $idsInDb=$result->fetchAll(PDO::FETCH_ASSOC); 
+
+                    foreach($idsInDb as $idInDb){
+                        array_push($idsInDatabase, $idInDb['id']);
+                    }
+
+                    $array3 = array_diff($idsInDatabase,$remainingDescIds);
+
+                    foreach($array3 as $element){
+                        $query = "DELETE FROM descriptions WHERE id=:id";
+                        $result = $db->prepare($query);
+                        $result->bindParam(':id',$element);
+                        $result->execute();
+                    }
+
+                    $imagePathCheck = PHOTOSPATH . "/[" . $item_id. "].png";
+                    if(!empty($_FILES['formFile']['name'])){
+                        if(file_exists($imagePathCheck)) unlink($imagePathCheck);
+                        $path = $_FILES['formFile']['name'];
+                        $ext = pathinfo($path, PATHINFO_EXTENSION);
+                        $imagename = "[" . $item_id . "]." . $ext;    
+                        $tmpname = $_FILES['formFile']['tmp_name'];
+                        if (!move_uploaded_file($tmpname, PHOTOSPATH . "/" . $imagename)) {
                             $_SESSION['error_page'] = "list_of_items";
-                            header("Location:" . ROOT . "/manager/error_page/1");
+                            header("Location:" . ROOT . "/manager/error_page/3");
                         }
                     }
+                    $result->closeCursor();
+                    $db->commit();
+                    $_SESSION['success_page'] = "list_of_items";
+                    header("Location:" . ROOT . "/manager/success_page/2");
+                    return;
+                }catch(Exception $ex){
+                    $db->rollBack();
+                    $_SESSION['error_page'] = "edit_item";
+                    header("Location:" . ROOT . "/manager/error_page/4");
+                    return;
                 }
-
-                $AttrIdsInDatabase = array();
-
-                $query="SELECT id FROM attributesofitems WHERE id_item=:id_item";
-                $result = $db->prepare($query);
-                $result->bindParam(':id_item',$editId);
-                $result->execute();
-                $AttrIdsInDb=$result->fetchAll(PDO::FETCH_ASSOC); 
-
-                foreach($AttrIdsInDb as $AidInDb){
-                    array_push($AttrIdsInDatabase, $AidInDb['id']);
-                }
-                $array4 = array_diff($AttrIdsInDatabase,$remainingAttrID);
-                foreach($array4 as $element){
-                    $query = "DELETE FROM attributesofitems WHERE id=:id";
-                    $result = $db->prepare($query);
-                    $result->bindParam(':id',$element);
-                    $result->execute();
-                }
-
-                ///////////////////////////////DESC////////////////////////////////////////////
-
-                $remainingDescIds = array();
-                
-                for($i=1;$i<=$_POST["idOfLastDesc"];$i++){
-                    if(!isset($_POST["descriptionTitle" . $i]) && !isset($_POST["description" . $i])){
-
-                    }else{
-                        if($_POST["descriptionId" . $i] != 0){
-                            $query="UPDATE descriptions SET title=:title, description=:desc WHERE id=:id";
-                            $result = $db->prepare($query);
-                            $result->bindParam(':title',$_POST["descriptionTitle" . $i]);
-                            $result->bindParam(':desc',$_POST["description" . $i]);
-                            $result->bindParam(':id',$_POST["descriptionId" . $i]);
-                            $result->execute();
-                            array_push($remainingDescIds, $_POST["descriptionId" . $i]);
-                        }
-                        else{
-                            $query="INSERT INTO descriptions (id_item, title, description) VALUES (:id_item, :title, :description)";
-                            $result = $db->prepare($query);
-                            $result->bindParam(':title',$_POST["descriptionTitle" . $i]);
-                            $result->bindParam(':description',$_POST["description" . $i]);
-                            $result->bindParam(':id_item',$editId);
-                            $result->execute();
-                            $lIId = $db->lastInsertId();
-                            array_push($remainingDescIds, $lIId);
-                        }
-                    }
-                }      
-
-                $idsInDatabase = array();
-
-                $query="SELECT id FROM descriptions WHERE id_item=:id_item";
-                $result = $db->prepare($query);
-                $result->bindParam(':id_item',$editId);
-                $result->execute();
-                $idsInDb=$result->fetchAll(PDO::FETCH_ASSOC); 
-
-                foreach($idsInDb as $idInDb){
-                    array_push($idsInDatabase, $idInDb['id']);
-                }
-
-                $array3 = array_diff($idsInDatabase,$remainingDescIds);
-
-                foreach($array3 as $element){
-                    $query = "DELETE FROM descriptions WHERE id=:id";
-                    $result = $db->prepare($query);
-                    $result->bindParam(':id',$element);
-                    $result->execute();
-                }
-
-                $imagePathCheck = PHOTOSPATH . "/[" . $item_id. "].png";
-                if(!empty($_FILES['formFile']['name'])){
-                    if(file_exists($imagePathCheck)) unlink($imagePathCheck);
-                    $path = $_FILES['formFile']['name'];
-                    $ext = pathinfo($path, PATHINFO_EXTENSION);
-                    $imagename = "[" . $item_id . "]." . $ext;    
-                    $tmpname = $_FILES['formFile']['tmp_name'];
-                    if (!move_uploaded_file($tmpname, PHOTOSPATH . "/" . $imagename)) {
-                        $_SESSION['error_page'] = "list_of_items";
-                        header("Location:" . ROOT . "/manager/error_page/3");
-                    }
-                }
-                
-                $_SESSION['success_page'] = "list_of_items";
-                header("Location:" . ROOT . "/manager/success_page/2");
-
             }
             else{
                 $_SESSION['error_page'] = "list_of_items";
@@ -1725,23 +1791,33 @@ class Manager extends Controller
                 $tekst1 = strtolower($category);
                 $tekst2 = ucfirst($tekst1);
 
-                $query="SELECT id, COUNT(id) FROM categories WHERE name=:categ";
-                $result = $db->prepare($query);
-                $result->bindParam(':categ', $category);
-                $result->execute();
-                $categ_id=$result->fetch(PDO::FETCH_ASSOC);
-                $temp = $categ_id['COUNT(id)'];
-                if($temp>0&&$categ_id['id']!=$id_categ){
-                    $_SESSION['error_page'] = "list_of_categories";
-                    header("Location:" . ROOT . "/manager/error_page/2");
-                }else{
-                    $query = "UPDATE `categories` 
-                        SET name = '$tekst2' 
-                        WHERE id = '$id_categ';";
+                try{
+                    $db->beginTransaction();
+                    $query="SELECT id, COUNT(id) FROM categories WHERE name=:categ";
                     $result = $db->prepare($query);
+                    $result->bindParam(':categ', $category);
                     $result->execute();
-                    $_SESSION['success_page'] = "list_of_categories";
-                    header("Location:" . ROOT . "/manager/success_page/1");
+                    $categ_id=$result->fetch(PDO::FETCH_ASSOC);
+                    $temp = $categ_id['COUNT(id)'];
+                    if($temp>0&&$categ_id['id']!=$id_categ){
+                        $_SESSION['error_page'] = "list_of_categories";
+                        header("Location:" . ROOT . "/manager/error_page/2");
+                    }else{
+                        $query = "UPDATE `categories` 
+                            SET name = '$tekst2' 
+                            WHERE id = '$id_categ';";
+                        $result = $db->prepare($query);
+                        $result->execute();
+                        $_SESSION['success_page'] = "list_of_categories";
+                        header("Location:" . ROOT . "/manager/success_page/1");
+                    }
+                    $result->closeCursor();
+                    $db->commit();
+                }catch(Exception $ex){
+                    $db->rollBack();
+                    $_SESSION['error_page'] = "edit_category";
+                    header("Location:" . ROOT . "/manager/error_page/4");
+                    return;
                 }
             }else{
                 $_SESSION['error_page'] = "list_of_categories";
@@ -2045,10 +2121,6 @@ class Manager extends Controller
         }
     }
 
-    
-
-    
-
     private function getFooter($db){
         if(isset($_SESSION['siteLink'])){
             $result = $_SESSION['siteLink'];
@@ -2059,9 +2131,7 @@ class Manager extends Controller
             $_SESSION['siteLink'] = $result;
         }
         return $result;
-    }
-
-    
+    }  
 
     /** This function logout the user
      */
