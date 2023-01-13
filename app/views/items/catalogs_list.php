@@ -55,7 +55,7 @@
             </tr>
 
             <tr>
-                <td colspan='12' class='p-0'>
+                <td colspan='12' class='p-0 border-0'>
 					<div class='hidTab collapse' id='row".$i."'>
                         <table class='table table-active coltab m-0'>
                             <thead>
