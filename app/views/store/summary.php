@@ -235,7 +235,7 @@
                       </div>
                       
                       <div class="col-3 p-1 ">
-                        <input name='orderSubmit' type="submit" id="orderSubmit" class="btn btn-primary btn-sm w-100">
+                        <input name='orderSubmit' type="submit" id="orderSubmit" class="btn btn-primary btn-sm w-100" value='Kup'>
                       </div>
                     </div>`
           )
@@ -287,7 +287,7 @@
                 </div>
                   
                   <div class="col-3 p-1 ">
-                    <input name='orderSubmit' type="submit" id="orderSubmit" class="btn btn-primary btn-sm w-100">
+                    <input name='orderSubmit' type="submit" id="orderSubmit" class="btn btn-primary btn-sm w-100" value='Kup'>
                   </div>
                 </div>`
             )
