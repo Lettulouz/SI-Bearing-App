@@ -775,13 +775,13 @@ class Store extends Controller
                                 WHERE id='$itemId'";
 
                     $db->query($query2);
-                    $db->query($query);
+                    $insertQuery = $db->query($query);
                 }
 
                 unset($_SESSION['idOfItems']);
                 unset($_SESSION['numberOfItems']);
                 unset($_SESSION['totalItemPrice']);
-                $query2->closeCursor();
+                $insertQuery->closeCursor();
                 $db->commit();
 
                 $_SESSION['success_page'] = "index";
