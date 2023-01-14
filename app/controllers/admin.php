@@ -29,7 +29,7 @@ class Admin extends Controller
                 $secondLine = "pomyślnie!";
             }
             $this->view('success_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
-            header("Refresh: 0.75; url=" . ROOT . "/admin/" . $path);
+            header("Refresh: 1; url=" . ROOT . "/admin/" . $path);
         }
         else header("Location:" . ROOT . "");
     }
@@ -60,7 +60,7 @@ class Admin extends Controller
             }
             $this->view('error_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
             $_SESSION['successOrErrorResponse'] = $path;
-            header("Refresh: 0.75; url=" . ROOT . "/admin/" . $path);
+            header("Refresh: 1; url=" . ROOT . "/admin/" . $path);
 
         }
         else header("Location:" . ROOT . "");

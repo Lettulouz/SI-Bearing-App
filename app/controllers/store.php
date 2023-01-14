@@ -13,7 +13,7 @@ class Store extends Controller
                 $secondLine = "pomyślnie!";
             }
             $this->view('success_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
-            header("Refresh: 0.75; url=" . ROOT . "/store/" . $path);
+            header("Refresh: 2; url=" . ROOT . "/store/" . $path);
         }
         else header("Location:" . ROOT . "");
     }
@@ -43,7 +43,7 @@ class Store extends Controller
             }
             $this->view('error_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
             $_SESSION['successOrErrorResponse'] = $path;
-            header("Refresh: 0.75; url=" . ROOT . "/store/" . $path);
+            header("Refresh: 2; url=" . ROOT . "/store/" . $path);
 
         }
         else header("Location:" . ROOT . "");

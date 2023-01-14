@@ -6,7 +6,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button> 
 
-            <a class="navbar-brand" href=<?php echo ROOT."/home"?> style="margin-top:-5px"><?=$data['siteName']['sitename']?></a>                 
+            <a class="navbar-brand" href="<?php echo ROOT."/home"?>" style="margin-top:-5px"><?=$data['siteName']['sitename']?></a>                 
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -99,4 +99,5 @@
     </nav>
 </div>
  
+
 
