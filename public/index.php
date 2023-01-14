@@ -1,8 +1,8 @@
 <?php
 
 require_once dirname(__FILE__,2) . '/app/init.php';
-//header('Cache-Control: no cache'); //no cache
-session_cache_limiter('private_no_expire');
+session_cache_limiter('private, must-revalidate');
+session_cache_expire(60);
 session_start();
 $app = new App;
 
