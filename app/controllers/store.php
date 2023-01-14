@@ -687,7 +687,7 @@ class Store extends Controller
         $itemAttrs -> execute();
         $itemAttrs = $itemAttrs->fetchAll(PDO::FETCH_ASSOC);
 
-        if(empty($itemsParams) && empty($itemDescrs) && empty($itemsAttrs)){
+        if(empty($itemParams) && empty($itemDescrs) && empty($itemAttrs)){
             header("Location:" . ROOT . "/store");
             return;
         }
