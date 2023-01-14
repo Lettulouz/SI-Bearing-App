@@ -367,7 +367,7 @@ class Login extends Controller
         else if($this->userRole == "shopservice")
             header("Location:" . ROOT . "/service");
         else if($this->userRole == "user")
-            header("Location:" . ROOT . "/home");
+            header("Location:" . ROOT . "/store");
     }
 
     private function getFooter($db){

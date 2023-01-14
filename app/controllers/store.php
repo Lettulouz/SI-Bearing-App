@@ -590,6 +590,7 @@ class Store extends Controller
     /** This function view items in card for a logged user
      */
     public function cart(){
+
         isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = $_SESSION['loggedUser_name'] : $loggedUser_name = "";
         require_once dirname(__FILE__,2) . '/core/database.php';
@@ -608,8 +609,10 @@ class Store extends Controller
 
             $itemsInCart = $db->query($query);
             $itemsInCart = $itemsInCart->fetchAll(PDO::FETCH_ASSOC);
+            
         }
      
+
         $this->view('store/cart', ['siteFooter' => $siteFooter, 'siteName' => $siteName, 'itemsArray'=>$itemsInCart, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
     }
 
