@@ -49,11 +49,10 @@
         </thead>
         <tbody>
         <?php 
-        $j = 0; // dodałwm j, po jak wyświetlało z i to miałem errory. Wojtek
+        $j = 0; 
         $items = $data['itemsArray'];
         $editItemPath = $data['editItemPath'];
         $removeItemPath = $data['removeItemPath'];
-        //foreach($items as $i => $item) 
         if($data['historyItems']==0){
             foreach($items as $j => $item) 
             {

@@ -237,7 +237,6 @@
                 echo "<div class='col-12 col-md-6 col-xl-3 mb-4'>
                                 <div class='card h-100'>";
 
-                // zdjecie jako link do itemku
                 echo "<a href=";
                 echo ROOT . "/store/item/{$item['itemID']}";
                 echo " >";
@@ -248,7 +247,6 @@
                 echo "<div class='card-body'>
                                         <h5  class='card-title'>";
 
-                // nazwa jako link do itemku
                 echo " <a href= ";
                 echo ROOT . "/store/item/{$item['itemID']}";
                 echo " class='text-body'>";

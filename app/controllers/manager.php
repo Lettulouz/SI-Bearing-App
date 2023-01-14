@@ -1091,8 +1091,6 @@ class Manager extends Controller
                             $result->execute();
                         }
 
-
-                    // var_dump($_POST["attribute_name" . $i] . ", " . $_POST["attribute_value" . $i]);
                         $i += 1;
                     }      
                     

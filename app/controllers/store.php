@@ -141,10 +141,10 @@ class Store extends Controller
             $querypricestartend .= " AND i.price<=$pricepartend ";
         }
         //
-        //   Producenci
+        //   Manufacturers
         //
         $tableMan = array();
-        // pobiera do tablicy id producetnów
+
         $i = 0;
         foreach($manufacturers as $manufacturer)
         {
@@ -159,8 +159,7 @@ class Store extends Controller
         }
 
         $id_manufacturer = '';
-        // zamienia tablice w jednego stringa
-        // wystarczy dostarczyć tablice wypełnioną id producenta i polecenie sql działa
+
         for($j = 0; $j < count($tableMan); $j++)
         {
             if($j != 0)
@@ -174,7 +173,7 @@ class Store extends Controller
         }
 
         //
-        //   Kategorie
+        //   Categories
         //
         $tableCateg = array();
         $i = 0;
@@ -190,8 +189,7 @@ class Store extends Controller
         }
 
         $id_category = '';
-        // zamienia tablice w jednego stringa
-        // wystarczy dostarczyć tablice wypełnioną id producenta i polecenie sql działa
+
         for($j = 0; $j < count($tableCateg); $j++)
         {
             if($j != 0)
@@ -205,7 +203,7 @@ class Store extends Controller
         }
 
         //
-        //   Katalogi
+        //   Catalogs
         //
         $tableCatal = array();
         $i = 0;
@@ -228,8 +226,7 @@ class Store extends Controller
         $catalogsAmount == sizeof($tableCatal) ? $querySwitch = true : $querySwitch = false;
 
         $id_catalog = '';
-        // zamienia tablice w jednego stringa
-        // wystarczy dostarczyć tablice wypełnioną id producenta i polecenie sql działa
+
         for($j = 0; $j < count($tableCatal); $j++)
         {
             if($j != 0)
@@ -243,7 +240,7 @@ class Store extends Controller
         }
 
         //
-        //   Atrybuty
+        //   Attributes
         //
         $tableAttr = array();
         $tableAttrValues = array();
@@ -262,8 +259,6 @@ class Store extends Controller
             $tableAttr = $_POST['checkBoxVarAttributes']; 
             $tableAttrValues = $_POST['arrayOfAttrVal'];
             $isItRange = $_POST['isItRange'];
-            // zamienia tablice w jednego stringa
-            // wystarczy dostarczyć tablice wypełnioną id producenta i polecenie sql działa
 
             $k = 0;
             for($j = 0; $j < count($attributes); $j++)

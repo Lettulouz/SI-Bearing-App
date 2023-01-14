@@ -378,7 +378,6 @@
             var input = '#' + $(tempRMV[i-1]).attr('id');
            
             for(var j=0;j<alreadyUsed.length;j++){
-                // sprawdzić czy value znajduje się w already used
                 $(input + ' option[value="' + alreadyUsed[j] + '"]').attr('disabled','disabled');
             }
 

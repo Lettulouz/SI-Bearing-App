@@ -483,7 +483,6 @@
         for(var i=1;i<=tempRMV.length;i++){
             var input = '#' + $(tempRMV[i-1]).attr('id');
             for(var j=0;j<possibleOptions.length;j++){
-                // sprawdzić czy value znajduje się w already used
                 $(input + ' option').attr('disabled',false);
             }
         }
@@ -501,7 +500,6 @@
             var input = '#' + $(tempRMV[i-1]).attr('id');
            
             for(var j=0;j<alreadyUsed.length;j++){
-                // sprawdzić czy value znajduje się w already used
                 $(input + ' option[value="' + alreadyUsed[j] + '"]').attr('disabled','disabled');
             }
 

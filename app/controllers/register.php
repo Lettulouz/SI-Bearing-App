@@ -175,7 +175,6 @@ class Register extends Controller
      */
     private function errorDuringValidation($errorMessage){
         $this->errorMessage = $errorMessage;
-        //$this->serverError = true;
         $this->check = false;
     }
 
@@ -286,8 +285,6 @@ class Register extends Controller
             <p> Masz 48h na aktywację konta, po tym czasie konto zostanie usunięte. </p>
             </body>
             </html>";
-
-            //$mail->addAttachment('ścieżka');
 
             $mail->send();
         } catch(Exception $e){
