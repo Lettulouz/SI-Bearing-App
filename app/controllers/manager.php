@@ -29,7 +29,7 @@ class Manager extends Controller
                 $secondLine = "pomyślnie!";
             }
             $this->view('success_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
-            header("Refresh: 0.75; url=" . ROOT . "/manager/" . $path);
+            header("Refresh: 1; url=" . ROOT . "/manager/" . $path);
         }
         else header("Location:" . ROOT . "");
     }
@@ -59,7 +59,7 @@ class Manager extends Controller
             }
             $this->view('error_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
             $_SESSION['successOrErrorResponse'] = $path;
-            header("Refresh: 0.75; url=" . ROOT . "/manager/" . $path);
+            header("Refresh: 1; url=" . ROOT . "/manager/" . $path);
 
         }
         else header("Location:" . ROOT . "");

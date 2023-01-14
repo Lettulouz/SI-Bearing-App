@@ -34,7 +34,7 @@ class Register extends Controller
                 $secondLine = "pomyślnie!";
             }
             $this->view('success_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
-            header("Refresh: 0.75; url=" . ROOT . "/login/" . $path);
+            header("Refresh: 1; url=" . ROOT . "/login/" . $path);
         }
         else header("Location:" . ROOT . "");
     }

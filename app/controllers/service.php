@@ -25,7 +25,7 @@ class Service extends Controller
                 $secondLine = "pomyślnie!";
             }
             $this->view('success_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
-            header("Refresh: 0.75; url=" . ROOT . "/service/" . $path);
+            header("Refresh: 1; url=" . ROOT . "/service/" . $path);
         }
         else header("Location:" . ROOT . "");
     }
@@ -44,7 +44,7 @@ class Service extends Controller
             }
             $this->view('error_page', ['firstLine' => $firstLine, 'secondLine' => $secondLine]);
             $_SESSION['successOrErrorResponse'] = $path;
-            header("Refresh: 0.75; url=" . ROOT . "/service/" . $path);
+            header("Refresh: 1; url=" . ROOT . "/service/" . $path);
 
         }
         else header("Location:" . ROOT . "");
