@@ -2,6 +2,10 @@
 
 class UserVerify extends Controller
 {
+    
+    /** function used to verify the user's account
+     * @param {string} is a unique code used to verify the user's account
+     */
     public function index($hash){
         $success = 0;
 

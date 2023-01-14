@@ -4,6 +4,9 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class Service extends Controller
 {
+    /** the function responsible for displaying the success page for various operations performed in the application
+     * @param {int} is responsible for determining what type of operation has been performed
+     */
     public function success_page($sid){     
         if(isset($_SESSION['success_page'])){
             $path = $_SESSION['success_page'];
@@ -30,6 +33,9 @@ class Service extends Controller
         else header("Location:" . ROOT . "");
     }
 
+    /** the function responsible for displaying the error page, which is generated in the event of a failure while performing an operation on the data
+     * @param {int} is the error ID that determines the error message to be displayed on the page
+     */
     public function error_page($sid){     
         if(isset($_SESSION['error_page'])){
             $path = $_SESSION['error_page'];
@@ -50,6 +56,9 @@ class Service extends Controller
         else header("Location:" . ROOT . "");
     }
 
+    /** function checks if the user is logged in and if his role is "shopservice"
+     * 
+     */
     public function index(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "shopservice"){
@@ -81,6 +90,9 @@ class Service extends Controller
         $this->view('service/index', ['siteLinks'=>$siteLink, 'ordersLast7Count' => $ordersLast7Count, 'ordersTotalCount' => $ordersTotalCount]);
     }
 
+    /** function takes the user to the page with the list of orders, if the user is logged in and is the service provider of the store
+     * 
+     */
     public function list_of_orders(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "shopservice"){
@@ -145,6 +157,9 @@ class Service extends Controller
         $this->view('service/list_of_orders', ['siteLinks'=>$siteLink, 'orders'=>$orders, 'orderItems'=>$OrderItems, 'orderpath'=>$orderpath]);
     }
 
+    /** function used to generate a sales report
+     * 
+     */
     public function sales_report(){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "shopservice"){
@@ -221,6 +236,9 @@ class Service extends Controller
         $this->view('service/sales_report', ['siteLinks'=>$siteLink, 'amount'=>$amount, 'earnings'=>$earnings, 'selling'=> $selling]);
     }
 
+    /** function responsible for displaying order details from the database
+     * @param {int} is responsible for passing the order ID to the function
+     */
     public function orderview($order_id=NULL){
         if(isset($_SESSION['loggedUser'])){
             if($_SESSION['loggedUser'] == "shopservice"){
@@ -288,6 +306,10 @@ class Service extends Controller
  
     }
 
+    /** private function that returns footer information from the database
+     * @param {PDO} an object representing a database connection
+     * @return Returns array, which contains footer information
+     */
     private function getFooter($db){
         if(isset($_SESSION['siteLink'])){
             $result = $_SESSION['siteLink'];
@@ -300,6 +322,9 @@ class Service extends Controller
         return $result;
     }
 
+    /** function responsible for logging out the user
+    * 
+    */
     public function logout(){
         unset($_SESSION['loggedUser']);
         header("Location:" . ROOT . "/login");

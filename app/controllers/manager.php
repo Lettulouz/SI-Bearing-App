@@ -2121,6 +2121,10 @@ class Manager extends Controller
         }
     }
 
+    /** private function that returns footer information from the database
+     * @param {PDO} an object representing a database connection
+     * @return Returns array, which contains footer information
+     */
     private function getFooter($db){
         if(isset($_SESSION['siteLink'])){
             $result = $_SESSION['siteLink'];

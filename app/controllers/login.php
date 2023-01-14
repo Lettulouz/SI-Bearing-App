@@ -14,11 +14,16 @@ class Login extends Controller
     private $userId = "";
     private $authhash = "";
 
-
+    /** function redirects the user to the login page and performs his verification after logging in
+     * 
+     */
     public function index(){
         header("Location:" . ROOT . "/login/validate");
     }
 
+    /** function responsible for setting a new password for the user after gaining access through a specially generated link
+     * @param {int} holds the value that is passed to the function
+     */
     public function set_new_password($hash = 0){
         unset($_SESSION['loggedUser']);
         require_once dirname(__FILE__,2) . '/core/database.php';
@@ -96,6 +101,9 @@ class Login extends Controller
         'siteFooter'=> $siteFooter, 'siteName' => $siteName]);
     }
 
+    /** function used to reset the user's password by sending an e-mail with an activation link to set a new password
+     * @param {PDO} object to connect to the database
+     */
     public function forgotten_password(){
         unset($_SESSION['loggedUser']);
         require_once dirname(__FILE__,2) . '/core/database.php';
@@ -166,6 +174,9 @@ class Login extends Controller
         $this->view('login/forgotten_password', ['siteFooter' => $siteFooter, 'siteName' => $siteName]);
     }
     
+    /** function responsible for user login
+     * 
+     */
     public function validate(){
         unset($_SESSION['loggedUser']);
         require_once dirname(__FILE__,2) . '/core/database.php';
@@ -203,6 +214,11 @@ class Login extends Controller
 
     }
 
+    /** the function used to compare two strings given as parameters
+     * @param {string} this is the first string to be compared ($password)
+     * @param {string} this is the second string to be compared ($repeatPassword)
+     * @return Returns boolean, if $password == $repeatPassword - true, else - false
+     */
     private function comparePasswords($password, $repeatPassword) {
         if($password == $repeatPassword){
             return true;
@@ -370,6 +386,11 @@ class Login extends Controller
             header("Location:" . ROOT . "/store");
     }
 
+    
+    /** private function that returns footer information from the database
+     * @param {PDO} an object representing a database connection
+     * @return Returns array, which contains footer information
+     */
     private function getFooter($db){
         if(isset($_SESSION['siteFooter'])){
             $result = $_SESSION['siteFooter'];
@@ -381,7 +402,11 @@ class Login extends Controller
         }
         return $result;
     }
-
+    
+    /** function is used to retrieve the page name from the database
+     * @param {PDO} used to execute the SQL query
+     * @return Returns array, associative, containing a single record from the siteinfo table containing the sitename field
+     */
     private function getSiteName($db){
         if(isset($_SESSION['siteName'])){
             $result = $_SESSION['siteName'];

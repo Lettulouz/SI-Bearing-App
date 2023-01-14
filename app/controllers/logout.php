@@ -2,6 +2,9 @@
 
 class Logout extends Controller
 {
+    /** user logout function
+     * 
+     */
     public function index(){
         unset($_SESSION['loggedUser']);
         unset($_SESSION['loggedUser_name']);

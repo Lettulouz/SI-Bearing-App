@@ -2,6 +2,9 @@
 
 class SpecialPage extends Controller
 {
+    /** function used to display the content of a special page based on the "id" parameter passed
+     * @param {int} is the ID of the page to be displayed
+     */
     public function index($id){
         if($id<1 || $id>9){
             header("Location:" . ROOT . "/home");
@@ -19,6 +22,10 @@ class SpecialPage extends Controller
         $this->view("specialpage", ['siteFooter' => $siteFooter, 'pageContent' => $pageContent, 'siteName' => $siteName]);
     }
 
+    /** private function that returns footer information from the database
+     * @param {PDO} an object representing a database connection
+     * @return Returns array, which contains footer information
+     */
     private function getFooter($db){
         if(isset($_SESSION['siteFooter'])){
             $result = $_SESSION['siteFooter'];
@@ -31,6 +38,10 @@ class SpecialPage extends Controller
         return $result;
     }
 
+    /** function is used to retrieve the page name from the database
+     * @param {PDO} used to execute the SQL query
+     * @return Returns array, associative, containing a single record from the siteinfo table containing the sitename field
+     */
     private function getSiteName($db){
         if(isset($_SESSION['siteName'])){
             $result = $_SESSION['siteName'];

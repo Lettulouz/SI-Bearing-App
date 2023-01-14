@@ -18,6 +18,9 @@ class Store extends Controller
         else header("Location:" . ROOT . "");
     }
 
+    /** function displays an error page
+     * @param {int} is responsible for determining the error message on the screen
+     */
     public function error_page($sid){     
         if(isset($_SESSION['error_page'])){
             $path = $_SESSION['error_page'];
@@ -616,8 +619,9 @@ class Store extends Controller
         $this->view('store/cart', ['siteFooter' => $siteFooter, 'siteName' => $siteName, 'itemsArray'=>$itemsInCart, 'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name]);
     }
 
-    /** This function get footer elements from the database
-     * 
+    /** private function that returns footer information from the database
+     * @param {PDO} an object representing a database connection
+     * @return Returns array, which contains footer information
      */
     private function getFooter($db){
         if(isset($_SESSION['siteFooter'])){
@@ -631,7 +635,10 @@ class Store extends Controller
         return $result;
     }
 
-    // this funtcion get store name from the database
+    /** function is used to retrieve the page name from the database
+     * @param {PDO} used to execute the SQL query
+     * @return Returns array, associative, containing a single record from the siteinfo table containing the sitename field
+     */
     private function getSiteName($db){
         if(isset($_SESSION['siteName'])){
             $result = $_SESSION['siteName'];

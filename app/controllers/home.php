@@ -1,6 +1,9 @@
 <?php
 class Home extends Controller
 {
+    /** function responsible for rendering the view of the main page of the online store
+     * 
+     */
     public function index(){
         isset($_SESSION['loggedUser']) ? $isLogged = true :  $isLogged = false; 
         isset($_SESSION['loggedUser_name']) ? $loggedUser_name = 
@@ -55,6 +58,10 @@ class Home extends Controller
         'selectedItems' => $selectedItems, 'homeData'=>$homeData]);
     }
 
+    /** private function that returns footer information from the database
+     * @param {PDO} an object representing a database connection
+     * @return Returns array, which contains footer information
+     */
     private function getFooter($db){
         if(isset($_SESSION['siteFooter'])){
             $result = $_SESSION['siteFooter'];
@@ -67,6 +74,10 @@ class Home extends Controller
         return $result;
     }
     
+    /** function is used to retrieve the page name from the database
+     * @param {PDO} used to execute the SQL query
+     * @return Returns array, associative, containing a single record from the siteinfo table containing the sitename field
+     */
     private function getSiteName($db){
         if(isset($_SESSION['siteName'])){
             $result = $_SESSION['siteName'];
@@ -79,6 +90,12 @@ class Home extends Controller
         return $result;
     }
 
+    /** function generates random integers within a specified range and quantity
+     * @param {int} minimum number value
+     * @param {int} maximum number value
+     * @param {int} number of numbers to generate
+     * @return Returns array, which contains randomly generated integers
+     */
     private function randomGen($min, $max, $quantity) {
         $numbers = range($min, $max);
         shuffle($numbers);

@@ -21,10 +21,16 @@ class Register extends Controller
     private $errorEmail = "";
     private $errorPassword = "";
 
+    /** function redirects the user to the registration validation page
+     * 
+     */
     public function index(){
         header("Location:" . ROOT . "/register/validate");
     }
 
+    /** a function responsible for displaying a page confirming the success of a given operation
+     * @param {int} is responsible for determining what type of operation has been performed
+     */
     public function success_page($sid){     
         if(isset($_SESSION['success_page'])){
             $path = $_SESSION['success_page'];
@@ -39,6 +45,9 @@ class Register extends Controller
         else header("Location:" . ROOT . "");
     }
     
+    /** the function is responsible for validating the data provided by the user during registration
+     * 
+     */
     public function validate(){
         unset($_SESSION['loggedUser']);
         require_once dirname(__FILE__,2) . '/core/database.php';
@@ -134,6 +143,9 @@ class Register extends Controller
         'siteFooter' => $siteFooter, 'siteName' => $siteName]);
     }
 
+    /** function checks whether the given email and login already exist in the database, if so, it saves an appropriate error message
+     * @param {PDO} is used to connect to the database
+     */
     private function checkIfUserExists($db){
         $_SESSION['loginInput'] =  $this->loginInput;
         $_SESSION['emailInput'] =  $this->emailInput;
@@ -217,6 +229,9 @@ class Register extends Controller
         return true;
     }
 
+    /** function is used to place a new user in the database
+     * @param {PDO} is used to connect to the database
+     */
     private function insertUser($db){
         $commandString = $db->prepare("INSERT INTO users (name, lastname, login, email, password, role, temporary) VALUES (:name, :surname, :login, :email, :password, 'user', '1')");
         $commandString->bindValue(":name", $this->nameInput, PDO::PARAM_STR);
@@ -280,6 +295,10 @@ class Register extends Controller
         }
     } 
 
+    /** private function that returns footer information from the database
+     * @param {PDO} an object representing a database connection
+     * @return Returns array, which contains footer information
+     */
     private function getFooter($db){
         if(isset($_SESSION['siteFooter'])){
             $result = $_SESSION['siteFooter'];
@@ -292,6 +311,10 @@ class Register extends Controller
         return $result;
     }
 
+    /** function is used to retrieve the page name from the database
+     * @param {PDO} used to execute the SQL query
+     * @return Returns array, associative, containing a single record from the siteinfo table containing the sitename field
+     */
     private function getSiteName($db){
         if(isset($_SESSION['siteName'])){
             $result = $_SESSION['siteName'];
