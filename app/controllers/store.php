@@ -686,6 +686,11 @@ class Store extends Controller
         $itemAttrs -> bindParam(':id',$id);
         $itemAttrs -> execute();
         $itemAttrs = $itemAttrs->fetchAll(PDO::FETCH_ASSOC);
+
+        if(empty($itemsParams) && empty($itemDescrs) && empty($itemsAttrs)){
+            header("Location:" . ROOT . "/store");
+            return;
+        }
         
         $this->view('store/item', ['id' => $id, 'siteFooter' => $siteFooter, 'siteName' => $siteName, 
         'isLogged' => $isLogged, 'loggedUser_name' => $loggedUser_name, 'itemParams' => $itemParams, 
