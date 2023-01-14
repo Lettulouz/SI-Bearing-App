@@ -660,13 +660,6 @@
 
         var inputElements3 = $(".checkboxvar:checked").parent().find('#attrwhole');
 
-        for (let i = 0; i < amountOfCheckedCheckBoxes; i++) {
-            console.log(inputElements1[i].val());
-            console.log(inputElements2[i]);
-            console.log(inputElements3[i]);
-        }
-
-
     }
     $(".pricepart").on('change', function() {
         var part1;

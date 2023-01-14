@@ -268,7 +268,6 @@
             }
             updateAttrList();
             $('#idOfLastAttr').val(attrNum2);
-            console.log(alreadyUsed)
         });
 
         $(document).on('click', '.remove_attr_btn', function(e){ 

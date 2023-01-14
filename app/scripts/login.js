@@ -8,7 +8,6 @@ function setNewPassword(){
     }
 
     if(!error) error = comparePasswords(password, repeatPassword);
-    console.log(error);
     
     if(!error) document.getElementById("newPasswordForm").submit();
 }

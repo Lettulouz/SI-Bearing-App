@@ -361,7 +361,6 @@
         for(var i=1;i<=tempRMV.length;i++){
             var input = '#' + $(tempRMV[i-1]).attr('id');
             for(var j=0;j<possibleOptions.length;j++){
-                // sprawdzić czy value znajduje się w already used
                 $(input + ' option').attr('disabled',false);
             }
         }
@@ -373,7 +372,6 @@
             if(selection && !alreadyUsed.includes(selection)) {
                 alreadyUsed[i-1] = selection;
             }
-            //console.log(alreadyUsed);
         }
   
         for(var i=1;i<=tempRMV.length;i++){
@@ -448,7 +446,6 @@
 
     $(window).resize(function() {
         let inputs = document.getElementsByClassName('desc');
-        console.log(inputs.length);
         var text_max = 1000;
         var textTitle_max = 100;
         for(var i=0;i<inputs.length;i++){

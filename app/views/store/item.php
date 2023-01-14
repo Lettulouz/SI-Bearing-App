@@ -102,7 +102,7 @@
             sessionStorage.setItem(idValueAmount[0], '1' + '-' + idValueAmount[1] + '-' + idValueAmount[2] + '-' + idValueAmount[3]);
         else {
             let valueAndAmount = sessionStorage.getItem(idValueAmount[0]).split("-");
-            if (valueAndAmount[2] >= valueAndAmount[0] + 1) {
+            if (parseFloat(valueAndAmount[2]) >= parseFloat(valueAndAmount[0]) + 1) {
                 var newValue = parseFloat(valueAndAmount[0]) + 1;
                 sessionStorage.setItem(idValueAmount[0], newValue + '-' + idValueAmount[1] + '-' + idValueAmount[2] + '-' + idValueAmount[3]);
             }

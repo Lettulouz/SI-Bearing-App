@@ -4,7 +4,6 @@
  * @author Dominik
  */
 function registerButton() {
-  console.log('test');
   var error = false;
   var login = document.getElementById('login').value;
   var email = document.getElementById('email').value;
