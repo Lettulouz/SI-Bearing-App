@@ -572,7 +572,7 @@ class Manager extends Controller
             } 
 
         $query="SELECT c.name, COUNT(iic.id_catalog) as amount, c.id
-        FROM catalog c LEFT JOIN itemsInCatalog iic ON c.id=iic.id_catalog GROUP BY c.id";
+        FROM catalog c LEFT JOIN itemsincatalog iic ON c.id=iic.id_catalog GROUP BY c.id";
         $result = $db->query($query);
         $result = $result->fetchAll(PDO::FETCH_ASSOC);
 
